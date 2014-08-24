@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from shellac.models import Clip
 import os
 import sys
-import time
 
 #file paths
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -64,7 +63,7 @@ class NewClipTest(StaticLiveServerCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         self.browser.set_window_size(1024, 768)
         self.user = User.objects.create_user(u.get('username_dummy'),
                                              u.get('email_dummy'),

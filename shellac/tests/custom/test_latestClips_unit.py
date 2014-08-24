@@ -1,9 +1,11 @@
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerCase
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from shellac.models import Clip
 from django.contrib.auth.models import User
+import sys
+
 
 def template_tag(request):
     return render(request, 'custom_tests/latest_clips.html')
@@ -24,7 +26,20 @@ def get_users():
     return users
 
 # GET /record
-class LatestClipTagTest(LiveServerTestCase):
+class LatestClipTagTest(StaticLiveServerCase):
+    @classmethod
+    def setUpClass(cls):
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = 'http://' + arg.split('=')[1]
+                return
+        super().setUpClass()
+        cls.server_url = cls.live_server_url
+
+    @classmethod
+    def tearDOwnClass(cls):
+        if cls.server_url == cls.server_url:
+            super().tearDownClass()
 
     def setUp(self):
         self.users = get_users()

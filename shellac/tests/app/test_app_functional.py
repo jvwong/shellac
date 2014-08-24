@@ -1,10 +1,10 @@
-#from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from django.contrib.auth.models import User
 from shellac.models import Clip
 import time
+import sys
 
 ##Fake user
 u = {
@@ -39,10 +39,25 @@ def login(self, usernm, passwd):
 
 
 class AppPageTest(StaticLiveServerCase):
+    @classmethod
+    def setUpClass(cls):
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = 'http://' + arg.split('=')[1]
+                return
+        super().setUpClass()
+        cls.server_url = cls.live_server_url
+
+    @classmethod
+    def tearDOwnClass(cls):
+        if cls.server_url == cls.server_url:
+            super().tearDownClass()
+
+
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         self.browser.set_window_size(pgwd, pght)
         self.user = User.objects.create_user(u.get('username_dummy'),
                                              u.get('email_dummy'),
@@ -52,6 +67,7 @@ class AppPageTest(StaticLiveServerCase):
         Clip.objects.create_clip('Clip3', self.user)
         Clip.objects.create_clip('Clip4', self.user)
         login(self, u['username_dummy'], u['password_dummy'])
+
         #The user clicks on the "record" menu bar link and is redirected to the record page
         menu_brand = self.browser.find_element_by_css_selector('.navbar-brand')
         menu_brand.click()
