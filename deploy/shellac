@@ -1,0 +1,30 @@
+# You may add here your
+# server {
+#	...
+# }
+# statements for each of your virtual hosts to this file
+
+server {
+	listen 80; 
+	server_name shellac.no-ip.ca;
+
+	# Allow file uploads
+	client_max_body_size 50M;
+
+	location /static {
+		alias 	/webapps/shellac/apps/static/;
+	}
+
+	location /media {
+		alias 	/webapps/shellac/apps/media/;
+	}
+
+	location / {
+ 		proxy_pass_header Server;
+                proxy_set_header Host $http_host;
+                proxy_redirect off;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Scheme $scheme;
+                proxy_pass http://shellacers;
+	}
+}
