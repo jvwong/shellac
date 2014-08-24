@@ -1,12 +1,17 @@
 from django.conf import settings
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerCase
 from django.contrib.auth.models import User
 from shellac.models import Clip
 import os
-
+import sys
 import time
+
+#file paths
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+CLIP_NAME = os.path.abspath(os.path.join(CURRENT_DIR, "aud.mp3"))
+BRAND_NAME = os.path.abspath(os.path.join(CURRENT_DIR, "img.jpeg"))
 
 ##Fake user
 u = {
@@ -21,9 +26,6 @@ c = {
     'description': 'Clip1 description',
     'tags': 'cool, new, stuff'
 }
-
-clipPath = '/home/jvwong/Projects/shellac/shellac/tests/app/aud.mp3'
-brandPath = '/home/jvwong/Projects/shellac/shellac/tests/app/img.jpeg'
 
 def login(self, usernm, passwd):
     #User will be presented with a for with "username" and "password" form
@@ -43,7 +45,22 @@ def login(self, usernm, passwd):
 
 # Test NewClipTest - This test tracks the user interaction from login to adding and retrieving
 # a new Clip object.
-class NewClipTest(LiveServerTestCase):
+class NewClipTest(StaticLiveServerCase):
+
+    @classmethod
+    def setUpClass(cls):
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = 'http://' + arg.split('=')[1]
+                return
+        super().setUpClass()
+        cls.server_url = cls.live_server_url
+
+    @classmethod
+    def tearDOwnClass(cls):
+        if cls.server_url == cls.server_url:
+            super().tearDownClass()
+
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
@@ -53,7 +70,9 @@ class NewClipTest(LiveServerTestCase):
                                              u.get('email_dummy'),
                                              u.get('password_dummy'))
         login(self, u['username_dummy'], u['password_dummy'])
-        #The user clicks on the "record" menu bar link and is redirected to the record page
+
+        #Initially on the profile page, the user clicks on the "Record" menu bar
+        # item and redirected to the 'record' page (/)
         menu_record_anchor = self.browser.find_element_by_class_name('glyphicon-record')
         menu_record_anchor.click()
         self.assertIn('Record', self.browser.title)
@@ -83,12 +102,11 @@ class NewClipTest(LiveServerTestCase):
         category_input = self.browser.find_element_by_css_selector('#id_categories')
         description_input = self.browser.find_element_by_css_selector('#id_description')
         brand_input = self.browser.find_element_by_css_selector('#id_brand')
-        brand_input.send_keys(brandPath)
+        brand_input.send_keys(BRAND_NAME )
         status_input = self.browser.find_element_by_css_selector('#id_status')
         audio_input = self.browser.find_element_by_css_selector('#id_audio_file')
-        audio_input.send_keys(clipPath)
+        audio_input.send_keys(CLIP_NAME)
         tags_input = self.browser.find_element_by_css_selector('#id_tags')
-
 
         #User types in fields for title
         title_input.send_keys(c['title'])
@@ -96,9 +114,8 @@ class NewClipTest(LiveServerTestCase):
         tags_input.send_keys(c['tags'])
 
         #When she hits 'enter' the user is redirected to the 'profile' page
-
-        submit_button = self.browser.find_element_by_css_selector('#record_submit')
-        submit_button.send_keys(Keys.ENTER)
+        record_button = self.browser.find_element_by_css_selector('#record_submit')
+        record_button.send_keys(Keys.ENTER)
 
         #Valdiate that we're on the Permalink site and can examine the Clip details
         self.assertIn('Permalink', self.browser.title)

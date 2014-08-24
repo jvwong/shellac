@@ -1,5 +1,5 @@
 from __future__ import with_statement
-from fabric.api import env, local, run
+from fabric.api import *
 import random
 import os
 
@@ -8,15 +8,13 @@ REPO_URL = 'http:'
 def start():
     local('./virtualenv/bin/python3.4 manage.py runserver 127.0.0.1:8000')
 
-
 def test():
     local('./virtualenv/bin/python3.4 manage.py test')
 
+def piprequire():
+    local("./virtualenv/bin/pip install https://github.com/django/django/archive/stable/1.7.x.zip")
+    local("./virtualenv/bin/pip install -r requirements.txt")
 
-# def piprequire():
-#     local("./virtualenv/bin/pip install https://github.com/django/django/archive/stable/1.7.x.zip")
-#     local("./virtualenv/bin/pip install -r requirements.txt")
-#
 #
 # def local_push():
 #     local("git push origin master")
