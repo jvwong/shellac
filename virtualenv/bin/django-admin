@@ -1,4 +1,4 @@
-#!/home/jvwong/Projects/awdeo/shellac/virtualenv/bin/python3.4
+#!/webapps/shellac/apps/shellac/virtualenv/bin/python3.4
 # EASY-INSTALL-ENTRY-SCRIPT: 'Django==1.7c3','console_scripts','django-admin'
 __requires__ = 'Django==1.7c3'
 import sys

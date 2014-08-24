@@ -1,4 +1,4 @@
-#!/home/jvwong/Projects/awdeo/shellac/virtualenv/bin/python3.4
+#!/webapps/shellac/apps/shellac/virtualenv/bin/python3.4
 from django.core import management
 
 if __name__ == "__main__":

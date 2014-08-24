@@ -1,4 +1,4 @@
-#!/home/jvwong/Projects/awdeo/shellac/virtualenv/bin/python3.4
+#!/webapps/shellac/apps/shellac/virtualenv/bin/python3.4
 """PILdriver, an image-processing calculator using PIL.
 
 An instance of class PILDriver is essentially a software stack machine
