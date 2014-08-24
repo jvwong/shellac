@@ -33,19 +33,20 @@ def remote_pull():
     with cd(BASE_DIR):
         run("git pull origin master")
 
-# def remote_collectstatic():
-#     with settings(warn_only=True):
-#         with cd(STATIC_DIR):
-#             run("rm -r *")
-#     run("./virtualenv/bin/python3.4 manage.py collectstatic")
-#
-# def remote_restart():
-#     run("supervisorctl restart shellac")
-#
-# def deploy(collectstatic=True):
-#     local_push()
-#     remote_pull()
-#     remote_collectstatic()
-#     remote_restart()
-#
-#
+def remote_collectstatic():
+    with settings(warn_only=True):
+        with cd(STATIC_DIR):
+            run("rm -r *")
+    with cd(BASE_DIR):
+        run("./virtualenv/bin/python3.4 manage.py collectstatic")
+
+def remote_restart():
+    run("supervisorctl restart shellac")
+
+def deploy(collectstatic=True):
+    local_push()
+    remote_pull()
+    remote_collectstatic()
+    remote_restart()
+
+
