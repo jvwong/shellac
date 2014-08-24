@@ -3,8 +3,9 @@ from fabric.api import *
 import random
 import os
 
-REPO_URL = 'http:'
+REPO_URL = 'https://github.com/jvwong/shellac.git'
 
+### local routines
 def start():
     local('./virtualenv/bin/python3.4 manage.py runserver 127.0.0.1:8000')
 
