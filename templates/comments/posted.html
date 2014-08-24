@@ -1,0 +1,10 @@
+{% extends "coltrane/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Thanks for commenting" %}.{% endblock %}
+
+{% block content %}
+  <p>{% trans "Your comment has been posted" %}</p>
+  
+  Return to<a class="title" href="{{ comment.content_object.get_absolute_url }}#last_comment"> '{{ comment.content_object }}'</a>
+{% endblock %}

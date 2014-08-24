@@ -1,0 +1,18 @@
+{% extends "shellac/base.html" %}
+{% load i18n %}
+{% load shellac_filters %}
+
+<!-- Head -->
+    {% block title %}Record{% endblock title %}
+
+<!-- Main -->
+    {% block content %}
+    <div class="container-fluid content-add_audio">
+        <form class="form-signin" role="form" enctype="multipart/form-data" action="" method="POST">{% csrf_token %}
+             {{ audio_form.as_p }}
+            <button class="btn btn-lg btn-primary btn-block" id="record_submit" type="submit">Submit</button>
+        </form>
+    </div>
+    {% endblock content %}
+
+

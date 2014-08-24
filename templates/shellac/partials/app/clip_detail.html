@@ -1,0 +1,24 @@
+{% load static %}
+
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 clip">
+    {% if object.audio_file %}
+    <a class="clip-detail-audio_file-anchor" href="{{object.audio_file.url}}">
+        <img width="200px" class="img-responsive clip-detail-brand"
+             src="{% if object.brand %}
+                    {{ object.brand.url }}
+                  {% else%}
+                    {% static 'shellac/assets/seventyEight.png' %}
+                  {% endif %}" alt="clip brand" />
+    </a>
+    {% elif object.brand %}
+        <img width="200px" class="img-responsive clip-detail-brand" src="{{ object.brand.url }}" alt="clip brand" />
+    {% else %}
+        <img src="{% static 'assets/seventyeight.png' %}" class="img-responsive clip-detail-brand" alt="clip brand" />
+    {% endif %}
+    <div class="clip-detail-caption">
+        <large class="lead text-center clip-detail-title">{{ object.title }}</large><br/>
+        <small class="text-center clip-detail-description">{{ object.description |truncatewords:10}}</small><br/>
+        <span class="text-center text-muted clip-detail-plays">Plays: {{ object.plays }}</span><br/>
+        <span class="text-center text-muted clip-detail-status">Status: {{ object.status }}</span><br/>
+    </div>
+</div>

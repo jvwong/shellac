@@ -1,0 +1,52 @@
+{% extends "shellac/base.html" %}
+{% load i18n %}
+
+
+<!-- Head -->
+    {% block title %}Sign up{% endblock title %}
+
+
+<!-- Navbar -->
+    {% block navbar-collapse-right-bar %}
+    <li><a class="navbar-collapse-right-bar-option" href="{% url 'shellac_users_signin' %}">Sign in</a></li>
+    {% endblock navbar-collapse-right-bar %}
+
+    {% block navbar-collapse-right-dropdown %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-flag"> Language</span></a>
+        <ul class="dropdown-menu" role="menu">
+             <li><a href="">en-us</a></li>
+        </ul>
+    </li>
+    {% endblock navbar-collapse-right-dropdown %}
+
+    {% block navbar-right-form %}
+    {% endblock navbar-right-form %}
+
+
+<!-- Main -->
+    {% block main %}
+    <div class="container-fluid content-signup">
+        <div class="col-sm-12 col-md-6 col-md-offset-6">
+            <form class="form-signin" role="form" action="" method="POST">{% csrf_token %}
+                <h3 class="form-login-heading">Sign up</h3>
+                <input type="text" class="form-control username" id="signup_username" name="username" placeholder="User Name" required autofocus>
+                <input type="email" class="form-control" id="signup_email" name="email" placeholder="Email (optional)">
+                <input type="password" class="form-control" id="signup_password1" name="password1" placeholder="Password" required>
+                <input type="password" class="form-control" id="signup_password2" name="password2" placeholder="Password Confirm" required><br/>
+                <button class="btn btn-lg btn-primary btn-block" id="signup_submit" type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="col-sm-12 col-md-6 col-md-offset-6 error-messages">
+            {% block messages %}
+                <span class="help-block">
+
+                {% for field in form %}
+                        {{ field.errors }}
+                {% endfor %}
+
+                </span>
+            {% endblock messages %}
+        </div>
+    </div>
+    {% endblock main %}
