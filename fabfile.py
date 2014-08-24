@@ -21,18 +21,18 @@ def piprequire():
 #     local("git push origin master")
 #
 #
-# # the user to use for the remote commands
-# env.user = 'shellac'
-# # the servers where the commands are executed
-# env.hosts = ['192.168.0.10']
-#
-# BASE_DIR = '/webapps/shellac/apps/shellac/'
-# STATIC_DIR = os.path.abspath(os.path.join(BASE_DIR, "../static/"))
-#
-# def remote_pull():
-#     with cd(BASE_DIR):
-#         run("git pull origin master")
-#
+# the user to use for the remote commands
+env.user = 'shellac'
+# the servers where the commands are executed
+env.hosts = ['192.168.0.10']
+
+BASE_DIR = '/webapps/shellac/apps/shellac/'
+STATIC_DIR = os.path.abspath(os.path.join(BASE_DIR, "../static/"))
+
+def remote_pull():
+    with cd(BASE_DIR):
+        run("git pull origin master")
+
 # def remote_collectstatic():
 #     with settings(warn_only=True):
 #         with cd(STATIC_DIR):
