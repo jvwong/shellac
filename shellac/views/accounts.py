@@ -3,6 +3,26 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate
 
+from django.http import HttpResponseRedirect
+
+
+def anonymous_required(view_function, redirect_to=None):
+    return AnonymousRequired(view_function, redirect_to)
+
+
+class AnonymousRequired(object):
+    def __init__(self, view_function, redirect_to):
+        if redirect_to is None:
+            from django.conf import settings
+            redirect_to = settings.LOGIN_REDIRECT_URL
+        self.view_function = view_function
+        self.redirect_to = redirect_to
+
+    def __call__(self, request, *args, **kwargs):
+        if request.user is not None and request.user.is_authenticated():
+            return HttpResponseRedirect(self.redirect_to)
+        return self.view_function(request, *args, **kwargs)
+
 ### Signup user
 def user_signup(request):
     if request.method == 'POST':
@@ -22,10 +42,9 @@ def user_signup(request):
     return render(request,
                   'accounts/signup.html',
                   {'form': form})
-
+user_signup = anonymous_required(user_signup, redirect_to='/')
 
 ### Login user
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate
 from shellac.forms import LoginForm
@@ -46,9 +65,12 @@ def user_signin(request):
     return render(request,
                   'accounts/signin.html',
                   {'form': form})
+user_signin = anonymous_required(user_signin, redirect_to='/')
 
 
 @login_required(login_url='/users/signin/')
 def user_signout(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+
