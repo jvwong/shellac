@@ -60,6 +60,12 @@ def _update_config(source_dir, env_host):
     #/config/gunicorn.conf
     gunicorn_path = source_dir + '/config/gunicorn.conf'
     sed(gunicorn_path, '_host', '%s' % (env_host,))
+    #/deploy/nginx.conf
+    nginx_path = source_dir + '/deploy/nginx.conf'
+    sed(nginx_path, '_host', '%s' % (env_host,))
+    #/deploy/nginx.conf
+    supervisor_path = source_dir + '/deploy/supervisor.conf'
+    sed(supervisor_path, '_host', '%s' % (env_host,))
 
 
 def _piprequire(virtualenv_dir, source_dir):
