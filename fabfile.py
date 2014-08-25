@@ -97,10 +97,6 @@ def _update_static_files(source_dir):
 def _update_database(source_dir):
     run('cd %s && ../virtualenv/bin/python3.4 manage.py migrate --noinput' % (source_dir,))
 
-
-def _restart_supervisor(env_host):
-    run('/usr/local/bin/supervisorctl restart %s' % (env_host,))
-
 ### ***** END Deployment *****
 
 
