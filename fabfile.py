@@ -16,7 +16,7 @@ def deploy():
     _create_directory_structure_if_necessary(base_dir)
     _get_latest_source(source_dir)
     _update_settings(source_dir, env.host)
-    _update_gunicorn_conf(source_dir, env.host)
+    _update_config(source_dir, env.host)
     _update_virtualenv(source_dir)
     _update_static_files(source_dir)
     _update_database(source_dir)
@@ -56,9 +56,10 @@ def _update_settings(source_dir, env_host):
         run("sed -i 's/SECRET_KEY = .+$/SECRET_KEY = \"%s\"/' %s" % (key, settings_path))
 
 
-def _update_gunicorn_conf(source_dir, env_host):
-    conf_path = source_dir + '/config/gunicorn.conf'
-    sed(conf_path, '_host', '%s' % (env_host,))
+def _update_config(source_dir, env_host):
+    #/config/gunicorn.conf
+    gunicorn_path = source_dir + '/config/gunicorn.conf'
+    sed(gunicorn_path, '_host', '%s' % (env_host,))
 
 
 def _piprequire(virtualenv_dir, source_dir):
