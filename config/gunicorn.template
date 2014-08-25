@@ -1,0 +1,12 @@
+bind = "unix:/tmp/HOST"
+backlog = 2048
+workers = 3
+chdir = "/webapps/shellac/shellac/HOST/source"
+pidfile = None
+accesslog = "/webapps/shellac/shellac/HOST/log/gunicorn/gunicorn_access.log"
+errorlog = "/webapps/shellac/shellac/HOST/log/gunicorn/gunicorn_error.log"
+debug = False
+loglevel = "info"
+user = "shellac"
+group = "webapps"
+

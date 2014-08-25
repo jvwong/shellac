@@ -56,15 +56,11 @@ def _update_settings(source_dir, env_host):
 
 
 def _update_config(source_dir, env_host):
-    #/config/gunicorn.conf
+    #Dynamically create this file from generic every time
+    template_path = source_dir + '/config/gunicorn.template'
     gunicorn_path = source_dir + '/config/gunicorn.conf'
-    sed(gunicorn_path, '_host', '%s' % (env_host,))
-    #/deploy/nginx.conf
-    nginx_path = source_dir + '/deploy/nginx.conf'
-    sed(nginx_path, '_host', '%s' % (env_host,))
-    #/deploy/nginx.conf
-    supervisor_path = source_dir + '/deploy/supervisor.conf'
-    sed(supervisor_path, '_host', '%s' % (env_host,))
+    run('cat %s > %s' % (template_path, gunicorn_path))
+    sed(gunicorn_path, 'HOST', '%s' % (env_host,))
 
 
 def _piprequire(virtualenv_dir, source_dir):
