@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 CONFIG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-APP_DIR="$(dirname "$CONFIG_DIR")"
-BASE_DIR="$(dirname "$APP_DIR")"
+SOURCE_DIR="$(dirname "$CONFIG_DIR")"
+BASE_DIR="$(dirname "$SOURCE_DIR")"
 
 DJANGO_WSGI_MODULE="config.wsgi"
 GUNICORN_CONF="$CONFIG_DIR/gunicorn.conf"
-APPLICATION_PATH="$APP_DIR/virtualenv/bin/gunicorn"
+APPLICATION_PATH="$BASE_DIR/virtualenv/bin/gunicorn"
 LOGDIR="$BASE_DIR/log/gunicorn"
 ERRFILE="/gunicorn_shellac.err"
 

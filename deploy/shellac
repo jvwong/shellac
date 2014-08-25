@@ -13,11 +13,11 @@ server {
 	client_max_body_size 50M;
 
 	location /static {
-		alias 	/webapps/shellac/apps/static/;
+		alias 	/webapps/shellac/shellac/shellac.no-ip.ca/static/;
 	}
 
 	location /media {
-		alias 	/webapps/shellac/apps/media/;
+		alias 	/webapps/shellac/shellac/shellac.no-ip.ca/media/;
 	}
 
 	location / {

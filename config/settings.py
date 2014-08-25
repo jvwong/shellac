@@ -2,19 +2,20 @@ import os
 
 APP_NAME = "shellac"
 
-DEBUG = False
+DEBUG = True
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 #Pre-configured paths
 CONFIG_DIR = os.path.abspath(os.path.dirname(__file__))
-BASE_DIR = os.path.abspath(os.path.join(CONFIG_DIR, ".."))
-STATIC_PATH = os.path.abspath(os.path.join(BASE_DIR, "static"))
+SOURCE_DIR = os.path.abspath(os.path.join(CONFIG_DIR, ".."))
+BASE_DIR = os.path.abspath(os.path.join(SOURCE_DIR, ".."))
+STATIC_PATH = os.path.abspath(os.path.join(SOURCE_DIR, "static"))
 
 DATABASE = ".".join([APP_NAME, "db"])
-DATABASE_NAME = os.path.abspath(os.path.join(BASE_DIR, "../database", DATABASE))
+DATABASE_NAME = os.path.abspath(os.path.join(BASE_DIR, "database", DATABASE))
 URLCONF_MODULE = ".".join(["config.urls"])
-TEMPLATE_PATH = os.path.abspath(os.path.join(BASE_DIR, "templates"))
+TEMPLATE_PATH = os.path.abspath(os.path.join(SOURCE_DIR, "templates"))
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -40,7 +41,7 @@ DATABASES = {
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['shellac.no-ip.ca']
+ALLOWED_HOSTS = ['shellac.no-ip.ca, 127.0.0.1']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -75,7 +76,7 @@ USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, "../media/"))
+MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, "media"))
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -86,7 +87,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, "../static/"))
+STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, "static"))
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -113,7 +114,7 @@ COMPRESS_PRECOMPILERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '0g6yk+xa!&xl%@rgf%eh%k_10v7p!ts6c00$0by@fx)95w(&pn'
+# SECRET_KEY = '0g6yk+xa!&xl%@rgf%eh%k_10v7p!ts6c00$0by@fx)95w(&pn'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -231,3 +232,4 @@ LOGGING = {
     }
 }
 
+from .secret_key import SECRET_KEY
