@@ -36,7 +36,7 @@ class RecordPageTest(TestCase):
         request.user = self.user
         response = shellac_record(request)
         form = RecordForm()
-        expected_html = render_to_string('shellac/record.html', {'form': form})
+        expected_html = render_to_string('shellac/record.html', {'form': form, 'user': self.user})
         self.assertEqual(response.content.decode(), expected_html)
 
     def test_record_page_can_respond_to_a_POST_request(self):

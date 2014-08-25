@@ -45,7 +45,7 @@ class NewUserTest(StaticLiveServerCase):
         brand_text = self.browser.find_element_by_class_name('navbar-brand').text
 
         #User is presented with an option to 'Sign up' in menu bar.
-        menubar_signin_anchor = self.browser.find_element_by_class_name('navbar-collapse-right-bar-option')
+        menubar_signin_anchor = self.browser.find_element_by_id('navbar-collapse-right-bar-signup')
         menubar_signin_anchor.click()
 
         # She Clicks it and is redirected to the 'Sign up' page
@@ -87,8 +87,8 @@ class NewUserTest(StaticLiveServerCase):
         navbar_cog.click()
 
         #She clicks the cog, then sign out
-        navbar_dropdown_opts = self.browser.find_elements_by_class_name('navbar-collapse-right-dropdown-option')
-        navbar_dropdown_opts[1].click()
+        navbar_dropdown_signout = self.browser.find_element_by_id('navbar-collapse-right-dropdown-signout')
+        navbar_dropdown_signout.click()
 
         #When she signs out she is redirected to the sign in page
         self.assertIn('Sign in', self.browser.title)
@@ -135,7 +135,7 @@ class DuplicateUserTest(StaticLiveServerCase):
         self.assertEqual('SHELLAC', brand_text)
 
         #User is presented with an option to 'Sign up' in menu bar.
-        menubar_signin_anchor = self.browser.find_element_by_class_name('navbar-collapse-right-bar-option')
+        menubar_signin_anchor = self.browser.find_element_by_id('navbar-collapse-right-bar-signup')
         menubar_signin_anchor.click()
 
         # She Clicks it and is redirected to the 'Sign up' page

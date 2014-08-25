@@ -23,5 +23,5 @@ class AppPageTest(TestCase):
         request = HttpRequest()
         request.user = user
         response = shellac_app(request)
-        expected_html = render_to_string('shellac/app.html')
+        expected_html = render_to_string('shellac/app.html', {'user': user})
         self.assertEqual(response.content.decode(), expected_html)

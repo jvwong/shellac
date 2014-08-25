@@ -80,4 +80,3 @@ class AppPageTest(StaticLiveServerCase):
     def test_fake(self):
         clip_detail_anchor = self.browser.find_element_by_css_selector('.clip-detail-audio_file-anchor')
         self.assertAlmostEqual(clip_detail_anchor.location['x'], pgwd/12 * 3, delta=50)
-        time.sleep(5)
