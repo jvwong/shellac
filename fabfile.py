@@ -96,6 +96,16 @@ def _update_static_files(source_dir):
 def _update_database(source_dir):
     run('cd %s && ../virtualenv/bin/python3.4 manage.py migrate --noinput' % (source_dir,))
 
+def lgittag():
+    #local('git tag LIVE')
+    local('export TAG=`date +DEPLOYED-%F/%H%M`')
+    local('git tag $TAG')
+    local('git push origin $TAG')
+    local('git log --graph --oneline --decorate')
+
+
+
+
 ### ***** END Deployment *****
 
 
