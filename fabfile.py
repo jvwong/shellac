@@ -20,7 +20,6 @@ def deploy():
     _update_virtualenv(source_dir)
     _update_static_files(source_dir)
     _update_database(source_dir)
-    _restart_supervisor(env.host)
 
 
 def _create_directory_structure_if_necessary(base_dir):
