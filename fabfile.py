@@ -39,7 +39,6 @@ def _get_latest_source(source_dir):
 
 def _update_settings(source_dir, env_host):
     settings_path = source_dir + '/config/settings.py'
-    #string substitution
     sed(settings_path, "DEBUG = True", "DEBUG = False")
     sed(settings_path,
         'ALLOWED_HOSTS =.+$',
@@ -54,6 +53,11 @@ def _update_settings(source_dir, env_host):
         run("echo SECRET_KEY = '\"%s\"' >> %s" % (key, secret_key_file))
     else:
         run("sed -i 's/SECRET_KEY = .+$/SECRET_KEY = \"%s\"/' %s" % (key, settings_path))
+
+
+def _update_gunicorn_conf(source_dir, env_host):
+    conf_path = source_dir + '/config/gunicorn.conf'
+    sed(conf_path, '_host', '%s' % (env_host,))
 
 
 def _piprequire(virtualenv_dir, source_dir):
@@ -104,6 +108,7 @@ def ldeploy(host):
     lcreate_directory_structure_if_necessary(base_dir)
     lget_latest_source(source_dir)
     lupdate_settings(source_dir, host)
+    lupdate_gunicorn_conf(source_dir, host)
     lupdate_virtualenv(source_dir)
     lupdate_static_files(source_dir)
     lupdate_database(source_dir)
@@ -137,6 +142,11 @@ def lupdate_settings(source_dir, host):
         local("echo SECRET_KEY = '\"%s\"' >> %s" % (key, secret_key_file))
     else:
         local("sed -i 's/SECRET_KEY = .+$/SECRET_KEY = \"%s\"/' %s" % (key, settings_path))
+
+
+def lupdate_gunicorn_conf(source_dir, env_host):
+    conf_path = source_dir + '/config/gunicorn.conf'
+    local("sed -i 's/_host/%s/' %s" % (env_host, conf_path))
 
 
 def lpiprequire(virtualenv_dir, source_dir):
