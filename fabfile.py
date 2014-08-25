@@ -98,10 +98,10 @@ def ldeploy(host):
     base_dir = os.path.abspath(os.path.join(source_dir, ".."))
     lcreate_directory_structure_if_necessary(base_dir)
     lget_latest_source(source_dir)
-    lupdate_settings(source_dir, host)
-    lupdate_virtualenv(source_dir)
-    lupdate_static_files(source_dir)
-    lupdate_database(source_dir)
+    # lupdate_settings(source_dir, host)
+    # lupdate_virtualenv(source_dir)
+    # lupdate_static_files(source_dir)
+    # lupdate_database(source_dir)
 
 
 def lcreate_directory_structure_if_necessary(base_dir):
