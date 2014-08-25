@@ -4,6 +4,8 @@ from django.http import HttpRequest
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from shellac.views.accounts import user_signup, user_signin
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 ##Fake user
 username_dummy = 'jvwong'

@@ -202,7 +202,7 @@ def lstart():
 
 
 def ltest():
-    local('../virtualenv/bin/python3.4 manage.py test')
+    local('../virtualenv/bin/python3.4 manage.py test shellac.tests')
 
 
 
