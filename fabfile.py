@@ -135,18 +135,17 @@ def lcreate_directory_structure_if_necessary(base_dir):
 def lget_latest_source(source_dir):
     if os.path.exists(source_dir + '/.git'):
         local('cd %s && git fetch' % (source_dir,))
+        # Get the hash of the local commit; Set the server version to same
+        local('cd %s && git merge' % (source_dir,))
     else:
         local('git clone %s %s' % (REPO_URL, source_dir))
-    # Get the hash of the local commit; Set the server version to same
-    current_commit = local("git log -n 1 --format=%H", capture=True)
-    local('cd %s && git reset --hard %s' % (source_dir, current_commit))
 
 
 def lupdate_settings(source_dir, host):
     settings_path = source_dir + '/config/settings.py'
     #string substitution
-    local("sed -i 's/DEBUG = True/DEBUG = False/' %s" % (settings_path,))
-    local("sed -i \"s/ALLOWED_HOSTS = \[.*\]$/ALLOWED_HOSTS = \['%s'\]/\" %s" % (host, settings_path))
+    #local("sed -i 's/DEBUG = True/DEBUG = False/' %s" % (settings_path,))
+    local("sed -i \"s/ALLOWED_HOSTS = \[.*\]$/ALLOWED_HOSTS = \['%s'\]/\" %s" % ('127.0.0.1', settings_path))
     secret_key_file = source_dir + '/config/secret_key.py'
     chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
     key = ''.join(random.SystemRandom().choice(chars) for _ in range(50))
@@ -158,12 +157,13 @@ def lupdate_settings(source_dir, host):
 
 
 def lupdate_config(source_dir, env_host):
-    gunicorn_path = source_dir + '/config/gunicorn.conf'
-    local("sed -i 's/_host/%s/' %s" % (env_host, gunicorn_path))
-    nginx_path = source_dir + '/deploy/nginx.conf'
-    local("sed -i 's/_host/%s/' %s" % (env_host, nginx_path))
-    supervisor_path = source_dir + '/deploy/supervisor.conf'
-    local("sed -i 's/_host/%s/' %s" % (env_host, supervisor_path))
+    pass
+    # gunicorn_path = source_dir + '/config/gunicorn.conf'
+    # local("sed -i 's/_host/%s/' %s" % (env_host, gunicorn_path))
+    # nginx_path = source_dir + '/deploy/nginx.conf'
+    # local("sed -i 's/_host/%s/' %s" % (env_host, nginx_path))
+    # supervisor_path = source_dir + '/deploy/supervisor.conf'
+    # local("sed -i 's/_host/%s/' %s" % (env_host, supervisor_path))
 
 
 def lpiprequire(virtualenv_dir, source_dir):
@@ -185,7 +185,7 @@ def lupdate_virtualenv(source_dir):
         local('virtualenv --python=/opt/python3.4/bin/python3.4 %s' % (virtualenv_dir,))
         local("touch %s/lib/python3.4/site-packages/_virtualenv_path_extensions.pth" % (virtualenv_dir,))
         ladd2virtualenv(source_dir, source_dir)
-    lpiprequire(virtualenv_dir, source_dir)
+        lpiprequire(virtualenv_dir, source_dir)
 
 
 def lupdate_static_files(source_dir):
@@ -197,16 +197,14 @@ def lupdate_database(source_dir):
 
 
 ### ***** Django *****
-def lstart(source_dir):
-    if not source_dir:
-        source_dir = os.getcwd() + '/source'
-    local('%s/../virtualenv/bin/python3.4 manage.py runserver 127.0.0.1:8000' % (source_dir,))
+def lstart():
+    local('../virtualenv/bin/python3.4 manage.py runserver 127.0.0.1:8000')
 
 
 def ltest(source_dir):
     if not source_dir:
         source_dir = os.getcwd() + '/source'
-    local('%s/../virtualenv/bin/python3.4 manage.py test' % (source_dir,))
+    local('../virtualenv/bin/python3.4 manage.py test')
 
 
 
