@@ -1,0 +1,46 @@
+Usage: fab [options] <command>[:arg1,arg2=val2,host=foo,hosts='h1;h2',...] ...
+
+Options:
+  -h, --help            show this help message and exit
+  -V, --version         show program's version number and exit
+  -l, --list            print list of possible commands and exit
+  --shortlist           alias for -F short --list
+  -F LIST_FORMAT, --list-format=LIST_FORMAT
+                        formats --list, choices: short, normal, nested
+  -d COMMAND, --display=COMMAND
+                        print detailed info about a given command and exit
+  -r, --reject-unknown-hosts
+                        reject unknown hosts
+  -D, --disable-known-hosts
+                        do not load user known_hosts file
+  -u USER, --user=USER  username to use when connecting to remote hosts
+  -p PASSWORD, --password=PASSWORD
+                        password for use with authentication and/or sudo
+  -H HOSTS, --hosts=HOSTS
+                        comma-separated list of hosts to operate on
+  -R ROLES, --roles=ROLES
+                        comma-separated list of roles to operate on
+  -x EXCLUDE_HOSTS, --exclude-hosts=EXCLUDE_HOSTS
+                        comma-separated list of hosts to exclude
+  -i KEY_FILENAME       path to SSH private key file. May be repeated.
+  -a, --no_agent        don't use the running SSH agent
+  -k, --no-keys         don't load private key files from ~/.ssh/
+  -f FABFILE, --fabfile=FABFILE
+                        Python module file to import, e.g. '../other.py'
+  -w, --warn-only       warn, instead of abort, when commands fail
+  -s SHELL, --shell=SHELL
+                        specify a new shell, defaults to '/bin/bash -l -c'
+  -c RCFILE, --config=RCFILE
+                        specify location of config file to use
+  --hide=LEVELS         comma-separated list of output levels to hide
+  --show=LEVELS         comma-separated list of output levels to show
+  --no-pty              do not use pseudo-terminal in run/sudo
+  -P, --parallel        Default to parallel execution method
+  -z NUM_FORKS, --pool-size=NUM_FORKS
+                        Number of concurrent processes to use when running in
+                        parallel
+  --abort-on-prompts    Abort instead of prompting (for password, host, etc)
+  --keepalive=KEEPALIVE
+                        enables a keepalive every n seconds
+  --linewise            Print stdout/stderr line-by-line instead of byte-by-
+                        byte

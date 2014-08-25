@@ -2,17 +2,14 @@
 ### ******************* REMOTE ROUTINES *****************************************
 ### ****************************************************************************
 from __future__ import with_statement
-from fabric.contrib.files import append, exists, sed
+from fabric.contrib.files import exists, sed
 from fabric.api import env, local, run
 import os
 import random
 
 REPO_URL = 'https://github.com/jvwong/shellac.git'
-env.user = 'shellac'
-env.hosts = ['192.168.0.10']
 
 ### ***** BRING Deployment *****
-
 def deploy():
     base_dir = '/webapps/%s/shellac/%s' % (env.user, env.host)
     source_dir = base_dir + '/source'
@@ -47,12 +44,15 @@ def _update_settings(source_dir, env_host):
         'ALLOWED_HOSTS =.+$',
         'ALLOWED_HOSTS = ["%s"]' % (env_host,)
     )
-    secret_key_file = source_dir + 'config/secret_key.py'
+    secret_key_file = source_dir + '/config/secret_key.py'
+    chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+    key = ''.join(random.SystemRandom().choice(chars) for _ in range(50))
+    # if not exists(secret_key_file):
+    #     append(secret_key_file, "SECRET_KEY = '%s'" % (key,))
     if not exists(secret_key_file):
-        chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
-        key = ''.join(random.SystemRandom().choice(chars) for _ in range(50))
-        append(secret_key_file, "SECRET_KEY = '%s'" % (key,))
-    append(settings_path, '\nfrom .secret_key import SECRET_KEY')
+        run("echo SECRET_KEY = '\"%s\"' >> %s" % (key, secret_key_file))
+    else:
+        run("sed -i 's/SECRET_KEY = .+$/SECRET_KEY = \"%s\"/' %s" % (key, settings_path))
 
 
 def _piprequire(virtualenv_dir, source_dir):
