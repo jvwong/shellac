@@ -10,8 +10,6 @@ APPLICATION_PATH="$BASE_DIR/virtualenv/bin/gunicorn"
 LOGDIR="$BASE_DIR/log/gunicorn"
 ERRFILE="/gunicorn_shellac.err"
 
-echo $APPLICATION_PATH
-
 #if they don't exist, create the log directories
 if [ ! -d "$LOGDIR" ]; then
 	mkdir -p "$LOGDIR"
