@@ -15,5 +15,4 @@ if [ ! -d "$LOGDIR" ]; then
 	mkdir -p "$LOGDIR"
 fi;
 
-#exec /webapps/shellac/shellac/shellac.no-ip.ca/virtualenv/bin/gunicorn -b 192.168.0.10:8004 config.wsgi:application 
 exec $APPLICATION_PATH -c $GUNICORN_CONF $DJANGO_WSGI_MODULE:application 2>>$LOGDIR$ERRFILE
