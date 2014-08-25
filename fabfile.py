@@ -97,10 +97,10 @@ def _update_database(source_dir):
     run('cd %s && ../virtualenv/bin/python3.4 manage.py migrate --noinput' % (source_dir,))
 
 def lgittag():
-    #local('git tag LIVE')
+    local('git tag -f LIVE')
     local('export TAG=`date +DEPLOYED-%F/%H%M`')
     local('git tag $TAG')
-    local('git push origin $TAG')
+    local('git push -f origin $TAG')
     local('git log --graph --oneline --decorate')
 
 
@@ -201,9 +201,7 @@ def lstart():
     local('../virtualenv/bin/python3.4 manage.py runserver 127.0.0.1:8000')
 
 
-def ltest(source_dir):
-    if not source_dir:
-        source_dir = os.getcwd() + '/source'
+def ltest():
     local('../virtualenv/bin/python3.4 manage.py test')
 
 
