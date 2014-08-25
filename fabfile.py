@@ -105,7 +105,7 @@ def ldeploy(host):
 
 
 def lcreate_directory_structure_if_necessary(base_dir):
-    for subfolder in ('database', 'static', 'media', 'virtualenv', 'source', 'log'):
+    for subfolder in ('database', 'static', 'media', 'virtualenv', 'source', 'log/supervisor', 'log/gunicorn'):
         local('mkdir -p %s/%s' % (base_dir, subfolder))
 
 
