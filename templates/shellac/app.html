@@ -18,5 +18,12 @@
                 </div>
             {% endfor object in objects %}
         </div>
+
+        <div>
+        {% for attr in user %}
+            {{attr}}
+        {% endfor %}
+        </div>
+
     {% endblock content %}
 
