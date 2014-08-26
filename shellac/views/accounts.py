@@ -56,8 +56,9 @@ def user_signin(request):
         name = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=name, password=password)
-
         if user is not None:
+            if not request.POST.get('remember_me', None):
+                request.session.set_expiry(0)
             login(request, user)
             return HttpResponseRedirect("/profile")
     else:
