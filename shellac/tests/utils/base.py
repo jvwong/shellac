@@ -54,7 +54,7 @@ class FunctionalTest(StaticLiveServerCase):
         user = User.objects.create(username=username)
         session = SessionStore()
         session[SESSION_KEY] = user.pk
-        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[2]
+        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[4]
         session.save()
 
         ### to set a cookie we need to first visit the domain
