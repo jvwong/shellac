@@ -14,6 +14,7 @@ from shellac.models import Clip
 def shellac_app(request):
     if request.method == 'GET':
         clips = Clip.objects.all()[:10]
+        #print(request.user.social_auth.values_list('extra_data'))
         return render(request, 'shellac/app.html', {'objects': clips})
     return render(request, 'shellac/app.html')
 
