@@ -4,6 +4,13 @@
 
 <!-- Head -->
     {% block title %}App{% endblock title %}
+    {% block head %}
+        <script type="text/javascript" src="{% static 'shellac/js/app/shellac.js' %}"></script>
+        <script type="text/javascript" src="{% static 'shellac/js/app/shellac.shell.js' %}"></script>
+        <script type="text/javascript">
+            $(function(){ shellac.initModule($('#shellac-app')) });
+        </script>
+    {% endblock head %}
 
 <!-- Main -->
     {% block content %}
