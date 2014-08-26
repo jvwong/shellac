@@ -43,3 +43,5 @@ class LatestClipsNode(template.Node):
 
 register = template.Library()
 register.tag('get_latest_content', do_latest_content)
+
+

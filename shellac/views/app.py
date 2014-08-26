@@ -6,16 +6,17 @@ from audiofield.widgets import CustomerAudioFileWidget
 from audiofield.forms import CustomerAudioFileForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-
 from shellac.models import Clip
+import json
 
 ### app
 @login_required()
 def shellac_app(request):
     if request.method == 'GET':
-        clips = Clip.objects.all()[:10]
-        #print(request.user.social_auth.values_list('extra_data'))
-        return render(request, 'shellac/app.html', {'objects': clips})
+        objects = Clip.objects.all()[:10]
+        data = [o.get_absolute_url() for o in objects]
+        print(data)
+        return render(request, 'shellac/app.html', {'data': json.dumps(data) })
     return render(request, 'shellac/app.html')
 
 

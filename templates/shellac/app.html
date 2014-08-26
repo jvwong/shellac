@@ -5,25 +5,12 @@
 <!-- Head -->
     {% block title %}App{% endblock title %}
     {% block head %}
-        <script type="text/javascript" src="{% static 'shellac/js/app/shellac.js' %}"></script>
-        <script type="text/javascript" src="{% static 'shellac/js/app/shellac.shell.js' %}"></script>
-        <script type="text/javascript">
-            $(function(){ shellac.initModule($('#shellac-app')) });
-        </script>
+        <script type="text/javascript">var data = {{ data|safe }};</script>
+        <script src="{% static 'shellac/js/bundle.js' %}"></script>
     {% endblock head %}
 
 <!-- Main -->
     {% block content %}
         <div id="shellac-app"></div>
-        <h3 class="app-content-header">Recent Clips</h3>
-        <div class="app-clips">
-            {% for object in objects %}
-                <div class="row">
-                    <a class="clip-detail-audio_file-anchor" href="{{object.get_absolute_url}}">
-                        <button type="button" class="btn btn-primary btn-lg btn-block">{{object.title}}</button>
-                    </a>
-                </div>
-            {% endfor object in objects %}
-        </div>
     {% endblock content %}
 

@@ -186,7 +186,6 @@ SOCIAL_AUTH_SOUNDCLOUD_SECRET = 'bb6db110403c5146985b3bbe6f70ac7d'
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
     'social.backends.twitter.TwitterOAuth',
-    'social.backends.google.GoogleOAuth2',
     'social.backends.soundcloud.SoundcloudOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
