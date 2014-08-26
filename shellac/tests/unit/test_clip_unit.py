@@ -36,45 +36,44 @@ def get_users():
 
 class ClipModelTest(TestCase):
 
-    users = get_users()
-
-    category_1 = Category()
-    category_1.title = 'Title: Category 1'
-    category_1.slug = 'title-category-1'
-    category_1.description = 'Description: Category 1'
-    category_1.save()
-
-    category_2 = Category()
-    category_2.title = 'Title: Category 2'
-    category_2.slug = 'title-category-2'
-    category_2.description = 'Description: Category 2'
-    category_2.save()
-
-    clip_1 = Clip()
-    clip_1.title = 'Title: Clip 1'
-    clip_1.author = users[0]
-    clip_1.description = 'Description: Clip 1'
-    clip_1.plays = 0
-    clip_1.rating = 1
-    clip_1.status = Clip.PUBLIC_STATUS
-    clip_1.save()
-    clip_1.categories.add(category_1)
-    clip_1.tags.add('tag1', 'tag2')
-
-
-    clip_2 = Clip()
-    clip_2.title = 'Title: Clip 2'
-    clip_2.author = users[1]
-    clip_2.description = 'Description: Clip 2'
-    clip_2.plays = 0
-    clip_2.rating = 2
-    clip_2.status = Clip.PRIVATE_STATUS
-    clip_2.save()
-    clip_2.categories.add(category_2)
-    clip_2.tags.add('taga', 'tagb')
-
-
     def test_for_saving_and_retrieving_clips(self):
+        users = get_users()
+
+        category_1 = Category()
+        category_1.title = 'Title: Category 1'
+        category_1.slug = 'title-category-1'
+        category_1.description = 'Description: Category 1'
+        category_1.save()
+
+        category_2 = Category()
+        category_2.title = 'Title: Category 2'
+        category_2.slug = 'title-category-2'
+        category_2.description = 'Description: Category 2'
+        category_2.save()
+
+        clip_1 = Clip()
+        clip_1.title = 'Title: Clip 1'
+        clip_1.author = users[0]
+        clip_1.description = 'Description: Clip 1'
+        clip_1.plays = 0
+        clip_1.rating = 1
+        clip_1.status = Clip.PUBLIC_STATUS
+        clip_1.save()
+        clip_1.categories.add(category_1)
+        clip_1.tags.add('tag1', 'tag2')
+
+
+        clip_2 = Clip()
+        clip_2.title = 'Title: Clip 2'
+        clip_2.author = users[1]
+        clip_2.description = 'Description: Clip 2'
+        clip_2.plays = 0
+        clip_2.rating = 2
+        clip_2.status = Clip.PRIVATE_STATUS
+        clip_2.save()
+        clip_2.categories.add(category_2)
+        clip_2.tags.add('taga', 'tagb')
+
 
         saved_clips = Clip.objects.all()
         self.assertEqual(saved_clips.count(), 2)
