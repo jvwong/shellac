@@ -15,8 +15,8 @@
         <ul class="dropdown-menu" role="menu">
             <li><a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Facebook</a></li>
             <li><a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Twitter</a></li>
-            <li><a href="{% url 'social:begin' 'google-oauth2' %}">Google</a> </li>
-            <li><a href="{% url 'social:begin' 'soundcloud' %}">Soundcloud</a></li>
+            <li><a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Google</a></li>
+            <li><a href="{% url 'social:begin' 'soundcloud' %}?next={{ request.path }}">Soundcloud</a></li>
         </ul>
     </li>
     {% endblock navbar-collapse-right-dropdown %}
