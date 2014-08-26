@@ -176,11 +176,18 @@ SOCIAL_AUTH_TWITTER_KEY = 'EEQish3n5RuQa1Gb8fQQFbW9u'
 SOCIAL_AUTH_TWITTER_SECRET = 'En3GxSUQeX5A4PKiUBmPG8V3E8ouXpPfvdsYk73omRCwMp7XHa'
 SOCIAL_AUTH_FACEBOOK_KEY = '689930151100698'
 SOCIAL_AUTH_FACEBOOK_SECRET = '2be8cac827a874de80ccea7ffe1aafdd'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '78676307931-t7g77nod78rvj7jlm4o1depda21ghkks.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'UEeTGjD9mPyTahcq0kUOEA0Y'
+SOCIAL_AUTH_SOUNDCLOUD_KEY = '65ce8b3f19e5c406f6b0a8c6d7df83c8'
+SOCIAL_AUTH_SOUNDCLOUD_SECRET = 'bb6db110403c5146985b3bbe6f70ac7d'
+
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
     'social.backends.twitter.TwitterOAuth',
     'django.contrib.auth.backends.ModelBackend',
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.soundcloud.SoundcloudOAuth2',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
