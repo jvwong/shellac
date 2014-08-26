@@ -14,6 +14,7 @@ from shellac.models import Clip
 def shellac_app(request):
     if request.method == 'GET':
         clips = Clip.objects.all()[:10]
+        print(request.session.get_expire_at_browser_close())
         return render(request, 'shellac/app.html', {'objects': clips})
     return render(request, 'shellac/app.html')
 
