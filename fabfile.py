@@ -14,8 +14,8 @@ REPO_URL = 'https://github.com/jvwong/shellac.git'
 def deploy():
     base_dir = '/webapps/%s/%s/%s' % (env.user, APP_NAME, env.host)
     source_dir = base_dir + '/source'
-    static_dir = os.path.abspath(os.path.join(source_dir, '/static'))
-    js_dir = os.path.abspath(os.path.join(static_dir, "/%s/js" % (APP_NAME,)))
+    static_dir = os.path.abspath(os.path.join(source_dir, 'static'))
+    js_dir = os.path.abspath(os.path.join(static_dir, "%s/js" % (APP_NAME,)))
     _create_directory_structure_if_necessary(base_dir)
     _get_latest_source(source_dir)
     _update_settings(source_dir, env.host)
@@ -191,6 +191,7 @@ def lupdate_virtualenv(source_dir):
 
 
 def lupdate_static_files(js_dir, source_dir):
+    local('cd %s && npm install && bower install' % (js_dir,))
     local('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic --noinput' % (source_dir,))
 
 
