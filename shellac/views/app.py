@@ -15,7 +15,6 @@ def shellac_app(request):
     if request.method == 'GET':
         objects = Clip.objects.all()[:10]
         data = [o.get_absolute_url() for o in objects]
-        print(data)
         return render(request, 'shellac/app.html', {'data': json.dumps(data) })
     return render(request, 'shellac/app.html')
 

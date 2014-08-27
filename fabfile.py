@@ -7,18 +7,21 @@ from fabric.api import env, local, run
 import os
 import random
 
+APP_NAME = "shellac"
 REPO_URL = 'https://github.com/jvwong/shellac.git'
 
 ### ***** BRING Deployment *****
 def deploy():
-    base_dir = '/webapps/%s/shellac/%s' % (env.user, env.host)
+    base_dir = '/webapps/%s/%s/%s' % (env.user, APP_NAME, env.host)
     source_dir = base_dir + '/source'
+    static_dir = os.path.abspath(os.path.join(source_dir, '/static'))
+    js_dir = os.path.abspath(os.path.join(static_dir, "/%s/js" % (APP_NAME,)))
     _create_directory_structure_if_necessary(base_dir)
     _get_latest_source(source_dir)
     _update_settings(source_dir, env.host)
     _update_config(source_dir, env.host)
     _update_virtualenv(source_dir)
-    _update_static_files(source_dir)
+    _update_static_files(js_dir, source_dir)
     _update_database(source_dir)
 
 
@@ -85,7 +88,8 @@ def _update_virtualenv(source_dir):
         _piprequire(virtualenv_dir, source_dir)
 
 
-def _update_static_files(source_dir):
+def _update_static_files(js_dir, source_dir):
+    run('cd %s && npm install && bower install' % (js_dir,))
     run('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic --noinput' % (source_dir,))
 
 
@@ -112,14 +116,16 @@ def lgittag():
 ### ***** Deployment *****
 
 def ldeploy(host):
-    source_dir = '/home/jvwong/Projects/shellac/%s/source' % (host,)
+    source_dir = '/home/jvwong/Projects/%s/%s/source' % (APP_NAME, host)
     base_dir = os.path.abspath(os.path.join(source_dir, ".."))
+    static_dir = os.path.abspath(os.path.join(source_dir, "static"))
+    js_dir = os.path.abspath(os.path.join(static_dir, "%s/js" % (APP_NAME,)))
     lcreate_directory_structure_if_necessary(base_dir)
     lget_latest_source(source_dir)
     lupdate_settings(source_dir, host)
     lupdate_config(source_dir, host)
     lupdate_virtualenv(source_dir)
-    lupdate_static_files(source_dir)
+    lupdate_static_files(js_dir, source_dir)
     lupdate_database(source_dir)
 
 
@@ -184,7 +190,7 @@ def lupdate_virtualenv(source_dir):
         lpiprequire(virtualenv_dir, source_dir)
 
 
-def lupdate_static_files(source_dir):
+def lupdate_static_files(js_dir, source_dir):
     local('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic --noinput' % (source_dir,))
 
 
@@ -198,7 +204,7 @@ def lstart():
 
 
 def ltest():
-    local('../virtualenv/bin/python3.4 manage.py test shellac.tests')
+    local('../virtualenv/bin/python3.4 manage.py test %s.tests' % (APP_NAME,))
 
 
 
