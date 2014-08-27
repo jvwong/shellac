@@ -5,11 +5,11 @@
 <!-- Head -->
     {% block title %}Permalink{% endblock title %}
     {% block head %}
-        <script type="text/javascript" src="{% static 'shellac/js/lib/SoundManager2-master/script/soundmanager2.js'%}"></script>
         <script type="text/javascript"></script>
     {% endblock head %}
 
-{% block content %}
-    {% include 'shellac/partials/app/clip_detail.html' %}
-{% endblock content %}
+<!-- Content -->
+    {% block content %}
+        {% include 'shellac/partials/app/clip_detail.html' %}
+    {% endblock content %}
 
