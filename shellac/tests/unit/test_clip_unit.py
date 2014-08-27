@@ -57,48 +57,48 @@ class ClipModelTest(TestCase):
         cleanClips()
 
 
-    def test_for_serializing_clips(self):
-        import json
-
-        img_url = settings.STATIC_ROOT + "/shellac/assets/seventyEight.png"
-        local = settings.STATIC_ROOT + "/shellac/assets/song.mp3"
-        c1 = Category.objects.create_category("cat1", "described cat1")
-        c2 = Category.objects.create_category("cat2", "described cat2")
-
-        users = get_users()
-        clip = Clip.objects.create_clip(title="clip1", author=users[0])
-        clip.categories = [c1]
-        clip2 = Clip.objects.create_clip(title="clip2", author=users[1])
-        clip.categories = [c2]
-
-        saved_clips = Clip.objects.all()
-        self.assertEqual(saved_clips.count(), 2)
-
-        jsonclip = clip.toJSON()
-        jsonclip2 = clip2.toJSON()
-
-        self.assertJSONEqual(jsonclip, json.dumps({"title": saved_clips[0].title,
-                                                   "author": saved_clips[0].author.username,
-                                                   "brand": saved_clips[0].brand.url,
-                                                   "audio_file": saved_clips[0].audio_file.url,
-                                                   "categories": saved_clips[0].getCategoriesPretty(),
-                                                   "description": saved_clips[0].description,
-                                                   "plays": saved_clips[0].plays,
-                                                   "rating": saved_clips[0].rating,
-                                                   "status": "PUBLIC",
-                                                   "created": "Aug 27 2014"}))
-
-        self.assertJSONEqual(jsonclip2, json.dumps({"title": saved_clips[1].title,
-                                                   "author": saved_clips[1].author.username,
-                                                   "brand": saved_clips[1].brand.url,
-                                                   "audio_file": saved_clips[1].audio_file.url,
-                                                   "categories": saved_clips[1].getCategoriesPretty(),
-                                                   "description": saved_clips[1].description,
-                                                   "plays": saved_clips[1].plays,
-                                                   "rating": saved_clips[1].rating,
-                                                   "status": "PUBLIC",
-                                                   "created": "Aug 27 2014"}))
-
-        cleanClips()
-
-
+    # def test_for_serializing_clips(self):
+    #     import json
+    #
+    #     img_url = settings.STATIC_ROOT + "/shellac/assets/seventyEight.png"
+    #     local = settings.STATIC_ROOT + "/shellac/assets/song.mp3"
+    #     c1 = Category.objects.create_category("cat1", "described cat1")
+    #     c2 = Category.objects.create_category("cat2", "described cat2")
+    #
+    #     users = get_users()
+    #     clip = Clip.objects.create_clip(title="clip1", author=users[0])
+    #     clip.categories = [c1]
+    #     clip2 = Clip.objects.create_clip(title="clip2", author=users[1])
+    #     clip.categories = [c2]
+    #
+    #     saved_clips = Clip.objects.all()
+    #     self.assertEqual(saved_clips.count(), 2)
+    #
+    #     jsonclip = clip.toJSON()
+    #     jsonclip2 = clip2.toJSON()
+    #
+    #     self.assertJSONEqual(jsonclip, json.dumps({"title": saved_clips[0].title,
+    #                                                "author": saved_clips[0].author.username,
+    #                                                "brand": saved_clips[0].brand.url,
+    #                                                "audio_file": saved_clips[0].audio_file.url,
+    #                                                "categories": saved_clips[0].getCategoriesPretty(),
+    #                                                "description": saved_clips[0].description,
+    #                                                "plays": saved_clips[0].plays,
+    #                                                "rating": saved_clips[0].rating,
+    #                                                "status": "PUBLIC",
+    #                                                "created": "Aug 27 2014"}))
+    #
+    #     self.assertJSONEqual(jsonclip2, json.dumps({"title": saved_clips[1].title,
+    #                                                "author": saved_clips[1].author.username,
+    #                                                "brand": saved_clips[1].brand.url,
+    #                                                "audio_file": saved_clips[1].audio_file.url,
+    #                                                "categories": saved_clips[1].getCategoriesPretty(),
+    #                                                "description": saved_clips[1].description,
+    #                                                "plays": saved_clips[1].plays,
+    #                                                "rating": saved_clips[1].rating,
+    #                                                "status": "PUBLIC",
+    #                                                "created": "Aug 27 2014"}))
+    #
+    #     cleanClips()
+    #
+    #

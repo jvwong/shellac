@@ -7,6 +7,7 @@ from audiofield.fields import AudioField
 import os.path
 import json
 
+
 #Useage
 ##c = Category.objects.create_category(title, description)
 class CategoryManager(models.Manager):
@@ -34,15 +35,6 @@ class Category(models.Model):
         return "/category/%s/" % self.slug
 
     objects = CategoryManager()
-
-
-
-from django.core.files import File
-import os
-def setFileField(instance_field, path):
-    if os.path.isfile(path):
-        with open(path, 'rb') as f:
-            instance_field.save("", File(f), save=False)
 
 
 ##c = Clip.objects.create_clip(title, author)
@@ -100,16 +92,6 @@ class Clip(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-
-        # set default Image and File fields (Testing only)
-        if not self.brand:
-            path = settings.STATIC_ROOT + "/shellac/assets/seventyEight.png"
-            setFileField(self.brand, path)
-
-        if not self.audio_file:
-            path = settings.STATIC_ROOT + "/shellac/assets/song.mp3"
-            setFileField(self.audio_file, path)
-
         super(Clip, self).save(*args, **kwargs)
 
     class Meta:
@@ -144,8 +126,8 @@ class Clip(models.Model):
                            'author': self.author.username,
                            'categories': self.getCategoriesPretty(),
                            'description': self.description,
-                           'brand': self.brand.url,
-                           'audio_file': self.audio_file.url,
+                           # 'brand': self.brand.url,
+                           # 'audio_file': self.audio_file.url,
                            'plays': self.plays,
                            'rating': self.rating,
                            'status': self.getStatusPretty(),
@@ -159,7 +141,7 @@ class Clip(models.Model):
 
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, post_save
 from django.dispatch.dispatcher import receiver
 
 @receiver(post_delete, sender=Clip)
@@ -175,5 +157,3 @@ def on_clip_delete(sender, instance, **kwargs):
             os.remove(instance.audio_file.url)
         # Pass false so ImageField doesn't save the model.
         instance.audio_file.delete(False)
-
-

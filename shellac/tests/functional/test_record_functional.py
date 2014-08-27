@@ -32,14 +32,8 @@ c = {
 class NewClipTest(FunctionalTest):
 
     def tearDown(self):
-        clips = Clip.objects.all()
-        for clip in clips:
-            audpath = os.path.abspath(os.path.join(settings.MEDIA_ROOT, clip.audio_file.name))
-            if os.path.exists(audpath):
-                os.remove(audpath)
-            imgpath = os.path.abspath(os.path.join(settings.MEDIA_ROOT, clip.brand.name))
-            if os.path.exists(imgpath):
-                os.remove(imgpath)
+        for clip in Clip.objects.all():
+            clip.delete(False)
         super(NewClipTest, self).tearDown()
 
     def test_user_can_add_a_clip_and_view_permalink(self):
