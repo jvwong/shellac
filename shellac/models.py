@@ -14,9 +14,10 @@ class CategoryManager(models.Manager):
         category = self.create(title=title, description=description)
         return category
 
+
 class Category(models.Model):
     title = models.CharField(max_length=250)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, editable=False)
     description = models.TextField()
 
     class Meta:
@@ -25,6 +26,10 @@ class Category(models.Model):
     def __unicode__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Category, self).save(*args, **kwargs)
+
     def get_absolute_url(self):
         return "/category/%s/" % self.slug
 
@@ -32,24 +37,18 @@ class Category(models.Model):
 
 
 
+from django.core.files import File
+import os
+def setFileField(instance_field, path):
+    if os.path.isfile(path):
+        with open(path, 'rb') as f:
+            instance_field.save("", File(f), save=False)
+
+
 ##c = Clip.objects.create_clip(title, author)
 class ClipManager(models.Manager):
-    def create_clip(self, title, author, **kwargs):
+    def create_clip(self, title, author):
         clip = self.create(title=title, author=author)
-
-        audio_path = kwargs.pop('audio_path', None)
-        brand_path = kwargs.pop('brand_path', None)
-
-        from django.core.files import File
-        import os
-        if audio_path and os.path.exists(audio_path):
-            with open(audio_path, 'rb') as f:
-                clip.audio_field.save("tmp", File(f), save=True)
-
-        if brand_path and os.path.exists(brand_path):
-            with open(brand_path, 'rb') as f:
-                clip.brand.save("tmp", File(f), save=True)
-
         return clip
 
 
@@ -71,7 +70,6 @@ class Clip(models.Model):
     tags = TaggableManager(blank=True)
     description = models.TextField(blank=True)
     brand = models.ImageField(upload_to='brands',
-                              default='settings.STATIC_ROOT/shellac/assets/seventyEight.png',
                               blank=True)
 
     ### Default
@@ -100,9 +98,18 @@ class Clip(models.Model):
     audio_file_player.allow_tags = True
     audio_file_player.short_description = 'Audio file player'
 
-
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
+
+        # set default Image and File fields
+        if not self.brand:
+            path = settings.STATIC_ROOT + "/shellac/assets/seventyEight.png"
+            setFileField(self.brand, path)
+
+        if not self.audio_file:
+            path = settings.STATIC_ROOT + "/shellac/assets/song.mp3"
+            setFileField(self.audio_file, path)
+
         super(Clip, self).save(*args, **kwargs)
 
     class Meta:
@@ -119,26 +126,30 @@ class Clip(models.Model):
                                             'slug': self.slug})
     get_absolute_url = models.permalink(get_absolute_url)
 
-    def getStatus(self):
+    def getStatusPretty(self):
         if self.status == Clip.PUBLIC_STATUS:
             return "PUBLIC"
         return "PRIVATE"
 
 
-    def getCreated(self):
+    def getCreatedPretty(self):
         return " ".join([self.created.strftime("%b"), self.created.strftime("%d"), self.created.strftime("%Y")])
 
+    def getCategoriesPretty(self):
+        cats = [c.title for c in list(self.categories.all())]
+        return cats
 
     def toJSON(self):
         return json.dumps({'title': self.title,
                            'author': self.author.username,
-                           'categories': '',
-                           'description': '',
+                           'categories': self.getCategoriesPretty(),
+                           'description': self.description,
                            'brand': self.brand.url,
+                           'audio_file': self.audio_file.url,
                            'plays': self.plays,
                            'rating': self.rating,
-                           'status': self.getStatus(),
-                           'created': self.getCreated()
+                           'status': self.getStatusPretty(),
+                           'created': self.getCreatedPretty()
                            })
 
     objects = ClipManager()
@@ -154,8 +165,8 @@ from django.dispatch.dispatcher import receiver
 @receiver(post_delete, sender=Clip)
 def on_clip_delete(sender, instance, **kwargs):
     if instance.brand:
-        if os.path.isfile(instance.brand.name):
-            os.remove(instance.brand.name)
+        # if os.path.isfile(instance.brand.name):
+        os.remove(instance.brand.name)
         # Pass false so ImageField doesn't save the model.
         instance.brand.delete(False)
 

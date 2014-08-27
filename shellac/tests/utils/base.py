@@ -54,7 +54,7 @@ class FunctionalTest(StaticLiveServerCase):
         user = User.objects.create(username=username)
         session = SessionStore()
         session[SESSION_KEY] = user.pk
-        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[4]
+        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[3]
         session.save()
 
         ### to set a cookie we need to first visit the domain
@@ -90,4 +90,4 @@ def setFileAttributefromUrl(field, url, fname):
 
 def setFileAttributefromLocal(field, path, fname):
     with open(path, 'rb') as f:
-        field.save(fname, File(f), save=True)
+        field.save(fname, File(f), save=False)

@@ -39,25 +39,3 @@ class RecordPageTest(TestCase):
         expected_html = render_to_string('shellac/record.html', {'form': form, 'user': self.user})
         self.assertEqual(response.content.decode(), expected_html)
 
-    def test_record_page_can_respond_to_a_POST_request(self):
-        import urllib.parse
-        params = urllib.parse.urlencode({'title': 'clip1 title',
-                                        'description': 'clip1 description',
-                                        'plays': 0,
-                                        'status': 1,
-                                        'rating': 0})
-        self.user = User.objects.create_user(username_dummy,
-                                                email_dummy,
-                                                password_dummy)
-        request = HttpRequest()
-        request.user = self.user
-        request.method = 'POST'
-        q = QueryDict(params)
-        request.POST = q
-        response = shellac_record(request)
-        #we're redirecting ...
-        dt = datetime.datetime.now()
-        link = "/".join(["/clips", str(dt.year), str(dt.strftime("%b").lower()), str(dt.day), "clip1-title/"])
-        self.assertEqual(response.status_code, 301)
-        self.assertTrue(isinstance(response, HttpResponsePermanentRedirect))
-        self.assertEqual(response.get('location'), link)

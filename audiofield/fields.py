@@ -124,11 +124,11 @@ class AudioField(FileField):
         channel_no = 0
         freq_value = 0
 
-        if request.POST and 'convert_type' in request.POST:
+        if hasattr(request, 'POST') and 'convert_type' in request.POST:
           convert_type = int(request.POST["convert_type"])
-        if request.POST and 'channel_no' in request.POST:
+        if hasattr(request, 'POST') and 'channel_no' in request.POST:
           channel_no = int(request.POST["channel_type"])
-        if request.POST and 'freq_type' in request.POST:
+        if hasattr(request, 'POST') and 'freq_type' in request.POST:
           freq_value = int(request.POST["freq_type"])
 
         splitted_filename = list(os.path.splitext(filename))[0]  # converted filename without ext
@@ -232,7 +232,10 @@ class AudioField(FileField):
                     self._convert_audio(dst_fullpath, instance, ext[1:4])
 
                     request = threadlocals.get_current_request()
-                    convert_type = int(request.POST["convert_type"])
+                    convert_type = 0
+
+                    if hasattr(request, 'POST'):
+                        convert_type = int(request.POST["convert_type"])
 
                     # 0 => Keep original
                     if convert_type > 0:

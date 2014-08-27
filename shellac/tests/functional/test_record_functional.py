@@ -9,8 +9,8 @@ import time
 #file paths
 FUNCTIONAL_DIR = os.path.abspath(os.path.dirname(__file__))
 ASSETS_DIR = os.path.abspath(os.path.join(FUNCTIONAL_DIR, "../assets"))
-CLIP_NAME = os.path.abspath(os.path.join(ASSETS_DIR, "aud.mp3"))
-BRAND_NAME = os.path.abspath(os.path.join(ASSETS_DIR, "img.jpeg"))
+CLIP_NAME = settings.STATIC_ROOT + "/shellac/assets/song.mp3"
+BRAND_NAME = settings.STATIC_ROOT + "/shellac/assets/seventyEight.png"
 
 ##Fake user
 u = {
@@ -68,8 +68,6 @@ class NewClipTest(FunctionalTest):
         record_button = self.browser.find_element_by_css_selector('#record_submit')
         record_button.send_keys(Keys.ENTER)
 
-        time.sleep(2)
-
         #Valdiate that we're on the Permalink site and can examine the Clip details
         self.assertIn('Permalink', self.browser.title)
         title = self.browser.find_element_by_css_selector('.clip-detail-title')
@@ -83,8 +81,3 @@ class NewClipTest(FunctionalTest):
         self.assertEqual(description.text, c['description'])
         self.assertEqual(plays.text, 'Plays: 0')
         self.assertEqual(status.text, 'Status: 1')
-
-
-
-
-
