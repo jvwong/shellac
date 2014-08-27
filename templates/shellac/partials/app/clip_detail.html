@@ -10,10 +10,7 @@
                     {% static 'shellac/assets/seventyEight.png' %}
                   {% endif %}" alt="clip brand" />
     </a>
-    {% elif object.brand %}
-        <img width="200px" class="img-responsive clip-detail-brand" src="{{ object.brand.url }}" alt="clip brand" />
-    {% else %}
-        <img src="{% static 'assets/seventyeight.png' %}" class="img-responsive clip-detail-brand" alt="clip brand" />
+    <img width="200px" class="img-responsive clip-detail-brand" src="{{ object.brand.url }}" alt="clip brand" />
     {% endif %}
     <div class="clip-detail-caption">
         <large class="lead text-center clip-detail-title">{{ object.title }}</large><br/>

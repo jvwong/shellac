@@ -34,8 +34,22 @@ class Category(models.Model):
 
 ##c = Clip.objects.create_clip(title, author)
 class ClipManager(models.Manager):
-    def create_clip(self, title, author):
+    def create_clip(self, title, author, **kwargs):
         clip = self.create(title=title, author=author)
+
+        audio_path = kwargs.pop('audio_path', None)
+        brand_path = kwargs.pop('brand_path', None)
+
+        from django.core.files import File
+        import os
+        if audio_path and os.path.exists(audio_path):
+            with open(audio_path, 'rb') as f:
+                clip.audio_field.save("tmp", File(f), save=True)
+
+        if brand_path and os.path.exists(brand_path):
+            with open(brand_path, 'rb') as f:
+                clip.brand.save("tmp", File(f), save=True)
+
         return clip
 
 
@@ -56,7 +70,9 @@ class Clip(models.Model):
     categories = models.ManyToManyField("shellac.Category", blank=True)
     tags = TaggableManager(blank=True)
     description = models.TextField(blank=True)
-    brand = models.ImageField(upload_to='brands', null=True, blank=True)
+    brand = models.ImageField(upload_to='brands',
+                              default='settings.STATIC_ROOT/shellac/assets/seventyEight.png',
+                              blank=True)
 
     ### Default
     plays = models.PositiveSmallIntegerField(default=0)
