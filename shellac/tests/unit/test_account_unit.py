@@ -25,19 +25,6 @@ class SigninPageTest(TestCase):
         expected_html = render_to_string('accounts/signin.html')
         self.assertEqual(response.content.decode(), expected_html)
 
-    def test_signin_page_can_responsd_to_a_POST_request(self):
-        self.user = User.objects.create_user(username_dummy,
-                                            email_dummy,
-                                            password_dummy)
-        response = self.client.post('/users/signin/',
-                            {'username': username_dummy,
-                             'password': password_dummy},
-                            follow=True)
-        #we're redirecting ...
-        self.assertEqual(response.status_code, 200)
-        self.assertRedirects(response, '/profile/')
-
-
 
 # GET /users/signup
 from shellac.forms import UserCreateForm
@@ -53,15 +40,4 @@ class SignupPageTest(TestCase):
         form = UserCreateForm()
         expected_html = render_to_string('accounts/signup.html', {'form': form})
         self.assertEqual(expected_html, response.content.decode())
-
-    def test_signup_page_can_responsd_to_a_POST_request(self):
-        response = self.client.post('/users/signup/',
-                            {'username': username_dummy,
-                             'email': email_dummy,
-                             'password1': password_dummy,
-                             'password2': password_dummy},
-                            follow=True)
-        #we're redirecting ...
-        self.assertEqual(response.status_code, 200)
-        self.assertRedirects(response, '/profile/')
 

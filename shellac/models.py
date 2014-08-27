@@ -82,8 +82,8 @@ class Clip(models.Model):
     created = models.DateTimeField(default=datetime.datetime.now, editable=False)
 
     #AUDIO
-    # Add the audio field to your model
-    audio_file = AudioField(upload_to='sounds', blank=True,
+    # Add the audio field to your model -- required
+    audio_file = AudioField(upload_to='sounds', blank=False,
                             ext_whitelist=(".mp3", ".wav", ".ogg"),
                             help_text=("Allowed type - .mp3, .wav, .ogg"))
 
@@ -101,7 +101,7 @@ class Clip(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
 
-        # set default Image and File fields
+        # set default Image and File fields (Testing only)
         if not self.brand:
             path = settings.STATIC_ROOT + "/shellac/assets/seventyEight.png"
             setFileField(self.brand, path)
@@ -165,9 +165,15 @@ from django.dispatch.dispatcher import receiver
 @receiver(post_delete, sender=Clip)
 def on_clip_delete(sender, instance, **kwargs):
     if instance.brand:
-        # if os.path.isfile(instance.brand.name):
-        os.remove(instance.brand.name)
+        if os.path.isfile(instance.brand.url):
+            os.remove(instance.brand.url)
         # Pass false so ImageField doesn't save the model.
         instance.brand.delete(False)
+
+    if instance.audio_file:
+        if os.path.isfile(instance.audio_file.url):
+            os.remove(instance.audio_file.url)
+        # Pass false so ImageField doesn't save the model.
+        instance.audio_file.delete(False)
 
 

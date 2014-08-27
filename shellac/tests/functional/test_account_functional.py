@@ -23,7 +23,7 @@ class NewUserTest(StaticLiveServerCase):
         cls.server_url = cls.live_server_url
 
     @classmethod
-    def tearDOwnClass(cls):
+    def tearDownClass(cls):
         if cls.server_url == cls.server_url:
             super().tearDownClass()
 

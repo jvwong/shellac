@@ -6,6 +6,12 @@ from django.contrib.staticfiles.testing import StaticLiveServerCase
 from selenium.webdriver.support.ui import WebDriverWait
 import sys
 User = get_user_model()
+from shellac.models import Clip
+
+
+def cleanClips():
+    for c in Clip.objects.all():
+        c.delete()
 
 ### The base class for all functional tests
 class FunctionalTest(StaticLiveServerCase):
@@ -29,6 +35,8 @@ class FunctionalTest(StaticLiveServerCase):
         self.browser.implicitly_wait(3)
 
     def tearDown(self):
+        for c in Clip.objects.all():
+            c.delete()
         self.browser.quit()
 
     def wait_for_element_with_id(self, element_id):
@@ -90,4 +98,6 @@ def setFileAttributefromUrl(field, url, fname):
 
 def setFileAttributefromLocal(field, path, fname):
     with open(path, 'rb') as f:
-        field.save(fname, File(f), save=False)
+        field.save(fname, File(f), save=True)
+
+

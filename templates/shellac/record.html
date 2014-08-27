@@ -14,7 +14,7 @@
                     <p>{{ field.errors }}</p>
                     <span class="btn btn-default btn-file btn-block">
                         <button class="btn btn-primary btn-lg btn-block" type="button">Add {{ field.label }}</button>
-                        <input id="{{ field.id_for_label }}" type="file" name="{{ field.html_name }}">
+                        <input id="{{ field.id_for_label }}" type="file" name="{{ field.html_name }}" required>
                     {% if field.label == "Audio file" %}
                         <input type="hidden" value="0" name="convert_type">
                         <input type="hidden" value="0" name="channel_type">
