@@ -124,11 +124,11 @@ class AudioField(FileField):
         channel_no = 0
         freq_value = 0
 
-        if 'convert_type' in request.POST:
+        if request.POST and 'convert_type' in request.POST:
           convert_type = int(request.POST["convert_type"])
-        if 'channel_no' in request.POST:
+        if request.POST and 'channel_no' in request.POST:
           channel_no = int(request.POST["channel_type"])
-        if 'freq_type' in request.POST:
+        if request.POST and 'freq_type' in request.POST:
           freq_value = int(request.POST["freq_type"])
 
         splitted_filename = list(os.path.splitext(filename))[0]  # converted filename without ext

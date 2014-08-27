@@ -5,6 +5,7 @@ import datetime
 from django.conf import settings
 from audiofield.fields import AudioField
 import os.path
+import json
 
 #Useage
 ##c = Category.objects.create_category(title, description)
@@ -101,6 +102,28 @@ class Clip(models.Model):
                                             'day': self.created.strftime("%d"),
                                             'slug': self.slug})
     get_absolute_url = models.permalink(get_absolute_url)
+
+    def getStatus(self):
+        if self.status == Clip.PUBLIC_STATUS:
+            return "PUBLIC"
+        return "PRIVATE"
+
+
+    def getCreated(self):
+        return " ".join([self.created.strftime("%b"), self.created.strftime("%d"), self.created.strftime("%Y")])
+
+
+    def toJSON(self):
+        return json.dumps({'title': self.title,
+                           'author': self.author.username,
+                           'categories': '',
+                           'description': '',
+                           'brand': self.brand.url,
+                           'plays': self.plays,
+                           'rating': self.rating,
+                           'status': self.getStatus(),
+                           'created': self.getCreated()
+                           })
 
     objects = ClipManager()
 

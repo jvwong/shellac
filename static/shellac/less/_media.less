@@ -1,0 +1,12 @@
+@width_media_list: 100px;
+
+.media-square(@width){
+  width: @width;
+  height: @width;
+}
+
+.media{
+  .media-object.clip{
+    .media-square(@width_media_list);
+  }
+}

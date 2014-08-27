@@ -112,3 +112,48 @@ class ClipModelTest(TestCase):
         self.assertTrue('taga' in list(saved_clip_2.tags.names()))
         self.assertTrue('tagb' in list(saved_clip_2.tags.names()))
 
+
+    def test_for_serializing_clips(self):
+        import json
+        from shellac.tests.utils.base import setFileAttributefromLocal
+
+        img_url = "/home/jvwong/Projects/shellac/shellac.no-ip.ca/source/shellac/tests/assets/img.jpg"
+        local = "/home/jvwong/Projects/shellac/shellac.no-ip.ca/source/shellac/tests/assets/aud.mp3"
+
+        users = get_users()
+        clip = Clip.objects.create_clip(title="clip1", author=users[0])
+        setFileAttributefromLocal(clip.brand, img_url, "clip1.jpg")
+        setFileAttributefromLocal(clip.audio_file, local, "clip1.mp3")
+
+        clip2 = Clip.objects.create_clip(title="clip2", author=users[1])
+        setFileAttributefromLocal(clip2.brand, img_url, "clip2.jpg")
+        setFileAttributefromLocal(clip2.brand, local, "clip2.mp3")
+
+        saved_clips = Clip.objects.all()
+        self.assertEqual(saved_clips.count(), 2)
+
+        jsonclip = clip.toJSON()
+        jsonclip2 = clip2.toJSON()
+
+        print(saved_clips[0].audio_file.url)
+        self.assertJSONEqual(jsonclip, json.dumps({"title": saved_clips[0].title,
+                                                   "author": saved_clips[0].author.username,
+                                                   "brand": saved_clips[0].brand.url,
+                                                   # "audio_file": saved_clips[0].audio_file.url,
+                                                   "categories": "", "description": "",
+                                                   "plays": saved_clips[0].plays,
+                                                   "rating": saved_clips[0].rating,
+                                                   "status": "PUBLIC",
+                                                   "created": "Aug 27 2014"}))
+
+        self.assertJSONEqual(jsonclip2, json.dumps({"title": saved_clips[1].title,
+                                                   "author": saved_clips[1].author.username,
+                                                   "brand": saved_clips[1].brand.url,
+                                                   # "audio_file": saved_clips[0].audio_file.url,
+                                                   "categories": "", "description": "",
+                                                   "plays": saved_clips[1].plays,
+                                                   "rating": saved_clips[1].rating,
+                                                   "status": "PUBLIC",
+                                                   "created": "Aug 27 2014"}))
+
+

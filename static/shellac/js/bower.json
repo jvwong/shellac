@@ -1,0 +1,29 @@
+{
+  "name": "shellac",
+  "main": "main.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jvwong/shellac",
+  "authors": [
+    "Jeffrey Wong <jvwong@outlook.com>"
+  ],
+  "description": "An audio app",
+  "keywords": [
+    "audio"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "taffydb" : "https://github.com/typicaljoe/taffydb/archive/master.zip",
+    "bootstrap": "~3.2.0",
+    "jquery": "~1.11.0",
+    "requirejs": "~2.1.14",
+    "soundmanager2": "*"
+  }
+}

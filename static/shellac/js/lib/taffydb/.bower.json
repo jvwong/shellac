@@ -1,0 +1,13 @@
+{
+  "name": "taffydb",
+  "_cacheHeaders": {
+    "ETag": "\"73682e7d7324f5a2f8b6a0bccea08428db7c20f3\"",
+    "Content-Length": "25908",
+    "Content-Type": "application/zip",
+    "Content-Disposition": "attachment; filename=taffydb-master.zip"
+  },
+  "_release": "e-tag:73682e7d7",
+  "_source": "https://github.com/typicaljoe/taffydb/archive/master.zip",
+  "_target": "*",
+  "_originalSource": "https://github.com/typicaljoe/taffydb/archive/master.zip"
+}
