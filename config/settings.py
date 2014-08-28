@@ -168,12 +168,12 @@ INSTALLED_APPS = (
 
 
 
-LOGIN_URL = '/users/signin/'
-LOGOUT_URL = '/users/signout/'
+LOGIN_URL = '/accounts/signin/'
+LOGOUT_URL = '/accounts/signout/'
 LOGIN_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_LOGIN_URL = '/users/signin/'
+SOCIAL_AUTH_LOGIN_URL = '/accounts/signin/'
 
 SOCIAL_AUTH_TWITTER_KEY = 'kANAQWIoSYdRC4U9jzBNSylvO'
 SOCIAL_AUTH_TWITTER_SECRET = 'Bsx72vYODZurqhHBCtTE2ngJIZC7Sbqf5mm7zIR9biTwrsAAWN'

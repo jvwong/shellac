@@ -67,7 +67,7 @@ def user_accounts_signin(request):
 user_signin = anonymous_required(user_accounts_signin, redirect_to='/')
 
 
-@login_required(login_url='/users/signin/')
+@login_required(login_url='/accounts/signin/')
 def user_accounts_signout(request):
     logout(request)
     return HttpResponseRedirect('/')

@@ -14,7 +14,7 @@ REPO_URL = 'https://github.com/jvwong/shellac.git'
 def deploy():
     base_dir = '/webapps/%s/%s/%s' % (env.user, APP_NAME, env.host)
     source_dir = base_dir + '/source'
-    js_dir = os.path.abspath(os.path.join(source_dir, "%s/static/js" % (APP_NAME,)))
+    js_dir = os.path.abspath(os.path.join(source_dir, "%s/static/%s/js" % (APP_NAME, APP_NAME)))
     _create_directory_structure_if_necessary(base_dir)
     _get_latest_source(source_dir)
     _update_settings(source_dir, env.host)

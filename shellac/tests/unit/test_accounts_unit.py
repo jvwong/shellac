@@ -16,7 +16,7 @@ email_dummy = 'jvwong@outlook.com'
 class SigninPageTest(TestCase):
 
     def test_signin_url_resolvers_to_user_signin_page_view(self):
-        found = resolve('/users/signin/')
+        found = resolve('/accounts/signin/')
         self.assertEqual(found.func, user_accounts_signin)
 
     def test_signin_page_returns_correct_html(self):
@@ -31,7 +31,7 @@ from shellac.forms import UserCreateForm
 class SignupPageTest(TestCase):
 
     def test_signup_url_resolvers_to_user_signup_page_view(self):
-        found = resolve('/users/signup/')
+        found = resolve('/accounts/signup/')
         self.assertEqual(found.func, user_accounts_signup)
 
     def test_signup_page_returns_correct_html(self):

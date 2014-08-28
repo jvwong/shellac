@@ -4,7 +4,7 @@ from shellac.forms import CreateClipForm
 from django.http import HttpResponsePermanentRedirect
 
 ## Create
-@login_required()
+@login_required(login_url='/accounts/signin/')
 def shellac_clips_create(request):
     if request.method == 'POST':
         form = CreateClipForm(request.POST, request.FILES)

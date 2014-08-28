@@ -8,7 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^users/', include('shellac.urls.accounts')),
+    url(r'^accounts/', include('shellac.urls.accounts')),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
 
