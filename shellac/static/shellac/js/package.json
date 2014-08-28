@@ -7,7 +7,7 @@
   "scripts": {
     "test": "grunt test",
     "build": "browserify main.js -o bundle.js",
-    "watch": "watchify main.js -o bundle.js --debug --verbose"
+    "watch": "watchify src/main.js -o dist/bundle.js --debug --verbose"
   },
   "keywords": [
     "audio"

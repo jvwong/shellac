@@ -5,7 +5,7 @@
 'use strict';
 
 $( document ).ready(function() {
-    var shellac = require('./app/shellac.js');
+    var shellac = require('./shellac.js');
     shellac.initModule($("#shellac-app"), data);
 });
 

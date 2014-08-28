@@ -14,7 +14,7 @@ REPO_URL = 'https://github.com/jvwong/shellac.git'
 def deploy():
     base_dir = '/webapps/%s/%s/%s' % (env.user, APP_NAME, env.host)
     source_dir = base_dir + '/source'
-    static_dir = os.path.abspath(os.path.join(source_dir, "%s/static/%s/js" % (APP_NAME, APP_NAME)))
+    static_dir = os.path.abspath(os.path.join(source_dir, "%s/static/%s" % (APP_NAME, APP_NAME)))
     js_dir = os.path.abspath(os.path.join(source_dir, "%s/static/%s/js" % (APP_NAME, APP_NAME)))
     _create_directory_structure_if_necessary(base_dir)
     _get_latest_source(source_dir)
@@ -91,8 +91,9 @@ def _update_virtualenv(source_dir):
 
 def _update_static_files(js_dir, static_dir, source_dir):
     run('cd %s && npm install && bower install' % (js_dir,))
-    run('cd %s && lessc -x ./less/app.less ./css/base.css' % (static_dir,))
-    run('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic --clear --noinput --ignore %s/**/*.* --ignore !%s/bundle.js' % (source_dir, js_dir, js_dir))
+    run('cd %s &&  lessc -x less/app.less css/base.css' % (static_dir,))
+    run('cd %s &&  browserify src/main.js dist/bundle.js' % (js_dir,))
+    run('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic --clear --noinput --ignore %s/{src, lib, node_modules, *.json} ' % (source_dir, js_dir))
 
 
 def _update_database(source_dir):

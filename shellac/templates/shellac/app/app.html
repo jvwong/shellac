@@ -6,7 +6,7 @@
     {% block title %}App{% endblock title %}
     {% block head %}
         <script type="text/javascript">var data = {{ data|safe }};</script>
-        <script src="{% static 'shellac/js/bundle.js' %}"></script>
+        <script type="text/javascript" src="{% static 'shellac/js/dist/bundle.js' %}"></script>
     {% endblock head %}
 
 <!-- Main -->
