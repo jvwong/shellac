@@ -5,6 +5,9 @@
         <img class="img-responsive clip-detail-brand"
              src="{% if object.brand %}{{ object.brand.url }}{% else %}{% static 'shellac/assets/seventyEight.png' %}{% endif %}" alt="clip brand" />
     </a>
+
+    <img class="img-responsive clip-detail-brand" src="{% static 'shellac/assets/seventyEight.png' %}" alt="clip brand" />
+
     <div class="clip-detail-caption">
         <large class="lead text-center clip-detail-title">{{ object.title }}</large><br/>
         <small class="text-center clip-detail-description">{{ object.description |truncatewords:10}}</small><br/>
