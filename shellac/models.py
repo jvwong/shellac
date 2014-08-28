@@ -16,16 +16,17 @@ class CategoryManager(models.Manager):
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=100, help_text='Maximum 100 characters.')
-    slug = models.SlugField(unique=True)
+    title = models.CharField(max_length=100, help_text='Maximum 100 characters.', unique=True)
+    slug = models.SlugField(blank=False)
     description = models.TextField(blank=True)
 
     def clip_set(self):
         return self.clip_set.all()
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.title = self.title.upper()
-        super(Category, self).save()
+        self.slug = slugify(self.title)
+        super(Category, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['title']
@@ -128,6 +129,9 @@ class Clip(models.Model):
         return cats
 
     def toJSON(self):
+        from django.core import serializers
+        # data = serializers.serialize('json', self, fields=('title',))
+        # print(data)
         return json.dumps({'title': self.title,
                            'author': self.author.username,
                            'categories': self.getCategoriesPretty(),

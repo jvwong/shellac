@@ -21,10 +21,10 @@ class CategoryModelTest(TestCase):
 
         saved_category_1 = saved_categories[0]
         saved_category_2 = saved_categories[1]
-        self.assertEqual(saved_category_1.title, 'Title: Category 1')
+        self.assertEqual(saved_category_1.title, 'Title: Category 1'.upper())
         self.assertEqual(saved_category_1.description, 'Description: Category 1')
         self.assertEqual(saved_category_1.slug, 'title-category-1')
-        self.assertEqual(saved_category_2.title, 'Title: Category 2')
+        self.assertEqual(saved_category_2.title, 'Title: Category 2'.upper())
         self.assertEqual(saved_category_2.description, 'Description: Category 2')
         self.assertEqual(saved_category_2.slug, 'title-category-2')
 

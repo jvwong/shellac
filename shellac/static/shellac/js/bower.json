@@ -20,10 +20,6 @@
     "tests"
   ],
   "dependencies": {
-    "taffydb" : "https://github.com/typicaljoe/taffydb/archive/master.zip",
-    "bootstrap": "~3.2.0",
-    "jquery": "~1.11.0",
-    "requirejs": "~2.1.14",
     "soundmanager2": "*"
   }
 }

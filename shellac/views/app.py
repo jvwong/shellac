@@ -9,7 +9,7 @@ def shellac_app(request):
     if request.method == 'GET':
         objects = Clip.objects.all()[:10]
         data = [o.get_absolute_url() for o in objects]
-        return render(request, 'shellac/app/app.html', {'data': json.dumps(data) })
+        return render(request, 'shellac/app/app.html', {'data': json.dumps(data)})
     return render(request, 'shellac/app/app.html')
 
 

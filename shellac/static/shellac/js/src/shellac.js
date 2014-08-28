@@ -5,8 +5,7 @@
 'use strict';
 
 var shellac = (function () {
-    var TAFFY = require('../lib/taffydb/taffy.js').taffy;
-
+    var TAFFY = require('taffydb').taffy;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
 
@@ -25,8 +24,8 @@ var shellac = (function () {
     },
 
     stateMap = {
-        $container  : undefined
-        , clip_db     : TAFFY()
+        $container: undefined,
+        clip_db: TAFFY()
     },
 
     jqueryMap = {},
@@ -107,10 +106,9 @@ var shellac = (function () {
         stateMap.clips = stateMap.clip_db().get();
 
         display_clips(stateMap.clips, jqueryMap.$shellac_container);
-        console.log($(".media-object.clip"));
     };
 
-    return { initModule: initModule }
+    return { initModule: initModule };
 }());
 
 module.exports = shellac;
