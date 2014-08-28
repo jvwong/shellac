@@ -1,7 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from shellac.forms import RecordForm
-from django.http import HttpResponsePermanentRedirect
 from shellac.models import Clip
 import json
 

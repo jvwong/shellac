@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from shellac.views.clips import shellac_clips_create
-from shellac.forms import RecordForm
+from shellac.forms import CreateClipForm
 
 ##Fake user
 username_dummy = 'andrea'
@@ -32,7 +32,7 @@ class CreatePageTest(TestCase):
         request = HttpRequest()
         request.user = self.user
         response = shellac_clips_create(request)
-        form = RecordForm()
+        form = CreateClipForm()
         expected_html = render_to_string('shellac/clips/create.html', {'form': form, 'user': self.user})
         self.assertEqual(response.content.decode(), expected_html)
 

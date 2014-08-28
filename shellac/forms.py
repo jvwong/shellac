@@ -34,7 +34,7 @@ class LoginForm(forms.Form):
         return self.cleaned_data
 
 
-class RecordForm(ModelForm):
+class CreateClipForm(ModelForm):
 
     class Meta:
         model = Clip
