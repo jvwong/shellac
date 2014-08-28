@@ -14,8 +14,7 @@ REPO_URL = 'https://github.com/jvwong/shellac.git'
 def deploy():
     base_dir = '/webapps/%s/%s/%s' % (env.user, APP_NAME, env.host)
     source_dir = base_dir + '/source'
-    static_dir = os.path.abspath(os.path.join(source_dir, 'static'))
-    js_dir = os.path.abspath(os.path.join(static_dir, "%s/js" % (APP_NAME,)))
+    js_dir = os.path.abspath(os.path.join(source_dir, "%s/static/js" % (APP_NAME,)))
     _create_directory_structure_if_necessary(base_dir)
     _get_latest_source(source_dir)
     _update_settings(source_dir, env.host)
@@ -118,8 +117,7 @@ def lgittag():
 def ldeploy(host):
     source_dir = '/home/jvwong/Projects/%s/%s/source' % (APP_NAME, host)
     base_dir = os.path.abspath(os.path.join(source_dir, ".."))
-    static_dir = os.path.abspath(os.path.join(source_dir, "static"))
-    js_dir = os.path.abspath(os.path.join(static_dir, "%s/js" % (APP_NAME,)))
+    js_dir = os.path.abspath(os.path.join(source_dir, "%s/static/js" % (APP_NAME,)))
     lcreate_directory_structure_if_necessary(base_dir)
     lget_latest_source(source_dir)
     lupdate_settings(source_dir, host)
