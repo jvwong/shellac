@@ -6,10 +6,8 @@
 
     </a>
     <ul>
-        <li>{{ object.brand }}</li>
-        <li>{{ object.brand.url }}</li>
-        <li>{{ object.brand.name }}</li>
-        <li>{{ object.brand.path }}</li>
+        <li>{% if object.brand %}{{ object.brand }} {% else %} NO brand {% endif %}</li>
+
     </ul>
 
 
