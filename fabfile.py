@@ -93,7 +93,7 @@ def _update_static_files(js_dir, static_dir, source_dir):
     run('cd %s && npm install && bower install' % (js_dir,))
     run('cd %s &&  lessc -x less/app.less css/base.css' % (static_dir,))
     run('cd %s &&  browserify src/main.js -o dist/bundle.js' % (js_dir,))
-    run('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic --clear --noinput -i src -i less -i lib -i node_modules -i *.json' % (source_dir, js_dir))
+    run('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic --clear --noinput -i {src, less} -i lib -i node_modules -i *.json' % (source_dir, ))
 
 
 def _update_database(source_dir):
