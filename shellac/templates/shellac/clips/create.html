@@ -1,0 +1,43 @@
+{% extends "shellac/base.html" %}
+{% load i18n %}
+{% load shellac_filters %}
+
+<!-- Head -->
+    {% block title %}Record{% endblock title %}
+
+<!-- Main -->
+    {% block content %}
+    <div class="container-fluid content-record">
+        <form class="form-signin" role="form" enctype="multipart/form-data" action="" method="POST">{% csrf_token %}
+             {% for field in form %}
+                {% if field.label == "Audio file" or field.label == "Brand" %}
+                    <p>{{ field.errors }}</p>
+                    <span class="btn btn-default btn-file btn-block">
+                        <button class="btn btn-primary btn-lg btn-block" type="button">Add {{ field.label }}</button>
+                        <input id="{{ field.id_for_label }}" type="file" name="{{ field.html_name }}">
+                    {% if field.label == "Audio file" %}
+                        <input type="hidden" value="0" name="convert_type">
+                        <input type="hidden" value="0" name="channel_type">
+                        <input type="hidden" value="0" name="freq_type">
+                    {% endif %}
+                    </span>
+                {% elif field.label == "Categories" or field.label == "Status" %}
+                    <div class="form-group">
+                        <p>{{ field.errors }}</p>
+                        {{ field.label_tag }}
+                        {{ field | add_class:"form-control" }}
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <p>{{ field.errors }}</p>
+                        {{ field.label_tag }}
+                        {{ field | add_class:"form-control" }}
+                    </div>
+                {% endif %}
+            {% endfor field in form %}
+            <button class="btn btn-lg btn-primary btn-block" id="record_submit" type="submit">Submit</button>
+        </form>
+    </div>
+    {% endblock content %}
+
+

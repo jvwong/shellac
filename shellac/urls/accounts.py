@@ -1,9 +1,9 @@
 from django.conf.urls import patterns, url
-from shellac.views.accounts import user_signin, user_signout, user_signup
+from shellac.views.accounts import user_accounts_signin, user_accounts_signout, user_accounts_signup
 
 urlpatterns = patterns('',
-   url(r'^signup/$', user_signup, name='shellac_users_signup'),
-   url(r'^signin/$', user_signin, name='shellac_users_signin'),
-   url(r'^signout/$', user_signout, name='shellac_users_signout')
+   url(r'^signup/$', user_accounts_signup, name='shellac_accounts_signup'),
+   url(r'^signin/$', user_accounts_signin, name='shellac_accounts_signin'),
+   url(r'^signout/$', user_accounts_signout, name='shellac_accounts_signout')
 )
 

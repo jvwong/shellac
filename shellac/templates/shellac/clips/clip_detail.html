@@ -1,0 +1,16 @@
+{% extends "shellac/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+<!-- Head -->
+    {% block title %}Permalink{% endblock title %}
+    {% block head %}
+        <script type="text/javascript"></script>
+    {% endblock head %}
+
+<!-- Content -->
+    {% block content %}
+        {% include 'shellac/partials/app/clip_detail.html' %}
+        <p>DEBUG: {% if debug %} TRUE {% else %} FALSE {% endif %}</p>
+    {% endblock content %}
+

@@ -1,7 +1,6 @@
 from shellac.forms import UserCreateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from django.contrib.auth import authenticate
 
 from django.http import HttpResponseRedirect
 
@@ -24,7 +23,7 @@ class AnonymousRequired(object):
         return self.view_function(request, *args, **kwargs)
 
 ### Signup user
-def user_signup(request):
+def user_accounts_signup(request):
     if request.method == 'POST':
         form = UserCreateForm(data=request.POST)
 
@@ -40,17 +39,16 @@ def user_signup(request):
     else:
         form = UserCreateForm()
     return render(request,
-                  'accounts/signup.html',
+                  'shellac/accounts/signup.html',
                   {'form': form})
-user_signup = anonymous_required(user_signup, redirect_to='/')
+user_signup = anonymous_required(user_accounts_signup, redirect_to='/')
 
 ### Login user
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate
 from shellac.forms import LoginForm
 
-
-def user_signin(request):
+def user_accounts_signin(request):
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
         name = request.POST['username']
@@ -64,13 +62,13 @@ def user_signin(request):
     else:
         form = LoginForm()
     return render(request,
-                  'accounts/signin.html',
+                  'shellac/accounts/signin.html',
                   {'form': form})
-user_signin = anonymous_required(user_signin, redirect_to='/')
+user_signin = anonymous_required(user_accounts_signin, redirect_to='/')
 
 
 @login_required(login_url='/users/signin/')
-def user_signout(request):
+def user_accounts_signout(request):
     logout(request)
     return HttpResponseRedirect('/')
 

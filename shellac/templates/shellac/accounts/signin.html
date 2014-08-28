@@ -1,0 +1,51 @@
+{% extends "shellac/base.html" %}
+{% load i18n %}
+
+<!-- Head -->
+    {% block title %}Sign in{% endblock title %}
+
+<!-- Navbar -->
+    {% block navbar-collapse-right-bar %}
+    <li><a id="navbar-collapse-right-bar-signup" href="{% url 'shellac_accounts_signup' %}">Sign up</a></li>
+    {% endblock navbar-collapse-right-bar %}
+
+    {% block navbar-collapse-right-dropdown %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span></a>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Facebook</a></li>
+            <li><a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Twitter</a></li>
+            <li><a href="{% url 'social:begin' 'soundcloud' %}?next={{ request.path }}">Soundcloud</a></li>
+        </ul>
+    </li>
+    {% endblock navbar-collapse-right-dropdown %}
+
+    {% block navbar-right-form %}
+    {% endblock navbar-right-form %}
+
+
+<!-- Main -->
+    {% block main %}
+    <div class="container-fluid content-signins">
+        <div class="col-sm-12 col-md-6 col-md-offset-6">
+            <form role="form" class="form-signin" method="post">{% csrf_token %}
+                <h3 class="form-login-heading">Sign in</h3>
+                <input type="text" name="username" id="signin_username" class="form-control username" placeholder="Username" required autofocus>
+                <input type="password" name="password" id="signin_password" class="form-control" placeholder="Password" required>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="remember_me" value="remember">Remember me
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" id="signin_submit" type="submit">Submit</button>
+            </form>
+            <div class="error-messages">
+                {% block messages %}
+                    <span class="help-block">
+                    </span>
+                {% endblock messages %}
+            </div>
+        </div>
+    </div>
+    {% endblock main %}
+
