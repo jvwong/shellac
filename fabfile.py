@@ -108,93 +108,93 @@ def lgittag():
 ### ***** END Deployment *****
 
 
-### ****************************************************************************
-### ******************* LOCAL ROUTINES *****************************************
-### ****************************************************************************
-
-### ***** Deployment *****
-
-def ldeploy(host):
-    source_dir = '/home/jvwong/Projects/%s/%s/source' % (APP_NAME, host)
-    base_dir = os.path.abspath(os.path.join(source_dir, ".."))
-    js_dir = os.path.abspath(os.path.join(source_dir, "%s/static/js" % (APP_NAME,)))
-    lcreate_directory_structure_if_necessary(base_dir)
-    lget_latest_source(source_dir)
-    lupdate_settings(source_dir, host)
-    lupdate_config(source_dir, host)
-    lupdate_virtualenv(source_dir)
-    lupdate_static_files(js_dir, source_dir)
-    lupdate_database(source_dir)
-
-
-def lcreate_directory_structure_if_necessary(base_dir):
-    for subfolder in ('database', 'static', 'media', 'virtualenv', 'source', 'log/supervisor', 'log/gunicorn'):
-        local('mkdir -p %s/%s' % (base_dir, subfolder))
-
-
-def lget_latest_source(source_dir):
-    if os.path.exists(source_dir + '/.git'):
-        local('cd %s && git fetch' % (source_dir,))
-        # Get the hash of the local commit; Set the server version to same
-        local('cd %s && git merge' % (source_dir,))
-    else:
-        local('git clone %s %s' % (REPO_URL, source_dir))
-
-
-def lupdate_settings(source_dir, host):
-    settings_path = source_dir + '/config/settings.py'
-    #string substitution
-    #local("sed -i 's/DEBUG = True/DEBUG = False/' %s" % (settings_path,))
-    local("sed -i \"s/ALLOWED_HOSTS = \[.*\]$/ALLOWED_HOSTS = \['%s'\]/\" %s" % ('127.0.0.1', settings_path))
-    secret_key_file = source_dir + '/config/secret_key.py'
-    chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
-    key = ''.join(random.SystemRandom().choice(chars) for _ in range(50))
-    if not os.path.exists(secret_key_file):
-        local("touch %s" % (secret_key_file,))
-        local("echo SECRET_KEY = '\"%s\"' >> %s" % (key, secret_key_file))
-    else:
-        local("sed -i 's/SECRET_KEY = .+$/SECRET_KEY = \"%s\"/' %s" % (key, settings_path))
-
-
-def lupdate_config(source_dir, env_host):
-    pass
-    # gunicorn_path = source_dir + '/config/gunicorn.conf'
-    # local("sed -i 's/_host/%s/' %s" % (env_host, gunicorn_path))
-    # nginx_path = source_dir + '/deploy/nginx.conf'
-    # local("sed -i 's/_host/%s/' %s" % (env_host, nginx_path))
-    # supervisor_path = source_dir + '/deploy/supervisor.conf'
-    # local("sed -i 's/_host/%s/' %s" % (env_host, supervisor_path))
-
-
-def lpiprequire(virtualenv_dir, source_dir):
-    local('%s/bin/pip install https://github.com/django/django/archive/stable/1.7.x.zip' % (virtualenv_dir,))
-    local('%s/bin/pip install -r %s/requirements.txt' % (virtualenv_dir, source_dir))
-
-
-def ladd2virtualenv(source_dir, path):
-    virtualenv_dir = source_dir + '/../virtualenv'
-    extensions_path = virtualenv_dir + '/lib/python3.4/site-packages/_virtualenv_path_extensions.pth'
-    if not os.path.exists(extensions_path):
-        local("touch %s/lib/python3.4/site-packages/_virtualenv_path_extensions.pth" % (virtualenv_dir,))
-    local("echo %s >> %s" % (path, extensions_path))
-
-
-def lupdate_virtualenv(source_dir):
-    virtualenv_dir = source_dir + '/../virtualenv'
-    if not os.path.exists(virtualenv_dir + '/bin/pip'):
-        local('virtualenv --python=/opt/python3.4/bin/python3.4 %s' % (virtualenv_dir,))
-        local("touch %s/lib/python3.4/site-packages/_virtualenv_path_extensions.pth" % (virtualenv_dir,))
-        ladd2virtualenv(source_dir, source_dir)
-        lpiprequire(virtualenv_dir, source_dir)
-
-
-def lupdate_static_files(js_dir, source_dir):
-    local('cd %s && npm install && bower install' % (js_dir,))
-    local('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic --noinput' % (source_dir,))
-
-
-def lupdate_database(source_dir):
-    local('cd %s && ../virtualenv/bin/python3.4 manage.py migrate --noinput' % (source_dir,))
+# ### ****************************************************************************
+# ### ******************* LOCAL ROUTINES *****************************************
+# ### ****************************************************************************
+#
+# ### ***** Deployment *****
+#
+# def ldeploy(host):
+#     source_dir = '/home/jvwong/Projects/%s/%s/source' % (APP_NAME, host)
+#     base_dir = os.path.abspath(os.path.join(source_dir, ".."))
+#     js_dir = os.path.abspath(os.path.join(source_dir, "%s/static/js" % (APP_NAME,)))
+#     lcreate_directory_structure_if_necessary(base_dir)
+#     lget_latest_source(source_dir)
+#     lupdate_settings(source_dir, host)
+#     lupdate_config(source_dir, host)
+#     lupdate_virtualenv(source_dir)
+#     lupdate_static_files(js_dir, source_dir)
+#     lupdate_database(source_dir)
+#
+#
+# def lcreate_directory_structure_if_necessary(base_dir):
+#     for subfolder in ('database', 'static', 'media', 'virtualenv', 'source', 'log/supervisor', 'log/gunicorn'):
+#         local('mkdir -p %s/%s' % (base_dir, subfolder))
+#
+#
+# def lget_latest_source(source_dir):
+#     if os.path.exists(source_dir + '/.git'):
+#         local('cd %s && git fetch' % (source_dir,))
+#         # Get the hash of the local commit; Set the server version to same
+#         local('cd %s && git merge' % (source_dir,))
+#     else:
+#         local('git clone %s %s' % (REPO_URL, source_dir))
+#
+#
+# def lupdate_settings(source_dir, host):
+#     settings_path = source_dir + '/config/settings.py'
+#     #string substitution
+#     #local("sed -i 's/DEBUG = True/DEBUG = False/' %s" % (settings_path,))
+#     local("sed -i \"s/ALLOWED_HOSTS = \[.*\]$/ALLOWED_HOSTS = \['%s'\]/\" %s" % ('127.0.0.1', settings_path))
+#     secret_key_file = source_dir + '/config/secret_key.py'
+#     chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+#     key = ''.join(random.SystemRandom().choice(chars) for _ in range(50))
+#     if not os.path.exists(secret_key_file):
+#         local("touch %s" % (secret_key_file,))
+#         local("echo SECRET_KEY = '\"%s\"' >> %s" % (key, secret_key_file))
+#     else:
+#         local("sed -i 's/SECRET_KEY = .+$/SECRET_KEY = \"%s\"/' %s" % (key, settings_path))
+#
+#
+# def lupdate_config(source_dir, env_host):
+#     pass
+#     # gunicorn_path = source_dir + '/config/gunicorn.conf'
+#     # local("sed -i 's/_host/%s/' %s" % (env_host, gunicorn_path))
+#     # nginx_path = source_dir + '/deploy/nginx.conf'
+#     # local("sed -i 's/_host/%s/' %s" % (env_host, nginx_path))
+#     # supervisor_path = source_dir + '/deploy/supervisor.conf'
+#     # local("sed -i 's/_host/%s/' %s" % (env_host, supervisor_path))
+#
+#
+# def lpiprequire(virtualenv_dir, source_dir):
+#     local('%s/bin/pip install https://github.com/django/django/archive/stable/1.7.x.zip' % (virtualenv_dir,))
+#     local('%s/bin/pip install -r %s/requirements.txt' % (virtualenv_dir, source_dir))
+#
+#
+# def ladd2virtualenv(source_dir, path):
+#     virtualenv_dir = source_dir + '/../virtualenv'
+#     extensions_path = virtualenv_dir + '/lib/python3.4/site-packages/_virtualenv_path_extensions.pth'
+#     if not os.path.exists(extensions_path):
+#         local("touch %s/lib/python3.4/site-packages/_virtualenv_path_extensions.pth" % (virtualenv_dir,))
+#     local("echo %s >> %s" % (path, extensions_path))
+#
+#
+# def lupdate_virtualenv(source_dir):
+#     virtualenv_dir = source_dir + '/../virtualenv'
+#     if not os.path.exists(virtualenv_dir + '/bin/pip'):
+#         local('virtualenv --python=/opt/python3.4/bin/python3.4 %s' % (virtualenv_dir,))
+#         local("touch %s/lib/python3.4/site-packages/_virtualenv_path_extensions.pth" % (virtualenv_dir,))
+#         ladd2virtualenv(source_dir, source_dir)
+#         lpiprequire(virtualenv_dir, source_dir)
+#
+#
+# def lupdate_static_files(js_dir, source_dir):
+#     local('cd %s && npm install && bower install' % (js_dir,))
+#     local('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic --noinput' % (source_dir,))
+#
+#
+# def lupdate_database(source_dir):
+#     local('cd %s && ../virtualenv/bin/python3.4 manage.py migrate --noinput' % (source_dir,))
 
 
 ### ***** Django *****
