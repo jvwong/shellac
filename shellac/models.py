@@ -8,7 +8,6 @@ import os.path
 import json
 
 
-#Useage
 ##c = Category.objects.create_category(title, description)
 class CategoryManager(models.Manager):
     def create_category(self, title, description):
@@ -17,22 +16,22 @@ class CategoryManager(models.Manager):
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=250)
+    title = models.CharField(max_length=100, help_text='Maximum 100 characters.')
     slug = models.SlugField(unique=True)
-    description = models.TextField()
+    description = models.TextField(blank=True)
+
+    def clip_set(self):
+        return self.clip_set.all()
 
     class Meta:
+        ordering = ['title']
         verbose_name_plural = "Categories"
 
     def __unicode__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        super(Category, self).save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return "/category/%s/" % self.slug
+    def __str__(self):
+        return self.title
 
     objects = CategoryManager()
 
@@ -101,6 +100,9 @@ class Clip(models.Model):
     def __unicode__(self):
         return self.title
 
+    def __str__(self):
+        return self.title
+
     def get_absolute_url(self):
         return ('shellac_clip_detail', (), {'year': self.created.strftime("%Y"),
                                             'month':  self.created.strftime("%b").lower(),
@@ -141,7 +143,7 @@ class Clip(models.Model):
 
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_delete
 from django.dispatch.dispatcher import receiver
 
 @receiver(post_delete, sender=Clip)

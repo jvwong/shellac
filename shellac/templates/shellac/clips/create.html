@@ -21,12 +21,6 @@
                         <input type="hidden" value="0" name="freq_type">
                     {% endif %}
                     </span>
-                {% elif field.label == "Categories" or field.label == "Status" %}
-                    <div class="form-group">
-                        <p>{{ field.errors }}</p>
-                        {{ field.label_tag }}
-                        {{ field | add_class:"form-control" }}
-                    </div>
                 {% else %}
                     <div class="form-group">
                         <p>{{ field.errors }}</p>
