@@ -22,6 +22,7 @@ def deploy():
     _update_virtualenv(source_dir)
     _update_static_files(js_dir, source_dir)
     _update_database(source_dir)
+    _restart_supervisor(env.host)
 
 
 def _create_directory_structure_if_necessary(base_dir):
@@ -94,6 +95,10 @@ def _update_static_files(js_dir, source_dir):
 
 def _update_database(source_dir):
     run('cd %s && ../virtualenv/bin/python3.4 manage.py migrate --noinput' % (source_dir,))
+
+def _restart_supervisor(env_host):
+    run('supervisorctl restart %s' % (env_host,))
+
 
 def lgittag():
     local('git tag -f LIVE')
