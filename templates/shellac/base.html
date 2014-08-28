@@ -28,7 +28,14 @@
 
     <!-- Custom css -->
     {% block custom_css %}
-    <link rel="stylesheet" type="text/less" media="all" href="{% static 'shellac/less/app.less' %}" />
+        {% if debug %}
+            <link rel="stylesheet" type="text/less" media="all" href="{% static 'shellac/less/app.less' %}" />
+            <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.4/less.min.js"></script>
+        {% else %}
+            {% compress css %}
+            <link rel="stylesheet" type="text/less" media="all" href="{% static 'shellac/less/app.less' %}" />
+            {% endcompress %}
+        {% endif %}
     {% endblock custom_css %}
 
     <title>{% block title %}{% endblock title %} | SHELLAC</title>
@@ -157,7 +164,6 @@
     </footer>
 
     <!-- Third party javascript -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.4/less.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </body>
 </html>
