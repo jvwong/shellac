@@ -31,9 +31,7 @@
             <link rel="stylesheet" type="text/less" media="all" href="{% static 'shellac/less/app.less' %}" />
             <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.4/less.min.js"></script>
         {% else %}
-            {% compress css %}
-            <link rel="stylesheet" type="text/less" media="all" href="{% static 'shellac/less/app.less' %}" />
-            {% endcompress %}
+            <link rel="stylesheet" type="text/css" href="{% static 'shellac/css/base.css' %}" />
         {% endif %}
     {% endblock custom_css %}
 

@@ -23,6 +23,10 @@ class Category(models.Model):
     def clip_set(self):
         return self.clip_set.all()
 
+    def save(self):
+        self.title = self.title.upper()
+        super(Category, self).save()
+
     class Meta:
         ordering = ['title']
         verbose_name_plural = "Categories"
