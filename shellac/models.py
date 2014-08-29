@@ -8,11 +8,33 @@ import os.path
 import json
 
 
+CATEGORIES = (
+    'arts',
+    'business',
+    'food',
+    'health',
+    'music',
+    'opinion',
+    'politics',
+    'real estate',
+    'science',
+    'sports',
+    'style',
+    'technology',
+    'travel',
+    'money',
+    'economics'
+)
+
 ##c = Category.objects.create_category(title, description)
 class CategoryManager(models.Manager):
     def create_category(self, title, description):
         category = self.create(title=title, description=description)
         return category
+
+    def autopopulate(self):
+        for category in CATEGORIES:
+            self.create_category(title=category, description=category)
 
 
 class Category(models.Model):

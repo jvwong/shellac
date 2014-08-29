@@ -18,12 +18,12 @@ def do_latest_content(parser, token):
         raise template.TemplateSyntaxError("'get_latest_content' tag got invalid model: %s " % bits[1])
 
     model = get_model(*model_args)
-    return LatestClipsNode(model, bits[2], bits[4])
+    return LatestContentNode(model, bits[2], bits[4])
 
 
-#Class: LatestClipsNode - a subclass of django.template.Node
+#Class: LatestContentNode - a subclass of django.template.Node
 #@post condition - override method render()
-class LatestClipsNode(template.Node):
+class LatestContentNode(template.Node):
 
     def __init__(self, model, n, varname):
         self.model = model
@@ -37,7 +37,7 @@ class LatestClipsNode(template.Node):
     #   - string of output to template
 
     def render(self, context):
-        context['latest_clips'] = self.model._default_manager.all()[:self.n]
+        context[self.varname] = self.model._default_manager.all()[:self.n]
         return ''
 
 

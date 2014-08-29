@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load i18n %}
 {% load staticfiles %}
+{% load shellac_tags %}
 {% load compress %}
 <html lang="en">
 <head>
@@ -106,10 +107,14 @@
             {% block sidebar %}
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
-                    <li><a href="#">Category</a></li>
-                    <li><a href="#">Category</a></li>
-                    <li><a href="#">Category</a></li>
-                    <li><a href="#">Category</a></li>
+                    {% get_latest_content shellac.category 50 as objects %}
+                    {% for object in objects %}
+                        <li>
+                            <a class="nav-sidebar-category" href="#">
+                                {{ object.title }}
+                            </a>
+                        </li>
+                    {% endfor object in objects %}
                 </ul>
             </div>
             {% endblock sidebar %}

@@ -51,8 +51,15 @@ var shellac = (function () {
             var jsonObj;
             try{
                 jsonObj = JSON.parse(o);
+
+                //model is a period concatentation of 'app.model'
                 jsonObj.model = jsonObj.model.split('.')[1];
                 jsonObj.fields.created = moment(jsonObj.fields.created);
+
+                //author is list of [username, pk]
+                jsonObj.fields.author_name = jsonObj.fields.author[0];
+                jsonObj.fields.author_pk = jsonObj.fields.author[1];
+
                 return jsonObj;
 
             }catch(err){
@@ -92,7 +99,7 @@ var shellac = (function () {
                     '<a href="/media/' + fields.audio_file + '">' +
                         '<div class="media-body">' +
                             '<h4 class="media-title"><strong>' + fields.title + '</strong></h4>' +
-                            '<span class="media-description"><small >' + fields.description + '</small></span><br/>' +
+                            '<span class="media-description"><small >' + fields.author_name + '</small></span><br/>' +
                             '<span class="media-created"><small>' + fields.created._d.toDateString() + '</small></span>' +
                         '</div>' +
                     '</a>' +
