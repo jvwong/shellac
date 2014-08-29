@@ -1,0 +1,19 @@
+{% load staticfiles %}
+<!-- media div -->
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 media clip">
+
+    <!-- media-image -->
+    <a class="media-url" href="{{ object.get_absolute_url }}">
+        <img class="media-img img-responsive" src="{% if object.brand %}{{ object.brand.url }}{% else %}{% static 'shellac/assets/seventyEight.png' %}{% endif %}" alt="{{ object.title }}" />
+        <!-- media-description div -->
+        <div class="media-description">
+            <!-- media-description content -->
+            <span class="media-description-content lead">{{ object.title |truncatechars:15  }}</span><br/>
+            <span class="media-description-content lead"><em>{{ object.description | truncatechars:20  }}</em></span><br/>
+            <span class="media-description-content"><small>{{ object.author.username }} -- {{ object.created | date:"M/d" }}</small></span><br/>
+            <!-- end media-description content -->
+        </div>
+    </a>
+    <!-- end media-description div -->
+</div>
+<!-- end media div -->

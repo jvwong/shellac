@@ -7,6 +7,8 @@
 @media_margin_top: 0px;
 @media_margin_left: 2px;
 @caption_opacity: 0.6;
+@media_desc_padding: 5px;
+@media_img_max_dim: 500px;
 
 .media:first-child {
     margin-top: @media_margin_top;
@@ -27,6 +29,8 @@
         width:100%;
 
         margin-left: @media_margin_left;
+        padding: @media_desc_padding;
+        padding-left: 2*@media_desc_padding;
 
         /* styling bellow */
         background-color: black;
@@ -35,9 +39,15 @@
         .opacity(@caption_opacity);
 
         p.media-description-content{
-            padding:10px;
             margin:0px;
         }
+    }
+
+    .media-img.img-responsive{
+    /*
+        max-height: @media_img_max_dim;
+        max-width: @media_img_max_dim;
+        */
     }
 
 }
