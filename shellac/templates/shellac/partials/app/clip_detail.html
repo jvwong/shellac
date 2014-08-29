@@ -1,6 +1,6 @@
 {% load staticfiles %}
 
-<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 clip">
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 clip-detail">
     <a class="clip-detail-audio_file-anchor" href="{{object.audio_file.url}}">
         <img class="img-responsive clip-detail-brand" src="{% if object.brand %}{{ object.brand.url }}{% else %}{% static 'shellac/assets/seventyEight.png' %}{% endif %}" alt="clip brand" />
     </a>

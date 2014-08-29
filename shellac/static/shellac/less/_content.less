@@ -3,21 +3,20 @@
  */
 @import "_elements.less";
 
-.app-clips{
-    margin-top: 50px;
+.clip-detail {
+    .bordered();
+    text-align: center;
+    position: relative;
+
+    img.clip-detail-brand {
+        display: inline-block;
+    }
+
+    .clip-detail-caption{
+        /*
+        .gradient();
+        */
+    }
 }
 
-.clip {
-  .bordered();
-  text-align: center;
-  position: relative;
-}
 
-.clip img.clip-detail-brand {
-  display: inline-block;
-}
-
-.clip .clip-detail-caption{
-  //position:absolute;
-  .gradient();
-}

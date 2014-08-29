@@ -1,6 +1,6 @@
 {% extends "shellac/base.html" %}
 {% load staticfiles %}
-{% load shellac_tags %}
+
 {% load i18n %}
 
 <!-- Head -->
@@ -15,25 +15,7 @@
 <!-- Main -->
     {% block content %}
         <div id="shellac-app">
-            <div class="row shellac-clip-list">
-                {% get_latest_content shellac.clip 10 as objects %}
-
-                {% for object in objects %}
-                <div class="media">
-                    <a class="pull-left" href="{{ object.get_absolute_url }}">
-                        <img class="media-object clip" src="{% static 'shellac/assets/seventyEight.png' %}" alt="{{ object.title }}">
-                    </a>
-                    <a href="{{ object.get_absolute_url }}">
-                        <div class="media-body">
-                            <h4 class="media-title"><strong>{{ object.title }}</strong></h4>
-                            <span class="media-description"><small>{{ object.author.username }}</small></span><br/>
-                            <span class="media-created"><small>{{ object.created }}</small></span>
-                        </div>
-                    </a>
-                </div>
-                {% endfor object in objects %}
-
-            </div>
+            {% include 'shellac/partials/app/latest_content.html' %}
         </div>
     {% endblock content %}
 
