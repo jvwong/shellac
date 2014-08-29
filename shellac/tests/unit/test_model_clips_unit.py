@@ -2,7 +2,11 @@ from django.test import TestCase
 from shellac.models import Clip, Category
 from django.contrib.auth.models import User
 from django.conf import settings
-from shellac.tests.utils.base import cleanClips, setFileAttributefromLocal
+import os
+from shellac.tests.utils.base import cleanClips
+
+brand_path = os.path.abspath(os.path.join(settings.STATIC_ROOT, "../source/shellac/tests/assets/seventyEight.png"))
+audio_path = os.path.abspath(os.path.join(settings.STATIC_ROOT, "../source/shellac/tests/assets/song.mp3"))
 
 def get_users():
     username1_dummy = 'andrea'
@@ -26,11 +30,11 @@ class ClipModelTest(TestCase):
         c2 = Category.objects.create_category("cat2", "described cat2")
 
         users = get_users()
-        clip1 = Clip.objects.create_clip(title="clip1", author=users[0])
+        clip1 = Clip.objects.create_clip("clip1", users[0])
         clip1.categories = [c1]
         clip1.tags.add("red", "green")
 
-        clip2 = Clip.objects.create_clip(title="clip2", author=users[1])
+        clip2 = Clip.objects.create_clip("clip2", users[1])
         clip2.categories = [c2]
         clip2.tags.add("blue", "purple")
 
@@ -57,48 +61,38 @@ class ClipModelTest(TestCase):
         cleanClips()
 
 
-    # def test_for_serializing_clips(self):
-    #     import json
-    #
-    #     img_url = settings.STATIC_ROOT + "/shellac/assets/seventyEight.png"
-    #     local = settings.STATIC_ROOT + "/shellac/assets/song.mp3"
-    #     c1 = Category.objects.create_category("cat1", "described cat1")
-    #     c2 = Category.objects.create_category("cat2", "described cat2")
-    #
-    #     users = get_users()
-    #     clip = Clip.objects.create_clip(title="clip1", author=users[0])
-    #     clip.categories = [c1]
-    #     clip2 = Clip.objects.create_clip(title="clip2", author=users[1])
-    #     clip.categories = [c2]
-    #
-    #     saved_clips = Clip.objects.all()
-    #     self.assertEqual(saved_clips.count(), 2)
-    #
-    #     jsonclip = clip.toJSON()
-    #     jsonclip2 = clip2.toJSON()
-    #
-    #     self.assertJSONEqual(jsonclip, json.dumps({"title": saved_clips[0].title,
-    #                                                "author": saved_clips[0].author.username,
-    #                                                "brand": saved_clips[0].brand.url,
-    #                                                "audio_file": saved_clips[0].audio_file.url,
-    #                                                "categories": saved_clips[0].getCategoriesPretty(),
-    #                                                "description": saved_clips[0].description,
-    #                                                "plays": saved_clips[0].plays,
-    #                                                "rating": saved_clips[0].rating,
-    #                                                "status": "PUBLIC",
-    #                                                "created": "Aug 27 2014"}))
-    #
-    #     self.assertJSONEqual(jsonclip2, json.dumps({"title": saved_clips[1].title,
-    #                                                "author": saved_clips[1].author.username,
-    #                                                "brand": saved_clips[1].brand.url,
-    #                                                "audio_file": saved_clips[1].audio_file.url,
-    #                                                "categories": saved_clips[1].getCategoriesPretty(),
-    #                                                "description": saved_clips[1].description,
-    #                                                "plays": saved_clips[1].plays,
-    #                                                "rating": saved_clips[1].rating,
-    #                                                "status": "PUBLIC",
-    #                                                "created": "Aug 27 2014"}))
-    #
-    #     cleanClips()
-    #
-    #
+    def test_for_serializing_clips(self):
+        import json
+        users = get_users()
+        c1 = Category.objects.create_category("cat1", "described cat1")
+        c2 = Category.objects.create_category("cat2", "described cat2")
+        clip = Clip.objects.create_clip("clip1", users[0])
+        clip.brand.name = brand_path
+        clip.audio_file.name = audio_path
+        # clip2 = Clip.objects.create_clip(title="clip2", author=users[1], brand_path=brand_path)
+
+        saved_clips = Clip.objects.all()
+        self.assertEqual(saved_clips.count(), 1)
+
+        data = json.loads(clip.serialize())
+        expected = {"model": "shellac.clip", "fields": {"categories": [], "slug": "clip1",
+                                                        "created": "2014-08-28T19:54:25.622",
+                                                        "plays": 0,
+                                                        "brand": "/home/jvwong/Projects/shellac/shellac.no-ip.ca/source/shellac/tests/assets/seventyEight.png", "author": 1, "audio_file": "/home/jvwong/Projects/shellac/shellac.no-ip.ca/source/shellac/tests/assets/song.mp3",
+                                                        "title": "clip1",
+                                                        "status": 1,
+                                                        "rating": 0,
+                                                        "description": ""},
+                                                "pk": 1}
+        self.assertEqual(data["model"], expected["model"])
+        self.assertEqual(data["pk"], expected["pk"])
+        self.assertEqual(data["fields"]["categories"], expected["fields"]["categories"])
+        self.assertEqual(data["fields"]["plays"], expected["fields"]["plays"])
+        self.assertEqual(data["fields"]["brand"], expected["fields"]["brand"])
+        self.assertEqual(data["fields"]["title"], expected["fields"]["title"])
+        self.assertEqual(data["fields"]["status"], expected["fields"]["status"])
+        self.assertEqual(data["fields"]["rating"], expected["fields"]["rating"])
+        self.assertEqual(data["fields"]["description"], expected["fields"]["description"])
+        cleanClips()
+
+

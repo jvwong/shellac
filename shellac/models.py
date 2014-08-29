@@ -43,6 +43,7 @@ class Category(models.Model):
 
 ##c = Clip.objects.create_clip(title, author)
 class ClipManager(models.Manager):
+
     def create_clip(self, title, author):
         clip = self.create(title=title, author=author)
         return clip
@@ -128,21 +129,12 @@ class Clip(models.Model):
         cats = [c.title for c in list(self.categories.all())]
         return cats
 
-    def toJSON(self):
+    def serialize(self):
         from django.core import serializers
-        # data = serializers.serialize('json', self, fields=('title',))
-        # print(data)
-        return json.dumps({'title': self.title,
-                           'author': self.author.username,
-                           'categories': self.getCategoriesPretty(),
-                           'description': self.description,
-                           # 'brand': self.brand.url,
-                           # 'audio_file': self.audio_file.url,
-                           'plays': self.plays,
-                           'rating': self.rating,
-                           'status': self.getStatusPretty(),
-                           'created': self.getCreatedPretty()
-                           })
+        data = serializers.serialize('json', [self,])
+        struct = json.loads(data)
+        data = json.dumps(struct[0])
+        return data
 
     objects = ClipManager()
 
