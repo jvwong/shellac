@@ -78,7 +78,6 @@ class ClipModelTest(TestCase):
         self.assertEqual(saved_clips.count(), 2)
 
         data = json.loads(clip.serialize())
-        print(data["fields"]["author"])
         expected = {"model": "shellac.clip", "fields": {"categories": [], "slug": "clip1",
                                                         "created": "2014-08-28T19:54:25.622",
                                                         "plays": 0,

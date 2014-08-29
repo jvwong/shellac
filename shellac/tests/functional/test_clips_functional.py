@@ -1,7 +1,7 @@
 from django.conf import settings
 from selenium.webdriver.common.keys import Keys
 from shellac.tests.utils.base import FunctionalTest
-from shellac.models import Clip
+from shellac.models import Clip, Category
 import os
 import sys
 import time
@@ -12,7 +12,6 @@ ASSETS_DIR = os.path.abspath(os.path.join(FUNCTIONAL_DIR, "../assets"))
 CLIP_NAME = os.path.abspath(os.path.join(ASSETS_DIR, "song.mp3"))
 BRAND_NAME = os.path.abspath(os.path.join(ASSETS_DIR, "seventyEight.png"))
 
-print(CLIP_NAME)
 ##Fake user
 u = {
     'username_dummy': 'andrea',
@@ -76,3 +75,33 @@ class NewClipTest(FunctionalTest):
         self.assertEqual(description.text, c['description'])
         self.assertEqual(plays.text, 'Plays: 0')
         self.assertEqual(status.text, 'Status: 1')
+
+
+    def test_clips_retrieved_via_categorys_clip_set(self):
+        self.create_pre_authenticated_session(u['username_dummy'])
+        self.browser.get(self.server_url + '/')
+        self.wait_to_be_signed_in(u['username_dummy'])
+
+        #Add a clip and category and retrieve the original clip
+        #autopopulate with categories
+        Category.objects.autopopulate()
+        categories = Category.objects.all()
+        numCat = len(categories)
+        self.assertEqual(len(categories), numCat)
+
+        #create n Clip objects
+        c1 = Clip.objects.create_clip('Clip1', self.user)
+        c1.categories = [Category.objects.filter(title__icontains="MUSIC").get()]
+        c1.save()
+
+        c2 = Clip.objects.create_clip('Clip2', self.user)
+        c2.categories = [Category.objects.filter(title__icontains="MUSIC").get()]
+        c2.save()
+
+        music_category = Category.objects.filter(title="MUSIC")[0]
+        music_clips = music_category.clip_set.all()
+        clipTitleList = [m.title for m in music_clips]
+        self.assertTrue(len(clipTitleList), 2)
+        self.assertEqual(clipTitleList[0], 'Clip1')
+        self.assertEqual(clipTitleList[1], 'Clip2')
+

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from shellac.models import Category
+from shellac.models import Category, Clip
 
 class CategoryModelTest(TestCase):
 
@@ -38,4 +38,7 @@ class CategoryModelTest(TestCase):
         self.assertIn('FOOD', cats)
         self.assertIn('HEALTH', cats)
         self.assertIn('OPINION', cats)
+
+
+
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 {% load i18n %}
 {% load staticfiles %}
-{% load shellac_tags %}
+
 {% load compress %}
 <html lang="en">
 <head>
@@ -105,18 +105,7 @@
         <div class="container-fluid">
         {% block main %}
             {% block sidebar %}
-            <div class="col-sm-3 col-md-2 sidebar">
-                <ul class="nav nav-sidebar">
-                    {% get_latest_content shellac.category 50 as objects %}
-                    {% for object in objects %}
-                        <li>
-                            <a class="nav-sidebar-category" href="#">
-                                {{ object.title }}
-                            </a>
-                        </li>
-                    {% endfor object in objects %}
-                </ul>
-            </div>
+                {% include 'shellac/partials/sidebar/latest_content.html' %}
             {% endblock sidebar %}
 
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 content">
@@ -131,30 +120,7 @@
     <footer>
         <div class="container">
         {% block footer %}
-            <div class="col-sm-9 col-sm-offset-4 col-md-10 col-md-offset-4">
-                <div class="row">
-                    <span>
-                        <a href="#">
-                            Developers
-                        </a>
-                    </span>
-                    <span>
-                        <a href="#">
-                            Privacy
-                        </a>
-                    </span>
-                    <span>
-                        <a href="#">
-                            Advertisers
-                        </a>
-                    </span>
-                    <span>
-                        <a href="#">
-                            Cookies
-                        </a>
-                    </span>
-                </div>
-            </div>
+            {% include 'shellac/partials/footer/generic.html' %}
         {% endblock footer %}
         </div>
     </footer>
