@@ -1,9 +1,12 @@
 /*
  * Media
  */
+@import "_elements";
+
 @media_margin_bottom: 15px;
 @media_margin_top: 0px;
 @media_desc_margin_left: 2px;
+@caption_opacity: 0.6;
 
 .media:first-child {
     margin-top: @media_margin_top;
@@ -27,10 +30,10 @@
         margin-right: @media_desc_margin_left;
 
         /* styling bellow */
-        background-color:black;
-        color:white;
-        opacity:0.6; /* transparency */
-        filter:alpha(opacity=60); /* IE transparency */
+        background-color: black;
+        background: black;
+        color: white;
+        .opacity(@caption_opacity);
 
         p.media-description-content{
             padding:10px;
