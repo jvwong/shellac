@@ -44,10 +44,10 @@ class AppPageTest(FunctionalTest):
 
         #reload the page
         self.browser.get(self.server_url + '/')
-        list = self.browser.find_element_by_class_name('shellac-clip-list')
+        app = self.browser.find_element_by_id('shellac-app')
 
         #ensure n clips exist
-        clips = list.find_elements_by_css_selector('.media')
+        clips = app.find_elements_by_css_selector('.media.clip')
         self.assertEqual(len(clips), 4)
 
         img_anchors = clips[0].find_elements_by_tag_name('a')

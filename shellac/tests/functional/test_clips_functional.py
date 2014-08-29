@@ -64,17 +64,11 @@ class NewClipTest(FunctionalTest):
 
         #Valdiate that we're on the Permalink site and can examine the Clip details
         self.assertIn('Permalink', self.browser.title)
-        title = self.browser.find_element_by_css_selector('.clip-detail-title')
-        description = self.browser.find_element_by_css_selector('.clip-detail-description')
-        #categories = self.browser.find_element_by_css_selector('.clip-detail-categories')
-        plays = self.browser.find_element_by_css_selector('.clip-detail-plays')
-        status = self.browser.find_element_by_css_selector('.clip-detail-status')
-        #tags = self.browser.find_element_by_css_selector('.clip-detail-tags')
+        descriptors = self.browser.find_elements_by_css_selector(".media-description-content")
 
-        self.assertEqual(title.text, c['title'])
-        self.assertEqual(description.text, c['description'])
-        self.assertEqual(plays.text, 'Plays: 0')
-        self.assertEqual(status.text, 'Status: 1')
+        self.assertEqual(descriptors[0].text, c['title'])
+        self.assertIn(c['description'], descriptors[1].text)
+        self.assertIn(u['username_dummy'], descriptors[2].text)
 
 
     def test_clips_retrieved_via_categorys_clip_set(self):

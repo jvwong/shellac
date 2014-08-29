@@ -9,7 +9,7 @@
         <div class="media-description">
             <!-- media-description content -->
             <span class="media-description-content lead">{{ object.title |truncatechars:15  }}</span><br/>
-            <span class="media-description-content lead"><em>{{ object.description | truncatechars:20  }}</em></span><br/>
+            <span class="media-description-content"><em>{{ object.description | truncatechars:20  }}</em></span><br/>
             <span class="media-description-content"><small>{{ object.author.username }} -- {{ object.created | date:"M/d" }}</small></span><br/>
             <!-- end media-description content -->
         </div>
