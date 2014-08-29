@@ -5,7 +5,8 @@
 'use strict';
 
 var shellac = (function () {
-    var TAFFY = require('taffydb').taffy;
+    var moment = require('moment'),
+        TAFFY = require('taffydb').taffy;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
 
@@ -29,8 +30,40 @@ var shellac = (function () {
     },
 
     jqueryMap = {},
+    setJqueryMap, display_clips,
+    parseData,
+    parseDate;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
+
+    //--------------------- BEGIN MODULE SCOPE MEDTHODS --------------------
+    /*
+    * method parseData: parse and incoming serialized string object
+    * parameters
+    *   * raw - a string describing an array of valid JSON
+    * return
+    *   * jsonArray - a list of valid JSON objects
+    **/
+    parseData = function(raw){
+        var jsonArray;
+
+        jsonArray = raw.map(function(o){
+            var jsonObj;
+            try{
+                jsonObj = JSON.parse(o);
+                jsonObj.model = jsonObj.model.split('.')[1];
+                jsonObj.fields.created = moment(jsonObj.fields.created);
+                return jsonObj;
+
+            }catch(err){
+                console.error(err);
+            }
+        });
+        return jsonArray;
+    };
+
+
+    //--------------------- END MODULE SCOPE MEDTHODS --------------------
 
 
     //--------------------- BEGIN DOM METHODS --------------------
@@ -42,23 +75,27 @@ var shellac = (function () {
             $outerDiv                   : $outerDiv,
             $shellac_container          : $outerDiv.find('.shellac-container')
         };
-    },
+    };
 
     display_clips = function(clipArray, $container){
 
-        clipArray.forEach(function(url){
+        clipArray.forEach(function(object){
+
+            var fields = object.fields;
 
             var anchor = String() +
             '<div class="row shellac-clip-list">' +
                 '<div class="media">' +
-                    '<a class="pull-left" href="' + url + '">' +
-                        '<img class="media-object clip" src="/static/shellac/assets/seventyEight.png" alt="">' +
+                    '<a class="pull-left" href="/media/' + fields.audio_file + '">' +
+                        '<img class="media-object clip" src="/static/shellac/assets/seventyEight.png" alt="fields.slug">' +
                     '</a>' +
-                    '<div class="media-body">' +
-                        '<h4 class="media-heading">Media title</h4>' +
-                        '<p class="media-meta">Metadata</p>' +
-                        '<p class="media-description">brief description</p>' +
-                    '</div>' +
+                    '<a href="/media/' + fields.audio_file + '">' +
+                        '<div class="media-body">' +
+                            '<h4 class="media-title"><strong>' + fields.title + '</strong></h4>' +
+                            '<span class="media-description"><small >' + fields.description + '</small></span><br/>' +
+                            '<span class="media-created"><small>' + fields.created._d.toDateString() + '</small></span>' +
+                        '</div>' +
+                    '</a>' +
                 '</div>' +
             '</div>';
 
@@ -95,16 +132,15 @@ var shellac = (function () {
     //   The Shell is also responsible for browser-wide issues
     // Returns   : none
     // Throws    : none
-    initModule = function( $container, data, TAFFY ){
+    initModule = function( $container, data ){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         $container.html( configMap.main_html );
         setJqueryMap();
 
         //load data into in-browser database
-        stateMap.clip_db.insert(data);
+        stateMap.clip_db.insert(parseData(data));
         stateMap.clips = stateMap.clip_db().get();
-
         display_clips(stateMap.clips, jqueryMap.$shellac_container);
     };
 
