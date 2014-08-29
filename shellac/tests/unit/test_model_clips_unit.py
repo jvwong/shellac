@@ -65,16 +65,20 @@ class ClipModelTest(TestCase):
         import json
         users = get_users()
         c1 = Category.objects.create_category("cat1", "described cat1")
-        c2 = Category.objects.create_category("cat2", "described cat2")
         clip = Clip.objects.create_clip("clip1", users[0])
         clip.brand.name = brand_path
         clip.audio_file.name = audio_path
-        # clip2 = Clip.objects.create_clip(title="clip2", author=users[1], brand_path=brand_path)
+
+        c2 = Category.objects.create_category("cat2", "described cat2")
+        clip2 = Clip.objects.create_clip("clip2", users[1])
+        clip2.brand.name = brand_path
+        clip2.audio_file.name = audio_path
 
         saved_clips = Clip.objects.all()
-        self.assertEqual(saved_clips.count(), 1)
+        self.assertEqual(saved_clips.count(), 2)
 
         data = json.loads(clip.serialize())
+        print(data["fields"]["author"])
         expected = {"model": "shellac.clip", "fields": {"categories": [], "slug": "clip1",
                                                         "created": "2014-08-28T19:54:25.622",
                                                         "plays": 0,

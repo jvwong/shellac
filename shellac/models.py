@@ -131,9 +131,11 @@ class Clip(models.Model):
 
     def serialize(self):
         from django.core import serializers
-        data = serializers.serialize('json', [self,])
-        struct = json.loads(data)
-        data = json.dumps(struct[0])
+        data = serializers.serialize('json', list([self]))
+        struct = json.loads(data).pop()
+        struct["fields"]["author"] = [self.author.username, self.author.id]
+        data = json.dumps(struct)
+
         return data
 
     objects = ClipManager()
