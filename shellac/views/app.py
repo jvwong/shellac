@@ -1,15 +1,14 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from shellac.models import Clip
+from shellac.models import Clip, Category
 import json
 
 ### app
 @login_required(login_url='/accounts/signin/')
 def shellac_app(request):
-    # if request.method == 'GET':
-        # objects = Clip.objects.all()[:10]
-        #data = [o.serialize() for o in objects]
-        # return render(request, 'shellac/app/app.html')
+    if request.method == 'GET':
+        objects = Clip.objects.all()[:10]
+        return render(request, 'shellac/app/app.html', {'objects': objects})
     return render(request, 'shellac/app/app.html')
 
 
@@ -17,3 +16,7 @@ def shellac_app(request):
 @login_required(login_url='/accounts/signin/')
 def user_profile(request):
     return render(request, 'shellac/app/profile.html')
+
+
+
+

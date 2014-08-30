@@ -1,6 +1,5 @@
 {% extends "shellac/base.html" %}
 {% load staticfiles %}
-{% load shellac_tags %}
 {% load i18n %}
 
 <!-- Head -->
@@ -15,7 +14,6 @@
 <!-- Main -->
     {% block content %}
         <div id="shellac-app">
-            {% get_latest_content shellac.clip 10 as objects %}
             {% for object in objects %}
                 {% include 'shellac/partials/media/clip_detail.html' %}
             {% endfor object in objects %}
