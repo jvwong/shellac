@@ -5,7 +5,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 import json
 from django.template.defaultfilters import slugify
-c1 = {"title": "cat1 title", "description": "cat1 description"}
+c1 = {"title": "cat1 title",  "slug": "cat1-title", "description": "cat1 description"}
 c1_json = json.dumps(c1)
 
 class SerializerTest(TestCase):
@@ -18,10 +18,11 @@ class SerializerTest(TestCase):
         python_serialized = CategorySerializer(cat1)
         self.assertEqual(c1['title'].upper(), python_serialized.data['title'])
         self.assertEqual(c1['description'], python_serialized.data['description'])
+        self.assertEqual(c1['slug'], python_serialized.data['slug'])
 
         ##JSON data
         json_serialized = JSONRenderer().render(python_serialized.data)
-        self.assertEqual(b'{"id": 1, "title": "CAT1 TITLE", "description": "cat1 description"}',
+        self.assertEqual(b'{"id": 1, "title": "CAT1 TITLE", "slug": "cat1-title", "description": "cat1 description"}',
                          json_serialized)
 
 
@@ -42,6 +43,7 @@ class SerializerTest(TestCase):
         self.assertTrue(type(deserialized.object), 'object')
         self.assertTrue(deserialized.object.title, c1['title'])
         self.assertTrue(deserialized.object.description, c1['description'])
+
 
 
 

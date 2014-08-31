@@ -7,6 +7,7 @@ class CategorySerializer(serializers.Serializer):
     title = serializers.CharField(max_length=100,
                                   help_text='Maximum 100 characters.',
                                   required=True)
+    slug = serializers.SlugField(read_only=True)
     description = serializers.CharField(widget=widgets.Textarea,
                                         max_length=100000,
                                         required=False)

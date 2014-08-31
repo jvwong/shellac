@@ -20,9 +20,9 @@ class ApiPageTest_root(APITestCase):
         response = self.client.get('/api/category/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertIn('{"id": 1, "title": "ARTS", "description": "arts"}', response.content.decode())
-        self.assertIn('{"id": 2, "title": "BUSINESS", "description": "business"}', response.content.decode())
-        self.assertIn('{"id": 3, "title": "FOOD", "description": "food"}', response.content.decode())
+        self.assertIn('{"id": 1, "title": "ARTS", "slug": "arts", "description": "arts"}', response.content.decode())
+        self.assertIn('{"id": 2, "title": "BUSINESS", "slug": "business", "description": "business"}', response.content.decode())
+        self.assertIn('{"id": 3, "title": "FOOD", "slug": "food", "description": "food"}', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
     def test_api_root_post_creates_and_returns_correct_response(self):
@@ -33,7 +33,7 @@ class ApiPageTest_root(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         #gotta massage the reponse to match with our original payload
-        self.assertEqual(response.data, {"id": 1, "title": "CAT1", "description": "cat1 description"})
+        self.assertEqual(response.data, {"id": 1, "title": "CAT1", "slug": "cat1", "description": "cat1 description"})
 
 
 class ApiPageTest_slug(APITestCase):
@@ -49,7 +49,7 @@ class ApiPageTest_slug(APITestCase):
         response = self.client.get('/api/category/arts/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertIn('{"id": 1, "title": "ARTS", "description": "arts"}', response.content.decode())
+        self.assertIn('{"id": 1, "title": "ARTS", "slug": "arts", "description": "arts"}', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
     def test_api_slug_put_updates_existing_object(self):
