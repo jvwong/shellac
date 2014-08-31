@@ -1,6 +1,6 @@
 from shellac.tests.utils.base import FunctionalTest, setFileAttributefromLocal
 from django.contrib.auth import get_user_model
-from shellac.models import Clip, Category
+from shellac.models import Clip
 User = get_user_model()
 import time
 import os
@@ -40,6 +40,7 @@ class AppPageTest(FunctionalTest):
         setFileAttributefromLocal(c4.audio_file, audio_path, "")
 
         clips = Clip.objects.all()
+        print(clips)
         self.assertEqual(len(clips), 4)
 
         #reload the page
@@ -54,7 +55,7 @@ class AppPageTest(FunctionalTest):
         img_anchors[0].click()
 
         self.assertIn('Permalink', self.browser.title)
-        time.sleep(1)
+
 
     def test_app_page_renders_latest_categories(self):
 

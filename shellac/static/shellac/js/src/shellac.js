@@ -139,16 +139,16 @@ var shellac = (function () {
     //   The Shell is also responsible for browser-wide issues
     // Returns   : none
     // Throws    : none
-    initModule = function( $container, data ){
+    initModule = function( $container ){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         $container.html( configMap.main_html );
         setJqueryMap();
 
         //load data into in-browser database
-        stateMap.clip_db.insert(parseData(data));
-        stateMap.clips = stateMap.clip_db().get();
-        display_clips(stateMap.clips, jqueryMap.$shellac_container);
+        //stateMap.clip_db.insert(parseData(data));
+        //stateMap.clips = stateMap.clip_db().get();
+        //display_clips(stateMap.clips, jqueryMap.$shellac_container);
     };
 
     return { initModule: initModule };

@@ -38,7 +38,10 @@ class CategoryManager(models.Manager):
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=100, help_text='Maximum 100 characters.', unique=True)
+    title = models.CharField(max_length=100,
+                             blank=False,
+                             help_text='Maximum 100 characters.',
+                             unique=True)
     slug = models.SlugField(blank=False)
     description = models.TextField(blank=True)
 

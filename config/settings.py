@@ -164,6 +164,7 @@ INSTALLED_APPS = (
     'compressor',
     'audiofield',
     'taggit',
+    'rest_framework'
 )
 
 

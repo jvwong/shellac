@@ -6,6 +6,6 @@
 var $ = require('jquery');
 $( document ).ready(function() {
     var shellac = require('./shellac.js');
-    shellac.initModule($("#shellac-app"), data);
+    shellac.initModule($("#shellac-app"));
 });
 

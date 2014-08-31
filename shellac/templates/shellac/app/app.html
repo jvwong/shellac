@@ -6,17 +6,12 @@
     {% block title %}App{% endblock title %}
     {% block head %}
         {% comment %}
-        <script type="text/javascript">var data = {{ data|safe }};</script>
         <script type="text/javascript" src="{% static  shellac/js/dist/bundle.js  %}"></script>
         {% endcomment %}
     {% endblock head %}
 
 <!-- Main -->
     {% block content %}
-        <div id="shellac-app">
-            {% for object in objects %}
-                {% include 'shellac/partials/media/clip_detail.html' %}
-            {% endfor object in objects %}
-        </div>
+        <div id="shellac-app"></div>
     {% endblock content %}
 

@@ -11,6 +11,8 @@ urlpatterns = patterns('',
     url('', include('django.contrib.auth.urls', namespace='auth')),
     url(r'^$', shellac_app, name='shellac_app'),
     url(r'^profile/', user_profile, name='shellac_profile'),
+
+    url(r'^api/', include('shellac.urls.api')),
     url(r'^clips/', include('shellac.urls.clips')),
 )
 
