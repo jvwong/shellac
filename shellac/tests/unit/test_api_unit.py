@@ -47,7 +47,6 @@ class ApiPageTest_slug(APITestCase):
         Category.objects.autopopulate()
 
         response = self.client.get('/api/category/arts/')
-        print(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertIn('{"id": 1, "title": "ARTS", "description": "arts"}', response.content.decode())

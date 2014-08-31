@@ -68,7 +68,6 @@ def _update_config(source_dir, env_host):
 
 
 def _piprequire(virtualenv_dir, source_dir):
-    run('%s/bin/pip install https://github.com/django/django/archive/stable/1.7.x.zip' % (virtualenv_dir,))
     run('%s/bin/pip install -r %s/requirements.txt' % (virtualenv_dir, source_dir))
 
 
@@ -86,7 +85,8 @@ def _update_virtualenv(source_dir):
         run('virtualenv --python=/opt/python3.4/bin/python3.4 %s' % (virtualenv_dir,))
         run("touch %s/lib/python3.4/site-packages/_virtualenv_path_extensions.pth" % (virtualenv_dir,))
         _add2virtualenv(source_dir, source_dir)
-        _piprequire(virtualenv_dir, source_dir)
+        run('%s/bin/pip install https://github.com/django/django/archive/stable/1.7.x.zip' % (virtualenv_dir,))
+    _piprequire(virtualenv_dir, source_dir)
 
 
 def _update_static_files(js_dir, static_dir, source_dir):

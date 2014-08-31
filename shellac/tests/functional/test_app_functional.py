@@ -40,7 +40,6 @@ class AppPageTest(FunctionalTest):
         setFileAttributefromLocal(c4.audio_file, audio_path, "")
 
         clips = Clip.objects.all()
-        print(clips)
         self.assertEqual(len(clips), 4)
 
         #reload the page

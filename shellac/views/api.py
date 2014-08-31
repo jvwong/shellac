@@ -12,7 +12,6 @@ class CategoryList(APIView):
     List all Categories, or create a new one.
     """
     def get(self, request, format=None):
-        print("using List")
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
