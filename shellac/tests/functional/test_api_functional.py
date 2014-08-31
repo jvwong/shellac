@@ -45,7 +45,7 @@ audio_path = os.path.abspath(os.path.join(FUNCTIONALTEST_DIR, "../assets/song.mp
 
 class ApiGetPageTest(FunctionalTest):
 
-    def test_api_get_renders_json_list_of_categories(self):
+    def test_api_root_get_renders_DJANGOREST_html_interface_listing_categories(self):
 
         self.create_pre_authenticated_session(u['username_dummy'])
         self.browser.get(self.server_url + '/')
