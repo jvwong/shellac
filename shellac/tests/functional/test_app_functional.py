@@ -1,6 +1,6 @@
 from shellac.tests.utils.base import FunctionalTest, setFileAttributefromLocal
 from django.contrib.auth import get_user_model
-from shellac.models import Clip
+from shellac.models import Clip, Category
 User = get_user_model()
 import time
 import os
@@ -108,6 +108,6 @@ class AppPageTest(FunctionalTest):
         mediadivs = self.browser.find_elements_by_class_name('media')
         self.assertEqual(len(mediadivs), 1)
 
-        # time.sleep(10)
+        time.sleep(10)
 
 

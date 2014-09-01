@@ -5,13 +5,17 @@
 <!-- Head -->
     {% block title %}App{% endblock title %}
     {% block head %}
-        {% comment %}
-        <script type="text/javascript" src="{% static  shellac/js/dist/bundle.js  %}"></script>
-        {% endcomment %}
+        <script type="text/javascript">var MEDIA_URL = "{{ MEDIA_URL }}", STATIC_URL = "{{ STATIC_URL }}"</script>
+        <script type="text/javascript" src="{% static 'shellac/js/dist/bundle.js' %}"></script>
     {% endblock head %}
 
 <!-- Main -->
     {% block content %}
         <div id="shellac-app"></div>
-    {% endblock content %}
+
+        {% for object in objects %}
+            <a href="{{ object.audio_file.url }}">PLAY</a>
+        {% endfor object in objects %}
+
+{% endblock content %}
 
