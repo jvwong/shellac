@@ -98,8 +98,7 @@ STATIC_URL = '/static/'
 # various locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder'
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder'
 )
 
 # Additional locations of static files
@@ -161,7 +160,6 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'shellac',
     'social.apps.django_app.default',
-    'compressor',
     'audiofield',
     'taggit',
     'rest_framework'

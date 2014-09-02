@@ -8,7 +8,8 @@ module.exports = function jshint(grunt) {
 	// Options
 	return {
 		files: [
-            'src/**/*.js'
+            'src/**/*.js',
+            '!src/**/main.js'
         ],
 		options: {
 		    jshintrc: '.jshintrc'

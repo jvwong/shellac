@@ -5,7 +5,8 @@
 'use strict';
 
 var shellac = (function () {
-    var moment = require('moment'),
+    var $ = require('jquery'),
+        moment = require('moment'),
         TAFFY = require('taffydb').taffy;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
@@ -203,8 +204,7 @@ var shellac = (function () {
                 '</a>';
 
             var filtered = object.clips.filter(function(id){
-                console.log(clip_list.indexOf(id));
-                return clip_list.indexOf(id) === -1
+                return clip_list.indexOf(id) === -1;
             });
             clip_list = clip_list.concat(filtered);
         });

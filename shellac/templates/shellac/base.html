@@ -2,7 +2,6 @@
 {% load i18n %}
 {% load staticfiles %}
 
-{% load compress %}
 <html lang="en">
 <head>
     <!--faveicon  -->
@@ -27,12 +26,16 @@
     <!-- Custom css -->
     {% block custom_css %}
         {% if debug %}
-            <link rel="stylesheet" type="text/less" media="all" href="{% static 'shellac/less/app.less' %}" />
+            <link rel="stylesheet/less" type="text/css" href="{% static 'shellac/less/app.less' %}" />
             <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.4/less.min.js"></script>
         {% else %}
             <link rel="stylesheet" type="text/css" href="{% static 'shellac/css/base.css' %}" />
         {% endif %}
     {% endblock custom_css %}
+
+    <!-- Third party javascript -->
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
     <title>{% block title %}{% endblock title %} | SHELLAC</title>
     {% block head %}
@@ -119,8 +122,5 @@
         </div>
     </footer>
 
-    <!-- Third party javascript -->
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </body>
 </html>
