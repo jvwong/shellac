@@ -88,7 +88,7 @@ var shellac = (function () {
             .done(function(categories){
                 stateMap.category_db.insert(parseCategoryData(categories));
                 stateMap.categories = stateMap.category_db().get();
-                PubSub.emit("onCategoryLoadComplete", stateMap.categories, jqueryMap.$nav_sidebar);
+                PubSub.emit("onCategoryLoadComplete");
             })
             .fail(function(){
                 console.error("Could not load Clip archive");
@@ -117,7 +117,7 @@ var shellac = (function () {
             .done(function(clips){
                 stateMap.clip_db.insert(parseClipData(clips));
                 stateMap.clips = stateMap.clip_db().get();
-                PubSub.emit("onClipLoadComplete", stateMap.clips, jqueryMap.$clip_content);
+                PubSub.emit("onClipLoadComplete");
             })
             .fail(function(){
                 console.error("Could not load Clip archive");
@@ -189,29 +189,37 @@ var shellac = (function () {
     };
 
 
-    display_categories = function(categoryArray, $container){
+    display_categories = function(){
 
-        categoryArray.forEach(function(object){
+        var all_anchor = String(),
+            items = String(),
+            item_count = 0;
+        jqueryMap.$nav_sidebar.append(all_anchor);
 
-            var anchor = String() +
-                '<a class="list-group-item nav-sidebar-category" href="#">' +
+        stateMap.categories.forEach(function(object){
+            items +=
+                '<a class="list-group-item nav-sidebar-category" href="#">' + '<span class="badge">' + object.clips.length + '</span>' +
                     '<h5 class="list-group-item-heading" id="' + object.slug + '">' + object.title + '</h5>' +
                 '</a>';
-
-            $container.append(anchor);
-
+            item_count += object.clips.length;
         });
+
+        all_anchor +=
+            '<a class="list-group-item nav-sidebar-category active" href="#">' + '<span class="badge">' + item_count + '</span>' +
+                '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
+            '</a>';
+
+        jqueryMap.$nav_sidebar.append(all_anchor, items);
 
         //register listeners
         $('.list-group-item-heading').on('click', onClickCategory);
     };
 
 
-    display_clips = function(clipArray, $container){
+    display_clips = function(){
 
-        console.log(clipArray[0]);
-
-        clipArray.forEach(function(object){
+        jqueryMap.$clip_content.html("");
+        stateMap.clips.forEach(function(object){
 
             var anchor = String() +
                 '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 media clip">' +
@@ -226,7 +234,7 @@ var shellac = (function () {
                 '</a>' +
             '</div>';
 
-            $container.append(anchor);
+            jqueryMap.$clip_content.append(anchor);
 
         });
 
@@ -245,8 +253,25 @@ var shellac = (function () {
     //   * binds to category DOM elements and reloads corresponding clips into
     //     stateMap.clips
     onClickCategory = function(e){
-        console.log(e.target.id);
-//        stateMap.clips = stateMap.clip_db({});
+
+        var category_object;
+
+        //empty the clip array
+        stateMap.clips = [];
+
+        //refill the empty the clip array
+        if(e.target.id === "ALL"){
+            stateMap.clips = stateMap.clip_db().get();
+
+        } else {
+            category_object = stateMap.category_db({slug: e.target.id}).first();
+
+            //push in any matching clip id
+            stateMap.clips = category_object.clips.map(function(id){
+                return stateMap.clip_db({id: id}).first();
+            });
+        }
+        display_clips();
     };
 
     //-------------------- END EVENT HANDLERS --------------------
