@@ -260,7 +260,7 @@ var shellac = (function () {
         stateMap.clips = [];
 
         //refill the empty the clip array
-        if(e.target.id === "ALL"){
+        if(e.target.id === "all"){
             stateMap.clips = stateMap.clip_db().get();
 
         } else {
