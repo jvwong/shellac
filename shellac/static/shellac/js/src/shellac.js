@@ -193,7 +193,7 @@ var shellac = (function () {
 
         var all_anchor = String(),
             items = String(),
-            item_count = 0;
+            clip_list = [];
         jqueryMap.$nav_sidebar.append(all_anchor);
 
         stateMap.categories.forEach(function(object){
@@ -201,11 +201,16 @@ var shellac = (function () {
                 '<a class="list-group-item nav-sidebar-category" href="#">' + '<span class="badge">' + object.clips.length + '</span>' +
                     '<h5 class="list-group-item-heading" id="' + object.slug + '">' + object.title + '</h5>' +
                 '</a>';
-            item_count += object.clips.length;
+
+            var filtered = object.clips.filter(function(id){
+                console.log(clip_list.indexOf(id));
+                return clip_list.indexOf(id) === -1
+            });
+            clip_list = clip_list.concat(filtered);
         });
 
         all_anchor +=
-            '<a class="list-group-item nav-sidebar-category active" href="#">' + '<span class="badge">' + item_count + '</span>' +
+            '<a class="list-group-item nav-sidebar-category active" href="#">' + '<span class="badge">' + clip_list.length + '</span>' +
                 '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
             '</a>';
 
