@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from django.contrib.auth import get_user_model
 User = get_user_model()
+from shellac.tests.utils.base import setFileAttributefromLocal
+
 """
  BEGIN CATEGORY API
 """
@@ -20,9 +22,9 @@ class Api_Category_PageTest_root(APITestCase):
         response = self.client.get('/api/category/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertIn('{"id": 1, "title": "ARTS", "slug": "arts", "description": "arts"}', response.content.decode())
-        self.assertIn('{"id": 2, "title": "BUSINESS", "slug": "business", "description": "business"}', response.content.decode())
-        self.assertIn('{"id": 3, "title": "FOOD", "slug": "food", "description": "food"}', response.content.decode())
+        self.assertIn('{"id": 1, "title": "ARTS", "slug": "arts", "description": "arts", "clips": []}', response.content.decode())
+        self.assertIn('{"id": 2, "title": "BUSINESS", "slug": "business", "description": "business", "clips": []}', response.content.decode())
+        self.assertIn('{"id": 3, "title": "FOOD", "slug": "food", "description": "food", "clips": []}', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
     def test_api_root_post_creates_and_returns_correct_response(self):
@@ -33,7 +35,7 @@ class Api_Category_PageTest_root(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         #gotta massage the reponse to match with our original payload
-        self.assertEqual(response.data, {"id": 1, "title": "CAT1", "slug": "cat1", "description": "cat1 description"})
+        self.assertEqual(response.data, {"id": 1, "title": "CAT1", "slug": "cat1", "description": "cat1 description", "clips": []})
 
 
 class Api_Category_PageTest_slug(APITestCase):
@@ -49,7 +51,7 @@ class Api_Category_PageTest_slug(APITestCase):
         response = self.client.get('/api/category/arts/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertIn('{"id": 1, "title": "ARTS", "slug": "arts", "description": "arts"}', response.content.decode())
+        self.assertIn('{"id": 1, "title": "ARTS", "slug": "arts", "description": "arts", "clips": []}', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
     def test_api_slug_put_updates_existing_object(self):
@@ -125,6 +127,10 @@ class Api_User_PageTest_username(APITestCase):
 # """
 #  BEGIN CLIP API
 # """
+import os
+from django.conf import settings
+audio_path = os.path.join(settings.STATIC_ROOT, "../source/shellac/tests/assets/song.mp3")
+
 class Api_Clip_PageTest_root(APITestCase):
 
     # line up view for '/'
@@ -142,14 +148,16 @@ class Api_Clip_PageTest_root(APITestCase):
         #create the clips
         clip1 = Clip.objects.create(title='clip1 title', author=user1)
         clip1.description = "clip1 description"
+        setFileAttributefromLocal(clip1.audio_file, audio_path, "")
         clip2 = Clip.objects.create(title='clip2 title', author=user2)
         clip2.description = "clip2 description"
+        setFileAttributefromLocal(clip2.audio_file, audio_path, "")
 
         response = self.client.get('/api/clip/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertIn('{"id": 1, "title": "clip1 title", "author": "andrea", "description": "", "brand": "", "plays": 0, "rating": 0, "status": 1, "slug": "clip1-title", "created": ', response.content.decode())
-        self.assertIn('{"id": 2, "title": "clip2 title", "author": "jvwong", "description": "", "brand": "", "plays": 0, "rating": 0, "status": 1, "slug": "clip2-title", "created": ', response.content.decode())
+        self.assertIn('{"id": 1, "title": "clip1 title", "author": "andrea", "categories": [], "description": "clip1 description", "brand": "", "plays": 0, "rating": 0, "status": 1, "slug": "clip1-title", "created": ', response.content.decode())
+        self.assertIn(' {"id": 2, "title": "clip2 title", "author": "jvwong", "categories": [], "description": "clip2 description", "brand": "", "plays": 0, "rating": 0, "status": 1, "slug": "clip2-title", "created": ', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
 

@@ -21,6 +21,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'slug', 'description', 'clips')
 
     def restore_object(self, attrs, instance=None):
+        attrs.pop("clips", None)
         # instance will be None, unless the serializer was instantiated with an
         # existing model instance to be updated, using the instance=... argument
         if instance:

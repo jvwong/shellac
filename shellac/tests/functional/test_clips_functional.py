@@ -1,10 +1,8 @@
-from django.conf import settings
 from selenium.webdriver.common.keys import Keys
 from shellac.tests.utils.base import FunctionalTest
 from shellac.models import Clip, Category
 import os
-import sys
-import time
+
 
 #file paths
 FUNCTIONAL_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -93,7 +91,8 @@ class NewClipTest(FunctionalTest):
         c2.save()
 
         music_category = Category.objects.filter(title="MUSIC")[0]
-        music_clips = music_category.clip_set.all()
+        music_clips = music_category.clips.all()
+        #
         clipTitleList = [m.title for m in music_clips]
         self.assertTrue(len(clipTitleList), 2)
         self.assertEqual(clipTitleList[0], 'Clip1')

@@ -47,7 +47,7 @@ class Category(models.Model):
     description = models.TextField(blank=True)
 
     def clip_set(self):
-        return self.clip_set.all()
+        return self.clips.all()
 
     def save(self, *args, **kwargs):
         self.title = self.title.upper()
@@ -94,6 +94,7 @@ class Clip(models.Model):
 
     ### Optional
     categories = models.ManyToManyField("shellac.Category", related_name="clips", blank=True)
+    # categories = models.ManyToManyField("shellac.Category", blank=True)
     tags = TaggableManager(blank=True)
     description = models.TextField(blank=True)
     brand = models.ImageField(upload_to='brands',

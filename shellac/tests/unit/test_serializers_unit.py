@@ -32,7 +32,7 @@ class CategorySerializerTest(TestCase):
         # print(type(python_serialized.data)) ###class rest.serializers...
         json_serialized = JSONRenderer().render(python_serialized.data)
         # print(type(json_serialized) ### bytes
-        self.assertEqual('{"id": 1, "title": "CAT1 TITLE", "slug": "cat1-title", "description": "cat1 description"}',
+        self.assertEqual('{"id": 1, "title": "CAT1 TITLE", "slug": "cat1-title", "description": "cat1 description", "clips": []}',
                          json_serialized.decode())
 
 
