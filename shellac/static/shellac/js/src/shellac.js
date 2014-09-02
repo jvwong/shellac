@@ -18,24 +18,32 @@ var shellac = (function () {
 
     configMap = {
         main_html: String() +
-            '<div class="shellac-container"></div>',
-
-        clip_template_html: String() +
-            '<a class="shellac-clip-anchor"></a>'
+            '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
+                '<div class="shellac-app nav nav-sidebar list-group"></div>' +
+            '</div>' +
+            '<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 shellac-app clip content"></div>'
     },
 
     stateMap = {
         $container: undefined,
+
         MEDIA_URL: undefined,
         STATIC_URL: undefined,
+
+        categories: undefined,
+        category_db: TAFFY(),
+
+        clips: undefined,
         clip_db: TAFFY()
     },
 
     jqueryMap = {},
-    setJqueryMap, display_clips,
-    parseData,
-    render,
-    onDataload,
+    setJqueryMap,
+
+    parseCategoryData, renderCategories, display_categories,
+    parseClipData, renderClips, display_clips,
+
+    onClickCategory,
     PubSub;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
@@ -65,20 +73,21 @@ var shellac = (function () {
 
 
 
-
     /*
-     * method loadData: make an api call to gather the Clips in database
+     * method renderCategories: make an api call to gather the Categories in database
      * parameters
      * return
      *   * jsonArray - a list of valid JSON objects representing
-     *   serialized Clip objects
+     *   serialized Category objects
      **/
-    render = function(){
+    renderCategories = function(){
         $.ajax({
-            url: '/api/clip/'
+            url: '/api/category/'
         })
-            .done(function(data){
-                onDataload(data);
+            .done(function(categories){
+                stateMap.category_db.insert(parseCategoryData(categories));
+                stateMap.categories = stateMap.category_db().get();
+                PubSub.emit("onCategoryLoadComplete", stateMap.categories, jqueryMap.$nav_sidebar);
             })
             .fail(function(){
                 console.error("Could not load Clip archive");
@@ -88,27 +97,62 @@ var shellac = (function () {
             });
     };
 
+
     /*
-     * method onDataload: handler following data load from Ajax call that sets the data
-     * variables on the Taffy DB and statemap
+     * method renderClips: make an api call to gather the Clips in database
      * parameters
-     *  - data: raw json data
      * return
+     *   * jsonArray - a list of valid JSON objects representing
+     *   serialized Clip objects
      **/
-    onDataload = function(data){
-        stateMap.clip_db.insert(parseData(data));
-        stateMap.clips = stateMap.clip_db().get();
-        PubSub.emit("onDataLoadComplete", stateMap.clips, jqueryMap.$shellac_container );
+    renderClips = function(){
+        $.ajax({
+            url: '/api/clip/'
+        })
+            .done(function(clips){
+                stateMap.clip_db.insert(parseClipData(clips));
+                stateMap.clips = stateMap.clip_db().get();
+                PubSub.emit("onClipLoadComplete", stateMap.clips, jqueryMap.$clip_content);
+            })
+            .fail(function(){
+                console.error("Could not load Clip archive");
+            })
+            .always(function(){
+
+            });
+    };
+
+
+
+    /*
+     * method parseCategoryData: transform any Category fields to javascript-compatible
+     * parameters
+     *   * raw - a string describing an array of valid JSON
+     * return
+     *   * jsonArray - a list of valid JSON objects
+     **/
+    parseCategoryData = function(raw){
+        var jsonArray;
+
+        jsonArray = raw.map(function(jsonObj){
+
+            try{
+                return jsonObj;
+            }catch(err){
+                console.error(err);
+            }
+        });
+        return jsonArray;
     };
 
     /*
-    * method parseData: transform any fields to javascript-compatible
+    * method parseClipData: transform any Clip fields to javascript-compatible
     * parameters
     *   * raw - a string describing an array of valid JSON
     * return
     *   * jsonArray - a list of valid JSON objects
     **/
-    parseData = function(raw){
+    parseClipData = function(raw){
         var jsonArray;
 
         jsonArray = raw.map(function(jsonObj){
@@ -133,13 +177,30 @@ var shellac = (function () {
         var $outerDiv = stateMap.$container;
 
         jqueryMap = {
-            $outerDiv                   : $outerDiv,
-            $shellac_container          : $outerDiv.find('.shellac-container')
+            $outerDiv       : $outerDiv,
+            $nav_sidebar    : $outerDiv.find('.shellac-app.sidebar .shellac-app.nav.nav-sidebar.list-group'),
+            $clip_content        : $outerDiv.find('.shellac-app.clip.content')
         };
     };
 
+
+    display_categories = function(categoryArray, $container){
+
+        categoryArray.forEach(function(object){
+
+            var anchor = String() +
+                '<a class="list-group-item nav-sidebar-category" href="#">' +
+                    '<h5 class="list-group-item-heading">' + object.title + '</h5>' +
+                '</a>';
+
+            $container.append(anchor);
+
+        });
+
+    };
+
+
     display_clips = function(clipArray, $container){
-        console.log(clipArray);
 
         clipArray.forEach(function(object){
 
@@ -166,14 +227,18 @@ var shellac = (function () {
     //--------------------- END DOM METHODS ----------------------
 
     //------------------- BEGIN EVENT HANDLERS -------------------
-    // Begin Event handler //
-    // Purpose    : Handles the event
+    // Begin Event handler /onClickCategory/
+    // Purpose    : Handles the event for sidebar category selection
     // Arguments  :
-    //   * event - jQuery event object.
     // Settings   : none
-    // Returns    : false
+    // Returns    :
     // Actions    :
-    //   * Parses the URI anchor component
+    //   * binds to category DOM elements and reloads corresponding clips into
+    //     stateMap.clips
+    onClickCategory = function(){
+        console.log("onClickCategory");
+    };
+
     //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
@@ -193,20 +258,29 @@ var shellac = (function () {
     //   The Shell is also responsible for browser-wide issues
     // Returns   : none
     // Throws    : none
-    initModule = function( $container, MEDIA_URL, STATIC_URL ){
+    initModule = function( $container, MEDIA_URL, STATIC_URL){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
+        stateMap.$nav_sidebar = $container.parent;
         stateMap.MEDIA_URL = MEDIA_URL;
         stateMap.STATIC_URL = STATIC_URL;
 
         $container.html( configMap.main_html );
         setJqueryMap();
 
-        console.log($container);
-        PubSub.on("onDataLoadComplete", display_clips);
+        //register pub-sub methods
+        PubSub.on("onClipLoadComplete", display_clips);
+        PubSub.on("onCategoryLoadComplete", display_categories);
+
+        //register listeners
+        onClickCategory();
 
         //load data into in-browser database
-        render();
+        renderClips();
+        renderCategories();
+
+        console.log($container);
+        console.log(stateMap.$nav_sidebar);
     };
 
     return { initModule: initModule };

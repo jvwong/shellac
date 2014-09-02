@@ -104,14 +104,6 @@
     <main>
         <div class="container-fluid">
         {% block main %}
-            {% block sidebar %}
-                {% include 'shellac/partials/sidebar/latest_content.html' %}
-            {% endblock sidebar %}
-
-            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 content">
-            {% block content %}
-            {% endblock content %}
-            </div>
         {% endblock main %}
         </div>
     </main>
