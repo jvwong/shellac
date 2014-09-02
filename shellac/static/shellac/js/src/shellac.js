@@ -81,8 +81,10 @@ var shellac = (function () {
      *   serialized Category objects
      **/
     renderCategories = function(){
+
+        var url = '/api/category/';
         $.ajax({
-            url: '/api/category/'
+            url: url
         })
             .done(function(categories){
                 stateMap.category_db.insert(parseCategoryData(categories));
@@ -100,16 +102,29 @@ var shellac = (function () {
 
     /*
      * method renderClips: make an api call to gather the Clips in database
+     * precondition: the category passed in is a valid Category object in database
      * parameters
+     *  * category - a valid Category object to filter on
      * return
      *   * jsonArray - a list of valid JSON objects representing
      *   serialized Clip objects
      **/
-    renderClips = function(){
+    renderClips = function(category){
+
+        var url = '/api/clip/';
+        if (typeof category !== 'undefined') {
+            url += category + '/';
+        }
+
+        console.log(url);
+
         $.ajax({
-            url: '/api/clip/'
+            url: url
         })
             .done(function(clips){
+
+                console.log(clips);
+
                 stateMap.clip_db.insert(parseClipData(clips));
                 stateMap.clips = stateMap.clip_db().get();
                 PubSub.emit("onClipLoadComplete", stateMap.clips, jqueryMap.$clip_content);
@@ -190,13 +205,17 @@ var shellac = (function () {
 
             var anchor = String() +
                 '<a class="list-group-item nav-sidebar-category" href="#">' +
-                    '<h5 class="list-group-item-heading">' + object.title + '</h5>' +
+                    '<h5 class="list-group-item-heading" id="' + object.slug + '">' + object.title + '</h5>' +
                 '</a>';
 
             $container.append(anchor);
 
         });
 
+        //register listeners
+        $('.list-group-item-heading').on('click', function(e){
+            console.log(e.target.id)
+        });
     };
 
 
@@ -272,15 +291,11 @@ var shellac = (function () {
         PubSub.on("onClipLoadComplete", display_clips);
         PubSub.on("onCategoryLoadComplete", display_categories);
 
-        //register listeners
-        onClickCategory();
-
         //load data into in-browser database
-        renderClips();
+        renderClips('arts');
         renderCategories();
 
         console.log($container);
-        console.log(stateMap.$nav_sidebar);
     };
 
     return { initModule: initModule };
