@@ -38,25 +38,25 @@ class ClipDetail(APIView):
     """
     def get_object(self, slug):
         try:
-            return Clip.objects.get(slug=slug)
+            return Clip.objects.get(pk=pk)
         except Clip.DoesNotExist:
             raise Http404
 
-    def get(self, request, slug, format=None):
-        clip = self.get_object(slug)
+    def get(self, request, pk, format=None):
+        clip = self.get_object(pk)
         serializer = ClipSerializer(clip)
         return Response(serializer.data)
 
-    def put(self, request, slug, format=None):
-        clip = self.get_object(slug)
+    def put(self, request, pk, format=None):
+        clip = self.get_object(pk)
         serializer = ClipSerializer(clip, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, slug, format=None):
-        clip = self.get_object(slug)
+    def delete(self, request, pk, format=None):
+        clip = self.get_object(pk)
         clip.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -104,6 +104,7 @@ class CategoryDetail(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, slug, format=None):

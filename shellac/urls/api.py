@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(r'^user/(?P<username>[-\w]+)/$', UserDetail.as_view(), name='shellac_api_user_detail'),
 
     url(r'^clip/$', ClipList.as_view(), name='shellac_api_clip'),
-    url(r'^clip/(?P<username>[-\w]+)/$', ClipDetail.as_view(), name='shellac_api_clip_detail'),
+    url(r'^clip/(?P<pk>[-\w]+)/$', ClipDetail.as_view(), name='shellac_api_clip_detail'),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

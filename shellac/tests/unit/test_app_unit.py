@@ -17,14 +17,13 @@ class AppPageTest(TestCase):
         found = resolve('/')
         self.assertEqual(found.func, shellac_app)
 
-    # line up view for '/' with app_page
-    def test_app_page_returns_correct_html(self):
+    #This is dynamic javascript so cannot judge html
+    def test_app_page_returns_correct_template(self):
         user = User.objects.create_user(username_dummy, password_dummy, email_dummy)
         request = HttpRequest()
         request.user = user
         response = shellac_app(request)
-        expected_html = render_to_string('shellac/app/app.html', {'user': user})
-        self.assertEqual(response.content.decode(), expected_html)
+        self.assertTemplateUsed(response, 'shellac/app/app.html')
 
 
 

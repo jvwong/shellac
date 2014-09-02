@@ -42,7 +42,8 @@ class Category(models.Model):
                              blank=False,
                              help_text='Maximum 100 characters.',
                              unique=True)
-    slug = models.SlugField(blank=False)
+    ##editable false means it won't be showed in admin and not validated
+    slug = models.SlugField(blank=True)
     description = models.TextField(blank=True)
 
     def clip_set(self):
@@ -92,20 +93,20 @@ class Clip(models.Model):
     #related name is how we query in User i.e.  user[1].clips.all().count()
 
     ### Optional
-    categories = models.ManyToManyField("shellac.Category", blank=True)
+    categories = models.ManyToManyField("shellac.Category", related_name="clips", blank=True)
     tags = TaggableManager(blank=True)
     description = models.TextField(blank=True)
     brand = models.ImageField(upload_to='brands',
                               blank=True)
 
     ### Default
-    plays = models.PositiveSmallIntegerField(default=0)
-    rating = models.PositiveSmallIntegerField(default=0)
+    plays = models.PositiveSmallIntegerField(default=0, editable=False)
+    rating = models.PositiveSmallIntegerField(default=0, editable=False)
     status = models.IntegerField(choices=STATUS_CHOICES, default=PUBLIC_STATUS)
 
     ### Auto
-    slug = models.SlugField(unique_for_date="created")
-    created = models.DateTimeField(default=datetime.datetime.now, editable=False)
+    slug = models.SlugField(blank=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True)
 
     #AUDIO
     # Add the audio field to your model -- required
@@ -129,6 +130,7 @@ class Clip(models.Model):
         super(Clip, self).save(*args, **kwargs)
 
     class Meta:
+        unique_together = ('author', 'title')
         verbose_name_plural = "Clips"
         ordering = ['created']
 

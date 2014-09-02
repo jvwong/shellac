@@ -29,9 +29,11 @@ class CategorySerializerTest(TestCase):
         self.assertEqual(c1['slug'], python_serialized.data['slug'])
 
         ##JSON data
+        # print(type(python_serialized.data)) ###class rest.serializers...
         json_serialized = JSONRenderer().render(python_serialized.data)
-        self.assertEqual(b'{"id": 1, "title": "CAT1 TITLE", "slug": "cat1-title", "description": "cat1 description"}',
-                         json_serialized)
+        # print(type(json_serialized) ### bytes
+        self.assertEqual('{"id": 1, "title": "CAT1 TITLE", "slug": "cat1-title", "description": "cat1 description"}',
+                         json_serialized.decode())
 
 
     def test_Category_deserialization(self):
@@ -40,9 +42,12 @@ class CategorySerializerTest(TestCase):
         python_serialized = CategorySerializer(cat1)
         json_serialized = JSONRenderer().render(python_serialized.data)
 
-        byte_stream = BytesIO(json_serialized)
-        json_deserialized = JSONParser().parse(byte_stream)
+        cat1.delete()
 
+        ## make sure we have bytes
+        byte_stream = BytesIO(json_serialized)
+        # python native type conversion
+        json_deserialized = JSONParser().parse(byte_stream)
         deserialized = CategorySerializer(data=json_deserialized)
 
         self.assertTrue(deserialized.is_valid(), True)

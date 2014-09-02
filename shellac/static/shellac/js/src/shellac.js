@@ -112,19 +112,10 @@ var shellac = (function () {
     renderClips = function(category){
 
         var url = '/api/clip/';
-        if (typeof category !== 'undefined') {
-            url += category + '/';
-        }
-
-        console.log(url);
-
         $.ajax({
             url: url
         })
             .done(function(clips){
-
-                console.log(clips);
-
                 stateMap.clip_db.insert(parseClipData(clips));
                 stateMap.clips = stateMap.clip_db().get();
                 PubSub.emit("onClipLoadComplete", stateMap.clips, jqueryMap.$clip_content);
@@ -213,13 +204,13 @@ var shellac = (function () {
         });
 
         //register listeners
-        $('.list-group-item-heading').on('click', function(e){
-            console.log(e.target.id)
-        });
+        $('.list-group-item-heading').on('click', onClickCategory);
     };
 
 
     display_clips = function(clipArray, $container){
+
+        console.log(clipArray[0]);
 
         clipArray.forEach(function(object){
 
@@ -254,8 +245,9 @@ var shellac = (function () {
     // Actions    :
     //   * binds to category DOM elements and reloads corresponding clips into
     //     stateMap.clips
-    onClickCategory = function(){
-        console.log("onClickCategory");
+    onClickCategory = function(e){
+        console.log(e.target.id);
+//        stateMap.clips = stateMap.clip_db({});
     };
 
     //-------------------- END EVENT HANDLERS --------------------
@@ -292,7 +284,7 @@ var shellac = (function () {
         PubSub.on("onCategoryLoadComplete", display_categories);
 
         //load data into in-browser database
-        renderClips('arts');
+        renderClips();
         renderCategories();
 
         console.log($container);
