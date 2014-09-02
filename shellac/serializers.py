@@ -46,6 +46,7 @@ class ClipSerializer(serializers.ModelSerializer):
     categories = serializers.SlugRelatedField(many=True,
                                               read_only=True,
                                               slug_field='slug')
+    brand = serializers.Field(source='brand.url')
     audio_file = serializers.Field(source='audio_file.url')
 
     class Meta:
