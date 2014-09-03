@@ -317,6 +317,7 @@ var shellac = (function () {
         renderCategories();
 
         console.log($container);
+        console.log($container);
     };
 
     return { initModule: initModule };

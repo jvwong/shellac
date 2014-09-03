@@ -113,11 +113,16 @@ def lgittag():
 ### ***** END Deployment *****
 
 ### ***** Django *****
-def lstart():
+lsource_dir = os.path.abspath(os.path.dirname(__file__))
+ljs_dir = os.path.abspath(os.path.join(lsource_dir, "%s/static/%s/js" % (APP_NAME, APP_NAME)))
+
+def start():
     local('../virtualenv/bin/python3.4 manage.py runserver 127.0.0.1:8000')
 
+def watch():
+    local('cd %s && grunt watch' % (ljs_dir,))
 
-def ltest():
+def test():
     local('../virtualenv/bin/python3.4 manage.py test %s.tests' % (APP_NAME,))
 
 

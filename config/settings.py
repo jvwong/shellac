@@ -92,13 +92,13 @@ STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, "static"))
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
-
+# STATIC_URL = 'https://<bucket domain>/{aws_bucket}/'.format(aws_bucket='shellac.media')
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder'
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
 # Additional locations of static files
@@ -109,9 +109,18 @@ STATICFILES_DIRS = (
     STATIC_PATH,
 )
 
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-)
+###PIPELINE SETTINGS
+#STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+# PIPELINE_DISABLE_WRAPPER = True
+
+# AWS_ACCESS_KEY_ID = 'AKIAIU4GNZSJOT6YNVWQ'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'shellac.media'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+# AWS_S3_SECURE_URLS = False       # use http instead of https
+# AWS_QUERYSTRING_AUTH = False     # don't add complex authentication-related query parameters for requests
+# STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
 INTERNAL_IPS = ('127.0.0.1',)
 
 # Make this unique, and don't share it with anybody.
@@ -162,7 +171,9 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'audiofield',
     'taggit',
-    'rest_framework'
+    'rest_framework',
+    # 'pipeline',
+    # 'storages',
 )
 
 
