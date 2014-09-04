@@ -8,7 +8,9 @@
 var shellac = (function () {
     var $ = require('jquery'),
         moment = require('moment'),
-        TAFFY = require('taffydb').taffy;
+        TAFFY = require('taffydb').taffy,
+        audio = require('./audio.js'),
+        util = require('./util.js');
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
 
@@ -46,9 +48,9 @@ var shellac = (function () {
     parseClipData, renderClips, display_clips,
 
     onClickCategory,
-    PubSub,
+    PubSub = util.PubSub,
 
-    audio_load;
+    onClickAudio = audio.enable;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -61,106 +63,7 @@ var shellac = (function () {
 
     //--------------------- BEGIN MODULE SCOPE METHODS --------------------
 
-    /*
-     * method audio_load: loads an audio sound by XMLHttpRequest
-     * precondition: a valid url points to a audio clip encoded mp3, ogg, or wav
-     * parameters
-     *  * url: a valid url to a audio resource
-     * return
-     **/
-    audio_load = function(event){
 
-
-
-        var sound = null,
-            context,
-            clip_url;
-        window.addEventListener('load', init, false);
-        function init() {
-            var url;
-            try {
-                // Fix up for prefixing
-                window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                context = new AudioContext();
-                url = $(event.target).parent().attr('data-clip-url');
-                console.log($(event.target).parent().attr('data-clip-url'));
-                return url;
-            }
-            catch(e) {
-                console.log('Web Audio API is not supported in this browser');
-            }
-        }
-
-        function get_sound(url){
-            var request = new XMLHttpRequest();
-            request.open('GET', url, true);
-            request.responseType = 'arraybuffer';
-
-            request.onload = function(e){
-                // method: decodeAudioData
-                // positional arguments: binary data, callback on success, error callback
-                context.decodeAudioData(request.response, function(buffer){
-                    if(!buffer){
-                        console.log('Error decoding file data');
-                        return;
-                    }
-                    playSound(buffer);
-                }, onError);
-            };
-            request.send();
-        }
-
-        function onError(error){
-            console.log("Error decoding file data %s", error);
-        }
-
-        function playSound(buffer){
-            //create a sound source
-            var source = context.createBufferSource();
-
-            //tell the source which sound to play
-            source.buffer = buffer;
-
-            //connect the source to the context's destination (the speakers)
-            source.connect(context.destination);
-
-            source.start(0);
-//            source.noteOn(0); /* Play sound. */
-        }
-
-        clip_url = init();
-        get_sound(clip_url);
-
-    };
-
-
-    /*
-     * method :
-     * parameters
-     * return
-     *   *
-     **/
-    PubSub = {
-        handlers: {},
-
-        on : function(eventType, handler) {
-            if (!(eventType in this.handlers)) {
-                this.handlers[eventType] = [];
-            }
-            //push handler into array -- "eventType": [handler]
-            this.handlers[eventType].push(handler);
-            return this;
-        },
-
-        emit : function(eventType) {
-            var handlerArgs = Array.prototype.slice.call(arguments, 1);
-            for (var i = 0; i < this.handlers[eventType].length; i++) {
-                this.handlers[eventType][i].apply(this, handlerArgs);
-            }
-            return this;
-        }
-
-    };
 
 
 
@@ -335,7 +238,7 @@ var shellac = (function () {
 
         });
         //register listeners
-        $('.media.clip .media-url').on('click', audio_load);
+        $('.media.clip .media-url').on('click', onClickAudio);
     };
 
 
@@ -350,19 +253,21 @@ var shellac = (function () {
     // Actions    :
     //   * binds to category DOM elements and reloads corresponding clips into
     //     stateMap.clips
-    onClickCategory = function(e){
+    onClickCategory = function(event){
 
         var category_object;
+
+        console.log($(event.target));
 
         //empty the clip array
         stateMap.clips = [];
 
         //refill the empty the clip array
-        if(e.target.id === "all"){
+        if(event.target.id === "all"){
             stateMap.clips = stateMap.clip_db().get();
 
         } else {
-            category_object = stateMap.category_db({slug: e.target.id}).first();
+            category_object = stateMap.category_db({slug: event.target.id}).first();
 
             //push in any matching clip id
             stateMap.clips = category_object.clips.map(function(id){
@@ -403,7 +308,6 @@ var shellac = (function () {
 
         //register pub-sub methods
         PubSub.on("onClipLoadComplete", display_clips);
-//        PubSub.on("onClipDisplayComplete", audio_load);
         PubSub.on("onCategoryLoadComplete", display_categories);
 
         //load data into in-browser database
@@ -411,7 +315,7 @@ var shellac = (function () {
         renderCategories();
 
         console.log($container);
-        console.log(stateMap.MEDIA_URL);
+        console.log(audio);
     };
 
     return { initModule: initModule };

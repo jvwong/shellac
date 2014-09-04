@@ -14030,6 +14030,149 @@ if ( typeof(exports) === 'object' ){
 
 },{}],4:[function(require,module,exports){
 /*
+ * audio.js
+ * Web Audio API methods
+*/
+/* global $, window, AudioContext, XMLHttpRequest */
+'use strict';
+
+var audio = (function () {
+
+    //---------------- BEGIN MODULE DEPENDENCIES --------------
+
+    //---------------- END MODULE DEPENDENCIES --------------
+
+    //---------------- BEGIN MODULE SCOPE VARIABLES --------------
+    var context,
+
+    configMap = {
+    },
+
+    stateMap = {
+        context: undefined
+    },
+
+    initModule,
+    retrieve,
+    enable;
+
+    //---------------- END MODULE SCOPE VARIABLES --------------
+
+   //--------------------- BEGIN MODULE SCOPE METHODS --------------------
+    // Begin Private method /retrieve/
+    // Example   :  retrieve('/path/to/sound', onLoadAudioData)
+    // Purpose   : Retrieve the given audio data from the url and fire the callback upon completion
+    // Arguments :
+    //  * context - the valid browser AudioContext object
+    //  * url - a valid url to an audio resource
+    //  * sucessCallback - callback function in the event of successful data transfer; takes arraybuffer
+    //  * errorCallback - callback function in the event of unsuccessful data transfer; takes error object
+    // Action    : Ajax request from the url and passes to callback which take an arraybuffer object
+    // Returns   : none
+    // Throws    : error if audio content is not decoded or available
+    retrieve = function(context, url, sucessCallback, onError){
+
+        var request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.responseType = 'arraybuffer';
+
+        request.onprogress = function(pe) {
+            if(pe.lengthComputable) {
+//                progressBar.max = pe.total;
+//                progressBar.value = pe.loaded;
+                console.log(pe.loaded);
+                console.log(pe.total);
+            }
+        };
+
+        request.onload = function(pe){
+            // method: decodeAudioData
+            // positional arguments: binary data, callback on success, error callback
+            context.decodeAudioData(request.response, function(buffer){
+                if(!buffer){
+                    console.log('Error decoding file data');
+                    return;
+                }
+                sucessCallback(buffer);
+            }, onError);
+        };
+        request.send();
+    };
+    //--------------------- END MODULE SCOPE METHODS --------------------
+
+
+    //------------------- BEGIN PUBLIC METHODS -------------------
+    // Begin Public method /enable/
+    // Example   :  enable(event)
+    // Purpose   : Add control methods for Web Audio API to the passed jQuery event objects
+    // Arguments :
+    //  * event: a jquery event object passed from click event
+    // Action    : Extracts the data from the given element and enables audio playback capability
+    // Returns   : none
+    // Throws    : error if audio content is not decoded or available
+    enable = function(event){
+
+        var url = $(event.target).parent().attr('data-clip-url');
+
+        function onError(error){
+            console.log("Error decoding file data %s", error);
+        }
+
+        function onSuccess(buffer){
+            //create a sound source
+            var source = stateMap.context.createBufferSource();
+
+            //tell the source which sound to play
+            source.buffer = buffer;
+
+            //connect the source to the context's destination (the speakers)
+            source.connect(stateMap.context.destination);
+
+            source.loop = true;
+
+//            source.start(0);
+        }
+
+        retrieve(stateMap.context, url, onSuccess, onError);
+    };
+
+    // Begin Public method /initModule/
+    // Example   : audio.initModule();
+    // Purpose   :
+    //   Sets up the Audio API context or reports errors
+    // Arguments : none
+    // Action    : searches and adds the correct AudioContext object to the global window
+    // Returns   : none
+    // Throws    : none
+    initModule = function(){
+        var contextClass;
+        // Fix up for prefixing
+        contextClass= (
+            window.AudioContext ||
+            window.webkitAudioContext ||
+            window.mozAudioContext ||
+            window.oAudioContext ||
+            window.msAudioContext);
+
+        if(contextClass){
+            stateMap.context = new contextClass();
+        } else {
+            console.log("WebAudio API is not available");
+        }
+    };
+
+    window.addEventListener('load', initModule, false);
+
+    return {
+        enable: enable
+    };
+}());
+
+module.exports = audio;
+
+
+},{}],5:[function(require,module,exports){
+/*
  * main.js
  * Entry point for shellac app
 */
@@ -14042,7 +14185,7 @@ $( document ).ready(function() {
 });
 
 
-},{"./shellac.js":5,"jquery":1}],5:[function(require,module,exports){
+},{"./shellac.js":6,"jquery":1}],6:[function(require,module,exports){
 /*
  * shellac.js
  * Root namespace module
@@ -14053,7 +14196,9 @@ $( document ).ready(function() {
 var shellac = (function () {
     var $ = require('jquery'),
         moment = require('moment'),
-        TAFFY = require('taffydb').taffy;
+        TAFFY = require('taffydb').taffy,
+        audio = require('./audio.js'),
+        util = require('./util.js');
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
 
@@ -14091,9 +14236,9 @@ var shellac = (function () {
     parseClipData, renderClips, display_clips,
 
     onClickCategory,
-    PubSub,
+    PubSub = util.PubSub,
 
-    audio_load;
+    onClickAudio = audio.enable;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -14106,106 +14251,7 @@ var shellac = (function () {
 
     //--------------------- BEGIN MODULE SCOPE METHODS --------------------
 
-    /*
-     * method audio_load: loads an audio sound by XMLHttpRequest
-     * precondition: a valid url points to a audio clip encoded mp3, ogg, or wav
-     * parameters
-     *  * url: a valid url to a audio resource
-     * return
-     **/
-    audio_load = function(event){
 
-
-
-        var sound = null,
-            context,
-            clip_url;
-        window.addEventListener('load', init, false);
-        function init() {
-            var url;
-            try {
-                // Fix up for prefixing
-                window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                context = new AudioContext();
-                url = $(event.target).parent().attr('data-clip-url');
-                console.log($(event.target).parent().attr('data-clip-url'));
-                return url;
-            }
-            catch(e) {
-                console.log('Web Audio API is not supported in this browser');
-            }
-        }
-
-        function get_sound(url){
-            var request = new XMLHttpRequest();
-            request.open('GET', url, true);
-            request.responseType = 'arraybuffer';
-
-            request.onload = function(e){
-                // method: decodeAudioData
-                // positional arguments: binary data, callback on success, error callback
-                context.decodeAudioData(request.response, function(buffer){
-                    if(!buffer){
-                        console.log('Error decoding file data');
-                        return;
-                    }
-                    playSound(buffer);
-                }, onError);
-            };
-            request.send();
-        }
-
-        function onError(error){
-            console.log("Error decoding file data %s", error);
-        }
-
-        function playSound(buffer){
-            //create a sound source
-            var source = context.createBufferSource();
-
-            //tell the source which sound to play
-            source.buffer = buffer;
-
-            //connect the source to the context's destination (the speakers)
-            source.connect(context.destination);
-
-            source.start(0);
-//            source.noteOn(0); /* Play sound. */
-        }
-
-        clip_url = init();
-        get_sound(clip_url);
-
-    };
-
-
-    /*
-     * method :
-     * parameters
-     * return
-     *   *
-     **/
-    PubSub = {
-        handlers: {},
-
-        on : function(eventType, handler) {
-            if (!(eventType in this.handlers)) {
-                this.handlers[eventType] = [];
-            }
-            //push handler into array -- "eventType": [handler]
-            this.handlers[eventType].push(handler);
-            return this;
-        },
-
-        emit : function(eventType) {
-            var handlerArgs = Array.prototype.slice.call(arguments, 1);
-            for (var i = 0; i < this.handlers[eventType].length; i++) {
-                this.handlers[eventType][i].apply(this, handlerArgs);
-            }
-            return this;
-        }
-
-    };
 
 
 
@@ -14380,7 +14426,7 @@ var shellac = (function () {
 
         });
         //register listeners
-        $('.media.clip .media-url').on('click', audio_load);
+        $('.media.clip .media-url').on('click', onClickAudio);
     };
 
 
@@ -14395,19 +14441,21 @@ var shellac = (function () {
     // Actions    :
     //   * binds to category DOM elements and reloads corresponding clips into
     //     stateMap.clips
-    onClickCategory = function(e){
+    onClickCategory = function(event){
 
         var category_object;
+
+        console.log($(event.target));
 
         //empty the clip array
         stateMap.clips = [];
 
         //refill the empty the clip array
-        if(e.target.id === "all"){
+        if(event.target.id === "all"){
             stateMap.clips = stateMap.clip_db().get();
 
         } else {
-            category_object = stateMap.category_db({slug: e.target.id}).first();
+            category_object = stateMap.category_db({slug: event.target.id}).first();
 
             //push in any matching clip id
             stateMap.clips = category_object.clips.map(function(id){
@@ -14448,7 +14496,6 @@ var shellac = (function () {
 
         //register pub-sub methods
         PubSub.on("onClipLoadComplete", display_clips);
-//        PubSub.on("onClipDisplayComplete", audio_load);
         PubSub.on("onCategoryLoadComplete", display_categories);
 
         //load data into in-browser database
@@ -14456,7 +14503,7 @@ var shellac = (function () {
         renderCategories();
 
         console.log($container);
-        console.log(stateMap.MEDIA_URL);
+        console.log(audio);
     };
 
     return { initModule: initModule };
@@ -14465,4 +14512,60 @@ var shellac = (function () {
 module.exports = shellac;
 
 
-},{"jquery":1,"moment":2,"taffydb":3}]},{},[4]);
+},{"./audio.js":4,"./util.js":7,"jquery":1,"moment":2,"taffydb":3}],7:[function(require,module,exports){
+/*
+ * util.js
+ * Utilities for the Audio app
+*/
+/* global */
+'use strict';
+
+var util = (function () {
+
+    var PubSub;
+
+    //---------------- BEGIN MODULE DEPENDENCIES --------------
+
+    //---------------- END MODULE DEPENDENCIES --------------
+
+    //-------------------- END EVENT HANDLERS --------------------
+
+    //------------------- BEGIN PUBLIC METHODS -------------------
+    // Begin Public method /PubSub/
+    // Example   : PubSub.on('bark', getDog ); PubSub.emit('bark');
+    // Purpose   :
+    //   Subscribe and publish events
+    // Arguments :
+    // Action    : The user can subscribe to events with on('<event name>', callback)
+    // and listen to events published with emit('<event name>')
+    // Returns   : none
+    // Throws    : none
+    PubSub = {
+        handlers: {},
+
+        on : function(eventType, handler) {
+            if (!(eventType in this.handlers)) {
+                this.handlers[eventType] = [];
+            }
+            //push handler into array -- "eventType": [handler]
+            this.handlers[eventType].push(handler);
+            return this;
+        },
+
+        emit : function(eventType) {
+            var handlerArgs = Array.prototype.slice.call(arguments, 1);
+            for (var i = 0; i < this.handlers[eventType].length; i++) {
+                this.handlers[eventType][i].apply(this, handlerArgs);
+            }
+            return this;
+        }
+
+    };
+
+    return { PubSub: PubSub };
+}());
+
+module.exports = util;
+
+
+},{}]},{},[5]);
