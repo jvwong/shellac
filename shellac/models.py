@@ -94,10 +94,12 @@ class Clip(models.Model):
 
     ### Optional
     categories = models.ManyToManyField("shellac.Category", related_name="clips", blank=True)
-    # categories = models.ManyToManyField("shellac.Category", blank=True)
     tags = TaggableManager(blank=True)
     description = models.TextField(blank=True)
-    brand = models.ImageField(upload_to='brands',
+
+    ###upload to subdirectory with user id prefixed
+    ### -- /media/brands/<userid>/filename
+    brand = models.ImageField(upload_to='brands/%Y/%m/%d',
                               blank=True)
 
     ### Default
@@ -111,20 +113,8 @@ class Clip(models.Model):
 
     #AUDIO
     # Add the audio field to your model -- required
-    audio_file = AudioField(upload_to='sounds', blank=False,
-                            ext_whitelist=(".mp3", ".wav", ".ogg"),
+    audio_file = models.FileField(upload_to='sounds/%Y/%m/%d', blank=True,
                             help_text=("Allowed type - .mp3, .wav, .ogg"))
-
-    def audio_file_player(self):
-        #audio player tag for admin
-        if self.audio_file:
-            file_url = settings.MEDIA_URL + str(self.audio_file)
-            player_string = '<span class="audio_file">\
-            <a href="%s">%s</a></span>' % (file_url, os.path.basename(self.audio_file.name))
-            return player_string
-
-    audio_file_player.allow_tags = True
-    audio_file_player.short_description = 'Audio file player'
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)

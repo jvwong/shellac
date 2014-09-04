@@ -85,6 +85,7 @@ class AudioField(FileField):
         filename = data.name
         ext = os.path.splitext(filename)[1]
         ext = ext.lower()
+        print("extension: %s" % ext)
         if ext not in self.ext_whitelist:
             error_msg = _("not allowed filetype!")
             logger.error(error_msg)

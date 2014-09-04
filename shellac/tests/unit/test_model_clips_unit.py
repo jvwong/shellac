@@ -1,12 +1,13 @@
 from django.test import TestCase
 from shellac.models import Clip, Category
 from django.contrib.auth.models import User
-from django.conf import settings
 import os
-from shellac.tests.utils.base import cleanClips
+from shellac.tests.utils.base import cleanClips, setFileAttributefromLocal
 
-brand_path = os.path.abspath(os.path.join(settings.STATIC_ROOT, "../source/shellac/tests/assets/seventyEight.png"))
-audio_path = os.path.abspath(os.path.join(settings.STATIC_ROOT, "../source/shellac/tests/assets/song.mp3"))
+UNIT_DIR = os.path.abspath(os.path.dirname(__file__))
+brand_path = os.path.abspath(os.path.join(UNIT_DIR, "../assets/seventyEight.png"))
+audio_path = os.path.abspath(os.path.join(UNIT_DIR, "../assets/song.mp3"))
+
 
 def get_users():
     username1_dummy = 'andrea'
@@ -31,10 +32,12 @@ class ClipModelTest(TestCase):
 
         users = get_users()
         clip1 = Clip.objects.create_clip("clip1", users[0])
+        setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
         clip1.categories = [c1]
         clip1.tags.add("red", "green")
 
         clip2 = Clip.objects.create_clip("clip2", users[1])
+        setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
         clip2.categories = [c2]
         clip2.tags.add("blue", "purple")
 

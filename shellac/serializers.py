@@ -1,110 +1,66 @@
-from django.forms import widgets
 from rest_framework import serializers
 from shellac.models import Category, Clip
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-import datetime
+
 
 class UserSerializer(serializers.ModelSerializer):
-    clips = serializers.PrimaryKeyRelatedField(many=True)
-
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'clips')
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    clips = serializers.PrimaryKeyRelatedField(many=True)
-
     class Meta:
         model = Category
         fields = ('id', 'title', 'slug', 'description', 'clips')
+        read_only_fields = ('clips',)
 
     def restore_object(self, attrs, instance=None):
-        attrs.pop("clips", None)
         # instance will be None, unless the serializer was instantiated with an
         # existing model instance to be updated, using the instance=... argument
-        if instance:
+        if instance is not None:
             # Update existing instance
             instance.title = attrs.get('title', instance.title)
             instance.description = attrs.get('description', instance.description)
             return instance
 
         # Create new instance
+        # attrs.pop('clips', None)
         return Category(**attrs)
 
 
-PUBLIC_STATUS = 1
-PRIVATE_STATUS = 2
-
-STATUS_CHOICES = (
-    (PUBLIC_STATUS, 'Public'),
-    (PRIVATE_STATUS, 'Private')
-)
-
 class ClipSerializer(serializers.ModelSerializer):
-    author = serializers.Field(source='author.username')
+    owner = serializers.SerializerMethodField('get_owner')
     categories = serializers.SlugRelatedField(many=True,
-                                              read_only=True,
-                                              slug_field='slug')
-    # brand = serializers.Field(source='brand.url')
-    audio_file = serializers.Field(source='audio_file.url')
+                                              slug_field='slug', read_only=False)
 
     class Meta:
         model = Clip
-        fields = ('id', 'title', 'author', 'categories', 'description', 'brand', 'plays', 'rating', 'status', 'slug', 'created', 'audio_file')
+        fields = ('id', 'title', 'author', 'description', 'categories',
+                  'brand', 'plays', 'rating', 'status', 'slug',
+                  'audio_file', 'created', 'owner')
+        # read_only_fields = ('categories',)
 
+    def get_owner(self, obj):
+        return obj.author.username
 
-# class ClipSerializer(serializers.Serializer):
-#
-#     id = serializers.Field()
-#     title = serializers.CharField(max_length=250,
-#                                   required=True)
-#     author = serializers.Field(source='author.username')
-#
-#     ### Optional
-#     # categories = serializers.SlugRelatedField(many=True,
-#     #                                           slug_field='slug',
-#     #                                           required=False)
-#     #tags = TaggableManager(blank=True)
-#     description = serializers.CharField(widget=widgets.Textarea,
-#                                         max_length=100000,
-#                                         required=False)
-#     brand = serializers.ImageField(required=False)
-#
-#
-#     ### Defaulted
-#     plays = serializers.IntegerField(default=0)
-#     rating = serializers.IntegerField(default=0)
-#     status = serializers.ChoiceField(choices=STATUS_CHOICES,
-#                                      default=PUBLIC_STATUS)
-#
-#     ### Auto
-#     slug = serializers.SlugField(read_only=True)
-#     created = serializers.DateTimeField(read_only=True)
-#
-#     #AUDIO
-#     # Add the audio field to your model -- required
-#     audio_file = serializers.FileField(allow_empty_file=False)
-#
-#
-#     """
-#     Create or update a new Clip instance, given a dictionary
-#     of deserialized field values.
-#     Note that if we don't define this method, then deserializing
-#     data will simply return a dictionary of items.
-#     """
-#     def restore_object(self, attrs, instance=None):
-#         if instance:
-#             # Update existing instance
-#             instance.title = attrs.get('title', instance.title)
-#             #instance.author = User.objects.get(username=attrs.get('author', instance.author))
-#             instance.description = attrs.get('description', instance.description)
-#             instance.plays = attrs.get('plays', instance.plays)
-#             instance.rating = attrs.get('rating', instance.rating)
-#             instance.status = attrs.get('status', instance.status)
-#             instance.created = attrs.get('created ', instance.created)
-#             return instance
-#
-#         # Create new instance
-#         return Clip(**attrs)
+    def restore_object(self, attrs, instance=None):
+        # instance will be None, unless the serializer was instantiated with an
+        # existing model instance to be updated, using the instance=... argument
+        if instance is not None:
+            # Update existing instance
+            instance.title = attrs.get('title', instance.title)
+            instance.description = attrs.get('description', instance.description)
+            instance.brand = attrs.get('brand', instance.brand)
+            instance.plays = attrs.get('plays', instance.plays)
+            instance.rating = attrs.get('rating', instance.rating)
+            instance.status = attrs.get('status', instance.status)
+            instance.slug = slugify(attrs.get('title', instance.title))
+            instance.audio_file = attrs.get('audio_file', instance.audio_file)
+            instance.categories = attrs.get('categories', instance.categories)
+            return instance
+
+        # Create new instance
+        attrs.pop('categories', None)
+        return Clip(**attrs)

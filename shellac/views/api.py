@@ -17,10 +17,7 @@ class ClipList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        print("in ClipList POST")
-        print(request.user.username)
-        print(request.DATA)
-        serializer = ClipSerializer(data=request.DATA)
+        serializer = ClipSerializer(data=request.DATA, files=request.FILES)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -36,26 +33,28 @@ class ClipDetail(APIView):
     """
     Retrieve, update or delete a clip instance.
     """
-    def get_object(self, slug):
+    def get_object(self, pk):
         try:
             return Clip.objects.get(pk=pk)
         except Clip.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
+        # print("ClipDetail GET")
         clip = self.get_object(pk)
         serializer = ClipSerializer(clip)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         clip = self.get_object(pk)
-        serializer = ClipSerializer(clip, data=request.DATA)
+        serializer = ClipSerializer(clip, data=request.DATA, files=request.FILES)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
+        # print("ClipDetail DELETE")
         clip = self.get_object(pk)
         clip.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -82,6 +81,8 @@ class CategoryList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
 
 class CategoryDetail(APIView):
     """
@@ -100,17 +101,18 @@ class CategoryDetail(APIView):
 
     def put(self, request, slug, format=None):
         category = self.get_object(slug)
-        serializer = CategorySerializer(category, data=request.DATA)
+        serializer = CategorySerializer(instance=category, data=request.DATA, files=request.FILES)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, slug, format=None):
         category = self.get_object(slug)
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 

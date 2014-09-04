@@ -29,6 +29,7 @@ var shellac = (function () {
         $container: undefined,
 
         STATIC_URL: undefined,
+        MEDIA_URL: undefined,
 
         categories: undefined,
         category_db: TAFFY(),
@@ -229,7 +230,7 @@ var shellac = (function () {
             var anchor = String() +
                 '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 media clip">' +
 
-                '<a class="media-url" href="' + object.audio_file + '">' +
+                '<a class="media-url" href="' + stateMap.MEDIA_URL + object.audio_file + '">' +
                     '<img class="media-img img-responsive" src="' + stateMap.STATIC_URL + 'shellac/assets/seventyEight.png" alt="' + object.title + '" />' +
                     '<div class="media-description">' +
                         '<span class="media-description-content lead">' + object.title + '</span><br/>' +
@@ -298,12 +299,12 @@ var shellac = (function () {
     //   The Shell is also responsible for browser-wide issues
     // Returns   : none
     // Throws    : none
-    initModule = function( $container, STATIC_URL){
+    initModule = function( $container, STATIC_URL, MEDIA_URL){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         stateMap.$nav_sidebar = $container.parent;
         stateMap.STATIC_URL = STATIC_URL;
-
+        stateMap.MEDIA_URL = MEDIA_URL;
 
         $container.html( configMap.main_html );
         setJqueryMap();
@@ -317,7 +318,7 @@ var shellac = (function () {
         renderCategories();
 
         console.log($container);
-        console.log($container);
+        console.log(stateMap.MEDIA_URL);
     };
 
     return { initModule: initModule };
