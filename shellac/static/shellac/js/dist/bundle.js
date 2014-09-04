@@ -14047,6 +14047,12 @@ var audio = (function () {
     var context,
 
     configMap = {
+        progress_html : String() +
+            '<div class="progress">' +
+                '<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">' +
+                    '<span class="sr-only">60% Complete</span>' +
+                '</div>' +
+            '</div>'
     },
 
     stateMap = {
@@ -14066,6 +14072,7 @@ var audio = (function () {
     onClickPlayer,
     togglePlayer,
     onRetrieveError, makeSource,
+    clearProgressBar,
     play, pause,
     retrieve;
 
@@ -14075,6 +14082,7 @@ var audio = (function () {
 
     setJqueryMap = function($player){
         jqueryMap.$player  = $player;
+        jqueryMap.$progress = $player.find('.media-progress');
     };
 
 
@@ -14096,11 +14104,12 @@ var audio = (function () {
         request.responseType = 'arraybuffer';
 
         request.onprogress = function(pe) {
+            var percentLoad;
+
             if(pe.lengthComputable) {
-//                progressBar.max = pe.total;
-//                progressBar.value = pe.loaded;
-//                console.log(pe.loaded);
-//                console.log(pe.total);
+                percentLoad = (pe.loaded / pe.total * 100).toFixed(0);
+//                console.log("% loaded: %s", percentLoad);
+                jqueryMap.$progress_bar.width(percentLoad + "%");
             }
         };
 
@@ -14117,6 +14126,7 @@ var audio = (function () {
                 stateMap.source.connect(stateMap.context.destination);
                 stateMap.source.start(0);
                 stateMap.isPlaying = true;
+//                util.PubSub.emit("retrieveComplete");
             }, function (error){
                 console.log("Error decoding file data %s", error);
             });
@@ -14198,21 +14208,33 @@ var audio = (function () {
 
         if(contextClass){
             stateMap.context = new contextClass();
+
+            //register listeners
+            util.PubSub.on("retrieveComplete", clearProgressBar);
         } else {
             console.log("WebAudio API is not available");
         }
     };
+
+    //Callback for data load completion
+    // Activity: Clear the progress bar
+    clearProgressBar = function(){
+        if(jqueryMap.$progress){
+            jqueryMap.$progress.html('');
+        }
+    };
+
+
     //--------------------- END MODULE SCOPE METHODS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
     onClickPlayer = function($player){
         var enteringUrl = $player.attr('data-clip-url');
 
-        console.log("enteringUrl: %s", enteringUrl);
-        console.log("stateMap.url: %s", stateMap.url);
-
         //If we click the same clip, continue state
         if(enteringUrl !== stateMap.url){
+            clearProgressBar();
+            setJqueryMap($player);
             //assign the new url and reset playing state
             stateMap.url = enteringUrl;
             stateMap.isPlaying = false;
@@ -14222,6 +14244,9 @@ var audio = (function () {
                 stateMap.source.disconnect();
                 stateMap.source = null;
             }
+            jqueryMap.$progress.append(configMap.progress_html);
+            jqueryMap.$progress_bar = $player.find('.progress-bar');
+
             //this is async
             retrieve(stateMap.context, stateMap.url, onRetrieveError);
         } else {
@@ -14487,6 +14512,7 @@ var shellac = (function () {
                             '<span class="media-description-content"><em>' + object.description + '</em></span><br/>' +
                             '<span class="media-description-content"><small>' + object.author + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
                         '</div>' +
+                        '<div class="media-progress"></div>' +
                     '</span>' +
                 '</div>';
 

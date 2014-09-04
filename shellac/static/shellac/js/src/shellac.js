@@ -230,6 +230,7 @@ var shellac = (function () {
                             '<span class="media-description-content"><em>' + object.description + '</em></span><br/>' +
                             '<span class="media-description-content"><small>' + object.author + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
                         '</div>' +
+                        '<div class="media-progress"></div>' +
                     '</span>' +
                 '</div>';
 
