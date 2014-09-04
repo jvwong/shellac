@@ -2,6 +2,7 @@
  * shellac.js
  * Root namespace module
 */
+/* global $, window, AudioContext, XMLHttpRequest */
 'use strict';
 
 var shellac = (function () {
@@ -45,11 +46,100 @@ var shellac = (function () {
     parseClipData, renderClips, display_clips,
 
     onClickCategory,
-    PubSub;
+    PubSub,
+
+    audio_load;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
+    /*
+     * method :
+     * parameters
+     * return
+     *   *
+     **/
+
     //--------------------- BEGIN MODULE SCOPE METHODS --------------------
+
+    /*
+     * method audio_load: loads an audio sound by XMLHttpRequest
+     * precondition: a valid url points to a audio clip encoded mp3, ogg, or wav
+     * parameters
+     *  * url: a valid url to a audio resource
+     * return
+     **/
+    audio_load = function(event){
+
+
+
+        var sound = null,
+            context,
+            clip_url;
+        window.addEventListener('load', init, false);
+        function init() {
+            var url;
+            try {
+                // Fix up for prefixing
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                context = new AudioContext();
+                url = $(event.target).parent().attr('data-clip-url');
+                console.log($(event.target).parent().attr('data-clip-url'));
+                return url;
+            }
+            catch(e) {
+                console.log('Web Audio API is not supported in this browser');
+            }
+        }
+
+        function get_sound(url){
+            var request = new XMLHttpRequest();
+            request.open('GET', url, true);
+            request.responseType = 'arraybuffer';
+
+            request.onload = function(e){
+                // method: decodeAudioData
+                // positional arguments: binary data, callback on success, error callback
+                context.decodeAudioData(request.response, function(buffer){
+                    if(!buffer){
+                        console.log('Error decoding file data');
+                        return;
+                    }
+                    playSound(buffer);
+                }, onError);
+            };
+            request.send();
+        }
+
+        function onError(error){
+            console.log("Error decoding file data %s", error);
+        }
+
+        function playSound(buffer){
+            //create a sound source
+            var source = context.createBufferSource();
+
+            //tell the source which sound to play
+            source.buffer = buffer;
+
+            //connect the source to the context's destination (the speakers)
+            source.connect(context.destination);
+
+            source.start(0);
+//            source.noteOn(0); /* Play sound. */
+        }
+
+        clip_url = init();
+        get_sound(clip_url);
+
+    };
+
+
+    /*
+     * method :
+     * parameters
+     * return
+     *   *
+     **/
     PubSub = {
         handlers: {},
 
@@ -227,23 +317,25 @@ var shellac = (function () {
         jqueryMap.$clip_content.html("");
         stateMap.clips.forEach(function(object){
 
-            var anchor = String() +
+            var clip = String() +
                 '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 media clip">' +
 
-                '<a class="media-url" href="' + stateMap.MEDIA_URL + object.audio_file + '">' +
-                    '<img class="media-img img-responsive" src="' + stateMap.STATIC_URL + 'shellac/assets/seventyEight.png" alt="' + object.title + '" />' +
-                    '<div class="media-description">' +
-                        '<span class="media-description-content lead">' + object.title + '</span><br/>' +
-                        '<span class="media-description-content"><em>' + object.description + '</em></span><br/>' +
-                        '<span class="media-description-content"><small>' + object.author + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
-                    '</div>' +
-                '</a>' +
-            '</div>';
+                    '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
+                        '<img class="media-img img-responsive" src="' + stateMap.STATIC_URL + 'shellac/assets/seventyEight.png" alt="' + object.title + '" />' +
+                        '<div class="media-description">' +
+                            '<span class="media-description-content lead">' + object.title + '</span><br/>' +
+                            '<span class="media-description-content"><em>' + object.description + '</em></span><br/>' +
+                            '<span class="media-description-content"><small>' + object.author + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
+                        '</div>' +
+                    '</span>' +
+                '</div>';
 
-            jqueryMap.$clip_content.append(anchor);
+            jqueryMap.$clip_content.append(clip);
+
 
         });
-
+        //register listeners
+        $('.media.clip .media-url').on('click', audio_load);
     };
 
 
@@ -311,6 +403,7 @@ var shellac = (function () {
 
         //register pub-sub methods
         PubSub.on("onClipLoadComplete", display_clips);
+//        PubSub.on("onClipDisplayComplete", audio_load);
         PubSub.on("onCategoryLoadComplete", display_categories);
 
         //load data into in-browser database

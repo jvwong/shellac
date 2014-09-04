@@ -9,8 +9,7 @@ module.exports = function watch(grunt) {
 	return {
         js: {
             files: [
-                'src/**/*.js',
-                '!src/**/main.js'
+                'src/**/*.js'
             ],
             tasks: [
                 'jshint',

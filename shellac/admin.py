@@ -22,7 +22,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ClipAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ["title"]}
-    list_display = ['__unicode__']
+    list_display = ['__unicode__', 'audio_file_player']
     actions = [custom_delete_selected]
 
     def get_actions(self, request):
