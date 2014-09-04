@@ -38,7 +38,9 @@ var shellac = (function () {
         category_db: TAFFY(),
 
         clips: undefined,
-        clip_db: TAFFY()
+        clip_db: TAFFY(),
+
+        isPlaying: false
     },
 
     jqueryMap = {},
@@ -48,9 +50,7 @@ var shellac = (function () {
     parseClipData, renderClips, display_clips,
 
     onClickCategory,
-    PubSub = util.PubSub,
-
-    onClickAudio = audio.enable;
+    PubSub = util.PubSub;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -237,8 +237,9 @@ var shellac = (function () {
 
 
         });
-        //register listeners
-        $('.media.clip .media-url').on('click', onClickAudio);
+        $('.media.clip .media-url').on('click', function(e){
+            audio.onClickPlayer($(this));
+        });
     };
 
 
