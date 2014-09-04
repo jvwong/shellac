@@ -140,11 +140,11 @@ audio_path = os.path.join(settings.STATIC_ROOT, "../source/shellac/tests/assets/
 
 class Api_ClipList(APITestCase):
 
-    def test_cliplist_url_resolves_to_api_cliplist_view(self):
+    def test_ClipList_url_resolves_to_api_ClipList_view(self):
         url = reverse('shellac_api_clip')
         self.assertEqual(url, '/api/clip/')
 
-    def test_cliplist_get_returns_correct_response(self):
+    def test_ClipList_GET_returns_correct_response(self):
         ##authenticate REST style
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
@@ -174,7 +174,7 @@ class Api_ClipList(APITestCase):
         cleanClips()
 
 
-    def test_cliplist_post_creates_and_returns_correct_response(self):
+    def test_ClipList_POST_creates_and_returns_correct_response(self):
 
         #make some users
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
