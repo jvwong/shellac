@@ -113,6 +113,7 @@ var audio = (function () {
             stateMap.isPlaying = false;
             stateMap.startTime = 0;
             stateMap.startOffset = 0;
+            stateMap.audio = null;
             if(stateMap.source){
                 stateMap.source.disconnect();
                 stateMap.source = null;
