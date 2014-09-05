@@ -9,6 +9,8 @@ var audio = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var util = require('./util.js');
+    var soundManager = require('../lib/soundmanager2/script/soundmanager2.js').soundManager;
+    console.log(soundManager);
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -73,20 +75,36 @@ var audio = (function () {
     // Returns   : none
     // Throws    : none
     initModule = function($player){
-        var contextClass;
-        // Fix up for prefixing
-        contextClass= (
-            window.AudioContext ||
-            window.webkitAudioContext ||
-            window.mozAudioContext ||
-            window.oAudioContext ||
-            window.msAudioContext);
+//        var contextClass;
+//        // Fix up for prefixing
+//        contextClass= (
+//            window.AudioContext ||
+//            window.webkitAudioContext ||
+//            window.mozAudioContext ||
+//            window.oAudioContext ||
+//            window.msAudioContext);
+//
+//        if(contextClass){
+//            stateMap.context = new contextClass();
+//        } else {
+//            console.log("WebAudio API is not available");
+//        }
 
-        if(contextClass){
-            stateMap.context = new contextClass();
-        } else {
-            console.log("WebAudio API is not available");
-        }
+        soundManager.setup({
+            url: 'http://www.hiding-my-file/Soundmanager2Files/soundmanager2_flash9.swf/',
+            onready: function() {
+                var mySound = soundManager.createSound({
+                    id: 'aSound',
+                    url: stateMap.url
+                });
+                mySound.play();
+            },
+            ontimeout: function() {
+                // Hrmm, SM2 could not start. Missing SWF? Flash blocked? Show an error, etc.?
+            }
+        });
+
+
     };
 
     createAudioPlayer = function(){
@@ -105,27 +123,35 @@ var audio = (function () {
     onClickPlayer = function($player){
         var enteringUrl = $player.attr('data-clip-url');
 
+        console.log("enteringUrl: %s", enteringUrl);
+        console.log("stateMap.url: %s", stateMap.url);
         //If we click the same clip, continue state
         if(enteringUrl !== stateMap.url){
             setJqueryMap($player);
             //assign the new url and reset playing state
             stateMap.url = enteringUrl;
-            stateMap.isPlaying = false;
-            stateMap.startTime = 0;
-            stateMap.startOffset = 0;
-            stateMap.audio = null;
-            if(stateMap.source){
-                stateMap.source.disconnect();
-                stateMap.source = null;
-            }
+//            stateMap.isPlaying = false;
+//            stateMap.startTime = 0;
+//            stateMap.startOffset = 0;
+//            stateMap.audio = null;
+//            if(stateMap.source){
+//                stateMap.source.disconnect();
+//            }
 
             //HTML5 audio tag method
-            stateMap.audio = createAudioPlayer();
-            stateMap.audio.play();
-            stateMap.isPlaying = true;
+//            stateMap.audio = createAudioPlayer();
+//            stateMap.audio.play();
+//            stateMap.isPlaying = true;
+
         } else {
-            stateMap.isPlaying = togglePlayer(stateMap.isPlaying);
+//            console.log(stateMap.audio.currentSrc);
+//            stateMap.isPlaying = togglePlayer(stateMap.isPlaying);
         }
+
+
+
+
+
     };
     //------------------- END PUBLIC METHODS -------------------
 
