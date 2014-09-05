@@ -1,4 +1,4 @@
-from shellac.tests.utils.base import FunctionalTest, setFileAttributefromLocal
+from shellac.tests.utils.functional import FunctionalTest, setFileAttributefromLocal
 from django.contrib.auth import get_user_model
 from shellac.models import Clip, Category
 User = get_user_model()

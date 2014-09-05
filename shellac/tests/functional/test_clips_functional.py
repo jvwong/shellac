@@ -1,5 +1,5 @@
 from selenium.webdriver.common.keys import Keys
-from shellac.tests.utils.base import FunctionalTest
+from shellac.tests.utils.functional import FunctionalTest
 from shellac.models import Clip, Category
 import os
 
