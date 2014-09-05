@@ -11,8 +11,8 @@ from django.conf import settings
 from shellac.tests.utils.base import setFileAttributefromLocal, cleanClips
 from rest_framework.compat import BytesIO
 
-brand_path = os.path.abspath(os.path.join(settings.STATIC_ROOT, "../source/shellac/tests/assets/seventyEight.png"))
-audio_path = os.path.abspath(os.path.join(settings.STATIC_ROOT, "../source/shellac/tests/assets/song.mp3"))
+audio_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../assets/song.mp3")
+brand_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../assets/seventyEight.png")
 
 def get_users():
     username1_dummy = 'andrea'

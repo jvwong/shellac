@@ -136,7 +136,7 @@ class Api_User_PageTest_username(APITestCase):
 import os
 import json
 from django.conf import settings
-audio_path = os.path.join(settings.STATIC_ROOT, "../source/shellac/tests/assets/song.mp3")
+audio_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../assets/song.mp3")
 
 class Api_ClipList(APITestCase):
 
