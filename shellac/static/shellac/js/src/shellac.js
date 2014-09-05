@@ -318,8 +318,7 @@ var shellac = (function () {
         renderClips();
         renderCategories();
 
-        console.log($container);
-        console.log(audio);
+//        console.log($container);
     };
 
     return { initModule: initModule };

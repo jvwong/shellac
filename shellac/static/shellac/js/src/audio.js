@@ -42,8 +42,7 @@ var audio = (function () {
 
     initModule,
     onClickPlayer,
-    togglePlayer,
-    createAudioPlayer;
+    togglePlayer;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -67,54 +66,23 @@ var audio = (function () {
     };
 
     // Begin private method /initModule/
-    // Example   : audio.initModule();
+    // Example   : initModule();
     // Purpose   :
     //   Sets up the Audio API context or reports errors
     // Arguments : none
     // Action    : searches and adds the correct AudioContext object to the global window
     // Returns   : none
     // Throws    : none
-    initModule = function($player){
-//        var contextClass;
-//        // Fix up for prefixing
-//        contextClass= (
-//            window.AudioContext ||
-//            window.webkitAudioContext ||
-//            window.mozAudioContext ||
-//            window.oAudioContext ||
-//            window.msAudioContext);
-//
-//        if(contextClass){
-//            stateMap.context = new contextClass();
-//        } else {
-//            console.log("WebAudio API is not available");
-//        }
-
+    initModule = function(){
         soundManager.setup({
             url: 'http://www.hiding-my-file/Soundmanager2Files/soundmanager2_flash9.swf/',
             onready: function() {
-                var mySound = soundManager.createSound({
-                    id: 'aSound',
-                    url: stateMap.url
-                });
-                mySound.play();
+                console.log("SoundManager ready");
             },
             ontimeout: function() {
-                // Hrmm, SM2 could not start. Missing SWF? Flash blocked? Show an error, etc.?
+                console.log("SoundManager failed to load");
             }
         });
-
-
-    };
-
-    createAudioPlayer = function(){
-        console.log("createAudioPlayer");
-        /*create an audio tag*/
-        var audio = new Audio();
-        stateMap.source = stateMap.context.createMediaElementSource(audio);
-        stateMap.source.connect(stateMap.context.destination);
-        audio.src = stateMap.url;
-        return audio;
     };
 
     //--------------------- END MODULE SCOPE METHODS --------------------
@@ -128,30 +96,31 @@ var audio = (function () {
         //If we click the same clip, continue state
         if(enteringUrl !== stateMap.url){
             setJqueryMap($player);
+
+            if(stateMap.audio){
+                stateMap.audio.stop();
+                soundManager.destroySound(stateMap.url);
+                stateMap.audio = null;
+            }
+
             //assign the new url and reset playing state
             stateMap.url = enteringUrl;
-//            stateMap.isPlaying = false;
-//            stateMap.startTime = 0;
-//            stateMap.startOffset = 0;
-//            stateMap.audio = null;
-//            if(stateMap.source){
-//                stateMap.source.disconnect();
-//            }
+            stateMap.startTime = 0;
+            stateMap.startOffset = 0;
 
-            //HTML5 audio tag method
-//            stateMap.audio = createAudioPlayer();
-//            stateMap.audio.play();
-//            stateMap.isPlaying = true;
+            //SoundManager2 method
+            stateMap.audio = soundManager.createSound({
+                    id: stateMap.url,
+                    url: stateMap.url
+                });
+            stateMap.audio.play();
+            stateMap.isPlaying = true;
 
         } else {
-//            console.log(stateMap.audio.currentSrc);
-//            stateMap.isPlaying = togglePlayer(stateMap.isPlaying);
+            console.log("Same URL %s", stateMap.url);
+            console.log("stateMap.isPlaying %s", stateMap.isPlaying);
+            stateMap.isPlaying = togglePlayer(stateMap.isPlaying);
         }
-
-
-
-
-
     };
     //------------------- END PUBLIC METHODS -------------------
 
