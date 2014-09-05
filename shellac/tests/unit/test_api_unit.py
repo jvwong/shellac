@@ -264,7 +264,7 @@ class Api_ClipDetail(APITestCase):
                                                          'audio_file': f})
 
         resp = response.data
-        print(resp)
+        # print(resp)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(resp['title'], 'updated clip1 title')
         self.assertEqual(resp['slug'], 'updated-clip1-title')
