@@ -20201,61 +20201,76 @@ var audio = (function () {
     //------------------- BEGIN PUBLIC METHODS -------------------
     onClickPlayer = function($player){
 
-        //Get the url of the clicked element
-        stateMap.url = $player.attr('data-clip-url');
+        // *** CASE 0
+        // State: Clip selected does was not created yet
+        // Action: Create the clip
+        if(!soundManager.getSoundById($player.attr('data-clip-url'))) {
 
-        //Set the current element to the stateMap; may not be able to find progress bar if uninitialized sound
-        setJqueryMap($player);
-
-        //Case I: New sound to be created
-        if(!soundManager.getSoundById(stateMap.url)){
-
-            //Safely pause a previously playing sound
-            if(stateMap.audio && stateMap.audio.playState === 1 ){
+            // Case 0.a: No clip is currently playing
+                // do nothing
+            // Case 0.b: Another Clip exists and is still playing / buffering
+            if (stateMap.audio && stateMap.audio.playState === 1){
+                //pause the previous clip
                 stateMap.audio.pause();
             }
 
+            stateMap.url = $player.attr('data-clip-url');
+            setJqueryMap($player);
+
             //Create the sound, assign it to stateMap, and autoplay
             stateMap.audio = soundManager.createSound({
-                    id: stateMap.url,
-                    url: stateMap.url,
-                    autoPlay: true,
-                    whileloading: function() {
-                        //soundManager._writeDebug('LOAD PROGRESS ' + this.bytesLoaded + ' / ' + this.bytesTotal);
-                    },
-                    whileplaying: function() {
-                        var percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
+                id: stateMap.url,
+                url: stateMap.url,
+                autoPlay: true,
+                whileloading: function () {
+                    //soundManager._writeDebug('LOAD PROGRESS ' + this.bytesLoaded + ' / ' + this.bytesTotal);
+                },
+                whileplaying: function () {
+                    var percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
 
-                        if(percentPlayed !== stateMap.percentPlayed){
-                            stateMap.percentPlayed = percentPlayed;
-                            //soundManager._writeDebug('PLAYed : ' + percentPlayed + '%');
-                            jqueryMap.$progress_bar.width(percentPlayed + '%');
-                        }
-                    },
-                    onload: function() {
-                        //inject the play progress bar and set jqueryMap attribute
-                        jqueryMap.$progress.html(configMap.progress_html);
-                        jqueryMap.$progress_bar = jqueryMap.$progress.find('.progress-bar');
-
-                        //initialize the percentPlayed
-                        stateMap.percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
-                    },
-                    onstop: function() {
-                        soundManager._writeDebug('The sound ' + this.id +' stopped.');
-                        //jqueryMap.$progress.html('');
-                    },
-                    onfinish: function() {
-                        soundManager._writeDebug('The sound ' + this.id + ' finished playing.');
-                        //jqueryMap.$progress.html('');
+                    if (percentPlayed !== stateMap.percentPlayed) {
+                        stateMap.percentPlayed = percentPlayed;
+                        jqueryMap.$progress_bar.width(percentPlayed + '%');
                     }
-                });
+                },
+                onload: function () {
+                    //inject the play progress bar and set jqueryMap attribute
+                    jqueryMap.$progress.html(configMap.progress_html);
+                    jqueryMap.$progress_bar = jqueryMap.$progress.find('.progress-bar');
 
-
+                    //initialize the percentPlayed
+                    stateMap.percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
+                },
+                onstop: function () {
+                    soundManager._writeDebug('The sound ' + this.id + ' stopped.');
+                },
+                onfinish: function () {
+                    soundManager._writeDebug('The sound ' + this.id + ' finished playing.');
+                }
+            });
         } else {
-            //Assign the current sound to the stateMap and toggle it appropriately
-            stateMap.audio = soundManager.getSoundById(stateMap.url);
+
+            // *** Case 1
+            // State: Clip selected indeed exists; stateMap.audio then must exist
+            // Action: Check if it is the same clip from before
+            var sound = soundManager.getSoundById($player.attr('data-clip-url'));
+
+            // Case 1a: this is the same clip
+            // In this case audio, url, and $player are identical so simply toggle the playing state
+            if(stateMap.audio.id !== sound.id){
+                // Case 1b: this is a different clip
+                // Pause previously playing clip
+                stateMap.audio.pause();
+
+                //update the stateMap to reflect the new object
+                stateMap.audio = sound;
+                stateMap.url = sound.id;
+                setJqueryMap($player);
+            }
+
             togglePlayer();
         }
+
 
     };
     //------------------- END PUBLIC METHODS -------------------
