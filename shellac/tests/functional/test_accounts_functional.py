@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from django.contrib.staticfiles.testing import StaticLiveServerCase
+# from django.contrib.staticfiles.testing import StaticLiveServerCase
+from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
 import time
 import sys
@@ -11,7 +12,7 @@ password_dummy = 'a'
 email_dummy = 'aray@outlook.com'
 
 
-class NewUserTest(StaticLiveServerCase):
+class NewUserTest(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -95,7 +96,7 @@ class NewUserTest(StaticLiveServerCase):
         #time.sleep(2)
 
 
-class DuplicateUserTest(StaticLiveServerCase):
+class DuplicateUserTest(LiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         for arg in sys.argv:
@@ -167,7 +168,7 @@ class DuplicateUserTest(StaticLiveServerCase):
         #time.sleep(1)
 
 
-class ReturningUserTest(StaticLiveServerCase):
+class ReturningUserTest(LiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         for arg in sys.argv:
