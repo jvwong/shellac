@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from shellac.models import Clip
 from django.contrib.auth.models import User
 import sys
-from shellac.tests.utils.base import cleanClips
+from shellac.tests.utils.unit import cleanClips
 from django.contrib.auth import get_user_model
 User = get_user_model()
 

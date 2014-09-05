@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from django.contrib.auth import get_user_model
 User = get_user_model()
-from shellac.tests.utils.base import setFileAttributefromLocal, cleanClips
+from shellac.tests.utils.unit import setFileAttributefromLocal, cleanClips
 
 """
  BEGIN CATEGORY API

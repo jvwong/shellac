@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 import os
 from django.conf import settings
-from shellac.tests.utils.base import setFileAttributefromLocal, cleanClips
+from shellac.tests.utils.unit import setFileAttributefromLocal, cleanClips
 from rest_framework.compat import BytesIO
 
 audio_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../assets/song.mp3")

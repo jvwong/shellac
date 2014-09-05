@@ -2,7 +2,7 @@ from django.test import TestCase
 from shellac.models import Clip, Category
 from django.contrib.auth.models import User
 import os
-from shellac.tests.utils.base import cleanClips, setFileAttributefromLocal
+from shellac.tests.utils.unit import cleanClips, setFileAttributefromLocal
 
 UNIT_DIR = os.path.abspath(os.path.dirname(__file__))
 brand_path = os.path.abspath(os.path.join(UNIT_DIR, "../assets/seventyEight.png"))
