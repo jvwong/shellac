@@ -14307,7 +14307,9 @@ var shellac = (function () {
             '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
                 '<div class="shellac-app nav nav-sidebar list-group"></div>' +
             '</div>' +
-            '<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 shellac-app clip content"></div>'
+            '<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 shellac-app clip content"></div>',
+
+        truncate_max: 25
     },
 
     stateMap = {
@@ -14508,8 +14510,8 @@ var shellac = (function () {
                     '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
                         '<img class="media-img img-responsive" src="' + stateMap.STATIC_URL + 'shellac/assets/seventyEight.png" alt="' + object.title + '" />' +
                         '<div class="media-description">' +
-                            '<span class="media-description-content lead">' + util.truncate(object.title, 20) + '</span><br/>' +
-                            '<span class="media-description-content"><em>' + util.truncate(object.description, 20) + '</em></span><br/>' +
+                            '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
+                            '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
                             '<span class="media-description-content"><small>' + object.author + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
                         '</div>' +
                         '<div class="media-progress"></div>' +
