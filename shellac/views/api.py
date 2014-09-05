@@ -18,9 +18,12 @@ class ClipList(APIView):
 
     def post(self, request, format=None):
         serializer = ClipSerializer(data=request.DATA, files=request.FILES)
+        #print(request.DATA)
+        #print(request.FILES)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        #print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def pre_save(self, obj):
@@ -75,7 +78,7 @@ class CategoryList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = CategorySerializer(data=request.DATA)
+        serializer = CategorySerializer(data=request.DATA, files=request.FILES)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -46,6 +46,7 @@ class ClipSerializer(serializers.ModelSerializer):
         return obj.author.username
 
     def restore_object(self, attrs, instance=None):
+        #print(attrs)
         # instance will be None, unless the serializer was instantiated with an
         # existing model instance to be updated, using the instance=... argument
         if instance is not None:

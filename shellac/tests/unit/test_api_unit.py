@@ -195,7 +195,7 @@ class Api_ClipList(APITestCase):
         data =response.data
         self.assertEqual(data['title'], 'clip1 title')
         self.assertEqual(data['description'], 'clip1 description')
-        self.assertIn('song.mp3', data['audio_file'])
+        self.assertIn('sounds', data['audio_file'])
         self.assertEqual(data['plays'], 0)
         self.assertEqual(data['rating'], 0)
         self.assertEqual(data['status'], 1)
@@ -250,15 +250,21 @@ class Api_ClipDetail(APITestCase):
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         clip1 = Clip.objects.create(title='clip1 title', author=user1)
         clip1.description = "clip1 description"
-        setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
+        # setFileAttributefromLocal(clip1.audio_file, audio_path, "song.mp3")
         self.assertEqual(User.objects.all().count(), 1)
         self.assertEqual(Clip.objects.all().count(), 1)
 
+        # open a file and attach it to the request payload
+        f = open(audio_path, "rb")
+
         self.client.login(username='andrea', password='a')
-        response = self.client.put('/api/clip/1/', data={'title': 'updated clip1 title', 'author': user1.id, 'description': 'updated clip1 description'})
+        response = self.client.put('/api/clip/1/', data={'title': 'updated clip1 title',
+                                                         'author': user1.id,
+                                                         'description': 'updated clip1 description',
+                                                         'audio_file': f})
 
         resp = response.data
-        # print(resp)
+        print(resp)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(resp['title'], 'updated clip1 title')
         self.assertEqual(resp['slug'], 'updated-clip1-title')
@@ -268,7 +274,6 @@ class Api_ClipDetail(APITestCase):
         self.assertEqual(resp['plays'], 0)
         self.assertEqual(resp['status'], 1)
         self.assertEqual(resp['owner'], 'andrea')
-
 
         cleanClips()
 
