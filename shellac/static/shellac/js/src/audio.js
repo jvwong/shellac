@@ -8,14 +8,13 @@
 var audio = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
-    var util = require('./util.js');
-    var soundManager = require('../lib/soundmanager2/script/soundmanager2.js').soundManager;
-    console.log(soundManager);
+    var util = require('./util.js'),
+        soundManager = require('../lib/soundmanager2/script/soundmanager2.js').soundManager;
 
     //---------------- END MODULE DEPENDENCIES --------------
 
     //---------------- BEGIN MODULE SCOPE VARIABLES --------------
-    var context,
+    var
 
     configMap = {
         progress_html : String() +
@@ -23,7 +22,9 @@ var audio = (function () {
                 '<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">' +
                     '<span class="sr-only">60% Complete</span>' +
                 '</div>' +
-            '</div>'
+            '</div>',
+
+        isSupported: undefined
     },
 
     stateMap = {
@@ -33,8 +34,7 @@ var audio = (function () {
         isPlaying: false,
 
         url: undefined,
-        startOffset: 0,
-        startTime: 0
+        percentPlayed: undefined
     },
 
     jqueryMap = {},
@@ -51,18 +51,21 @@ var audio = (function () {
     setJqueryMap = function($player){
         jqueryMap.$player  = $player;
         jqueryMap.$progress = $player.find('.media-progress');
+        jqueryMap.$progress_bar = jqueryMap.$progress.find('.progress-bar');
     };
 
-    togglePlayer = function(isPlaying){
-        if(!isPlaying){
-            console.log("start playing: %s", stateMap.url);
-            stateMap.audio.play();
-            return !isPlaying;
-        }
+    togglePlayer = function(){
+        if(stateMap.audio.paused){
+            console.log("Paused; Resume play: %s", stateMap.url);
+            stateMap.audio.resume();
 
-        console.log("pausing: %s", stateMap.url);
-        stateMap.audio.pause();
-        return !isPlaying;
+        }else if(stateMap.audio.playState === 0){ //stopped or uninitialized
+            console.log("Stopped; Start play: %s", stateMap.url);
+            stateMap.audio.play();
+        }else if(stateMap.audio.playState === 1){ //playing or buffering
+            console.log("Playing; Pause : %s", stateMap.url);
+            stateMap.audio.pause();
+        }
     };
 
     // Begin private method /initModule/
@@ -75,9 +78,12 @@ var audio = (function () {
     // Throws    : none
     initModule = function(){
         soundManager.setup({
+            debugMode: true,
+            consoleOnly: true,
             url: 'http://www.hiding-my-file/Soundmanager2Files/soundmanager2_flash9.swf/',
             onready: function() {
-                console.log("SoundManager ready");
+                configMap.isSupported = soundManager.ok();
+                console.log("SoundManager supported: %s", configMap.isSupported);
             },
             ontimeout: function() {
                 console.log("SoundManager failed to load");
@@ -89,38 +95,63 @@ var audio = (function () {
 
     //------------------- BEGIN PUBLIC METHODS -------------------
     onClickPlayer = function($player){
-        var enteringUrl = $player.attr('data-clip-url');
 
-        console.log("enteringUrl: %s", enteringUrl);
-        console.log("stateMap.url: %s", stateMap.url);
-        //If we click the same clip, continue state
-        if(enteringUrl !== stateMap.url){
-            setJqueryMap($player);
+        //Get the url of the clicked element
+        stateMap.url = $player.attr('data-clip-url');
 
-            if(stateMap.audio){
-                stateMap.audio.stop();
-                soundManager.destroySound(stateMap.url);
-                stateMap.audio = null;
+        //Set the current element to the stateMap; may not be able to find progress bar if uninitialized sound
+        setJqueryMap($player);
+
+        //Case I: New sound to be created
+        if(!soundManager.getSoundById(stateMap.url)){
+
+            //Safely pause a previously playing sound
+            if(stateMap.audio && stateMap.audio.playState === 1 ){
+                stateMap.audio.pause();
             }
 
-            //assign the new url and reset playing state
-            stateMap.url = enteringUrl;
-            stateMap.startTime = 0;
-            stateMap.startOffset = 0;
-
-            //SoundManager2 method
+            //Create the sound, assign it to stateMap, and autoplay
             stateMap.audio = soundManager.createSound({
                     id: stateMap.url,
-                    url: stateMap.url
+                    url: stateMap.url,
+                    autoPlay: true,
+                    whileloading: function() {
+                        //soundManager._writeDebug('LOAD PROGRESS ' + this.bytesLoaded + ' / ' + this.bytesTotal);
+                    },
+                    whileplaying: function() {
+                        var percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
+
+                        if(percentPlayed !== stateMap.percentPlayed){
+                            stateMap.percentPlayed = percentPlayed;
+                            //soundManager._writeDebug('PLAYed : ' + percentPlayed + '%');
+                            jqueryMap.$progress_bar.width(percentPlayed + '%');
+                        }
+                    },
+                    onload: function() {
+                        //inject the play progress bar and set jqueryMap attribute
+                        jqueryMap.$progress.html(configMap.progress_html);
+                        jqueryMap.$progress_bar = jqueryMap.$progress.find('.progress-bar');
+
+                        //initialize the percentPlayed
+                        stateMap.percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
+                    },
+                    onstop: function() {
+                        soundManager._writeDebug('The sound ' + this.id +' stopped.');
+                        //jqueryMap.$progress.html('');
+                    },
+                    onfinish: function() {
+                        soundManager._writeDebug('The sound ' + this.id + ' finished playing.');
+                        //jqueryMap.$progress.html('');
+                    }
                 });
-            stateMap.audio.play();
-            stateMap.isPlaying = true;
+
 
         } else {
-            console.log("Same URL %s", stateMap.url);
-            console.log("stateMap.isPlaying %s", stateMap.isPlaying);
-            stateMap.isPlaying = togglePlayer(stateMap.isPlaying);
+            //Assign the current sound to the stateMap and toggle it appropriately
+            stateMap.audio = soundManager.getSoundById(stateMap.url);
+            togglePlayer();
         }
+
     };
     //------------------- END PUBLIC METHODS -------------------
 
