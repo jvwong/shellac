@@ -14058,6 +14058,7 @@ var audio = (function () {
     stateMap = {
         source: undefined,
         context: undefined,
+        audio: undefined,
         isPlaying: false,
 
         url: undefined,
@@ -14071,10 +14072,7 @@ var audio = (function () {
     initModule,
     onClickPlayer,
     togglePlayer,
-    onRetrieveError, makeSource,
-    clearProgressBar,
-    play, pause,
-    retrieve;
+    createAudioPlayer;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -14085,108 +14083,17 @@ var audio = (function () {
         jqueryMap.$progress = $player.find('.media-progress');
     };
 
-
-    // Begin Private method /retrieve/
-    // Example   :  retrieve('/path/to/sound', onLoadAudioData)
-    // Purpose   : Retrieve the given audio data from the url and fire the callback upon completion
-    // Arguments :
-    //  * context - the valid browser AudioContext object
-    //  * url - a valid url to an audio resource
-    //  * sucessCallback - callback function in the event of successful data transfer; takes arraybuffer
-    //  * errorCallback - callback function in the event of unsuccessful data transfer; takes error object
-    // Action    : Ajax request from the url and passes to callback which take an arraybuffer object
-    // Returns   : none
-    // Throws    : error if audio content is not decoded or available
-    retrieve = function(context, url, onError){
-
-        var request = new XMLHttpRequest();
-        request.open('GET', url, true);
-        request.responseType = 'arraybuffer';
-
-        request.onprogress = function(pe) {
-            var percentLoad;
-
-            if(pe.lengthComputable) {
-                percentLoad = (pe.loaded / pe.total * 100).toFixed(0);
-//                console.log("% loaded: %s", percentLoad);
-                jqueryMap.$progress_bar.width(percentLoad + "%");
-            }
-        };
-
-        request.onload = function(pe){
-            // method: decodeAudioData
-            // positional arguments: binary data, callback on success, error callback
-            context.decodeAudioData(request.response, function(buffer){
-                if(!buffer){
-                    console.log('Error decoding file data');
-                    return;
-                }
-                stateMap.source = stateMap.context.createBufferSource();
-                stateMap.source.buffer = buffer;
-                stateMap.source.connect(stateMap.context.destination);
-                stateMap.source.start(0);
-                stateMap.isPlaying = true;
-//                util.PubSub.emit("retrieveComplete");
-            }, function (error){
-                console.log("Error decoding file data %s", error);
-            });
-        };
-        request.send();
-    };
-
-    makeSource = function (buffer){
-        //create a sound source
-        stateMap.source = stateMap.context.createBufferSource();
-        //tell the stateMap.source which sound to play
-        stateMap.source.buffer = buffer;
-        //connect the source to the context's destination (the speakers)
-        stateMap.source.connect(stateMap.context.destination);
-        console.log('finished makesource');
-    };
-
     togglePlayer = function(isPlaying){
         if(!isPlaying){
             console.log("start playing: %s", stateMap.url);
-            play();
+            stateMap.audio.play();
             return !isPlaying;
         }
 
-        console.log("stopping: %s", stateMap.url);
-        pause();
+        console.log("pausing: %s", stateMap.url);
+        stateMap.audio.pause();
         return !isPlaying;
     };
-
-
-    // Begin private method /play/
-    // Example   : play();
-    // Purpose   :
-    //   Resumes / plays the audio clip from the last paused state or the start
-    // Arguments : none
-    // Action    : activates the audio player
-    // Returns   : none
-    // Throws    : none
-    play = function(){
-        console.log('play');
-
-        stateMap.startTime = stateMap.context.currentTime;
-        makeSource(stateMap.source.buffer);
-        stateMap.source.start(0, stateMap.startOffset % stateMap.source.buffer.duration);
-    };
-
-    // Begin private method /pause/
-    // Example   : pause();
-    // Purpose   :
-    //   Stops the audio clip at the given state
-    // Arguments : none
-    // Action    : deactivates the audio player
-    // Returns   : none
-    // Throws    : none
-    pause = function(){
-        stateMap.source.stop();
-        //measure how much time has passed since the last pause
-        stateMap.startOffset += stateMap.context.currentTime - stateMap.startTime;
-    };
-
 
     // Begin private method /initModule/
     // Example   : audio.initModule();
@@ -14208,22 +14115,20 @@ var audio = (function () {
 
         if(contextClass){
             stateMap.context = new contextClass();
-
-            //register listeners
-            util.PubSub.on("retrieveComplete", clearProgressBar);
         } else {
             console.log("WebAudio API is not available");
         }
     };
 
-    //Callback for data load completion
-    // Activity: Clear the progress bar
-    clearProgressBar = function(){
-        if(jqueryMap.$progress){
-            jqueryMap.$progress.html('');
-        }
+    createAudioPlayer = function(){
+        console.log("createAudioPlayer");
+        /*create an audio tag*/
+        var audio = new Audio();
+        stateMap.source = stateMap.context.createMediaElementSource(audio);
+        stateMap.source.connect(stateMap.context.destination);
+        audio.src = stateMap.url;
+        return audio;
     };
-
 
     //--------------------- END MODULE SCOPE METHODS --------------------
 
@@ -14233,7 +14138,6 @@ var audio = (function () {
 
         //If we click the same clip, continue state
         if(enteringUrl !== stateMap.url){
-            clearProgressBar();
             setJqueryMap($player);
             //assign the new url and reset playing state
             stateMap.url = enteringUrl;
@@ -14245,21 +14149,12 @@ var audio = (function () {
                 stateMap.source = null;
             }
 
-//            jqueryMap.$progress.append(configMap.progress_html);
-//            jqueryMap.$progress_bar = $player.find('.progress-bar');
-
-            //this is async
-//            retrieve(stateMap.context, stateMap.url, onRetrieveError);
-
-            /*create an audio tag*/
-            var audio = new Audio();
-            stateMap.source = stateMap.context.createMediaElementSource(audio);
-            stateMap.source.connect(stateMap.context.destination);
-            audio.src = stateMap.url;
-            audio.play();
-
+            //HTML5 audio tag method
+            stateMap.audio = createAudioPlayer();
+            stateMap.audio.play();
+            stateMap.isPlaying = true;
         } else {
-//            stateMap.isPlaying = togglePlayer(stateMap.isPlaying);
+            stateMap.isPlaying = togglePlayer(stateMap.isPlaying);
         }
     };
     //------------------- END PUBLIC METHODS -------------------
