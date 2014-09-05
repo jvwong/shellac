@@ -2,7 +2,7 @@
  * audio.js
  * Web Audio API methods
 */
-/* global $, window, AudioContext, XMLHttpRequest */
+/* global $, window, AudioContext, XMLHttpRequest, Audio*/
 'use strict';
 
 var audio = (function () {
@@ -213,13 +213,22 @@ var audio = (function () {
                 stateMap.source.disconnect();
                 stateMap.source = null;
             }
-            jqueryMap.$progress.append(configMap.progress_html);
-            jqueryMap.$progress_bar = $player.find('.progress-bar');
+
+//            jqueryMap.$progress.append(configMap.progress_html);
+//            jqueryMap.$progress_bar = $player.find('.progress-bar');
 
             //this is async
-            retrieve(stateMap.context, stateMap.url, onRetrieveError);
+//            retrieve(stateMap.context, stateMap.url, onRetrieveError);
+
+            /*create an audio tag*/
+            var audio = new Audio();
+            stateMap.source = stateMap.context.createMediaElementSource(audio);
+            stateMap.source.connect(stateMap.context.destination);
+            audio.src = stateMap.url;
+            audio.play();
+
         } else {
-            stateMap.isPlaying = togglePlayer(stateMap.isPlaying);
+//            stateMap.isPlaying = togglePlayer(stateMap.isPlaying);
         }
     };
     //------------------- END PUBLIC METHODS -------------------
