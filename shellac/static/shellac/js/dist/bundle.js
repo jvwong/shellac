@@ -14508,8 +14508,8 @@ var shellac = (function () {
                     '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
                         '<img class="media-img img-responsive" src="' + stateMap.STATIC_URL + 'shellac/assets/seventyEight.png" alt="' + object.title + '" />' +
                         '<div class="media-description">' +
-                            '<span class="media-description-content lead">' + object.title + '</span><br/>' +
-                            '<span class="media-description-content"><em>' + object.description + '</em></span><br/>' +
+                            '<span class="media-description-content lead">' + util.truncate(object.title, 20) + '</span><br/>' +
+                            '<span class="media-description-content"><em>' + util.truncate(object.description, 20) + '</em></span><br/>' +
                             '<span class="media-description-content"><small>' + object.author + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
                         '</div>' +
                         '<div class="media-progress"></div>' +
@@ -14618,7 +14618,7 @@ module.exports = shellac;
 
 var util = (function () {
 
-    var PubSub;
+    var PubSub, truncate;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
 
@@ -14658,7 +14658,27 @@ var util = (function () {
 
     };
 
-    return { PubSub: PubSub };
+    // Begin Public method /truncate/
+    // Example   : truncate(string, maxchar)
+    // Purpose   :
+    //   Truncate a string and append "..." to the remaining
+    // Arguments :
+    //  * string - the original string
+    //  * maxchar - the max number of chars to show
+    // Returns   : the truncated string
+    // Throws    : none
+    truncate = function(string, maxchar){
+        var truncated = string.slice(0, maxchar);
+        if(string.length > maxchar){
+            truncated += "...";
+        }
+        return truncated;
+    };
+
+    return {
+        PubSub: PubSub,
+        truncate: truncate
+    };
 }());
 
 module.exports = util;

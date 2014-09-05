@@ -226,8 +226,8 @@ var shellac = (function () {
                     '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
                         '<img class="media-img img-responsive" src="' + stateMap.STATIC_URL + 'shellac/assets/seventyEight.png" alt="' + object.title + '" />' +
                         '<div class="media-description">' +
-                            '<span class="media-description-content lead">' + object.title + '</span><br/>' +
-                            '<span class="media-description-content"><em>' + object.description + '</em></span><br/>' +
+                            '<span class="media-description-content lead">' + util.truncate(object.title, 20) + '</span><br/>' +
+                            '<span class="media-description-content"><em>' + util.truncate(object.description, 20) + '</em></span><br/>' +
                             '<span class="media-description-content"><small>' + object.author + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
                         '</div>' +
                         '<div class="media-progress"></div>' +

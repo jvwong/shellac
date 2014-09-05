@@ -7,7 +7,7 @@
 
 var util = (function () {
 
-    var PubSub;
+    var PubSub, truncate;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
 
@@ -47,7 +47,27 @@ var util = (function () {
 
     };
 
-    return { PubSub: PubSub };
+    // Begin Public method /truncate/
+    // Example   : truncate(string, maxchar)
+    // Purpose   :
+    //   Truncate a string and append "..." to the remaining
+    // Arguments :
+    //  * string - the original string
+    //  * maxchar - the max number of chars to show
+    // Returns   : the truncated string
+    // Throws    : none
+    truncate = function(string, maxchar){
+        var truncated = string.slice(0, maxchar);
+        if(string.length > maxchar){
+            truncated += "...";
+        }
+        return truncated;
+    };
+
+    return {
+        PubSub: PubSub,
+        truncate: truncate
+    };
 }());
 
 module.exports = util;
