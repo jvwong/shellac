@@ -9,7 +9,7 @@ var audio = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var util = require('./util.js'),
-        soundManager = require('../lib/soundmanager2/script/soundmanager2.js').soundManager;
+    soundManager = require('../lib/soundmanager2/script/soundmanager2.js').soundManager;
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -40,7 +40,7 @@ var audio = (function () {
     jqueryMap = {},
     setJqueryMap,
 
-    initModule,
+    initModule, onCategoryChange,
     onClickPlayer,
     togglePlayer;
 
@@ -68,6 +68,57 @@ var audio = (function () {
         }
     };
 
+    // Begin private method /onCategoryChange/
+    // Example   : onCategoryChange;
+    // Purpose   :
+    //   PubSub callback for changes in the category UI
+    // Arguments :
+    //  * urls - array of urls for Clip objects currently displayed
+    // Action    : for each url, update the given progress bar. Find the "current" sound object
+    //  and reassign the jqueryMap to reflect the updated / new DOM element
+    // Returns   : none
+    // Throws    : none
+    onCategoryChange = function(urls){
+
+        urls.forEach(function(url){
+            var murl,
+                $player,
+                pplayed,
+                $progress_bar,
+                sound;
+
+            //tack on the media tag
+            murl = '/media/' + url;
+
+            //get the span.media-url
+            $player = $('.media.clip').find("[data-clip-url='" + murl + "']");
+            console.log($player);
+
+            //get the sound and check if it was created
+            sound = soundManager.getSoundById(murl);
+            if(sound){
+
+                //inject the progress bar and update the state
+                $player.find('.media-progress').html(configMap.progress_html);
+                $progress_bar = $player.find('.media-progress .progress-bar');
+
+                //if it was stopped then set it to 100%
+                if(sound.playState === 0){
+                    pplayed = '100';
+                }else{
+                    pplayed = (sound.position / sound.durationEstimate * 100).toFixed(1);
+                }
+                $progress_bar.width(pplayed + '%');
+
+
+                // if the sound === stateMap.audio then reassign the jQuery map
+                if(stateMap.audio.id === murl){
+                    setJqueryMap($player);
+                }
+            }
+        });
+    };
+
     // Begin private method /initModule/
     // Example   : initModule();
     // Purpose   :
@@ -89,6 +140,7 @@ var audio = (function () {
                 console.log("SoundManager failed to load");
             }
         });
+        util.PubSub.on("shellac-categorychange", onCategoryChange );
     };
 
     //--------------------- END MODULE SCOPE METHODS --------------------
@@ -165,6 +217,8 @@ var audio = (function () {
 
             togglePlayer();
         }
+
+        console.log(stateMap.url);
 
 
     };

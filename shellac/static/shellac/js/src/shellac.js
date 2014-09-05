@@ -6,13 +6,13 @@
 'use strict';
 
 var shellac = (function () {
+
+    //---------------- BEGIN MODULE DEPENDENCIES --------------
     var $ = require('jquery'),
         moment = require('moment'),
         TAFFY = require('taffydb').taffy,
         audio = require('./audio.js'),
         util = require('./util.js');
-
-    //---------------- BEGIN MODULE DEPENDENCIES --------------
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -254,14 +254,14 @@ var shellac = (function () {
     // Arguments  :
     // Settings   : none
     // Returns    :
-    // Actions    :
+    // Actions    : Should signal to audio module to update progress bar state for each clip
     //   * binds to category DOM elements and reloads corresponding clips into
     //     stateMap.clips
     onClickCategory = function(event){
 
         var category_object;
 
-        console.log($(event.target));
+//        console.log($(event.target));
 
         //empty the clip array
         stateMap.clips = [];
@@ -279,6 +279,7 @@ var shellac = (function () {
             });
         }
         display_clips();
+        util.PubSub.emit("shellac-categorychange", stateMap.clips.map(function(clip){return clip.audio_file;}));
     };
 
     //-------------------- END EVENT HANDLERS --------------------

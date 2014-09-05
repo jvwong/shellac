@@ -20114,7 +20114,7 @@ var audio = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var util = require('./util.js'),
-        soundManager = require('../lib/soundmanager2/script/soundmanager2.js').soundManager;
+    soundManager = require('../lib/soundmanager2/script/soundmanager2.js').soundManager;
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -20145,7 +20145,7 @@ var audio = (function () {
     jqueryMap = {},
     setJqueryMap,
 
-    initModule,
+    initModule, onCategoryChange,
     onClickPlayer,
     togglePlayer;
 
@@ -20173,6 +20173,57 @@ var audio = (function () {
         }
     };
 
+    // Begin private method /onCategoryChange/
+    // Example   : onCategoryChange;
+    // Purpose   :
+    //   PubSub callback for changes in the category UI
+    // Arguments :
+    //  * urls - array of urls for Clip objects currently displayed
+    // Action    : for each url, update the given progress bar. Find the "current" sound object
+    //  and reassign the jqueryMap to reflect the updated / new DOM element
+    // Returns   : none
+    // Throws    : none
+    onCategoryChange = function(urls){
+
+        urls.forEach(function(url){
+            var murl,
+                $player,
+                pplayed,
+                $progress_bar,
+                sound;
+
+            //tack on the media tag
+            murl = '/media/' + url;
+
+            //get the span.media-url
+            $player = $('.media.clip').find("[data-clip-url='" + murl + "']");
+            console.log($player);
+
+            //get the sound and check if it was created
+            sound = soundManager.getSoundById(murl);
+            if(sound){
+
+                //inject the progress bar and update the state
+                $player.find('.media-progress').html(configMap.progress_html);
+                $progress_bar = $player.find('.media-progress .progress-bar');
+
+                //if it was stopped then set it to 100%
+                if(sound.playState === 0){
+                    pplayed = '100';
+                }else{
+                    pplayed = (sound.position / sound.durationEstimate * 100).toFixed(1);
+                }
+                $progress_bar.width(pplayed + '%');
+
+
+                // if the sound === stateMap.audio then reassign the jQuery map
+                if(stateMap.audio.id === murl){
+                    setJqueryMap($player);
+                }
+            }
+        });
+    };
+
     // Begin private method /initModule/
     // Example   : initModule();
     // Purpose   :
@@ -20194,6 +20245,7 @@ var audio = (function () {
                 console.log("SoundManager failed to load");
             }
         });
+        util.PubSub.on("shellac-categorychange", onCategoryChange );
     };
 
     //--------------------- END MODULE SCOPE METHODS --------------------
@@ -20271,6 +20323,8 @@ var audio = (function () {
             togglePlayer();
         }
 
+        console.log(stateMap.url);
+
 
     };
     //------------------- END PUBLIC METHODS -------------------
@@ -20292,14 +20346,13 @@ module.exports = audio;
 */
 /* global $, document, STATIC_URL, MEDIA_URL */
 'use strict';
-require('jquery');
 $( document ).ready(function() {
     var shellac = require('./shellac.js');
     shellac.initModule($("#shellac-app"), STATIC_URL, MEDIA_URL);
 });
 
 
-},{"./shellac.js":7,"jquery":2}],7:[function(require,module,exports){
+},{"./shellac.js":7}],7:[function(require,module,exports){
 /*
  * shellac.js
  * Root namespace module
@@ -20308,13 +20361,13 @@ $( document ).ready(function() {
 'use strict';
 
 var shellac = (function () {
+
+    //---------------- BEGIN MODULE DEPENDENCIES --------------
     var $ = require('jquery'),
         moment = require('moment'),
         TAFFY = require('taffydb').taffy,
         audio = require('./audio.js'),
         util = require('./util.js');
-
-    //---------------- BEGIN MODULE DEPENDENCIES --------------
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -20556,14 +20609,14 @@ var shellac = (function () {
     // Arguments  :
     // Settings   : none
     // Returns    :
-    // Actions    :
+    // Actions    : Should signal to audio module to update progress bar state for each clip
     //   * binds to category DOM elements and reloads corresponding clips into
     //     stateMap.clips
     onClickCategory = function(event){
 
         var category_object;
 
-        console.log($(event.target));
+//        console.log($(event.target));
 
         //empty the clip array
         stateMap.clips = [];
@@ -20581,6 +20634,7 @@ var shellac = (function () {
             });
         }
         display_clips();
+        util.PubSub.emit("shellac-categorychange", stateMap.clips.map(function(clip){return clip.audio_file;}));
     };
 
     //-------------------- END EVENT HANDLERS --------------------
