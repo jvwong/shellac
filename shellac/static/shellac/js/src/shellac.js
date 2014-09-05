@@ -8,8 +8,7 @@
 var shellac = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
-    var $ = require('jquery'),
-        moment = require('moment'),
+    var moment = require('moment'),
         TAFFY = require('taffydb').taffy,
         audio = require('./audio.js'),
         util = require('./util.js');

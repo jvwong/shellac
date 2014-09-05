@@ -56,14 +56,14 @@ var audio = (function () {
 
     togglePlayer = function(){
         if(stateMap.audio.paused){
-            console.log("Paused; Resume play: %s", stateMap.url);
+            //console.log("Paused; Resume play: %s", stateMap.url);
             stateMap.audio.resume();
 
         }else if(stateMap.audio.playState === 0){ //stopped or uninitialized
-            console.log("Stopped; Start play: %s", stateMap.url);
+            //console.log("Stopped; Start play: %s", stateMap.url);
             stateMap.audio.play();
         }else if(stateMap.audio.playState === 1){ //playing or buffering
-            console.log("Playing; Pause : %s", stateMap.url);
+            //console.log("Playing; Pause : %s", stateMap.url);
             stateMap.audio.pause();
         }
     };
@@ -89,11 +89,8 @@ var audio = (function () {
 
             //tack on the media tag
             murl = '/media/' + url;
-
             //get the span.media-url
             $player = $('.media.clip').find("[data-clip-url='" + murl + "']");
-            console.log($player);
-
             //get the sound and check if it was created
             sound = soundManager.getSoundById(murl);
             if(sound){
@@ -109,7 +106,6 @@ var audio = (function () {
                     pplayed = (sound.position / sound.durationEstimate * 100).toFixed(1);
                 }
                 $progress_bar.width(pplayed + '%');
-
 
                 // if the sound === stateMap.audio then reassign the jQuery map
                 if(stateMap.audio.id === murl){
@@ -134,7 +130,7 @@ var audio = (function () {
             url: 'http://www.hiding-my-file/Soundmanager2Files/soundmanager2_flash9.swf/',
             onready: function() {
                 configMap.isSupported = soundManager.ok();
-                console.log("SoundManager supported: %s", configMap.isSupported);
+                //console.log("SoundManager supported: %s", configMap.isSupported);
             },
             ontimeout: function() {
                 console.log("SoundManager failed to load");
@@ -189,10 +185,10 @@ var audio = (function () {
                     stateMap.percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
                 },
                 onstop: function () {
-                    soundManager._writeDebug('The sound ' + this.id + ' stopped.');
+                    //soundManager._writeDebug('The sound ' + this.id + ' stopped.');
                 },
                 onfinish: function () {
-                    soundManager._writeDebug('The sound ' + this.id + ' finished playing.');
+                    //soundManager._writeDebug('The sound ' + this.id + ' finished playing.');
                 }
             });
         } else {
@@ -217,10 +213,6 @@ var audio = (function () {
 
             togglePlayer();
         }
-
-        console.log(stateMap.url);
-
-
     };
     //------------------- END PUBLIC METHODS -------------------
 
