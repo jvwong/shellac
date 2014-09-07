@@ -42,6 +42,7 @@ var audio = (function () {
 
     initModule, onCategoryChange,
     onClickPlayer,
+    makeSound,
     togglePlayer;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
@@ -139,6 +140,49 @@ var audio = (function () {
         util.PubSub.on("shellac-categorychange", onCategoryChange );
     };
 
+
+    // Begin private method /makeSound/
+    // Example   : makeSound( );
+    // Purpose   :
+    //   Sets up the Audio API context or reports errors
+    // Arguments : none
+    // Action    : searches and adds the correct AudioContext object to the global window
+    // Returns   : none
+    // Throws    : none
+    makeSound = function(url, autoPlay){
+        soundManager.createSound({
+            id: stateMap.url,
+            url: stateMap.url,
+            autoPlay: true,
+            whileloading: function () {
+                //soundManager._writeDebug('LOAD PROGRESS ' + this.bytesLoaded + ' / ' + this.bytesTotal);
+            },
+            whileplaying: function () {
+                var percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
+
+                if (percentPlayed !== stateMap.percentPlayed) {
+                    stateMap.percentPlayed = percentPlayed;
+                    jqueryMap.$progress_bar.width(percentPlayed + '%');
+                }
+            },
+            onload: function () {
+                //inject the play progress bar and set jqueryMap attribute
+                jqueryMap.$progress.html(configMap.progress_html);
+                jqueryMap.$progress_bar = jqueryMap.$progress.find('.progress-bar');
+
+                //initialize the percentPlayed
+                stateMap.percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
+            },
+            onstop: function () {
+                //soundManager._writeDebug('The sound ' + this.id + ' stopped.');
+            },
+            onfinish: function () {
+                //soundManager._writeDebug('The sound ' + this.id + ' finished playing.');
+            }
+        });
+
+    };
+
     //--------------------- END MODULE SCOPE METHODS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
@@ -161,36 +205,7 @@ var audio = (function () {
             setJqueryMap($player);
 
             //Create the sound, assign it to stateMap, and autoplay
-            stateMap.audio = soundManager.createSound({
-                id: stateMap.url,
-                url: stateMap.url,
-                autoPlay: true,
-                whileloading: function () {
-                    //soundManager._writeDebug('LOAD PROGRESS ' + this.bytesLoaded + ' / ' + this.bytesTotal);
-                },
-                whileplaying: function () {
-                    var percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
-
-                    if (percentPlayed !== stateMap.percentPlayed) {
-                        stateMap.percentPlayed = percentPlayed;
-                        jqueryMap.$progress_bar.width(percentPlayed + '%');
-                    }
-                },
-                onload: function () {
-                    //inject the play progress bar and set jqueryMap attribute
-                    jqueryMap.$progress.html(configMap.progress_html);
-                    jqueryMap.$progress_bar = jqueryMap.$progress.find('.progress-bar');
-
-                    //initialize the percentPlayed
-                    stateMap.percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
-                },
-                onstop: function () {
-                    //soundManager._writeDebug('The sound ' + this.id + ' stopped.');
-                },
-                onfinish: function () {
-                    //soundManager._writeDebug('The sound ' + this.id + ' finished playing.');
-                }
-            });
+            stateMap.audio = makeSound;
         } else {
 
             // *** Case 1

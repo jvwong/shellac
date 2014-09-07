@@ -147,7 +147,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'audiofield.middleware.threadlocals.ThreadLocals',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -169,14 +168,15 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'shellac',
     'social.apps.django_app.default',
-    'audiofield',
     'taggit',
     'rest_framework',
     # 'pipeline',
     # 'storages',
 )
 
-
+REST_FRAMEWORK = {
+    'PAGINATE_BY': 10
+}
 
 LOGIN_URL = '/accounts/signin/'
 LOGOUT_URL = '/accounts/signout/'
@@ -213,14 +213,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'social.apps.django_app.context_processors.backends',
     'social.apps.django_app.context_processors.login_redirect',
 )
-
-#AUDIO
-# Frontend widget values
-CHANNEL_TYPE_VALUE = 0  # 0-Keep original, 1-Mono, 2-Stereo
-FREQ_TYPE_VALUE = 8000  # 0-Keep original, 8000-8000Hz, 16000-16000Hz, 22050-22050Hz,
-                     # 44100-44100Hz, 48000-48000Hz, 96000-96000Hz
-CONVERT_TYPE_VALUE = 0 # 0-Keep original, 1-Convert to MP3, 2-Convert to WAV, 3-Convert to OGG
-
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

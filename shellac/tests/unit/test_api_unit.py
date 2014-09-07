@@ -7,6 +7,25 @@ User = get_user_model()
 from shellac.tests.utils.unit import setFileAttributefromLocal, cleanClips
 
 """
+ BEGIN ROOT API
+"""
+class Api_Root(APITestCase):
+
+    # line up view for '/'
+    def test_api_root_url_resolves_to_api_root_view(self):
+        url = reverse('shellac_api_root')
+        self.assertEqual(url, '/api/')
+
+    def test_api_root_get_returns_correct_response(self):
+        response = self.client.get('/api/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('/api/user/', response.data['users'])
+        self.assertIn('/api/category/', response.data['categories'])
+        self.assertIn('/api/clip/', response.data['clips'])
+        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+
+
+"""
  BEGIN CATEGORY API
 """
 class Api_CategoryList(APITestCase):

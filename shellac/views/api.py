@@ -1,10 +1,24 @@
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import permissions
+from rest_framework.reverse import reverse
+from rest_framework.decorators import api_view
+
 from shellac.models import Category, Clip
 from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializer
-from rest_framework.views import APIView
 from django.http import Http404
-from rest_framework import permissions
+
+
+@api_view(('GET',))
+def api_root(request, format=None):
+    return Response({
+        'users': reverse('shellac_api_user', request=request, format=format),
+        'categories': reverse('shellac_api_category', request=request, format=format),
+        'clips': reverse('shellac_api_clip', request=request, format=format)
+    })
+
+
 
 ### api /
 class ClipList(APIView):
