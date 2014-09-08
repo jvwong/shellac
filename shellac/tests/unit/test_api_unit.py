@@ -82,15 +82,16 @@ class Api_CategoryDetail(APITestCase):
 
         payload = {"title": "ARTS", "description": "arts"}
         response = self.client.put("/api/category/arts/", payload)
+
         #A 200 indicated modified resource
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         #the response to match with our original payload
         self.assertIn(response.data['description'], payload['description'])
 
-        #PUT a new object will NOT create: HTTP_404_NOT_FOUND
+        #PUT a new object will create: HTTP_201_CREATED
         payload_create = {"title": "cat1 new title", "description": "cat1 description"}
         response = self.client.put("/api/category/cat1-new-title/", payload_create, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
     def test_Api_CategoryDetail_DELETE_removes_existing_object(self):
@@ -106,7 +107,8 @@ class Api_CategoryDetail(APITestCase):
 
         #A get response to NOT match
         get_response = self.client.get("/api/category/")
-        self.assertNotIn(get_response.data[0]['description'], "arts")
+        # print(get_response.data)
+        self.assertNotIn("arts", get_response.data)
 
 # """
 #  BEGIN USER API
@@ -176,19 +178,21 @@ class Api_ClipList(APITestCase):
         clip2.description = "clip2 description"
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
 
+        # print(Clip.objects.all().count())
+
         response = self.client.get('/api/clip/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         resp = json.loads(response.content.decode())
-        # print(resp[0])
-        self.assertEqual(resp[0].get('id'), clip1.id)
-        self.assertEqual(resp[0].get('title'), clip1.title)
-        self.assertEqual(resp[0].get('author'), clip1.author.id)
-        self.assertEqual(resp[0].get('description'), clip1.description)
-        self.assertEqual(resp[0].get('plays'), clip1.plays)
-        self.assertEqual(resp[0].get('status'), clip1.status)
-        self.assertEqual(resp[0].get('rating'), clip1.rating)
-        self.assertEqual(resp[0].get('audio_file'), clip1.audio_file.name)
+        # print(resp['results'][0])
+        self.assertEqual(resp['results'][0].get('id'), clip1.id)
+        self.assertEqual(resp['results'][0].get('title'), clip1.title)
+        self.assertEqual(resp['results'][0].get('author'), clip1.author.id)
+        self.assertEqual(resp['results'][0].get('description'), clip1.description)
+        self.assertEqual(resp['results'][0].get('plays'), clip1.plays)
+        self.assertEqual(resp['results'][0].get('status'), clip1.status)
+        self.assertEqual(resp['results'][0].get('rating'), clip1.rating)
+        self.assertEqual(resp['results'][0].get('audio_file'), clip1.audio_file.name)
 
         cleanClips()
 
