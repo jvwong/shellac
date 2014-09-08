@@ -4,21 +4,26 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 
 
-class UserSerializer(serializers.ModelSerializer):
-    # clips = serializers.HyperlinkedRelatedField(many=True,
-    #                                             lookup_field='pk',
-    #                                             view_name='shellac_api_clip_detail')
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    clips = serializers.HyperlinkedRelatedField(many=True,
+                                                lookup_field='pk',
+                                                view_name='clip-detail')
 
     class Meta:
-        # lookup_field = 'username'
+        lookup_field = 'username'
         model = User
-        fields = ('id', 'username', 'email', 'clips')
+        fields = ('url', 'id', 'username', 'email', 'clips')
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.HyperlinkedModelSerializer):
+    clips = serializers.HyperlinkedRelatedField(many=True,
+                                                lookup_field='pk',
+                                                view_name='clip-detail')
+
     class Meta:
+        lookup_field = 'slug'
         model = Category
-        fields = ('id', 'title', 'slug', 'description', 'clips')
+        fields = ('url', 'id', 'title', 'slug', 'description', 'clips')
         read_only_fields = ('clips',)
 
     def restore_object(self, attrs, instance=None):
@@ -35,12 +40,19 @@ class CategorySerializer(serializers.ModelSerializer):
         return Category(**attrs)
 
 
-class ClipSerializer(serializers.ModelSerializer):
+class ClipSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.SerializerMethodField('get_owner')
-    categories = serializers.SlugRelatedField(many=True,
-                                              slug_field='slug', read_only=False)
+    author = serializers.HyperlinkedRelatedField(lookup_field='username',
+                                                 view_name='user-detail')
+
+    # categories = serializers.SlugRelatedField(many=True,
+    #                                           slug_field='slug', read_only=False)
+    categories = serializers.HyperlinkedRelatedField(many=True,
+                                                     lookup_field='slug',
+                                                     view_name='category-detail')
 
     class Meta:
+        lookup_field = 'pk'
         model = Clip
         fields = ('id', 'title', 'author', 'description', 'categories',
                   'brand', 'plays', 'rating', 'status', 'slug',

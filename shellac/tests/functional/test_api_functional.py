@@ -66,7 +66,7 @@ class ApiGetPageTest(FunctionalTest):
         self.assertEqual(len(categories), 4)
 
         #reload the page
-        self.browser.get(self.server_url + '/api/category/')
+        self.browser.get(self.server_url + '/api/categories/')
         self.assertIn('Django REST framework', self.browser.title)
         span_response_headers = self.browser.find_element_by_css_selector('.meta.nocode')
 

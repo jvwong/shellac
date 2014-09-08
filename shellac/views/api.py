@@ -28,6 +28,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class ClipViewSet(viewsets.ModelViewSet):
+    lookup_field = 'pk'
     queryset = Clip.objects.all()
     serializer_class = ClipSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
