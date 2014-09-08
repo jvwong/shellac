@@ -57,8 +57,10 @@ var util = (function () {
     // Returns   : the truncated string
     // Throws    : none
     truncate = function(string, maxchar){
-        var truncated = string.slice(0, maxchar);
-        if(string.length > maxchar){
+        var str = string || '';
+
+        var truncated = str.slice(0, maxchar);
+        if(str.length > maxchar){
             truncated += "...";
         }
         return truncated;

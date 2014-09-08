@@ -150,10 +150,16 @@ var audio = (function () {
     // Returns   : none
     // Throws    : none
     makeSound = function(url, autoPlay){
-        soundManager.createSound({
-            id: stateMap.url,
-            url: stateMap.url,
-            autoPlay: true,
+
+        console.log(url);
+        console.log(autoPlay);
+
+        var sound;
+
+        sound = soundManager.createSound({
+            id: url,
+            url: url,
+            autoPlay: autoPlay,
             whileloading: function () {
                 //soundManager._writeDebug('LOAD PROGRESS ' + this.bytesLoaded + ' / ' + this.bytesTotal);
             },
@@ -181,6 +187,8 @@ var audio = (function () {
             }
         });
 
+        return sound;
+
     };
 
     //--------------------- END MODULE SCOPE METHODS --------------------
@@ -205,7 +213,7 @@ var audio = (function () {
             setJqueryMap($player);
 
             //Create the sound, assign it to stateMap, and autoplay
-            stateMap.audio = makeSound;
+            stateMap.audio = makeSound(stateMap.url, true);
         } else {
 
             // *** Case 1

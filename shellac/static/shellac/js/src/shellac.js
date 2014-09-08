@@ -47,6 +47,8 @@ var shellac = (function () {
     jqueryMap = {},
     setJqueryMap,
 
+    urlParse,
+
     parseCategoryData, renderCategories, display_categories,
     parseClipData, renderClips, display_clips,
 
@@ -77,12 +79,12 @@ var shellac = (function () {
      **/
     renderCategories = function(){
 
-        var url = '/api/category/';
+        var url = '/api/categories/';
         $.ajax({
             url: url
         })
             .done(function(categories){
-                stateMap.category_db.insert(parseCategoryData(categories));
+                stateMap.category_db.insert(parseCategoryData(categories.results));
                 stateMap.categories = stateMap.category_db().get();
                 PubSub.emit("onCategoryLoadComplete");
             })
@@ -106,12 +108,12 @@ var shellac = (function () {
      **/
     renderClips = function(category){
 
-        var url = '/api/clip/';
+        var url = '/api/clips/';
         $.ajax({
             url: url
         })
             .done(function(clips){
-                stateMap.clip_db.insert(parseClipData(clips));
+                stateMap.clip_db.insert(parseClipData(clips.results));
                 stateMap.clips = stateMap.clip_db().get();
                 PubSub.emit("onClipLoadComplete");
             })
@@ -166,6 +168,33 @@ var shellac = (function () {
             }
         });
         return jsonArray;
+    };
+
+    /*
+     * method urlParse: extract the various aspects of the url from a HyperlinkedRelatedField
+     * precondition: requires a HyperlinkedRelatedField of the form protocol:host/api/object/pk/
+     * parameters
+     *   * url - the url of the resource
+     * return
+     *   * URLobj - an object literal with fields protocol, host, api, object, and pk
+     **/
+    urlParse = function(url){
+        var URL = {},
+            u = url || '',
+            parts;
+
+        parts = u.split('/');
+
+        try{
+            URL.protocol = parts[0];
+            URL.host = parts[2].split(':')[0];
+            URL.object = parts[4];
+            URL.pk = parts[5];
+
+        } catch (e) {
+            throw "Improper url format entered";
+        }
+        return URL;
     };
 
 
@@ -229,7 +258,7 @@ var shellac = (function () {
                         '<div class="media-description">' +
                             '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
                             '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
-                            '<span class="media-description-content"><small>' + object.author + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
+                            '<span class="media-description-content"><small>' + object.owner + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
                         '</div>' +
                         '<div class="media-progress"></div>' +
                     '</span>' +
@@ -260,8 +289,6 @@ var shellac = (function () {
 
         var category_object;
 
-//        console.log($(event.target));
-
         //empty the clip array
         stateMap.clips = [];
 
@@ -272,14 +299,17 @@ var shellac = (function () {
         } else {
             category_object = stateMap.category_db({slug: event.target.id}).first();
 
-            //push in any matching clip id
-            stateMap.clips = category_object.clips.map(function(id){
-                return stateMap.clip_db({id: id}).first();
+            //push in any matching clip id from the url
+            stateMap.clips = category_object.clips.map(function(clip_url){
+                var URL = urlParse(clip_url);
+                return stateMap.clip_db({id: parseInt(URL.pk)}).first();
             });
         }
         display_clips();
         util.PubSub.emit("shellac-categorychange", stateMap.clips.map(function(clip){return clip.audio_file;}));
     };
+
+
 
     //-------------------- END EVENT HANDLERS --------------------
 
