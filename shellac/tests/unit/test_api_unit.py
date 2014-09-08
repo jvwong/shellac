@@ -13,15 +13,15 @@ class Api_Root(APITestCase):
 
     # line up view for '/'
     def test_api_root_url_resolves_to_api_root_view(self):
-        url = reverse('shellac_api_root')
+        url = reverse('api_root')
         self.assertEqual(url, '/api/')
 
     def test_api_root_get_returns_correct_response(self):
         response = self.client.get('/api/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('/api/user/', response.data['users'])
-        self.assertIn('/api/category/', response.data['categories'])
-        self.assertIn('/api/clip/', response.data['clips'])
+        self.assertIn('/api/users/', response.data['users'])
+        self.assertIn('/api/categories/', response.data['categories'])
+        self.assertIn('/api/clips/', response.data['clips'])
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
 
@@ -32,13 +32,13 @@ class Api_CategoryList(APITestCase):
 
     # line up view for '/'
     def test_api_root_category_url_resolves_to_api_categorylist_view(self):
-        url = reverse('shellac_api_category_list')
-        self.assertEqual(url, '/api/category/')
+        url = reverse('category-list')
+        self.assertEqual(url, '/api/categories/')
 
     def test_api_root_get_returns_correct_response(self):
         Category.objects.autopopulate()
 
-        response = self.client.get('/api/category/.json')
+        response = self.client.get('/api/categories/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertIn('{"id": 1, "title": "ARTS", "slug": "arts", "description": "arts", "clips": []}', response.content.decode())
@@ -51,7 +51,7 @@ class Api_CategoryList(APITestCase):
         User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         self.client.login(username='andrea', password='a')
         payload = {"title": "cat1", "description": "cat1 description"}
-        response = self.client.post("/api/category/", payload, format='json')
+        response = self.client.post("/api/categories/", payload, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -63,13 +63,13 @@ class Api_CategoryDetail(APITestCase):
 
     # line up view for '/'
     def test_Api_CategoryDetail_url_resolves_to_api_categorylist_view(self):
-        url = reverse('shellac_api_category_detail', kwargs={'slug': 'arts'})
-        self.assertEqual(url, '/api/category/arts/')
+        url = reverse('category-detail', kwargs={'slug': 'arts'})
+        self.assertEqual(url, '/api/categories/arts/')
 
     def test_Api_CategoryDetail_GET_returns_correct_response(self):
         Category.objects.autopopulate()
 
-        response = self.client.get('/api/category/arts/')
+        response = self.client.get('/api/categories/arts/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertIn('{"id": 1, "title": "ARTS", "slug": "arts", "description": "arts", "clips": []}', response.content.decode())
@@ -81,7 +81,7 @@ class Api_CategoryDetail(APITestCase):
         self.client.login(username='andrea', password='a')
 
         payload = {"title": "ARTS", "description": "arts"}
-        response = self.client.put("/api/category/arts/", payload)
+        response = self.client.put("/api/categories/arts/", payload)
 
         #A 200 indicated modified resource
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -90,7 +90,7 @@ class Api_CategoryDetail(APITestCase):
 
         #PUT a new object will create: HTTP_201_CREATED
         payload_create = {"title": "cat1 new title", "description": "cat1 description"}
-        response = self.client.put("/api/category/cat1-new-title/", payload_create, format='json')
+        response = self.client.put("/api/categories/cat1-new-title/", payload_create, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
@@ -100,13 +100,13 @@ class Api_CategoryDetail(APITestCase):
         self.client.login(username='andrea', password='a')
 
         payload = {"title": "ARTS", "description": "arts"}
-        response = self.client.delete("/api/category/arts/")
+        response = self.client.delete("/api/categories/arts/")
 
         #A 204 indicated modified resource
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         #A get response to NOT match
-        get_response = self.client.get("/api/category/")
+        get_response = self.client.get("/api/categories/")
         # print(get_response.data)
         self.assertNotIn("arts", get_response.data)
 
@@ -117,18 +117,21 @@ class Api_User_PageTest_root(APITestCase):
 
     # line up view for '/'
     def test_api_root_user_url_resolves_to_api_category_view(self):
-        url = reverse('shellac_api_user_list')
-        self.assertEqual(url, '/api/user/')
+        url = reverse('user-list')
+        self.assertEqual(url, '/api/users/')
 
     def test_api_root_user_get_returns_correct_response(self):
         User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
 
-        response = self.client.get('/api/user/.json')
+        response = self.client.get('/api/users/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertIn('{"id": 1, "username": "andrea", "email": "aray@outlook.com", "clips": []}', response.content.decode())
-        self.assertIn('{"id": 2, "username": "jvwong", "email": "jray@outlook.com", "clips": []}', response.content.decode())
+        # print(response)
+
+        self.assertIn('"username": "andrea"', response.content.decode())
+        self.assertIn('"email": "aray@outlook.com"', response.content.decode())
+        self.assertIn('"clips": []', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
 
@@ -136,17 +139,19 @@ class Api_User_PageTest_username(APITestCase):
 
     # line up view for '/'
     def test_api_username_user_url_resolves_to_api_userlist_view(self):
-        url = reverse('shellac_api_user_detail', kwargs={'username': 'jvwong'})
-        self.assertEqual(url, '/api/user/jvwong/')
+        url = reverse('user-detail', kwargs={'username': 'jvwong'})
+        self.assertEqual(url, '/api/users/jvwong/')
 
     def test_api_username_get_returns_correct_response(self):
         User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
 
-        response = self.client.get('/api/user/jvwong/')
+        response = self.client.get('/api/users/jvwong/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertIn('{"id": 2, "username": "jvwong", "email": "jray@outlook.com", "clips": []}', response.content.decode())
+        self.assertIn('"username": "jvwong"', response.content.decode())
+        self.assertIn('"email": "jray@outlook.com"', response.content.decode())
+        self.assertIn('"clips": []', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
 
@@ -162,8 +167,8 @@ audio_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../asset
 class Api_ClipList(APITestCase):
 
     def test_ClipList_url_resolves_to_api_ClipList_view(self):
-        url = reverse('shellac_api_clip_list')
-        self.assertEqual(url, '/api/clip/')
+        url = reverse('clip-list')
+        self.assertEqual(url, '/api/clips/')
 
     def test_ClipList_GET_returns_correct_response(self):
         ##authenticate REST style
@@ -180,7 +185,7 @@ class Api_ClipList(APITestCase):
 
         # print(Clip.objects.all().count())
 
-        response = self.client.get('/api/clip/.json')
+        response = self.client.get('/api/clips/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         resp = json.loads(response.content.decode())
@@ -212,7 +217,7 @@ class Api_ClipList(APITestCase):
 
         # response should be 'HTTP_201_CREATED' and have a clip count of 1
         self.client.login(username='andrea', password='a')
-        response = self.client.post("/api/clip/", payload)
+        response = self.client.post("/api/clips/", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         data =response.data
@@ -232,8 +237,8 @@ class Api_ClipDetail(APITestCase):
 
     # line up view for '/'
     def test_api_ClipDetail_url_resolves_to_api_ClipDetail_view(self):
-        url = reverse('shellac_api_clip_detail', kwargs={'pk': 1})
-        self.assertEqual(url, '/api/clip/1/')
+        url = reverse('clip-detail', kwargs={'pk': 1})
+        self.assertEqual(url, '/api/clips/1/')
 
     def test_api_ClipDetail_GET_returns_correct_response(self):
         #add users and clips
@@ -248,7 +253,7 @@ class Api_ClipDetail(APITestCase):
         self.assertEqual(User.objects.all().count(), 2)
         self.assertEqual(Clip.objects.all().count(), 2)
 
-        response = self.client.get('/api/clip/1/')
+        response = self.client.get('/api/clips/1/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         resp = response.data
@@ -281,7 +286,7 @@ class Api_ClipDetail(APITestCase):
         f = open(audio_path, "rb")
 
         self.client.login(username='andrea', password='a')
-        response = self.client.put('/api/clip/1/', data={'title': 'updated clip1 title',
+        response = self.client.put('/api/clips/1/', data={'title': 'updated clip1 title',
                                                          'author': user1.id,
                                                          'description': 'updated clip1 description',
                                                          'audio_file': f})
@@ -316,12 +321,12 @@ class Api_ClipDetail(APITestCase):
 
         #A 204 indicated modified resource
         self.client.login(username='andrea', password='a')
-        response = self.client.delete('/api/clip/1/')
+        response = self.client.delete('/api/clips/1/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         # A get response to NOT match
         self.assertEqual(Clip.objects.all().count(), 1)
-        r = self.client.get("/api/category/1/")
+        r = self.client.get("/api/categories/1/")
         self.assertEqual(r.status_code, 404)
 
         cleanClips()

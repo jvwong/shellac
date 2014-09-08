@@ -5,7 +5,12 @@ from django.utils.text import slugify
 
 
 class UserSerializer(serializers.ModelSerializer):
+    # clips = serializers.HyperlinkedRelatedField(many=True,
+    #                                             lookup_field='pk',
+    #                                             view_name='shellac_api_clip_detail')
+
     class Meta:
+        # lookup_field = 'username'
         model = User
         fields = ('id', 'username', 'email', 'clips')
 

@@ -16,10 +16,6 @@ urlpatterns = patterns('',
     url(r'^clips/', include('shellac.urls.clips')),
 )
 
-if 'rosetta' in settings.INSTALLED_APPS:
-    urlpatterns += patterns('',
-        url(r'^rosetta/', include('rosetta.urls')),
-    )
 
 
 

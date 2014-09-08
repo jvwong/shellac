@@ -1,21 +1,56 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
 from rest_framework.urlpatterns import format_suffix_patterns
-from shellac.views.api import CategoryList, CategoryDetail, UserList, UserDetail, ClipList, ClipDetail, api_root
+from shellac.views.api import api_root, CategoryViewSet, ClipViewSet, UserViewSet
 
-urlpatterns = patterns('',
-    url(r'^$', api_root, name='shellac_api_root'),
+user_list = UserViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
 
-    url(r'^category/$', CategoryList.as_view(), name='shellac_api_category_list'),
-    url(r'^category/(?P<slug>[-\w]+)/$', CategoryDetail.as_view(), name='shellac_api_category_detail'),
+user_detail = UserViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'
+})
 
-    url(r'^user/$', UserList.as_view(), name='shellac_api_user_list'),
-    url(r'^user/(?P<username>[-\w]+)/$', UserDetail.as_view(), name='shellac_api_user_detail'),
+category_list = CategoryViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
 
-    url(r'^clip/$', ClipList.as_view(), name='shellac_api_clip_list'),
-    url(r'^clip/(?P<pk>[\d]+)/$', ClipDetail.as_view(), name='shellac_api_clip_detail'),
+category_detail = CategoryViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'
+})
+
+clip_list = ClipViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+clip_detail = ClipViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'
+})
+
+urlpatterns = patterns('shellac.views.api',
+    url(r'^$', api_root, name='api_root'),
+    url(r'^clips/$', clip_list, name='clip-list'),
+    url(r'^clips/(?P<pk>[0-9]+)/$', clip_detail, name='clip-detail'),
+    url(r'^categories/$', category_list, name='category-list'),
+    url(r'^categories/(?P<slug>[-\w]+)/$', category_detail, name='category-detail'),
+    url(r'^users/$', user_list, name='user-list'),
+    url(r'^users/(?P<username>[-\w]+)/$', user_detail, name='user-detail')
 )
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'html'])
+
+# Login and logout views for the browsable API
+urlpatterns += patterns('',
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+)
 
 
 

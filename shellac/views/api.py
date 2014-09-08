@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
-from rest_framework import generics
+from rest_framework import viewsets
 
 from django.contrib.auth.models import User
 from shellac.models import Clip, Category
@@ -13,26 +13,21 @@ from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializ
 @api_view(('GET',))
 def api_root(request, format=None):
     return Response({
-        'users': reverse('shellac_api_user_list', request=request, format=format),
-        'categories': reverse('shellac_api_category_list', request=request, format=format),
-        'clips': reverse('shellac_api_clip_list', request=request, format=format)
+        'users': reverse('user-list', request=request, format=format),
+        'categories': reverse('category-list', request=request, format=format),
+        'clips': reverse('clip-list', request=request, format=format)
     })
 
 
-class CategoryList(generics.ListCreateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-
-class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+class CategoryViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
-class ClipList(generics.ListCreateAPIView):
+
+class ClipViewSet(viewsets.ModelViewSet):
     queryset = Clip.objects.all()
     serializer_class = ClipSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -41,25 +36,8 @@ class ClipList(generics.ListCreateAPIView):
         obj.author = self.request.user
 
 
-class ClipDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Clip.objects.all()
-    serializer_class = ClipSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    def pre_save(self, obj):
-        obj.author = self.request.user
-
-
-class UserList(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+class UserViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-
