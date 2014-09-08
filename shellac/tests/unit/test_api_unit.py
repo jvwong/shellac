@@ -32,7 +32,7 @@ class Api_CategoryList(APITestCase):
 
     # line up view for '/'
     def test_api_root_category_url_resolves_to_api_categorylist_view(self):
-        url = reverse('shellac_api_category')
+        url = reverse('shellac_api_category_list')
         self.assertEqual(url, '/api/category/')
 
     def test_api_root_get_returns_correct_response(self):
@@ -117,7 +117,7 @@ class Api_User_PageTest_root(APITestCase):
 
     # line up view for '/'
     def test_api_root_user_url_resolves_to_api_category_view(self):
-        url = reverse('shellac_api_user')
+        url = reverse('shellac_api_user_list')
         self.assertEqual(url, '/api/user/')
 
     def test_api_root_user_get_returns_correct_response(self):
@@ -162,7 +162,7 @@ audio_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../asset
 class Api_ClipList(APITestCase):
 
     def test_ClipList_url_resolves_to_api_ClipList_view(self):
-        url = reverse('shellac_api_clip')
+        url = reverse('shellac_api_clip_list')
         self.assertEqual(url, '/api/clip/')
 
     def test_ClipList_GET_returns_correct_response(self):

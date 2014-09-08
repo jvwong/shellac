@@ -13,9 +13,9 @@ from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializ
 @api_view(('GET',))
 def api_root(request, format=None):
     return Response({
-        'users': reverse('shellac_api_user', request=request, format=format),
-        'categories': reverse('shellac_api_category', request=request, format=format),
-        'clips': reverse('shellac_api_clip', request=request, format=format)
+        'users': reverse('shellac_api_user_list', request=request, format=format),
+        'categories': reverse('shellac_api_category_list', request=request, format=format),
+        'clips': reverse('shellac_api_clip_list', request=request, format=format)
     })
 
 
@@ -37,13 +37,17 @@ class ClipList(generics.ListCreateAPIView):
     serializer_class = ClipSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+    def pre_save(self, obj):
+        obj.author = self.request.user
+
 
 class ClipDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Clip.objects.all()
     serializer_class = ClipSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    # def pre_save(self, obj):
-    #     obj.author = self.request.user
+
+    def pre_save(self, obj):
+        obj.author = self.request.user
 
 
 class UserList(generics.ListCreateAPIView):

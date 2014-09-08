@@ -5,13 +5,13 @@ from shellac.views.api import CategoryList, CategoryDetail, UserList, UserDetail
 urlpatterns = patterns('',
     url(r'^$', api_root, name='shellac_api_root'),
 
-    url(r'^category/$', CategoryList.as_view(), name='shellac_api_category'),
+    url(r'^category/$', CategoryList.as_view(), name='shellac_api_category_list'),
     url(r'^category/(?P<slug>[-\w]+)/$', CategoryDetail.as_view(), name='shellac_api_category_detail'),
 
-    url(r'^user/$', UserList.as_view(), name='shellac_api_user'),
+    url(r'^user/$', UserList.as_view(), name='shellac_api_user_list'),
     url(r'^user/(?P<username>[-\w]+)/$', UserDetail.as_view(), name='shellac_api_user_detail'),
 
-    url(r'^clip/$', ClipList.as_view(), name='shellac_api_clip'),
+    url(r'^clip/$', ClipList.as_view(), name='shellac_api_clip_list'),
     url(r'^clip/(?P<pk>[\d]+)/$', ClipDetail.as_view(), name='shellac_api_clip_detail'),
 )
 
