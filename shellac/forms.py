@@ -39,5 +39,3 @@ class CreateClipForm(ModelForm):
     class Meta:
         model = Clip
         exclude = ['author', 'slug', 'plays', 'rating']
-
-

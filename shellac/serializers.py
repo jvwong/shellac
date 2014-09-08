@@ -24,11 +24,12 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
         lookup_field = 'slug'
         model = Category
         fields = ('url', 'id', 'title', 'slug', 'description', 'clips')
-        read_only_fields = ('clips',)
+        # read_only_fields = ('clips',)
 
     def restore_object(self, attrs, instance=None):
         # instance will be None, unless the serializer was instantiated with an
         # existing model instance to be updated, using the instance=... argument
+        # print("attrs: ", attrs)
         if instance is not None:
             # Update existing instance
             instance.title = attrs.get('title', instance.title)
@@ -36,7 +37,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
             return instance
 
         # Create new instance
-        # attrs.pop('clips', None)
+        attrs.pop('clips', None)
         return Category(**attrs)
 
 
