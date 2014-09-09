@@ -46,16 +46,16 @@ body.home {
 body,
 #main-wrapper,
 #nav ul li strong a {
-  background: #fff url(_image/noise.png);
+  background: #fff url(../demo/_image/noise.png);
 }
 
 body,
 #main-wrapper,
 #nav ul li strong a {
-  background: #fff url(_image/tiny_grid.png);
+  background: #fff url(../demo/_image/tiny_grid.png);
   background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaAgMAAADUJKRdAAAADFBMVEX8/Pz19fX09PT29vY9qbYoAAAAaElEQVR4Xk2MoREDMRADrzSDBQcEQj71GBw4kBbSQKp4YBBw9PsJyLxtsR2tZNfx/LyPhzX7R1Ue2SfjKlicDKBNdpBXsz790Nj8kUlo+WR47PvEPfY+gb7+kMhm5801EBsLvq/z3v8Apg8pkRmgbrsAAAAASUVORK5CYII=);
   /* old IE */
-  *background: #fff url(_image/tiny_grid.png);
+  *background: #fff url(../demo/_image/tiny_grid.png);
 }
 
 #nav ul li strong a {
@@ -88,9 +88,9 @@ body,
    * http://dejavu-fonts.org/wiki/index.php?title=Main_Page
    */
   font-family: 'DejaVuSansMonoBook';
-  src: url('_image/dejavusansmono-webfont.eot');
-  src: url('_image/dejavusansmono-webfont.eot?#iefix') format('embedded-opentype'),
-       url('_image/dejavusansmono-webfont.woff') format('woff'),
+  src: url('../demo/_image/dejavusansmono-webfont.eot');
+  src: url('../demo/_image/dejavusansmono-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../demo/_image/dejavusansmono-webfont.woff') format('woff'),
        url('../demo/_image/dejavusansmono-webfont.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
@@ -207,7 +207,7 @@ body.home .sm2-speaker {
   top: 0px;
   width: 20%;
   height: 120%; /* hackish, but works. */
-  background: transparent url(_image/soundmanager2-speaker.png) no-repeat 50% 50%;
+  background: transparent url(../demo/_image/soundmanager2-speaker.png) no-repeat 50% 50%;
   max-width: 256px;
   max-height: 250px;
   background-size: contain;
@@ -629,7 +629,7 @@ h2 {
 }
 
 #content { /* #top #content */
-  background: #222 url(_image/noise-dark.png);
+  background: #222 url(../demo/_image/noise-dark.png);
 }
 
 #top,
@@ -1098,9 +1098,9 @@ ul.standard ul {
 .wedge .r,
 .wedge-dark .r,
 .c3 h2 .r {
-  background:transparent url(_image/wedge.png) no-repeat;
+  background:transparent url(../demo/_image/wedge.png) no-repeat;
   background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAEABAMAAACJ12OUAAAAGFBMVEUREREAZpkYGBgAZpkiIiIAZpkREREAZpkArR2CAAAABnRSTlMAAOvrEhJBIv9yAAAC0UlEQVR42u3ZuW0cQRCF4cIPhrG2MhDkLZgDM5ChBGQoKBlMgdgElAQ9gVACNMTZ2WOO7rraI2rcna33cdjTTTzyQ7++fzFuQPTrdDBuMAa8H04vQwNOL++HkQHTtw0CBmAekh0wf1cnYAEsAibAIGACDAI2QCdgA3QCDoBKwAFQCXgAGgEPQCPgAigEXACFgA/QJ+AD9Ak4AV0CTkCXgBfQI+C/tT0W952dubgBncH4Ae3J+AHt0QQAzdkEAM3hRACt6UQArfGEAI35hACNAGKAfQIxwD6CIGCXQRCwCyEK2KYQBWxjCAM2OYQBmyDigHUSccA6igRglUUCsAojA1imkQEs40gBFnmkAItAcoB7IjnAPZIk4JZJEnALJQu4ppIFXGNJAy65pAGXYPKAOZk8YI5mAHDOZgBwJjACmAiMACYCT7/U6+c3/fOv1R9Uf1D9QfUH1R9Uf1D9QfUH1R9Uf1D9QfUH1R9Uf1D9wefvD/4NXhwfRwQPrzy8jgw4PiIjhI90ZITwEY4MEKZsZIAwRSN5wjkZyRPOwUiaMOciacIci2QJl1QkS7iEIknCNRNJEq6RSI5wS0RyhFsgkiLc85AU4R6HZAiLNCRDWIQhCcIyC0kQllFInLBKQuKEVRASJqxzkDBhHYNECZsUJErYhCBBwjYDCRK2EUiMsEtAYoRdABIi7OcjIcJ+PBIhNKYjEUJjOBIgtGYjAUJrNOInNCcjfkJzMO47O3Px39oeixvb+cFwP67Oo8X7vHpPFu9vrPe7xblmuqsL56rtrm98y7a/vPG9OP0XDNerq7ziuDYPZZPBs3toewye/Uvb5XDsoOo+i2MPV3d67E1c3+ixjxH9qME8yIzDDvMoNY5brLPUOm2xTnPrvLf++3+0/uLgz2/1ev6rf/5W/UH1B9UfVH9Q/UH1B9UfVH9Q/UH1B9UfVH9Q/UH1B9UffPr+4D+tsZObsTO2qgAAAABJRU5ErkJggg==);
-  *background-image:url(_image/wedge.png);
+  *background-image:url(../demo/_image/wedge.png);
 }
 
 .wedge .l,
@@ -1269,7 +1269,7 @@ ul.standard ul {
 }
 
 .flash9 {
-  background-image:url(_image/flash9.png);
+  background-image:url(../demo/_image/flash9.png);
   background-repeat:no-repeat;
   background-position:bottom right;
   _background-image:none;
@@ -1281,19 +1281,19 @@ li.flash9 {
 
 .flash9:hover,
 .flash9.active {
-  background-image:url(_image/flash9-dark.png);
+  background-image:url(../demo/_image/flash9-dark.png);
   _background-image:none;
 }
 
 .new {
-  background-image:url(_image/new.png);
+  background-image:url(../demo/_image/new.png);
   background-repeat:no-repeat;
   background-position:bottom right;
   _background-image:none;
 }
 
 .recent {
-  background-image:url(_image/new-bw.png);
+  background-image:url(../demo/_image/new-bw.png);
   background-repeat:no-repeat;
   background-position:bottom right;
   _background-image:none;
@@ -1303,7 +1303,7 @@ li.flash9 {
 .new.active,
 .recent:hover,
 .recent.active {
-  background-image:url(_image/new-dark.png);
+  background-image:url(../demo/_image/new-dark.png);
   background-repeat:no-repeat;
   background-position:bottom right;
   _background-image:none;
@@ -1800,7 +1800,7 @@ ul.inthewild a {
   margin: 0px;
   padding: 0px;
   border-radius: 0px;
-  background: transparent url(_image/logo-sprite.png) no-repeat 0px 0px;
+  background: transparent url(../demo/_image/logo-sprite.png) no-repeat 0px 0px;
   line-height: 96px;
   vertical-align: middle;
 }
@@ -1995,10 +1995,10 @@ ul.graphic li a.sm2_link {
 }
 
 ul.graphic li a {
-  background:#ddd url(play-mp3-links/image/icon_play.png) no-repeat 3px 50%;
+  background:#ddd url(../demo/play-mp3-links/image/icon_play.png) no-repeat 3px 50%;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAA6ElEQVR42q2UvQqDMBRGC47dAj6rgygIDg5OfQlHF30GX0JFURddnEQU+eoNLaSJFRUvnPzA/c4QkjwA3AIf1tJWnitsRT8I+2Q0UfTM8/yFk0UZyooiNk0ThmE4BWUoK4r0cRxxBcr+iMh+AVW0LAtkoihCURS0/ocqwkaZpgnbtrmwrmts1DGR67owDIPjeR7iOEbXdfuisiwh4zgOSb5wcZIkYo8qapoGMpZlkYALwzBElmWoqkrsUUVt20LG930EQUAHTvstVFHf95BJ05TmPVQR3dQLKCI2zzOuQNnbHu3t38gtvAF1L6rpAc8MDwAAAABJRU5ErkJggg==);
-  *background-image: url(play-mp3-links/image/icon_play.png);
-  _background-image:url(play-mp3-links/image/icon_play.gif);
+  *background-image: url(../demo/play-mp3-links/image/icon_play.png);
+  _background-image:url(../demo/play-mp3-links/image/icon_play.gif);
 }
 
 ul.graphic li a:hover,

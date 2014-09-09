@@ -8,7 +8,7 @@
 
 body {
  font-size:75%;
- background: #fff url(../_image/noise.png);
+ background: #fff url(../../demo/_image/noise.png);
 }
 
 pre {

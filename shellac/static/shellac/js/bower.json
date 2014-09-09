@@ -20,6 +20,9 @@
     "tests"
   ],
   "dependencies": {
-    "soundmanager2": "*"
+    "soundmanager2": "*",
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.2.0",
+    "less": "~1.7.5"
   }
 }
