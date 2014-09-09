@@ -271,9 +271,10 @@ var shellac = (function () {
         });
         $('.media.clip .media-url').on('click', function(e){
             var url = $(this).attr('data-clip-url'),
-                $progress = $(this).find('.media-progress');
+                $progress = $(this).find('.media-progress'),
+                $description = $(this).find('.media-description');
 
-            audio.onClickPlayer(url, $progress);
+            audio.onClickPlayer(url, $progress, $description);
         });
     };
 
@@ -309,7 +310,9 @@ var shellac = (function () {
             });
         }
         display_clips();
-//        util.PubSub.emit("shellac-categorychange", stateMap.clips.map(function(clip){return clip.audio_file;}));
+        util.PubSub.emit("shellac-categorychange",
+            stateMap.clips.map(function(clip){return clip.audio_file;})
+        );
     };
 
 

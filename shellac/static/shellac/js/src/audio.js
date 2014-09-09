@@ -53,8 +53,9 @@ var audio = (function () {
 
    //--------------------- BEGIN MODULE SCOPE METHODS --------------------
 
-    setJqueryMap = function($progress){
+    setJqueryMap = function($progress, $description){
         jqueryMap.$progress  = $progress;
+        jqueryMap.$description  = $description;
         jqueryMap.$progress_bar = jqueryMap.$progress.find('.progress-bar');
     };
 
@@ -87,8 +88,10 @@ var audio = (function () {
         urls.forEach(function(url){
             var murl,
                 $player,
-                pplayed,
+                $description,
+                $progress,
                 $progress_bar,
+                pplayed,
                 sound;
 
             //tack on the media tag
@@ -100,7 +103,9 @@ var audio = (function () {
             if(sound){
 
                 //inject the progress bar and update the state
-                $player.find('.media-progress').html(configMap.progress_html);
+                $progress = $player.find('.media-progress');
+                $description = $player.find('.media-description');
+                $progress.html(configMap.progress_html);
                 $progress_bar = $player.find('.media-progress .progress-bar');
 
                 //if it was stopped then set it to 100%
@@ -113,7 +118,7 @@ var audio = (function () {
 
                 // if the sound === stateMap.audio then reassign the jQuery map
                 if(stateMap.audio.id === murl){
-                    setJqueryMap($player);
+                    setJqueryMap($progress, $description);
                 }
             }
         });
@@ -155,12 +160,7 @@ var audio = (function () {
     // Returns   : none
     // Throws    : none
     makeSound = function(url, autoPlay){
-
-        console.log(url);
-        console.log(autoPlay);
-
         var sound;
-
         sound = soundManager.createSound({
             id: url,
             url: url,
@@ -184,10 +184,21 @@ var audio = (function () {
                 //initialize the percentPlayed
                 stateMap.percentPlayed = (this.position / this.durationEstimate * 100).toFixed(1);
             },
+            onplay: function(){
+                jqueryMap.$description.toggleClass("playing");
+            },
+            onpause: function(){
+                jqueryMap.$description.toggleClass("playing");
+            },
+            onresume: function(){
+                jqueryMap.$description.toggleClass("playing");
+            },
             onstop: function () {
+                jqueryMap.$description.toggleClass("playing");
                 //soundManager._writeDebug('The sound ' + this.id + ' stopped.');
             },
             onfinish: function () {
+                jqueryMap.$description.toggleClass("playing");
                 //soundManager._writeDebug('The sound ' + this.id + ' finished playing.');
             }
         });
@@ -199,7 +210,7 @@ var audio = (function () {
     //--------------------- END MODULE SCOPE METHODS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
-    onClickPlayer = function(url, $progress){
+    onClickPlayer = function(url, $progress, $description){
 
         console.log(url);
         console.log($progress);
@@ -218,7 +229,7 @@ var audio = (function () {
             }
 
             stateMap.url = url;
-            setJqueryMap($progress);
+            setJqueryMap($progress, $description);
 
             //Create the sound, assign it to stateMap, and autoplay
             stateMap.audio = makeSound(stateMap.url, true);
@@ -239,7 +250,7 @@ var audio = (function () {
                 //update the stateMap to reflect the new object
                 stateMap.audio = sound;
                 stateMap.url = sound.id;
-                setJqueryMap($progress);
+                setJqueryMap($progress, $description);
             }
 
             togglePlayer();
