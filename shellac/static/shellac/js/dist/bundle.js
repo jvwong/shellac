@@ -11099,6 +11099,7 @@ var audio = (function () {
             },
             onplay: function(){
                 jqueryMap.$description.toggleClass("playing");
+                jqueryMap.$description.toggleClass("played");
             },
             onpause: function(){
                 jqueryMap.$description.toggleClass("playing");
