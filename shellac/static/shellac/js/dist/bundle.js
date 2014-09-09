@@ -10966,9 +10966,8 @@ var audio = (function () {
 
    //--------------------- BEGIN MODULE SCOPE METHODS --------------------
 
-    setJqueryMap = function($player){
-        jqueryMap.$player  = $player;
-        jqueryMap.$progress = $player.find('.media-progress');
+    setJqueryMap = function($progress){
+        jqueryMap.$progress  = $progress;
         jqueryMap.$progress_bar = jqueryMap.$progress.find('.progress-bar');
     };
 
@@ -11113,12 +11112,15 @@ var audio = (function () {
     //--------------------- END MODULE SCOPE METHODS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
-    onClickPlayer = function($player){
+    onClickPlayer = function(url, $progress){
+
+        console.log(url);
+        console.log($progress);
 
         // *** CASE 0
         // State: Clip selected does was not created yet
         // Action: Create the clip
-        if(!soundManager.getSoundById($player.attr('data-clip-url'))) {
+        if(!soundManager.getSoundById(url)) {
 
             // Case 0.a: No clip is currently playing
                 // do nothing
@@ -11128,8 +11130,8 @@ var audio = (function () {
                 stateMap.audio.pause();
             }
 
-            stateMap.url = $player.attr('data-clip-url');
-            setJqueryMap($player);
+            stateMap.url = url;
+            setJqueryMap($progress);
 
             //Create the sound, assign it to stateMap, and autoplay
             stateMap.audio = makeSound(stateMap.url, true);
@@ -11138,7 +11140,7 @@ var audio = (function () {
             // *** Case 1
             // State: Clip selected indeed exists; stateMap.audio then must exist
             // Action: Check if it is the same clip from before
-            var sound = soundManager.getSoundById($player.attr('data-clip-url'));
+            var sound = soundManager.getSoundById(url);
 
             // Case 1a: this is the same clip
             // In this case audio, url, and $player are identical so simply toggle the playing state
@@ -11150,7 +11152,7 @@ var audio = (function () {
                 //update the stateMap to reflect the new object
                 stateMap.audio = sound;
                 stateMap.url = sound.id;
-                setJqueryMap($player);
+                setJqueryMap($progress);
             }
 
             togglePlayer();
@@ -11249,10 +11251,6 @@ var shellac = (function () {
      **/
 
     //--------------------- BEGIN MODULE SCOPE METHODS --------------------
-
-
-
-
 
     /*
      * method renderCategories: make an api call to gather the Categories in database
@@ -11437,6 +11435,8 @@ var shellac = (function () {
             var clip = String() +
                 '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 media clip">' +
                     '<div class="ui360">' +
+
+                        //BEGIN $player
                         '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
                             '<img class="media-img img-responsive" src="' + stateMap.STATIC_URL + 'shellac/assets/seventyEight.png" alt="' + object.title + '" />' +
                             '<div class="media-description">' +
@@ -11446,6 +11446,8 @@ var shellac = (function () {
                             '</div>' +
                             '<div class="media-progress"></div>' +
                         '</span>' +
+                        //END $player
+
                     '</div>' +
                 '</div>';
 
@@ -11454,10 +11456,12 @@ var shellac = (function () {
 
         });
         $('.media.clip .media-url').on('click', function(e){
-            audio.onClickPlayer($(this));
+            var url = $(this).attr('data-clip-url'),
+                $progress = $(this).find('.media-progress');
+
+            audio.onClickPlayer(url, $progress);
         });
     };
-
 
     //--------------------- END DOM METHODS ----------------------
 

@@ -66,10 +66,6 @@ var shellac = (function () {
 
     //--------------------- BEGIN MODULE SCOPE METHODS --------------------
 
-
-
-
-
     /*
      * method renderCategories: make an api call to gather the Categories in database
      * parameters
@@ -253,6 +249,8 @@ var shellac = (function () {
             var clip = String() +
                 '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 media clip">' +
                     '<div class="ui360">' +
+
+                        //BEGIN $player
                         '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
                             '<img class="media-img img-responsive" src="' + stateMap.STATIC_URL + 'shellac/assets/seventyEight.png" alt="' + object.title + '" />' +
                             '<div class="media-description">' +
@@ -262,6 +260,8 @@ var shellac = (function () {
                             '</div>' +
                             '<div class="media-progress"></div>' +
                         '</span>' +
+                        //END $player
+
                     '</div>' +
                 '</div>';
 
@@ -270,10 +270,12 @@ var shellac = (function () {
 
         });
         $('.media.clip .media-url').on('click', function(e){
-            audio.onClickPlayer($(this));
+            var url = $(this).attr('data-clip-url'),
+                $progress = $(this).find('.media-progress');
+
+            audio.onClickPlayer(url, $progress);
         });
     };
-
 
     //--------------------- END DOM METHODS ----------------------
 
