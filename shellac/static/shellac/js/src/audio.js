@@ -9,7 +9,7 @@ var audio = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var util = require('./util.js'),
-    soundManager = require('../lib/soundmanager2/script/soundmanager2.js').soundManager;
+        soundManager = require('../lib/soundmanager2/script/soundmanager2.js').soundManager;
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -40,10 +40,14 @@ var audio = (function () {
     jqueryMap = {},
     setJqueryMap,
 
-    initModule, onCategoryChange,
+    initModule,
+
+    onCategoryChange,
     onClickPlayer,
     makeSound,
-    togglePlayer;
+    togglePlayer,
+
+    PubSub = util.PubSub;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -128,18 +132,20 @@ var audio = (function () {
         soundManager.setup({
             debugMode: true,
             consoleOnly: true,
+            html5PollingInterval: 50, // increased framerate for whileplaying() etc.
+            flashVersion: 9,
+            useHighPerformance: true,
             url: 'http://www.hiding-my-file/Soundmanager2Files/soundmanager2_flash9.swf/',
             onready: function() {
                 configMap.isSupported = soundManager.ok();
-                //console.log("SoundManager supported: %s", configMap.isSupported);
             },
             ontimeout: function() {
                 console.log("SoundManager failed to load");
             }
         });
-        util.PubSub.on("shellac-categorychange", onCategoryChange );
-    };
 
+        PubSub.on("shellac-categorychange", onCategoryChange );
+    };
 
     // Begin private method /makeSound/
     // Example   : makeSound( );

@@ -86,7 +86,7 @@ var shellac = (function () {
             .done(function(categories){
                 stateMap.category_db.insert(parseCategoryData(categories.results));
                 stateMap.categories = stateMap.category_db().get();
-                PubSub.emit("onCategoryLoadComplete");
+                PubSub.emit("categoryLoadComplete");
             })
             .fail(function(){
                 console.error("Could not load Clip archive");
@@ -115,7 +115,7 @@ var shellac = (function () {
             .done(function(clips){
                 stateMap.clip_db.insert(parseClipData(clips.results));
                 stateMap.clips = stateMap.clip_db().get();
-                PubSub.emit("onClipLoadComplete");
+                PubSub.emit("clipLoadComplete");
             })
             .fail(function(){
                 console.error("Could not load Clip archive");
@@ -252,16 +252,17 @@ var shellac = (function () {
 
             var clip = String() +
                 '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 media clip">' +
-
-                    '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
-                        '<img class="media-img img-responsive" src="' + stateMap.STATIC_URL + 'shellac/assets/seventyEight.png" alt="' + object.title + '" />' +
-                        '<div class="media-description">' +
-                            '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
-                            '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
-                            '<span class="media-description-content"><small>' + object.owner + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
-                        '</div>' +
-                        '<div class="media-progress"></div>' +
-                    '</span>' +
+                    '<div class="ui360">' +
+                        '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
+                            '<img class="media-img img-responsive" src="' + stateMap.STATIC_URL + 'shellac/assets/seventyEight.png" alt="' + object.title + '" />' +
+                            '<div class="media-description">' +
+                                '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
+                                '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
+                                '<span class="media-description-content"><small>' + object.owner + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
+                            '</div>' +
+                            '<div class="media-progress"></div>' +
+                        '</span>' +
+                    '</div>' +
                 '</div>';
 
             jqueryMap.$clip_content.append(clip);
@@ -306,7 +307,7 @@ var shellac = (function () {
             });
         }
         display_clips();
-        util.PubSub.emit("shellac-categorychange", stateMap.clips.map(function(clip){return clip.audio_file;}));
+//        util.PubSub.emit("shellac-categorychange", stateMap.clips.map(function(clip){return clip.audio_file;}));
     };
 
 
@@ -341,8 +342,8 @@ var shellac = (function () {
         setJqueryMap();
 
         //register pub-sub methods
-        PubSub.on("onClipLoadComplete", display_clips);
-        PubSub.on("onCategoryLoadComplete", display_categories);
+        PubSub.on("clipLoadComplete", display_clips);
+        PubSub.on("categoryLoadComplete", display_categories);
 
         //load data into in-browser database
         renderClips();
