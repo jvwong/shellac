@@ -47,10 +47,6 @@ urlpatterns = patterns('shellac.views.api',
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'html'])
 
-# Login and logout views for the browsable API
-urlpatterns += patterns('',
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-)
 
 
 

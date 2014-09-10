@@ -16,6 +16,12 @@ urlpatterns = patterns('',
     url(r'^clips/', include('shellac.urls.clips')),
 )
 
+# Login and logout views for the browsable API
+urlpatterns += patterns('',
+    url(r'^api-auth/$', include('rest_framework.urls', namespace='rest_framework')),
+)
+
+
 
 
 
