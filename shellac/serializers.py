@@ -55,7 +55,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         lookup_field = 'pk'
         model = Clip
-        fields = ('id', 'title', 'author', 'description', 'categories',
+        fields = ('url', 'id', 'title', 'author', 'description', 'categories',
                   'brand', 'plays', 'rating', 'status', 'slug',
                   'audio_file', 'created', 'owner')
         # read_only_fields = ('categories',)
