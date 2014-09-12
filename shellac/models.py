@@ -1,11 +1,7 @@
 from django.db import models
 from taggit.managers import TaggableManager
 from django.template.defaultfilters import slugify
-import datetime
-from django.conf import settings
-from audiofield.fields import AudioField
 import os.path
-import json
 
 
 CATEGORIES = (
@@ -71,9 +67,7 @@ class Category(models.Model):
     objects = CategoryManager()
 
 
-##c = Clip.objects.create_clip(title, author)
 class ClipManager(models.Manager):
-
     def create_clip(self, title, author):
         clip = self.create(title=title, author=author)
         return clip

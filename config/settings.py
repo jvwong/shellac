@@ -175,7 +175,7 @@ INSTALLED_APPS = (
 )
 
 REST_FRAMEWORK = {
-    'PAGINATE_BY': 10
+    'PAGINATE_BY': 50
 }
 
 LOGIN_URL = '/accounts/signin/'

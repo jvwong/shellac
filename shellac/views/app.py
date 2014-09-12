@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from shellac.models import Clip, Category
-import json
+from shellac.models import Clip
+
 
 ### app
 @login_required(login_url='/accounts/signin/')
