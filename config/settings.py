@@ -109,18 +109,6 @@ STATICFILES_DIRS = (
     STATIC_PATH,
 )
 
-###PIPELINE SETTINGS
-#STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
-# PIPELINE_DISABLE_WRAPPER = True
-
-# AWS_ACCESS_KEY_ID = 'AKIAIU4GNZSJOT6YNVWQ'
-# AWS_SECRET_ACCESS_KEY = '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'
-# AWS_STORAGE_BUCKET_NAME = 'shellac.media'
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-# AWS_S3_SECURE_URLS = False       # use http instead of https
-# AWS_QUERYSTRING_AUTH = False     # don't add complex authentication-related query parameters for requests
-# STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-
 INTERNAL_IPS = ('127.0.0.1',)
 
 # Make this unique, and don't share it with anybody.
