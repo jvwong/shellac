@@ -5,6 +5,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from shellac.tests.utils.unit import setFileAttributefromLocal, cleanClips
+from rest_framework.authtoken.models import Token
 
 """
  BEGIN ROOT API
@@ -35,7 +36,7 @@ class Api_CategoryList(APITestCase):
         url = reverse('category-list')
         self.assertEqual(url, '/api/categories/')
 
-    def test_api_root_get_returns_correct_response(self):
+    def test_CategoryList_GET_returns_correct_response(self):
         Category.objects.autopopulate()
 
         response = self.client.get('/api/categories/.json')
@@ -48,7 +49,7 @@ class Api_CategoryList(APITestCase):
         self.assertIn('"clips": []', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
-    def test_api_root_post_creates_and_returns_correct_response(self):
+    def test_CategoryList_POST_creates_and_returns_correct_response(self):
         # Category.objects.autopopulate()
         User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         self.client.login(username='andrea', password='a')
@@ -64,6 +65,33 @@ class Api_CategoryList(APITestCase):
         self.assertEqual(response.data['title'], "CAT1")
         self.assertEqual(response.data['description'], "cat1 description")
         self.assertEqual(response.data['clips'], [])
+
+
+    def test_CategoryList_POST_with_token_auth_creates_and_returns_correct_response(self):
+
+        #make some users
+        user = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+
+        #get the corrent token
+        Token.objects.create(user=user)
+        payload1 = json.dumps({'username': 'andrea', 'password': 'a'})
+        response1 = self.client.post("/api-token-auth/", payload1, content_type='application/json')
+        token = response1.data['token']
+        #print(token)
+
+        payload = {"title": "cat1", "description": "cat1 description"}
+
+        response = self.client.post("/api/categories/", payload, HTTP_AUTHORIZATION='Token ' + token)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        data =response.data
+        #print(data)
+
+        self.assertEqual(response.data['title'], "CAT1")
+        self.assertEqual(response.data['description'], "cat1 description")
+        self.assertEqual(response.data['clips'], [])
+
+
 
 
 class Api_CategoryDetail(APITestCase):
@@ -176,6 +204,7 @@ audio_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../asset
 
 class Api_ClipList(APITestCase):
 
+
     def test_ClipList_url_resolves_to_api_ClipList_view(self):
         url = reverse('clip-list')
         self.assertEqual(url, '/api/clips/')
@@ -231,7 +260,7 @@ class Api_ClipList(APITestCase):
         # self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         data =response.data
-        # print(data)
+        #print(data)
         self.assertEqual(data['title'], 'clip1 title')
         self.assertEqual(data['description'], 'clip1 description')
         self.assertIn('sounds', data['audio_file'])
@@ -243,6 +272,66 @@ class Api_ClipList(APITestCase):
         self.assertEqual(data['owner'], 'andrea')
 
         cleanClips()
+
+
+    def test_ClipList_POST_returns_corrent_authorization_token(self):
+
+        #make some users
+        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+        self.assertEqual(User.objects.all().count(), 2)
+        self.assertEqual(Clip.objects.all().count(), 0)
+
+        #Get the token directly from the DB
+        token = Token.objects.get_or_create(user=user1) ##returns (Token, boolean) tuple
+        #print(token[0].key)
+
+        payload = json.dumps({'username': 'andrea', 'password': 'a'})
+        #print(payload)
+        response = self.client.post("/api-token-auth/", payload, content_type='application/json')
+        data =response.data
+        #print(data)
+
+        self.assertEqual(token[0].key, data['token'])
+
+
+    def test_ClipList_POST_with_token_auth_creates_and_returns_correct_response(self):
+
+        #make some users
+        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+        self.assertEqual(User.objects.all().count(), 2)
+        self.assertEqual(Clip.objects.all().count(), 0)
+
+        #get the corrent token
+        Token.objects.create(user=user1)
+        payload1 = json.dumps({'username': 'andrea', 'password': 'a'})
+        response1 = self.client.post("/api-token-auth/", payload1, content_type='application/json')
+        token = response1.data['token']
+        #print(token)
+
+        # # open a file and attach it to the request payload
+        f = open(audio_path, "rb")
+        payload = {'title': 'clip1 title', 'author': 'http://testserver/api/users/andrea/', 'description': 'clip1 description', 'audio_file': f}
+
+        # response should be 'HTTP_201_CREATED' and have a clip count of 1
+        response = self.client.post("/api/clips/", payload, HTTP_AUTHORIZATION='Token ' + token)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        data =response.data
+        #print(data)
+        self.assertEqual(data['title'], 'clip1 title')
+        self.assertEqual(data['description'], 'clip1 description')
+        self.assertIn('sounds', data['audio_file'])
+        self.assertEqual(data['plays'], 0)
+        self.assertEqual(data['rating'], 0)
+        self.assertEqual(data['status'], 1)
+        self.assertEqual(data['brand'], '')
+        self.assertEqual(data['categories'], [])
+        self.assertEqual(data['owner'], 'andrea')
+
+        cleanClips()
+
 
 class Api_ClipDetail(APITestCase):
 

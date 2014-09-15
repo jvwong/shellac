@@ -158,12 +158,16 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'taggit',
     'rest_framework',
-    # 'pipeline',
+    'rest_framework.authtoken',
     # 'storages',
 )
 
 REST_FRAMEWORK = {
-    'PAGINATE_BY': 50
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework.authentication.TokenAuthentication',
+       'rest_framework.authentication.SessionAuthentication'
+   ),
+   'PAGINATE_BY': 50,
 }
 
 LOGIN_URL = '/accounts/signin/'

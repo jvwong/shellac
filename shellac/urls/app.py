@@ -19,6 +19,7 @@ urlpatterns = patterns('',
 # Login and logout views for the browsable API
 urlpatterns += patterns('',
     url(r'^accounts/$', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-token-auth/$', 'rest_framework.authtoken.views.obtain_auth_token')
 )
 
 
