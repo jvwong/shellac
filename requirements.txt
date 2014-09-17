@@ -1,6 +1,5 @@
 Markdown==2.4
 Pillow==2.3.0
-South==1.0
 amqp==1.4.6
 anyjson==0.3.3
 billiard==3.3.0.18
