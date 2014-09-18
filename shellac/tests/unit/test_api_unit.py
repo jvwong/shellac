@@ -161,20 +161,22 @@ class Api_CategoryDetail(APITestCase):
 class Api_User_PageTest_root(APITestCase):
 
     # line up view for '/'
-    def test_api_root_user_url_resolves_to_api_category_view(self):
+    def test_UserList_url_resolves_to_api_category_view(self):
         url = reverse('user-list')
         self.assertEqual(url, '/api/users/')
 
-    def test_api_root_user_get_returns_correct_response(self):
-        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+
+    def test_UserList_GET_by_staff_returns_correct_response(self):
+        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        u.is_staff = True
+        u.save()
         self.client.login(username='andrea', password='a')
 
+        ##Should reject non-superuser
         response = self.client.get('/api/users/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # print(response)
-
+        #print(response.data)
         self.assertIn('"username": "andrea"', response.content.decode())
         self.assertIn('"email": "aray@outlook.com"', response.content.decode())
         self.assertIn('"clips": []', response.content.decode())
@@ -184,11 +186,11 @@ class Api_User_PageTest_root(APITestCase):
 class Api_User_PageTest_username(APITestCase):
 
     # line up view for '/'
-    def test_api_username_user_url_resolves_to_api_userlist_view(self):
+    def test_UserDetail_username_user_url_resolves_to_api_userlist_view(self):
         url = reverse('user-detail', kwargs={'username': 'jvwong'})
         self.assertEqual(url, '/api/users/jvwong/')
 
-    def test_api_username_get_returns_correct_response(self):
+    def test_UserDetail_GET_nonstaff_returns_correct_response(self):
         User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
 
@@ -201,6 +203,19 @@ class Api_User_PageTest_username(APITestCase):
         self.assertIn('"clips": []', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
+    # def test_UserDetail_get_returns_correct_response(self):
+    #     User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+    #     User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+    #
+    #     self.client.login(username='andrea', password='a')
+    #     response = self.client.get('/api/users/jvwong/')
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #
+    #     self.assertIn('"username": "jvwong"', response.content.decode())
+    #     self.assertIn('"email": "jray@outlook.com"', response.content.decode())
+    #     self.assertIn('"clips": []', response.content.decode())
+    #     self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+    #
 
 
 # """
@@ -322,6 +337,8 @@ class Api_ClipList(APITestCase):
         self.assertEqual(response1.status_code, status.HTTP_200_OK)
 
         ### open a file and attach it to the request payload
+        ### this is bizarre behaviour as the author is automatically set upon save
+        ### and so ignores the author field even though it is required
         f = open(audio_path, "rb")
         payload = {'title': 'clip1 title', 'author': 'http://testserver/api/users/andrea/', 'description': 'clip1 description', 'audio_file': f}
 
@@ -418,6 +435,33 @@ class Api_ClipDetail(APITestCase):
         cleanClips()
 
 
+    def test_ClipDetail_PUT_by_nonowner_is_rejected(self):
+        #add users and clips
+        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+        clip1 = Clip.objects.create(title='clip1 title', author=user1)
+        clip1.description = "clip1 description"
+
+        # setFileAttributefromLocal(clip1.audio_file, audio_path, "song.mp3")
+        self.assertEqual(User.objects.all().count(), 2)
+        self.assertEqual(Clip.objects.all().count(), 1)
+
+        # open a file and attach it to the request payload
+        f = open(audio_path, "rb")
+
+        self.client.login(username='jvwong', password='j')
+        response = self.client.put('/api/clips/1/', data={'title': 'updated clip1 title',
+                                                         'author': 'http://testserver/api/users/andrea/',
+                                                         'description': 'updated clip1 description',
+                                                         'audio_file': f})
+
+        resp = response.data
+        #print(resp)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        cleanClips()
+
+
     def test_ClipDetail_DELETE_removes_existing_object(self):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
@@ -440,5 +484,27 @@ class Api_ClipDetail(APITestCase):
         self.assertEqual(Clip.objects.all().count(), 1)
         r = self.client.get("/api/categories/1/")
         self.assertEqual(r.status_code, 404)
+
+        cleanClips()
+
+    def test_ClipDetail_DELETE_by_nonowner_is_rejected(self):
+        #add users and clips
+        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+        clip1 = Clip.objects.create(title='clip1 title', author=user1)
+        clip1.description = "clip1 description"
+        setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
+
+        clip2 = Clip.objects.create(title='clip2 title', author=user2)
+        clip2.description = "clip2 description"
+        setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
+
+        self.assertEqual(User.objects.all().count(), 2)
+        self.assertEqual(Clip.objects.all().count(), 2)
+
+        #A 403 Forbidden indicates non-owner attempts to alter resource
+        self.client.login(username='jvwong', password='j')
+        response = self.client.delete('/api/clips/1/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         cleanClips()
