@@ -5,10 +5,13 @@ from rest_framework.decorators import api_view
 from rest_framework import viewsets
 
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+
 from shellac.models import Clip, Category
 from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializer
+from shellac.permissions import IsOwnerOrReadOnly, UserIsOwnerOrAdmin, UserIsAdminOrPost
+from shellac.viewsets import DetailViewSet, ListViewSet
 
-from shellac.permissions import IsOwnerOrReadOnly
 
 
 @api_view(('GET',))
@@ -34,12 +37,34 @@ class ClipViewSet(viewsets.ModelViewSet):
     def pre_save(self, obj):
         obj.author = self.request.user
 
-    permission_classes = (IsOwnerOrReadOnly, )
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly, )
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserListViewSet(ListViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (UserIsAdminOrPost,)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class UserDetailViewSet(DetailViewSet):
     lookup_field = 'username'
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticated, UserIsOwnerOrAdmin,)
 
-    #permission_classes = (permissions.IsAdminUser, )
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
