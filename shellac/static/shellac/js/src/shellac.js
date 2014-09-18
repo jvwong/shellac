@@ -250,19 +250,21 @@ var shellac = (function () {
             var clip = String() +
                 '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 media clip">' +
                     '<div class="ui360">' +
+                        '<div class="crop">' +
 
-                        //BEGIN $player
-                        '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
-                            '<img class="media-img img-responsive" src="' + stateMap.MEDIA_URL + object.brand + '" alt="' + object.title + '" />' +
-                            '<div class="media-description">' +
-                                '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
-                                '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
-                                '<span class="media-description-content"><small>' + object.owner + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
-                            '</div>' +
-                            '<div class="media-progress"></div>' +
-                        '</span>' +
-                        //END $player
+                            //BEGIN $player
+                            '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
+                                '<img class="media-img" src="' + stateMap.MEDIA_URL + object.brand + '" alt="' + object.title + '" />' +
+                                '<div class="media-description">' +
+                                    '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
+                                    '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
+                                    '<span class="media-description-content"><small>' + object.owner + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
+                                '</div>' +
+                                '<div class="media-progress"></div>' +
+                            '</span>' +
+                            //END $player
 
+                        '</div>' +
                     '</div>' +
                 '</div>';
 

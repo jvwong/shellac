@@ -23,15 +23,14 @@ class CategoryViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 class ClipViewSet(viewsets.ModelViewSet):
     lookup_field = 'pk'
     queryset = Clip.objects.all()
     serializer_class = ClipSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def pre_save(self, obj):
         obj.author = self.request.user
@@ -41,4 +40,4 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)

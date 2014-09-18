@@ -12,12 +12,14 @@ from rest_framework.authtoken.models import Token
 """
 class Api_Root(APITestCase):
 
-    # line up view for '/'
     def test_api_root_url_resolves_to_api_root_view(self):
         url = reverse('api_root')
         self.assertEqual(url, '/api/')
 
     def test_api_root_get_returns_correct_response(self):
+        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        self.client.login(username='andrea', password='a')
+
         response = self.client.get('/api/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('/api/users/', response.data['users'])
@@ -37,6 +39,9 @@ class Api_CategoryList(APITestCase):
         self.assertEqual(url, '/api/categories/')
 
     def test_CategoryList_GET_returns_correct_response(self):
+        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        self.client.login(username='andrea', password='a')
+
         Category.objects.autopopulate()
 
         response = self.client.get('/api/categories/.json')
@@ -102,6 +107,8 @@ class Api_CategoryDetail(APITestCase):
         self.assertEqual(url, '/api/categories/arts/')
 
     def test_Api_CategoryDetail_GET_returns_correct_response(self):
+        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        self.client.login(username='andrea', password='a')
         Category.objects.autopopulate()
 
         response = self.client.get('/api/categories/arts/')
@@ -161,6 +168,7 @@ class Api_User_PageTest_root(APITestCase):
     def test_api_root_user_get_returns_correct_response(self):
         User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+        self.client.login(username='andrea', password='a')
 
         response = self.client.get('/api/users/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -184,6 +192,7 @@ class Api_User_PageTest_username(APITestCase):
         User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
 
+        self.client.login(username='andrea', password='a')
         response = self.client.get('/api/users/jvwong/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -224,6 +233,7 @@ class Api_ClipList(APITestCase):
 
         # print(Clip.objects.all().count())
 
+        self.client.login(username='andrea', password='a')
         response = self.client.get('/api/clips/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -306,20 +316,21 @@ class Api_ClipList(APITestCase):
         #get the corrent token
         Token.objects.create(user=user1)
         payload1 = json.dumps({'username': 'andrea', 'password': 'a'})
+        #print(payload1)
         response1 = self.client.post("/api-token-auth/", payload1, content_type='application/json')
         token = response1.data['token']
-        #print(token)
+        self.assertEqual(response1.status_code, status.HTTP_200_OK)
 
-        # # open a file and attach it to the request payload
+        ### open a file and attach it to the request payload
         f = open(audio_path, "rb")
         payload = {'title': 'clip1 title', 'author': 'http://testserver/api/users/andrea/', 'description': 'clip1 description', 'audio_file': f}
 
-        # response should be 'HTTP_201_CREATED' and have a clip count of 1
+        ### response should be 'HTTP_201_CREATED' and have a clip count of 1
         response = self.client.post("/api/clips/", payload, HTTP_AUTHORIZATION='Token ' + token)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         data =response.data
-        #print(data)
+        ### print(data)
         self.assertEqual(data['title'], 'clip1 title')
         self.assertEqual(data['description'], 'clip1 description')
         self.assertIn('sounds', data['audio_file'])
@@ -353,6 +364,7 @@ class Api_ClipDetail(APITestCase):
         self.assertEqual(User.objects.all().count(), 2)
         self.assertEqual(Clip.objects.all().count(), 2)
 
+        self.client.login(username='andrea', password='a')
         response = self.client.get('/api/clips/1/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

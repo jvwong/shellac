@@ -3,9 +3,9 @@
  */
 @import "_elements";
 
-@media_margin_bottom: 4px;
+@media_margin_bottom: 0px;
 @media_margin_top: 0px;
-@media_margin_left: 2px;
+@media_margin_left: 0px;
 @caption_opacity: 0.8;
 @caption_opacity_playing: 0.8;
 @progress_opacity: 1.0;
@@ -24,6 +24,17 @@
 
 .media.clip {
 
+    background: #fff;
+    border: 1px solid #000;
+    display: inline-block;
+    vertical-align: top;
+    padding: 10px;
+    /*
+    width: 200px;
+    height: 200px;
+    margin-right: .1em;
+    margin-bottom: .1em;
+    */
 
     .media-description{
         position:absolute; /* absolute position (so we can position it where we want)*/
@@ -88,11 +99,24 @@
       }
     }
 
-    img.media-img.img-responsive{
-      /*
-      height: @media_img_dim;
-      width: @media_img_dim;
-      */
+    .crop {
+
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        /*
+        img.media-img{
+            display: block;
+            min-width: 100%;
+            min-height: 100%;
+            margin: auto;
+            position: absolute;
+            top: -100%;
+            right: -100%;
+            bottom: -100%;
+            left: -100%;
+        }
+        */
     }
 
 }
