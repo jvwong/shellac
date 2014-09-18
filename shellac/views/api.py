@@ -29,15 +29,36 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
 
 
-class ClipViewSet(viewsets.ModelViewSet):
+class ClipListViewSet(ListViewSet):
     lookup_field = 'pk'
     queryset = Clip.objects.all()
     serializer_class = ClipSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
     def pre_save(self, obj):
         obj.author = self.request.user
 
-    permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly, )
+
+class ClipDetailViewSet(DetailViewSet):
+    lookup_field = 'pk'
+    queryset = Clip.objects.all()
+    serializer_class = ClipSerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly,)
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class UserListViewSet(ListViewSet):

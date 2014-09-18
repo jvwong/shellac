@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url, include
 from rest_framework.urlpatterns import format_suffix_patterns
-from shellac.views.api import api_root, CategoryViewSet, ClipViewSet, UserListViewSet, UserDetailViewSet
+from shellac.views.api import api_root, CategoryViewSet, ClipListViewSet, ClipDetailViewSet, UserListViewSet, UserDetailViewSet
 
 user_list = UserListViewSet.as_view({
     'get': 'get',
@@ -24,15 +24,15 @@ category_detail = CategoryViewSet.as_view({
     'delete': 'destroy'
 })
 
-clip_list = ClipViewSet.as_view({
-    'get': 'list',
-    'post': 'create'
+clip_list = ClipListViewSet.as_view({
+    'get': 'get',
+    'post': 'post'
 })
 
-clip_detail = ClipViewSet.as_view({
-    'get': 'retrieve',
-    'put': 'update',
-    'delete': 'destroy'
+clip_detail = ClipDetailViewSet.as_view({
+    'get': 'get',
+    'put': 'put',
+    'delete': 'delete'
 })
 
 urlpatterns = patterns('shellac.views.api',

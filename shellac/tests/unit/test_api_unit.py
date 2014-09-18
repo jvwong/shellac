@@ -319,14 +319,13 @@ import json
 from django.conf import settings
 audio_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../assets/song.mp3")
 
-class Api_ClipList(APITestCase):
+class ClipListViewSet(APITestCase):
 
-
-    def test_ClipList_url_resolves_to_api_ClipList_view(self):
+    def test_ClipListViewSet_resolves_to_correct_view(self):
         url = reverse('clip-list')
         self.assertEqual(url, '/api/clips/')
 
-    def test_ClipList_GET_returns_correct_response(self):
+    def test_ClipListViewSet_GET_authenticated_returns_correct_response(self):
         ##authenticate REST style
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
@@ -355,6 +354,25 @@ class Api_ClipList(APITestCase):
         self.assertEqual(resp['results'][0].get('status'), clip1.status)
         self.assertEqual(resp['results'][0].get('rating'), clip1.rating)
         self.assertEqual(resp['results'][0].get('audio_file'), clip1.audio_file.name)
+
+        cleanClips()
+
+    def test_ClipListViewSet_GET_unauthenticated_returns_correct_response(self):
+        ##authenticate REST style
+        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+
+        #create the clips
+        clip1 = Clip.objects.create(title='clip1 title', author=user1)
+        clip1.description = "clip1 description"
+        setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
+        clip2 = Clip.objects.create(title='clip2 title', author=user2)
+        clip2.description = "clip2 description"
+        setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
+
+        # print(Clip.objects.all().count())
+        response = self.client.get('/api/clips/.json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         cleanClips()
 
@@ -454,14 +472,14 @@ class Api_ClipList(APITestCase):
         cleanClips()
 
 
-class Api_ClipDetail(APITestCase):
+class Api_ClipDetailViewSet(APITestCase):
 
     # line up view for '/'
-    def test_api_ClipDetail_url_resolves_to_api_ClipDetail_view(self):
+    def test_api_ClipDetailViewSet_GET_resolves_to_correct_view(self):
         url = reverse('clip-detail', kwargs={'pk': 1})
         self.assertEqual(url, '/api/clips/1/')
 
-    def test_api_ClipDetail_GET_returns_correct_response(self):
+    def test_api_ClipDetailViewSet_GET_own_returns_correct_response(self):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
@@ -495,7 +513,41 @@ class Api_ClipDetail(APITestCase):
 
         cleanClips()
 
-    def test_ClipDetail_PUT_updates_existing_object(self):
+    def test_api_ClipDetailViewSet_GET_others_returns_correct_response(self):
+        #add users and clips
+        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+        clip1 = Clip.objects.create(title='clip1 title', author=user1)
+        clip1.description = "clip1 description"
+        setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
+        clip2 = Clip.objects.create(title='clip2 title', author=user2)
+        clip2.description = "clip2 description"
+        setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
+        self.assertEqual(User.objects.all().count(), 2)
+        self.assertEqual(Clip.objects.all().count(), 2)
+
+        self.client.login(username='jvwong', password='j')
+        response = self.client.get('/api/clips/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        resp = response.data
+        # print(resp)
+        self.assertEqual('clip1 title', resp['title'])
+        self.assertEqual('clip1-title', resp['slug'])
+        self.assertEqual('clip1 description', resp['description'])
+        self.assertIn('sounds/', resp['audio_file'])
+        self.assertEqual(resp['plays'], 0)
+        self.assertEqual(resp['rating'], 0)
+        self.assertEqual(resp['status'], 1)
+        self.assertEqual(resp['brand'], '')
+        self.assertEqual(resp['categories'], [])
+        self.assertEqual(resp['owner'], 'andrea')
+        self.assertEqual([], resp['categories'])
+        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+
+        cleanClips()
+
+    def test_ClipDetailViewSet_PUT_own_updates_existing_object(self):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         clip1 = Clip.objects.create(title='clip1 title', author=user1)
@@ -526,7 +578,6 @@ class Api_ClipDetail(APITestCase):
         self.assertEqual(resp['owner'], 'andrea')
 
         cleanClips()
-
 
     def test_ClipDetail_PUT_by_nonowner_is_rejected(self):
         #add users and clips
