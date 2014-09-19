@@ -38,7 +38,9 @@ clip_detail = ClipDetailViewSet.as_view({
 urlpatterns = patterns('shellac.views.api',
     url(r'^$', api_root, name='api_root'),
     url(r'^clips/$', clip_list, name='clip-list'),
+    url(r'^clips/(?P<username>[a-zA-Z0-9_-]{3,16})/$', clip_list, name='clip-list'),
     url(r'^clips/(?P<pk>[0-9]+)/$', clip_detail, name='clip-detail'),
+
     url(r'^categories/$', category_list, name='category-list'),
     url(r'^categories/(?P<slug>[-\w]+)/$', category_detail, name='category-detail'),
     url(r'^users/$', user_list, name='user-list'),

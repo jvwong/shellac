@@ -31,7 +31,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class ClipListViewSet(ListViewSet):
     lookup_field = 'pk'
-    queryset = Clip.objects.all()
     serializer_class = ClipSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
@@ -43,6 +42,24 @@ class ClipListViewSet(ListViewSet):
 
     def pre_save(self, obj):
         obj.author = self.request.user
+
+    def get_queryset(self):
+
+        #filter based on the provided username
+        username = self.kwargs.get('username', '')
+        if username:
+            #print(username)
+            return Clip.objects.filter(author__username=username)
+        return Clip.objects.all()
+
+    def get_paginate_by(self):
+        #print(self.request.accepted_renderer.format)
+        if self.request.accepted_renderer.format == 'api':
+            return 20
+        elif self.request.accepted_renderer.format == 'json':
+            return 100
+        else:
+            return 100
 
 
 class ClipDetailViewSet(DetailViewSet):

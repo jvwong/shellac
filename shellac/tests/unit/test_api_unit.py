@@ -376,6 +376,35 @@ class ClipListViewSet(APITestCase):
 
         cleanClips()
 
+    def test_ClipListViewSet_GET_byUsername_returns_correct_response(self):
+        ##authenticate REST style
+        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+
+        #create the clips
+        clip1 = Clip.objects.create(title='clip1 title', author=user1)
+        clip1.description = "clip1 description"
+        setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
+        clip3 = Clip.objects.create(title='clip3 title', author=user1)
+        clip3.description = "clip3 description"
+        setFileAttributefromLocal(clip3.audio_file, audio_path, "song3.mp3")
+
+        clip2 = Clip.objects.create(title='clip2 title', author=user2)
+        clip2.description = "clip2 description"
+        setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
+        clip4 = Clip.objects.create(title='clip4 title', author=user2)
+        clip4.description = "clip4 description"
+        setFileAttributefromLocal(clip4.audio_file, audio_path, "song4.mp3")
+
+        self.client.login(username='andrea', password='a')
+        response1 = self.client.get('/api/clips/andrea/.json')
+        results = dict(response1.data).get('results')
+        #print(results)
+        self.assertEqual(response1.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(results), 2)
+
+        cleanClips()
+
 
     def test_ClipList_POST_creates_and_returns_correct_response(self):
 

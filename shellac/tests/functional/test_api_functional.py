@@ -5,7 +5,6 @@ User = get_user_model()
 import time
 import os
 import json
-from django.conf import settings
 
 ##Fake category
 c1 = {"title": "cat1 title",
@@ -74,4 +73,3 @@ class ApiGetPageTest(FunctionalTest):
         self.assertIn('Content-Type: application/json', span_response_headers.text)
         self.assertIn('Vary: Accept', span_response_headers.text)
         self.assertIn('Allow: GET, POST, HEAD, OPTIONS', span_response_headers.text)
-
