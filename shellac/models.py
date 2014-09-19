@@ -2,6 +2,11 @@ from django.db import models
 from taggit.managers import TaggableManager
 from django.template.defaultfilters import slugify
 import os.path
+from django.contrib.auth.models import User
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    following = models.ManyToManyField('self', related_name='followers')
 
 
 CATEGORIES = (
