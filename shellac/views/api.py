@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from shellac.models import Clip, Category
 from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializer
 from shellac.permissions import IsOwnerOrReadOnly, UserIsOwnerOrAdmin, UserIsAdminOrPost
-from shellac.viewsets import DetailViewSet, ListViewSet
+from shellac.viewsets import DetailViewSet, ListViewSet, FirehoseViewSet
 
 
 
@@ -44,13 +44,32 @@ class ClipListViewSet(ListViewSet):
         obj.author = self.request.user
 
     def get_queryset(self):
-
         #filter based on the provided username
         username = self.kwargs.get('username', '')
         if username:
             #print(username)
             return Clip.objects.filter(author__username=username)
-        return Clip.objects.all()
+        return Clip.objects.all() ##By 'following'
+
+    def get_paginate_by(self):
+        #print(self.request.accepted_renderer.format)
+        if self.request.accepted_renderer.format == 'api':
+            return 20
+        elif self.request.accepted_renderer.format == 'json':
+            return 100
+        else:
+            return 100
+
+
+class ClipFirehoseViewSet(FirehoseViewSet):
+    serializer_class = ClipSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return Clip.objects.all() ##By 'following'
 
     def get_paginate_by(self):
         #print(self.request.accepted_renderer.format)

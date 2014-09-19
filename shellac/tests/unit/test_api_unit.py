@@ -397,7 +397,7 @@ class ClipListViewSet(APITestCase):
         setFileAttributefromLocal(clip4.audio_file, audio_path, "song4.mp3")
 
         self.client.login(username='andrea', password='a')
-        response1 = self.client.get('/api/clips/andrea/.json')
+        response1 = self.client.get('/api/clips/search/andrea/.json')
         results = dict(response1.data).get('results')
         #print(results)
         self.assertEqual(response1.status_code, status.HTTP_200_OK)

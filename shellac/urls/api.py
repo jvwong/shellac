@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url, include
 from rest_framework.urlpatterns import format_suffix_patterns
-from shellac.views.api import api_root, CategoryViewSet, ClipListViewSet, ClipDetailViewSet, UserListViewSet, UserDetailViewSet
+from shellac.views.api import api_root, CategoryViewSet, ClipListViewSet, ClipFirehoseViewSet, ClipDetailViewSet, UserListViewSet, UserDetailViewSet
 
 user_list = UserListViewSet.as_view({
     'get': 'get',
@@ -24,6 +24,10 @@ category_detail = CategoryViewSet.as_view({
     'delete': 'destroy'
 })
 
+clip_firehose = ClipFirehoseViewSet.as_view({
+    'get': 'get'
+})
+
 clip_list = ClipListViewSet.as_view({
     'get': 'get',
     'post': 'post'
@@ -37,9 +41,10 @@ clip_detail = ClipDetailViewSet.as_view({
 
 urlpatterns = patterns('shellac.views.api',
     url(r'^$', api_root, name='api_root'),
-    url(r'^clips/$', clip_list, name='clip-list'),
-    url(r'^clips/(?P<username>[a-zA-Z0-9_-]{3,16})/$', clip_list, name='clip-list'),
-    url(r'^clips/(?P<pk>[0-9]+)/$', clip_detail, name='clip-detail'),
+    url(r'^clips/$', clip_list, name='clip-list'), #By 'following'
+    url(r'^clips/firehose/$', clip_firehose, name='clip-firehose'), #Firehose
+    url(r'^clips/search/(?P<username>[a-zA-Z0-9_-]{3,16})/$', clip_list, name='clip-list'), #By User
+    url(r'^clips/(?P<pk>[0-9]+)/$', clip_detail, name='clip-detail'), #By pk
 
     url(r'^categories/$', category_list, name='category-list'),
     url(r'^categories/(?P<slug>[-\w]+)/$', category_detail, name='category-detail'),

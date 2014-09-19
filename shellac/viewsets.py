@@ -14,7 +14,7 @@ class DetailViewSet(mixins.RetrieveModelMixin,
     pass
 
 
-class ReadOnlyDetailViewSet(mixins.RetrieveModelMixin,
-                            viewsets.GenericViewSet):
+class FirehoseViewSet(mixins.ListModelMixin,
+                      viewsets.GenericViewSet):
     pass
 
