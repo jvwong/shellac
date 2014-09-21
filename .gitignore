@@ -1,4 +1,5 @@
 node_modules/
+shellac/js/lib/*
 static/shellac/js/lib/
 .idea/
 *.pyc

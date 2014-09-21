@@ -1,16 +1,18 @@
-from django.db import models
-from taggit.managers import TaggableManager
-from django.template.defaultfilters import slugify
 import os.path
+
+from django.db import models
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
+
+from taggit.managers import TaggableManager
+
 from shellac.tests.fixtures import categories
 
 
-## One to one model for User -- used to extend the User
-## model for the purposes of adding relationship attributes
-class UserProfile(models.Model):
+## One-to-one model -- extend User to accomodate relationships
+class Person(models.Model):
     user = models.OneToOneField(User)
-    following = models.ManyToManyField('self', related_name='followers')
+    date_of_birth = models.DateField(blank=True)
 
 
 ##c = Category.objects.create_category(title, description)

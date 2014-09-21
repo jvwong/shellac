@@ -1,8 +1,10 @@
-from django.contrib import admin
-from shellac.models import Category, Clip
 import os.path
+
+from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+
+from shellac.models import Category, Clip, Person
 
 def custom_delete_selected(modeladmin, request, queryset):
     #custom delete code
@@ -36,15 +38,15 @@ class ClipAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Clip, ClipAdmin)
 
-#
-# class UserInline(admin.StackedInline):
-#     model = User
-#     can_delete = False
-#     verbose_name_plural = 'user'
-#
-# class UserAdmin(UserAdmin):
-#     inlines = (UserInline,)
-#
-# # Re-register UserAdmin
-# admin.site.unregister(User)
-# admin.site.register(User, UserAdmin)
+
+class PersonInline(admin.StackedInline):
+    model = Person
+    can_delete = True
+    verbose_name_plural = 'people'
+
+class UserAdmin(UserAdmin):
+    inlines = (PersonInline,)
+
+# Re-register UserAdmin
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
