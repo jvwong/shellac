@@ -3,30 +3,12 @@ from taggit.managers import TaggableManager
 from django.template.defaultfilters import slugify
 import os.path
 from django.contrib.auth.models import User
+from shellac.tests.fixtures import categories
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     following = models.ManyToManyField('self', related_name='followers')
 
-
-CATEGORIES = (
-    'arts',
-    'business',
-    'food',
-    'health',
-    'music',
-    'opinion',
-    'politics',
-    'real estate',
-    'science',
-    'sports',
-    'style',
-    'technology',
-    'travel',
-    'money',
-    'economics',
-    'comedy'
-)
 
 ##c = Category.objects.create_category(title, description)
 class CategoryManager(models.Manager):
@@ -35,7 +17,7 @@ class CategoryManager(models.Manager):
         return category
 
     def autopopulate(self):
-        for category in CATEGORIES:
+        for category in categories.CATEGORIES:
             self.create_category(title=category, description=category)
 
 

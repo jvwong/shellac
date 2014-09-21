@@ -30,7 +30,7 @@ def shellac_clips_create(request):
 def shellac_clips_autopopulate(request):
     if request.method == 'GET':
         author = request.user
-        autopopulate_clips(author, 100)
+        autopopulate_clips(author, 50)
 
     return HttpResponseRedirect('/')
 
