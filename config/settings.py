@@ -159,7 +159,6 @@ INSTALLED_APPS = (
     'taggit',
     'rest_framework',
     'rest_framework.authtoken',
-    # 'storages',
 )
 
 REST_FRAMEWORK = {
