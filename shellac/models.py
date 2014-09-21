@@ -19,7 +19,8 @@ CATEGORIES = (
     'technology',
     'travel',
     'money',
-    'economics'
+    'economics',
+    'comedy'
 )
 
 ##c = Category.objects.create_category(title, description)
