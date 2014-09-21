@@ -5,6 +5,9 @@ import os.path
 from django.contrib.auth.models import User
 from shellac.tests.fixtures import categories
 
+
+## One to one model for User -- used to extend the User
+## model for the purposes of adding relationship attributes
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     following = models.ManyToManyField('self', related_name='followers')

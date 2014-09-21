@@ -7,9 +7,7 @@ User = get_user_model()
 from shellac.tests.utils.unit import setFileAttributefromLocal, cleanClips
 from rest_framework.authtoken.models import Token
 
-"""
- BEGIN ROOT API
-"""
+### API root (/api/)
 class Api_Root(APITestCase):
 
     def test_api_root_url_resolves_to_api_root_view(self):
@@ -28,9 +26,7 @@ class Api_Root(APITestCase):
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
 
-"""
- BEGIN CATEGORY API
-"""
+### API categories(/api/categories/)
 class Api_CategoryList(APITestCase):
 
     # line up view for '/'
