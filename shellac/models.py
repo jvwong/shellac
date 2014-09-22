@@ -3,16 +3,112 @@ import os.path
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from django.db.models.signals import post_delete
+from django.dispatch.dispatcher import receiver
+from django.db.models.signals import post_save
 
 from taggit.managers import TaggableManager
 
 from shellac.tests.fixtures import categories
 
 
+
+## One-to-one model -- extend User to accomodate relationships
+class PersonManager(models.Model):
+    pass
+
 ## One-to-one model -- extend User to accomodate relationships
 class Person(models.Model):
-    user = models.OneToOneField(User)
-    date_of_birth = models.DateField(blank=True)
+    user = models.OneToOneField(User, primary_key=True, blank=False)
+    joined = models.DateTimeField(auto_now_add=True, blank=True)
+    relationships = models.ManyToManyField('self', through='Relationship',
+                                          symmetrical=False,
+                                          related_name='related_to')
+
+    ##create a relationship self --> person with status
+    ##May need to disallow circular references, i.e. self == person
+    #Returns a tuple of (object, created)
+    def add_relationship(self, person, status):
+        relationship, created = Relationship.objects.get_or_create(
+            from_person=self,
+            to_person=person,
+            status=status
+        )
+        return relationship
+
+    ##remove a relationship self --> person with status
+    def remove_relationship(self, person, status):
+        Relationship.objects.filter(
+            from_person=self,
+            to_person=person,
+            status=status
+        ).delete()
+        return
+
+    ##Query Relationships model
+    def get_relationships(self, status):
+        return self.relationships.filter(
+            # This deserves some explanation. self.relationships gives you a ManyRelatedManager
+            # object that references all the Person objects with Relationships with self
+            # Now remember this is asymmetric; If we call p1.add_relationship(p2, status)
+            # there is no Relationship from p2 back to p1.
+            # 'to_people' is a reference in other Person objects to Relationship objects
+            # where to_person is referencing the Person
+            ## here we search these Relationship objects for status and from_person fields
+            to_people__status=status,
+            to_people__from_person=self
+        )
+
+    def get_following(self):
+        return self.get_relationships(Relationship.RELATIONSHIP_FOLLOWING)
+
+
+    ##Query Relationships model
+    def get_related_to(self, status):
+        return self.related_to.filter(
+            # This deserves some MORE explanation. self.related_to gives you a ManyRelatedManager
+            # objects that references all Person objects with which there is a reference back to self
+            # So concretely, self.related_to can access Relationship using from_people
+            from_people__status=status,
+            from_people__to_person=self,
+        )
+
+    def get_followers(self):
+        return self.get_related_to(Relationship.RELATIONSHIP_FOLLOWING)
+
+
+
+
+
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name_plural = "People"
+
+    objects = PersonManager()
+
+# Receive the post_save signal
+@receiver(post_save, sender=User)
+def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs):
+    if(created):
+        p = Person(user=instance)
+        p.save()
+
+
+class Relationship(models.Model):
+    RELATIONSHIP_FOLLOWING = 1
+    RELATIONSHIP_BLOCKED = 2
+    RELATIONSHIP_STATUSES = (
+        (RELATIONSHIP_FOLLOWING, 'Following'),
+        (RELATIONSHIP_BLOCKED, 'Blocked'),
+    )
+
+    from_person = models.ForeignKey(Person, related_name='from_people')
+    to_person = models.ForeignKey(Person, related_name='to_people')
+    created = models.DateTimeField(auto_now_add=True, blank=True)
+    status = models.IntegerField(choices=RELATIONSHIP_STATUSES, default=RELATIONSHIP_FOLLOWING)
+    private = models.BooleanField(default=False)
 
 
 ##c = Category.objects.create_category(title, description)
@@ -142,11 +238,6 @@ class Clip(models.Model):
 
 
 
-
-
-# Receive the pre_delete signal and delete the file associated with the model instance.
-from django.db.models.signals import post_delete
-from django.dispatch.dispatcher import receiver
 
 @receiver(post_delete, sender=Clip)
 def on_clip_delete(sender, instance, **kwargs):

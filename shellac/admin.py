@@ -39,14 +39,9 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Clip, ClipAdmin)
 
 
-class PersonInline(admin.StackedInline):
-    model = Person
-    can_delete = True
-    verbose_name_plural = 'people'
-
-class UserAdmin(UserAdmin):
-    inlines = (PersonInline,)
+class PersonAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'user', 'joined']
+    readonly_fields = ('user',)
 
 # Re-register UserAdmin
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+admin.site.register(Person, PersonAdmin)
