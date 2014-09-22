@@ -21,9 +21,10 @@ class Person(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     username = models.CharField(max_length=30, editable=False)
     joined = models.DateTimeField(auto_now_add=True, blank=True)
-    relationships = models.ManyToManyField('self', through='Relationship',
-                                          symmetrical=False,
-                                          related_name='related_to')
+    relationships = models.ManyToManyField('self',
+                                           through='Relationship',
+                                           symmetrical=False,
+                                           related_name='related_to')
 
     ##create a relationship self --> person with status
     ##May need to disallow circular references, i.e. self == person
