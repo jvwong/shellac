@@ -4,6 +4,7 @@ from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
 from rest_framework import viewsets
 from rest_framework.views import APIView
+from rest_framework import status
 
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
@@ -40,18 +41,27 @@ class ClipListViewSet(ListViewSet):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+    # def post(self, request, *args, **kwargs):
+    #     return self.create(request, *args, **kwargs)
+
+    def post(self, request, format=None):
+        serializer = ClipSerializer(data=request.DATA, files=request.FILES, context={'request': request})
+        print("ClipListViewSet user: %s" % request.user)
+        print("ClipListViewSet DATA: %s" % request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def pre_save(self, obj):
-        obj.author = self.request.user
+        obj.author = self.request.user.person
 
     def get_queryset(self):
         #filter based on the provided username
-        username = self.kwargs.get('username', '')
-        if username:
-            #print(username)
-            return Clip.objects.filter(author__username=username)
+        person = self.kwargs.get('person', '')
+        if person:
+            #print(person)
+            return Clip.objects.filter(author__user__username=person)
         return Clip.objects.all() ##By 'following'
 
     def get_paginate_by(self):
@@ -130,14 +140,12 @@ class UserDetailViewSet(DetailViewSet):
 
 class PersonListView(APIView):
     """
-    List all people
+    List all people. Do NOT create
     """
     def get(self, request, format=None):
         people = Person.objects.all()
         serializer = PersonSerializer(people, many=True, context={'request': request})
         return Response(serializer.data)
-
-    permission_classes = (permissions.IsAuthenticated, )
 
 
 class PersonDetailView(APIView):
@@ -146,11 +154,12 @@ class PersonDetailView(APIView):
     """
     def get_object(self, user):
         try:
-            return Person.objects.get(user=user)
+            ##This is a hack since we need to find a user object
+            return Person.objects.get(user=User.objects.get(username=user))
         except Person.DoesNotExist:
             raise Http404
 
     def get(self, request, user, format=None):
-        person = self.get_object(User.objects.get(username=user))
+        person = self.get_object(user)
         serializer = PersonSerializer(person, context={'request': request})
         return Response(serializer.data)

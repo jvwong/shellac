@@ -16,10 +16,6 @@ user_detail = UserDetailViewSet.as_view({
     'delete': 'delete'
 })
 
-person_list = PersonListView.as_view()
-
-person_detail = PersonDetailView.as_view()
-
 category_list = CategoryViewSet.as_view({
     'get': 'list',
     'post': 'create'
@@ -50,7 +46,7 @@ urlpatterns = patterns('shellac.views.api',
     url(r'^$', api_root, name='api_root'),
     url(r'^clips/$', clip_list, name='clip-list'), #By 'following'
     url(r'^clips/firehose/$', clip_firehose, name='clip-firehose'), #Firehose
-    url(r'^clips/search/(?P<username>[a-zA-Z0-9_-]{3,16})/$', clip_list, name='clip-list'), #By User
+    url(r'^clips/search/(?P<person>[\w]+)/$', clip_list, name='clip-list'), #By Person
     url(r'^clips/(?P<pk>[0-9]+)/$', clip_detail, name='clip-detail'), #By pk
 
     url(r'^categories/$', category_list, name='category-list'),
@@ -58,12 +54,8 @@ urlpatterns = patterns('shellac.views.api',
     url(r'^users/$', user_list, name='user-list'),
     url(r'^users/(?P<username>[-\w]+)/$', user_detail, name='user-detail'),
 
-    url(r'^people/$', person_list, name='person-list'),
-    url(r'^people/(?P<user>[-\w]+)/$', person_detail, name='person-detail')
+    url(r'^people/$', PersonListView.as_view(), name='person-list'),
+    url(r'^people/(?P<user>[-\w]+)/$', PersonDetailView.as_view(), name='person-detail')
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'html'])
-
-
-
-

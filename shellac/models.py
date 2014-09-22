@@ -8,7 +8,6 @@ from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
 
 from taggit.managers import TaggableManager
-
 from shellac.tests.fixtures import categories
 
 
@@ -19,7 +18,7 @@ class PersonManager(models.Model):
 
 ## One-to-one model -- extend User to accomodate relationships
 class Person(models.Model):
-    user = models.OneToOneField(User, primary_key=True, blank=False)
+    user = models.OneToOneField(User, primary_key=True)
     joined = models.DateTimeField(auto_now_add=True, blank=True)
     relationships = models.ManyToManyField('self', through='Relationship',
                                           symmetrical=False,
@@ -180,8 +179,7 @@ class Clip(models.Model):
     )
 
     title = models.CharField(max_length=250)
-    author = models.ForeignKey("auth.User", related_name="clips")
-    #related name is how we query in User i.e.  user[1].clips.all().count()
+    author = models.ForeignKey("shellac.Person", related_name="clips")
 
     ### Optional
     categories = models.ManyToManyField("shellac.Category", related_name="clips", blank=True)

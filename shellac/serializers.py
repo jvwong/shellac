@@ -4,26 +4,24 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.Field(source='user.username')
-    first_name = serializers.Field(source='user.first_name')
-    last_name = serializers.Field(source='user.last_name')
-
+    clips = serializers.HyperlinkedRelatedField(many=True,
+                                                lookup_field='pk',
+                                                view_name='clip-detail')
+    user = serializers.HyperlinkedRelatedField(many=False,
+                                                lookup_field='username',
+                                                view_name='user-detail')
     class Meta:
         lookup_field = 'user'
         model = Person
-        fields = ('url', 'user', 'joined', 'owner', 'first_name', 'last_name')
+        fields = ('url', 'user', 'joined', 'clips')
 
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    clips = serializers.HyperlinkedRelatedField(many=True,
-                                                lookup_field='pk',
-                                                view_name='clip-detail')
-
     class Meta:
         lookup_field = 'username'
         model = User
-        fields = ('url', 'id', 'username', 'email', 'clips')
+        fields = ('url', 'id', 'username', 'email')
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -53,12 +51,9 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ClipSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.SerializerMethodField('get_owner')
-    author = serializers.HyperlinkedRelatedField(lookup_field='username',
-                                                 view_name='user-detail')
-
-    # categories = serializers.SlugRelatedField(many=True,
-    #                                           slug_field='slug', read_only=False)
+    owner = serializers.Field(source='author.user.username')
+    author = serializers.HyperlinkedRelatedField(lookup_field='user',
+                                                 view_name='person-detail')
     categories = serializers.HyperlinkedRelatedField(many=True,
                                                      lookup_field='slug',
                                                      view_name='category-detail')
@@ -71,11 +66,8 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
                   'audio_file', 'created', 'owner')
         # read_only_fields = ('categories',)
 
-    def get_owner(self, obj):
-        return obj.author.username
-
     def restore_object(self, attrs, instance=None):
-        #print(attrs)
+        #print("restoration: %s" % (attrs,))
         # instance will be None, unless the serializer was instantiated with an
         # existing model instance to be updated, using the instance=... argument
         if instance is not None:

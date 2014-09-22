@@ -29,7 +29,7 @@ def shellac_clips_create(request):
 @login_required(login_url='/accounts/signin/')
 def shellac_clips_autopopulate(request):
     if request.method == 'GET':
-        author = request.user
+        author = request.user.person
         autopopulate_clips(author, 50)
 
     return HttpResponseRedirect('/')

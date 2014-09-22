@@ -33,12 +33,8 @@ class PersonModelTest(TestCase):
         self.assertIsNotNone(Person.objects.get(user=u1).joined)
         self.assertIsNotNone(Person.objects.get(user=u1).relationships)
 
-        #Verify the pk on the Person is the associated User
-        self.assertTrue(Person.objects.get(pk=u1).user.username, username1)
-
 
 class RelationshipModelTest(TestCase):
-
 
     def test_creating_add_and_remove_relationship_FOLLOWING(self):
          #Create a pair of Users/People
