@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
 from django.conf import settings
-from shellac.views.app import user_profile, shellac_app
+from shellac.views.app import user_profile, shellac_app, shellac_tune
 admin.autodiscover()
 urlpatterns = patterns('',
 
@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url('', include('django.contrib.auth.urls', namespace='auth')),
     url(r'^$', shellac_app, name='shellac_app'),
     url(r'^profile/', user_profile, name='shellac_profile'),
+    url(r'^tune/', shellac_tune, name='shellac_tune'),
 
     url(r'^api/', include('shellac.urls.api')),
     url(r'^clips/', include('shellac.urls.clips')),

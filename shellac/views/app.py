@@ -18,6 +18,11 @@ def user_profile(request):
     return render(request, 'shellac/app/profile.html')
 
 
+### Tune in
+@login_required(login_url='/accounts/signin/')
+def shellac_tune(request):
+    return render(request, 'shellac/app/tune.html')
+
 
 
 

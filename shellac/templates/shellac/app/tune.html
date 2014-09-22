@@ -1,0 +1,13 @@
+{% extends "shellac/base.html" %}
+
+<!-- Head -->
+    {% block title %}Profile{% endblock title %}
+
+{% block content %}
+    <div class="profile">
+        <h3>Tune</h3>
+        <ul class="list-group">
+            {{ user.person.get_followers }}
+        </ul>
+    </div>
+{% endblock content %}

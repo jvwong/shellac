@@ -58,7 +58,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     {% block navbar-header-brand %}
-                    <a class="navbar-brand" href="{% url 'shellac_app' %}">SHELLAC</a>
+                    <a class="navbar-brand" href="#">SHELLAC</a>
                     {% endblock navbar-header-brand %}
                 </div>
                 {% endblock navbar-header %}
@@ -71,8 +71,11 @@
 
                         {% block navbar-collapse-right-bar %}
                         <li id="nav-navbar-right-bar-help"><a href="">Help</a></li>
-                        <li id="nav-navbar-right-bar-user"><a href="{% url 'shellac_accounts_signout' %}">{{user.username}}</a></li>
+                        <li id="nav-navbar-right-bar-user"><a href="{% url 'shellac_profile' %}">{{user.username}}</a></li>
+                        <li id="nav-navbar-right-bar-listen"><a href="{% url 'shellac_app' %}"><span class="glyphicon glyphicon-headphones"></span></a></li>
                         <li id="nav-navbar-right-bar-record"><a href="{% url 'shellac_clips_create' %}"><span class="glyphicon glyphicon-record"></span></a></li>
+                        <li id="nav-navbar-right-bar-tune"><a href="{% url 'shellac_tune' %}"><span class="glyphicon glyphicon-globe"></span></a></li>
+
                         {% endblock navbar-collapse-right-bar %}
 
                         {% block navbar-collapse-right-dropdown %}
