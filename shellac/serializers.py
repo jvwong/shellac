@@ -1,7 +1,18 @@
 from rest_framework import serializers
-from shellac.models import Category, Clip
+from shellac.models import Category, Clip, Person
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+
+class PersonSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.Field(source='user.username')
+    first_name = serializers.Field(source='user.first_name')
+    last_name = serializers.Field(source='user.last_name')
+
+    class Meta:
+        lookup_field = 'user'
+        model = Person
+        fields = ('url', 'user', 'joined', 'owner', 'first_name', 'last_name')
+
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

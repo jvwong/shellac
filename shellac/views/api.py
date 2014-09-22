@@ -3,12 +3,14 @@ from rest_framework import permissions
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
 from rest_framework import viewsets
+from rest_framework.views import APIView
 
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 
-from shellac.models import Clip, Category
-from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializer
+from shellac.models import Clip, Category, Person
+from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializer, PersonSerializer
 from shellac.permissions import IsOwnerOrReadOnly, UserIsOwnerOrAdmin, UserIsAdminOrPost
 from shellac.viewsets import DetailViewSet, ListViewSet, FirehoseViewSet
 
@@ -18,6 +20,7 @@ from shellac.viewsets import DetailViewSet, ListViewSet, FirehoseViewSet
 def api_root(request, format=None):
     return Response({
         'users': reverse('user-list', request=request, format=format),
+        'people': reverse('person-list', request=request, format=format),
         'categories': reverse('category-list', request=request, format=format),
         'clips': reverse('clip-list', request=request, format=format)
     })
@@ -125,3 +128,29 @@ class UserDetailViewSet(DetailViewSet):
         return self.destroy(request, *args, **kwargs)
 
 
+class PersonListView(APIView):
+    """
+    List all people
+    """
+    def get(self, request, format=None):
+        people = Person.objects.all()
+        serializer = PersonSerializer(people, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    permission_classes = (permissions.IsAuthenticated, )
+
+
+class PersonDetailView(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, user):
+        try:
+            return Person.objects.get(user=user)
+        except Person.DoesNotExist:
+            raise Http404
+
+    def get(self, request, user, format=None):
+        person = self.get_object(User.objects.get(username=user))
+        serializer = PersonSerializer(person, context={'request': request})
+        return Response(serializer.data)

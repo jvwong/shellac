@@ -677,3 +677,59 @@ class Api_ClipDetailViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         cleanClips()
+
+
+
+# """
+#  BEGIN Person API
+# """
+class Api_PersonListView(APITestCase):
+
+    # line up view for '/'
+    def test_PersonListView_url_resolves_to_api_category_view(self):
+        url = reverse('person-list')
+        self.assertEqual(url, '/api/people/')
+
+
+    def test_PersonListView_GET_returns_correct_response(self):
+        u  = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        u.is_staff = True
+        u.save()
+        u2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+
+        self.client.login(username='andrea', password='a')
+        response = self.client.get('/api/people/.json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        #print(response.data)
+        self.assertIn('"owner": "andrea"', response.content.decode())
+        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+
+
+class Api_PersonDetailView(APITestCase):
+
+    def test_PersonDetailView_url_resolves_to_correct_view(self):
+        url = reverse('person-detail', kwargs={'user': 'jvwong'})
+        self.assertEqual(url, '/api/people/jvwong/')
+
+    def test_PersonDetailView_GET_same_Person_returns_correct_response(self):
+        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+
+        self.client.login(username='andrea', password='a')
+        response = self.client.get('/api/people/andrea/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertIn('"owner": "andrea"', response.content.decode())
+        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+
+    def test_PersonDetailView_GET_other_Person_returns_correct_response(self):
+        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+
+        self.client.login(username='andrea', password='a')
+        response = self.client.get('/api/people/jvwong/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertIn('"owner": "jvwong"', response.content.decode())
+        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
