@@ -16,6 +16,14 @@ user_detail = UserDetailViewSet.as_view({
     'delete': 'delete'
 })
 
+person_list = PersonListView.as_view({
+    'get': 'get'
+})
+
+person_detail = PersonDetailView.as_view({
+    'get': 'get'
+})
+
 category_list = CategoryViewSet.as_view({
     'get': 'list',
     'post': 'create'
@@ -54,8 +62,8 @@ urlpatterns = patterns('shellac.views.api',
     url(r'^users/$', user_list, name='user-list'),
     url(r'^users/(?P<username>[-\w]+)/$', user_detail, name='user-detail'),
 
-    url(r'^people/$', PersonListView.as_view(), name='person-list'),
-    url(r'^people/(?P<user>[-\w]+)/$', PersonDetailView.as_view(), name='person-detail')
+    url(r'^people/$', person_list, name='person-list'),
+    url(r'^people/(?P<username>[-\w]+)/$', person_detail, name='person-detail')
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'html'])

@@ -7,14 +7,10 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     clips = serializers.HyperlinkedRelatedField(many=True,
                                                 lookup_field='pk',
                                                 view_name='clip-detail')
-    user = serializers.HyperlinkedRelatedField(many=False,
-                                                lookup_field='username',
-                                                view_name='user-detail')
     class Meta:
-        lookup_field = 'user'
+        lookup_field = 'username'
         model = Person
-        fields = ('url', 'user', 'joined', 'clips')
-
+        fields = ('url', 'joined', 'clips')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -52,8 +48,9 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
 class ClipSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.Field(source='author.user.username')
-    author = serializers.HyperlinkedRelatedField(lookup_field='user',
+    author = serializers.HyperlinkedRelatedField(lookup_field='username',
                                                  view_name='person-detail')
+
     categories = serializers.HyperlinkedRelatedField(many=True,
                                                      lookup_field='slug',
                                                      view_name='category-detail')
@@ -67,9 +64,6 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
         # read_only_fields = ('categories',)
 
     def restore_object(self, attrs, instance=None):
-        #print("restoration: %s" % (attrs,))
-        # instance will be None, unless the serializer was instantiated with an
-        # existing model instance to be updated, using the instance=... argument
         if instance is not None:
             # Update existing instance
             instance.title = attrs.get('title', instance.title)

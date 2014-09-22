@@ -19,6 +19,7 @@ class PersonManager(models.Model):
 ## One-to-one model -- extend User to accomodate relationships
 class Person(models.Model):
     user = models.OneToOneField(User, primary_key=True)
+    username = models.CharField(max_length=30, editable=False)
     joined = models.DateTimeField(auto_now_add=True, blank=True)
     relationships = models.ManyToManyField('self', through='Relationship',
                                           symmetrical=False,
@@ -83,8 +84,9 @@ class Person(models.Model):
             from_people__to_person=self
         )
 
-
-
+    def save(self, *args, **kwargs):
+        self.username = self.user.username
+        super(Person, self).save(*args, **kwargs)
 
 
     def __str__(self):
@@ -179,7 +181,7 @@ class Clip(models.Model):
     )
 
     title = models.CharField(max_length=250)
-    author = models.ForeignKey("shellac.Person", related_name="clips")
+    author = models.ForeignKey(Person, related_name="clips")
 
     ### Optional
     categories = models.ManyToManyField("shellac.Category", related_name="clips", blank=True)

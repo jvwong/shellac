@@ -13,9 +13,7 @@ from django.http import Http404
 from shellac.models import Clip, Category, Person
 from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializer, PersonSerializer
 from shellac.permissions import IsOwnerOrReadOnly, UserIsOwnerOrAdmin, UserIsAdminOrPost
-from shellac.viewsets import DetailViewSet, ListViewSet, FirehoseViewSet
-
-
+from shellac.viewsets import DetailViewSet, ListViewSet, FirehoseViewSet, ListOnlyViewSet, RetrieveOnlyView
 
 @api_view(('GET',))
 def api_root(request, format=None):
@@ -46,21 +44,18 @@ class ClipListViewSet(ListViewSet):
 
     def post(self, request, format=None):
         serializer = ClipSerializer(data=request.DATA, files=request.FILES, context={'request': request})
-        print("ClipListViewSet user: %s" % request.user)
-        print("ClipListViewSet DATA: %s" % request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def pre_save(self, obj):
-        obj.author = self.request.user.person
+        obj.author = Person.objects.get(user=self.request.user)
 
     def get_queryset(self):
         #filter based on the provided username
         person = self.kwargs.get('person', '')
         if person:
-            #print(person)
             return Clip.objects.filter(author__user__username=person)
         return Clip.objects.all() ##By 'following'
 
@@ -138,28 +133,24 @@ class UserDetailViewSet(DetailViewSet):
         return self.destroy(request, *args, **kwargs)
 
 
-class PersonListView(APIView):
+class PersonListView(ListOnlyViewSet):
     """
-    List all people. Do NOT create
+    List only; DO NOT allow create Person -- do this through User
     """
-    def get(self, request, format=None):
-        people = Person.objects.all()
-        serializer = PersonSerializer(people, many=True, context={'request': request})
-        return Response(serializer.data)
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 
-class PersonDetailView(APIView):
+class PersonDetailView(RetrieveOnlyView):
     """
-    Retrieve, update or delete a snippet instance.
+    Retrieve a Person
     """
-    def get_object(self, user):
-        try:
-            ##This is a hack since we need to find a user object
-            return Person.objects.get(user=User.objects.get(username=user))
-        except Person.DoesNotExist:
-            raise Http404
+    lookup_field = 'username'
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
 
-    def get(self, request, user, format=None):
-        person = self.get_object(user)
-        serializer = PersonSerializer(person, context={'request': request})
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
