@@ -76,6 +76,14 @@ class Person(models.Model):
     def get_followers(self):
         return self.get_related_to(Relationship.RELATIONSHIP_FOLLOWING)
 
+    def get_friends(self):
+        return self.relationships.filter(
+            to_people__status=Relationship.RELATIONSHIP_FOLLOWING,
+            to_people__from_person=self,
+            from_people__status=Relationship.RELATIONSHIP_FOLLOWING,
+            from_people__to_person=self
+        )
+
 
 
 

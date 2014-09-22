@@ -75,6 +75,23 @@ class RelationshipModelTest(TestCase):
         self.assertEqual(p1.relationships.all().count(), 0)
 
 
+    def test_creating_cannot_add_relationship_FOLLOWING_multiple_times(self):
+        #Create a pair of Users/People
+        u1 = User.objects.create_user(username=username1, password=password1)
+        u2 = User.objects.create_user(username=username2, password=password2)
+        p1 = u1.person
+        p2 = u2.person
+        self.assertTrue(User.objects.all().count(), 2)
+        self.assertTrue(Person.objects.all().count(), 2)
+
+        #Add p1 following p2
+        rel12 = p1.add_relationship(p2, Relationship.RELATIONSHIP_FOLLOWING)
+        rel12b = p1.add_relationship(p2, Relationship.RELATIONSHIP_FOLLOWING)
+
+        #Verify p1 following p2 created only 1 Relationship object
+        self.assertEqual(Relationship.objects.all().count(), 1)
+
+
     def test_get_relationships(self):
         #Create a pair of Users/People
         u1 = User.objects.create_user(username=username1, password=password1)
@@ -174,5 +191,33 @@ class RelationshipModelTest(TestCase):
         #Verify both p2, p3 have relationship with p1
         self.assertEqual(relQuery21[0].user.username, p1.user.username)
         self.assertEqual(relQuery31[0].user.username, p1.user.username)
+
+
+    def test_get_friends(self):
+        #Create a pair of Users/People
+        u1 = User.objects.create_user(username=username1, password=password1)
+        u2 = User.objects.create_user(username=username2, password=password2)
+        u3 = User.objects.create_user(username=username3, password=password3)
+        p1 = u1.person
+        p2 = u2.person
+        p3 = u3.person
+        self.assertTrue(User.objects.all().count(), 3)
+        self.assertTrue(Person.objects.all().count(), 3)
+        rel12 = p1.add_relationship(p2, Relationship.RELATIONSHIP_FOLLOWING)
+        rel21 = p2.add_relationship(p1, Relationship.RELATIONSHIP_FOLLOWING)
+        rel13 = p1.add_relationship(p3, Relationship.RELATIONSHIP_FOLLOWING)
+
+        #Verify retrieval of symmetric Relationships
+        relQuery12 = p1.get_friends()
+        relQuery21 = p2.get_friends()
+        relQuery31 = p3.get_friends()
+
+        self.assertEqual(len(relQuery12), 1)
+        self.assertEqual(len(relQuery21), 1)
+        self.assertEqual(len(relQuery31), 0)
+
+        #Verify p1 is friends with p2 and vice-versa
+        self.assertEqual(relQuery12[0].user.username, p2.user.username)
+        self.assertEqual(relQuery21[0].user.username, p1.user.username)
 
 

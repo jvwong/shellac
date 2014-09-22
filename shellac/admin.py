@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
-from shellac.models import Category, Clip, Person
+from shellac.models import Category, Clip, Person, Relationship
 
 def custom_delete_selected(modeladmin, request, queryset):
     #custom delete code
@@ -39,9 +39,25 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Clip, ClipAdmin)
 
 
+class RelationshipInline(admin.TabularInline):
+    model = Relationship
+    fk_name = 'from_person'
+    #raw_id_fields = ('from_person', 'to_person')
+    extra = 1
+
+    fieldsets = (
+        ('Advanced options', {
+            'classes': ('collapse',),
+            'fields': ('from_person', 'to_person', 'status', 'private')
+        }),
+    )
+
 class PersonAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'user', 'joined']
+    list_filter = ['joined']
+    search_fields = ['user__username']
     readonly_fields = ('user',)
+    inlines = (RelationshipInline,)
 
 # Re-register UserAdmin
 admin.site.register(Person, PersonAdmin)
