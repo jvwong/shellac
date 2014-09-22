@@ -1,9 +1,5 @@
 import os.path
-
 from django.contrib import admin
-from django.contrib.auth.models import User
-from django.contrib.auth.admin import UserAdmin
-
 from shellac.models import Category, Clip, Person, Relationship
 
 def custom_delete_selected(modeladmin, request, queryset):

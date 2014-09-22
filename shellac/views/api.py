@@ -12,7 +12,7 @@ from django.http import Http404
 
 from shellac.models import Clip, Category, Person
 from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializer, PersonSerializer
-from shellac.permissions import IsOwnerOrReadOnly, UserIsOwnerOrAdmin, UserIsAdminOrPost
+from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, UserIsAdminOrPost
 from shellac.viewsets import DetailViewSet, ListViewSet, FirehoseViewSet, ListOnlyViewSet, RetrieveOnlyView
 
 @api_view(('GET',))
@@ -93,7 +93,7 @@ class ClipDetailViewSet(DetailViewSet):
     lookup_field = 'pk'
     queryset = Clip.objects.all()
     serializer_class = ClipSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated, IsAuthorOrReadOnly,)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)

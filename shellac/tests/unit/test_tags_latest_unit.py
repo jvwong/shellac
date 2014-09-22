@@ -19,8 +19,8 @@ class LatestClipTagTest(TestCase):
         user1 = User.objects.create(username='jeff')
         user2 = User.objects.create(username='and')
 
-        clip1 = Clip.objects.create_clip(title="clip1", author=user1)
-        clip2 = Clip.objects.create_clip(title="clip2", author=user2)
+        clip1 = Clip.objects.create_clip(title="clip1", author=user1.person)
+        clip2 = Clip.objects.create_clip(title="clip2", author=user2.person)
 
         request = HttpRequest()
         response = template_tag(request)

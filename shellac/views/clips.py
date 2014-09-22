@@ -14,7 +14,7 @@ def shellac_clips_create(request):
         if form.is_valid():
             #save a new Clip object from the data passed
             new_clip = form.save(commit=False)
-            new_clip.author = request.user
+            new_clip.author = request.user.person
             new_clip.save()
             if new_clip.categories.all().count() > 0:
                 new_clip.save_m2m()

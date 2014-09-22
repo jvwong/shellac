@@ -82,11 +82,11 @@ class NewClipTest(FunctionalTest):
         self.assertEqual(len(categories), numCat)
 
         #create n Clip objects
-        c1 = Clip.objects.create_clip('Clip1', self.user)
+        c1 = Clip.objects.create_clip('Clip1', self.user.person)
         c1.categories = [Category.objects.filter(title__icontains="MUSIC").get()]
         c1.save()
 
-        c2 = Clip.objects.create_clip('Clip2', self.user)
+        c2 = Clip.objects.create_clip('Clip2', self.user.person)
         c2.categories = [Category.objects.filter(title__icontains="MUSIC").get()]
         c2.save()
 

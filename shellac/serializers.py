@@ -4,13 +4,15 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
+    first_name = serializers.Field(source='user.first_name')
+    last_name = serializers.Field(source='user.last_name')
     clips = serializers.HyperlinkedRelatedField(many=True,
                                                 lookup_field='pk',
                                                 view_name='clip-detail')
     class Meta:
         lookup_field = 'username'
         model = Person
-        fields = ('url', 'joined', 'clips')
+        fields = ('url', 'username', 'first_name', 'last_name', 'joined', 'clips')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

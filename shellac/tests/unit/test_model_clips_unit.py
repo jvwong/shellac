@@ -31,12 +31,12 @@ class ClipModelTest(TestCase):
         c2 = Category.objects.create_category("cat2", "described cat2")
 
         users = get_users()
-        clip1 = Clip.objects.create_clip("clip1", users[0])
+        clip1 = Clip.objects.create_clip("clip1", users[0].person)
         setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
         clip1.categories = [c1]
         clip1.tags.add("red", "green")
 
-        clip2 = Clip.objects.create_clip("clip2", users[1])
+        clip2 = Clip.objects.create_clip("clip2", users[1].person)
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
         clip2.categories = [c2]
         clip2.tags.add("blue", "purple")
@@ -52,8 +52,8 @@ class ClipModelTest(TestCase):
         self.assertEqual(saved_clip_1.rating, 0)
         self.assertEqual(saved_clip_1.status, Clip.PUBLIC_STATUS)
         self.assertEqual(saved_clip_1.slug, 'clip1')
-        self.assertEqual(users[0].clips.all().count(), 1)
-        self.assertEqual(users[0].clips.all()[0].title, 'clip1')
+        self.assertEqual(users[0].person.clips.all().count(), 1)
+        self.assertEqual(users[0].person.clips.all()[0].title, 'clip1')
         #query on categories
         self.assertEqual(saved_clip_1.categories.all().count(), 1)
         self.assertEqual(saved_clip_1.categories.all()[0].slug, 'cat1')
