@@ -3,26 +3,71 @@ from rest_framework import permissions
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
 from rest_framework import viewsets
-from rest_framework.views import APIView
-from rest_framework import status
 
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
-from django.http import Http404
+from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 
-from shellac.models import Clip, Category, Person
-from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializer, PersonSerializer
-from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, UserIsAdminOrPost
+from shellac.models import Clip, Category, Person, Relationship
+from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializer, PersonSerializer, RelationshipSerializer
+from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, \
+    UserIsAdminOrPost, RelationshipIsOwnerOrAdmin
 from shellac.viewsets import DetailViewSet, ListViewSet, FirehoseViewSet, ListOnlyViewSet, RetrieveOnlyView
+
 
 @api_view(('GET',))
 def api_root(request, format=None):
     return Response({
         'users': reverse('user-list', request=request, format=format),
+        'relationships': reverse('relationship-list', request=request, format=format),
         'people': reverse('person-list', request=request, format=format),
         'categories': reverse('category-list', request=request, format=format),
         'clips': reverse('clip-list', request=request, format=format)
     })
+
+
+class RelationshipListViewSet(ListViewSet):
+    serializer_class = RelationshipSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the Relationships for
+        the user as determined by the username portion of the URL. If the Person
+        does not exist then return an empty queryset. If no username is given,
+        return the ones related to the current user.
+        """
+        username = self.kwargs.get('username', None)
+        if username is not None:
+            try:
+                person = (User.objects.get(username=username)).person
+            except ObjectDoesNotExist:
+                return Relationship.objects.none()
+        else:
+            person = self.request.user.person
+        return Relationship.objects.filter(Q(from_person=person) | Q(to_person=person))
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class RelationshipDetailViewSet(DetailViewSet):
+    #lookup_field = 'from_person'
+    queryset = Relationship.objects.all()
+    serializer_class = RelationshipSerializer
+    permission_classes = (permissions.IsAuthenticated, RelationshipIsOwnerOrAdmin)
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -41,13 +86,6 @@ class ClipListViewSet(ListViewSet):
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-
-    # def post(self, request, format=None):
-    #     serializer = ClipSerializer(data=request.DATA, files=request.FILES, context={'request': request})
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def pre_save(self, obj):
         obj.author = Person.objects.get(user=self.request.user)

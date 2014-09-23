@@ -3,7 +3,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from shellac.views.api import api_root, \
     CategoryViewSet, ClipListViewSet,  ClipFirehoseViewSet, ClipDetailViewSet, \
     UserListViewSet, UserDetailViewSet,\
-    PersonListView, PersonDetailView
+    PersonListView, PersonDetailView, \
+    RelationshipListViewSet, RelationshipDetailViewSet
 
 user_list = UserListViewSet.as_view({
     'get': 'get',
@@ -50,6 +51,18 @@ clip_detail = ClipDetailViewSet.as_view({
     'delete': 'delete'
 })
 
+relationship_list = RelationshipListViewSet.as_view({
+    'get': 'get',
+    'post': 'post'
+})
+
+relationship_detail = RelationshipDetailViewSet.as_view({
+    'get': 'get',
+    'put': 'put',
+    'delete': 'delete'
+})
+
+
 urlpatterns = patterns('shellac.views.api',
     url(r'^$', api_root, name='api_root'),
     url(r'^clips/$', clip_list, name='clip-list'), #By 'following'
@@ -63,7 +76,11 @@ urlpatterns = patterns('shellac.views.api',
     url(r'^users/(?P<username>[-\w]+)/$', user_detail, name='user-detail'),
 
     url(r'^people/$', person_list, name='person-list'),
-    url(r'^people/(?P<username>[-\w]+)/$', person_detail, name='person-detail')
+    url(r'^people/(?P<username>[-\w]+)/$', person_detail, name='person-detail'),
+
+    url(r'^relationships/$', relationship_list, name='relationship-list'),
+    url(r'^relationships/(?P<username>[-\w]+)/$', relationship_list, name='relationship-list'),
+    url(r'^relationships/(?P<pk>[0-9]+)/$', relationship_detail, name='relationship-detail')
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'html'])

@@ -1,9 +1,20 @@
 from rest_framework import serializers
-from shellac.models import Category, Clip, Person
+from shellac.models import Category, Clip, Person, Relationship
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 
-from rest_framework.reverse import reverse
+
+class RelationshipSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='relationship-detail',
+        lookup_field='pk'
+    )
+
+    class Meta:
+        lookup_field = 'username'
+        model = Relationship
+        fields = ('url', 'id', 'from_person', 'to_person',  'created', 'status', 'private')
+
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     first_name = serializers.Field(source='user.first_name')
@@ -11,15 +22,13 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     clips = serializers.HyperlinkedRelatedField(many=True,
                                                 lookup_field='pk',
                                                 view_name='clip-detail')
-    followers = serializers.Field(source='get_followers')
-    following = serializers.Field(source='get_following')
-    friends = serializers.Field(source='get_friends')
+    relationships = RelationshipSerializer(source='from_people', many=True)
 
     class Meta:
         lookup_field = 'username'
         model = Person
         fields = ('url', 'username', 'first_name', 'last_name', 'joined',
-                  'clips', 'following', 'followers', 'friends')
+                  'clips', 'relationships')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

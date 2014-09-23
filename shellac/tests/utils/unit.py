@@ -29,5 +29,3 @@ def setFileAttributefromUrl(field, url, fname):
 def setFileAttributefromLocal(field, path, fname):
     with open(path, 'rb') as f:
         field.save(fname, File(f), save=True)
-
-

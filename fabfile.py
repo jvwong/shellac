@@ -114,6 +114,7 @@ def lgittag():
 
 ### ***** Django *****
 lsource_dir = os.path.abspath(os.path.dirname(__file__))
+lfixtures_dir = os.path.abspath(os.path.join(lsource_dir, "shellac/fixtures"))
 ljs_dir = os.path.abspath(os.path.join(lsource_dir, "%s/static/%s/js" % (APP_NAME, APP_NAME)))
 
 def start():
@@ -124,6 +125,11 @@ def watch():
 
 def test():
     local('../virtualenv/bin/python3.4 manage.py test %s.tests' % (APP_NAME,))
+
+def make_fixtures():
+    local('../virtualenv/bin/python3.4 manage.py dumpdata shellac --exclude=shellac.Person --format=json --indent=4 > %s/shellac.json' % (lfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py dumpdata auth --format=json --indent=4 > %s/auth.json' % (lfixtures_dir,))
+
 
 
 

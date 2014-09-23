@@ -8,7 +8,7 @@ from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
 
 from taggit.managers import TaggableManager
-from shellac.tests.fixtures import categories
+from shellac.fixtures import categories
 
 
 
@@ -107,8 +107,9 @@ def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs)
 
 
 class Relationship(models.Model):
-    RELATIONSHIP_FOLLOWING = 1
-    RELATIONSHIP_BLOCKED = 2
+    #(A, B) where A is stored value; B is human-readable name
+    RELATIONSHIP_FOLLOWING = 'following'
+    RELATIONSHIP_BLOCKED = 'blocked'
     RELATIONSHIP_STATUSES = (
         (RELATIONSHIP_FOLLOWING, 'Following'),
         (RELATIONSHIP_BLOCKED, 'Blocked'),
@@ -117,7 +118,7 @@ class Relationship(models.Model):
     from_person = models.ForeignKey(Person, related_name='from_people')
     to_person = models.ForeignKey(Person, related_name='to_people')
     created = models.DateTimeField(auto_now_add=True, blank=True)
-    status = models.IntegerField(choices=RELATIONSHIP_STATUSES, default=RELATIONSHIP_FOLLOWING)
+    status = models.CharField(max_length=10, choices=RELATIONSHIP_STATUSES, default=RELATIONSHIP_FOLLOWING)
     private = models.BooleanField(default=False)
 
 
