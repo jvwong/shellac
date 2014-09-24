@@ -11,6 +11,8 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.http import QueryDict
 
+from urllib.parse import urlparse
+
 from shellac.models import Clip, Category, Person, Relationship
 from shellac.serializers import CategorySerializer, UserSerializer, \
     ClipSerializer, PersonSerializer, RelationshipSerializer
@@ -29,7 +31,7 @@ def api_root(request, format=None):
         'clips': reverse('clip-list', request=request, format=format)
     })
 
-from urllib.parse import urlparse
+
 class RelationshipListViewSet(ListViewSet):
     serializer_class = RelationshipSerializer
     permission_classes = (permissions.IsAuthenticated, )
@@ -49,22 +51,14 @@ class RelationshipListViewSet(ListViewSet):
 
     def post(self, request, *args, **kwargs):
         """
-        This view should create between the authenticated Person and
-        the target with the given status and return a Relationship
+        This view will always create Relationship between the authenticated Person
+        and the target regardless of the from_person field
         """
-        return self.create(request, *args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        #validate whether authenticated user is from_user
-        from_person = request.DATA.get('from_person', '')
-        u = urlparse(from_person).path.split('/')[3]
-        serializer = RelationshipSerializer(data=request.DATA, context={'request': request})
-
-        if u != self.request.user.person.username:
-            return Response(serializer.errors, status=status.HTTP_)
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        o = urlparse(request.DATA.get('from_person'))
+        path_elements = o.path.split('/')
+        if request.user.person.username in path_elements:
+            return self.create(request, *args, **kwargs)
+        return Response({'from_person': 'from_user does not match authenticated User'}, status=status.HTTP_400_BAD_REQUEST)
 
     def pre_save(self, obj):
         obj.from_person = self.request.user.person

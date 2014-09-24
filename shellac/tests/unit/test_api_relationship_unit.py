@@ -125,7 +125,7 @@ class RelationshipListViewSet(APITestCase):
         self.assertEqual(url, '/api/relationships/')
 
     def test_RelationshipListViewSet_GET_returns_ALL_Rel_objects(self):
-        response = self.client.get('/api/relationships/.json')
+        response = self.client.get('/api/relationships/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         resp = json.loads(response.content.decode())
@@ -141,16 +141,16 @@ class RelationshipListViewSet(APITestCase):
         qurlname = 'http://testserver/api/people/aray/'
         qstat = 'following'
 
-        payload = {'from_person': qurlname, 'status': qstat, 'to_person': qurlname, 'private': False}
+        payload = {'from_person': self.urlname, 'status': qstat, 'to_person': qurlname, 'private': False}
 
         response = self.client.post('/api/relationships/', payload)
         #print(response.data)
+        #print(response.status_code)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        response = json.loads(response.content.decode())
-        self.assertEqual(response['from_person'], self.urlname)
-        self.assertEqual(response['to_person'], qurlname)
-        self.assertEqual(response['status'], qstat)
+        self.assertEqual(response.data['from_person'], self.urlname)
+        self.assertEqual(response.data['to_person'], qurlname)
+        self.assertEqual(response.data['status'], qstat)
 
 
 class RelationshipDetailViewSet(APITestCase):
