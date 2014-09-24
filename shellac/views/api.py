@@ -231,8 +231,12 @@ class PersonListStatusView(generics.ListCreateAPIView):
             elif qstatus == 'friends':
                 data = user.person.get_friends().order_by('username')
 
+            ##Authenticated User can only view own blocked list
             elif qstatus == 'blocked':
-                data = user.person.get_blocked().order_by('username')
+                if user == request.user:
+                    data = user.person.get_blocked().order_by('username')
+                else:
+                    data = Person.objects.none()
 
             if data is not None:
                 serializer = PersonSerializer(data, many=True, context={'request': request})
