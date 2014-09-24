@@ -6,7 +6,6 @@ from django.db.models import Q
 
 from shellac.models import Category, Clip, Person, Relationship
 
-from rest_framework.authtoken.models import Token
 from rest_framework import status
 from rest_framework.test import APITestCase
 

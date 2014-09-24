@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url, include
 from rest_framework.urlpatterns import format_suffix_patterns
 from shellac.views.api import api_root, \
-    CategoryViewSet, ClipListViewSet,  ClipFirehoseViewSet, ClipDetailViewSet, \
+    CategoryViewSet, ClipListViewSet, ClipDetailViewSet, ClipListFollowingView, \
     UserListViewSet, UserDetailViewSet,\
     PersonListView, PersonDetailView, \
     RelationshipListViewSet, RelationshipDetailViewSet
@@ -54,8 +54,10 @@ relationship_detail = RelationshipDetailViewSet.as_view({
 urlpatterns = patterns('shellac.views.api',
     url(r'^$', api_root, name='api_root'),
 
-    url(r'^clips/$', clip_list, name='clip-list'), #By 'following'
-    url(r'^clips/(?P<pk>[0-9]+)/$', clip_detail, name='clip-detail'), #By pk
+    url(r'^clips/$', clip_list, name='clip-list'),
+    url(r'^clips/(?P<pk>[0-9]+)/$', clip_detail, name='clip-detail'),
+
+    url(r'^clips/(?P<status>[\w-]+)/(?P<username>[\w.@+-]+)/$', ClipListFollowingView.as_view(), name='clip-list-following'),
 
     url(r'^categories/$', category_list, name='category-list'),
     url(r'^categories/(?P<slug>[\w-]+)/$', category_detail, name='category-detail'),

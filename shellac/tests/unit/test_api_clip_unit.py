@@ -7,6 +7,7 @@ from rest_framework.authtoken.models import Token
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from shellac.models import Clip
 from shellac.tests.utils.unit import setFileAttributefromLocal, cleanClips
@@ -349,3 +350,42 @@ class ClipDetailViewSet(APITestCase):
 
 
 
+class ClipListFollowingView(APITestCase):
+    fixtures = ['shellac.json', 'auth.json']
+
+    def setUp(self):
+        username = 'aray'
+        password = 'aray'
+        self.status = 'following'
+        self.urlname = 'http://testserver/api/people/' + username + '/'
+        self.user = User.objects.get(username=username)
+        self.person = self.user.person
+        self.client.login(username=username, password=password)
+
+    # view for '/api/clips/following/(?P<username>[\w.@+-]+)/$'
+    def test_ClipListFollowingView_resolves_to_correct_view(self):
+        qstatus = 'following'
+        qusername = 'jvwong'
+        qurl = '/api/clips/' + qstatus + '/' + qusername + '/'
+
+        url = reverse('clip-list-following', kwargs={'username': qusername, 'status': qstatus})
+        self.assertEqual(url, qurl)
+
+    def test_ClipListFollowingView_GET_username_returns_correct_list(self):
+        qstatus = 'following'
+        qusername = 'jvwong'
+        qurl = '/api/clips/' + qstatus + '/' + qusername + '/'
+
+        response = self.client.get(qurl)
+        #self.assertEqual(response.status_code, status.HTTP_200_OK)
+        resp = json.loads(response.content.decode())
+        #print(resp)
+
+        # #jvwong is following everyone else
+        qclips = Clip.objects.filter(Q(author__username='aray') |
+                                     Q(author__username='jray') |
+                                     Q(author__username='kray'))
+        self.assertEqual(len(qclips), len(resp))
+        self.assertContains(response, 'aray')
+        self.assertContains(response, 'jray')
+        self.assertContains(response, 'kray')

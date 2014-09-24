@@ -1,3 +1,6 @@
+from itertools import chain
+from urllib.parse import urlparse
+
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.reverse import reverse
@@ -8,10 +11,6 @@ from rest_framework import status
 
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
-from django.http import QueryDict
-
-from urllib.parse import urlparse
 
 from shellac.models import Clip, Category, Person, Relationship
 from shellac.serializers import CategorySerializer, UserSerializer, \
@@ -109,24 +108,32 @@ class ClipListViewSet(ListViewSet):
             return 100
 
 
-class ClipFirehoseViewSet(generics.ListAPIView):
+class ClipListFollowingView(generics.ListAPIView):
+    model = Clip
     serializer_class = ClipSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
-    def get_queryset(self):
-        return Clip.objects.all() ##By 'following'
+    def list(self, request, *args, **kwargs):
 
-    def get_paginate_by(self):
-        #print(self.request.accepted_renderer.format)
-        if self.request.accepted_renderer.format == 'api':
-            return 20
-        elif self.request.accepted_renderer.format == 'json':
-            return 100
-        else:
-            return 100
+        #Retrieve the User
+        username = kwargs.get('username', None)
+        if username is None:
+            return Response({'invalid username'}, status.HTTP_400_BAD_REQUEST)
+
+        #Retrieve following set (get_following) for Person corresponding to User
+        user = User.objects.get(username=username)
+        following = user.person.get_following()
+
+        #Retrieve Clips from each Person in set following
+        clips = [p.clips.all() for p in following]
+        data = list(chain(*clips))
+
+        serializer = ClipSerializer(data, many=True, context={'request': request})
+        #print(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ClipDetailViewSet(DetailViewSet):
