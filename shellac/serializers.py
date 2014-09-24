@@ -15,7 +15,6 @@ class RelationshipSerializer(serializers.HyperlinkedModelSerializer):
         model = Relationship
         fields = ('url', 'id', 'from_person', 'to_person',  'created', 'status', 'private')
 
-
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     first_name = serializers.Field(source='user.first_name')
     last_name = serializers.Field(source='user.last_name')

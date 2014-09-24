@@ -95,7 +95,7 @@ class Api_Category_Root(APITestCase):
 
 
 
-class Api_CategoryDetail(APITestCase):
+class CategoryDetail(APITestCase):
 
     # line up view for '/'
     def test_Api_CategoryDetail_url_resolves_to_api_categorylist_view(self):
@@ -154,7 +154,7 @@ class Api_CategoryDetail(APITestCase):
 # """
 #  BEGIN USER API
 # """
-class Api_UserListViewSet(APITestCase):
+class UserListViewSet(APITestCase):
 
     # line up view for '/'
     def test_UserListViewSet_url_resolves_to_api_category_view(self):
@@ -199,7 +199,7 @@ class Api_UserListViewSet(APITestCase):
 
 
 
-class Api_UserDetailViewSet(APITestCase):
+class UserDetailViewSet(APITestCase):
 
     # line up view for '/'
     def test_UserDetail_username_user_url_resolves_to_api_userlist_view(self):
@@ -493,7 +493,7 @@ class ClipListViewSet(APITestCase):
         cleanClips()
 
 
-class Api_ClipDetailViewSet(APITestCase):
+class ClipDetailViewSet(APITestCase):
 
     # line up view for '/'
     def test_api_ClipDetailViewSet_GET_resolves_to_correct_view(self):

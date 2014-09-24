@@ -3,16 +3,20 @@ from rest_framework import permissions
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
 from rest_framework import viewsets
+from rest_framework import generics
+from rest_framework import status
 
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404
+from django.http import QueryDict
 
 from shellac.models import Clip, Category, Person, Relationship
-from shellac.serializers import CategorySerializer, UserSerializer, ClipSerializer, PersonSerializer, RelationshipSerializer
+from shellac.serializers import CategorySerializer, UserSerializer, \
+    ClipSerializer, PersonSerializer, RelationshipSerializer
 from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, \
     UserIsAdminOrPost, RelationshipIsOwnerOrAdmin
-from shellac.viewsets import DetailViewSet, ListViewSet, FirehoseViewSet, ListOnlyViewSet, RetrieveOnlyView
+from shellac.viewsets import DetailViewSet, ListViewSet, FirehoseViewSet
 
 
 @api_view(('GET',))
@@ -25,7 +29,7 @@ def api_root(request, format=None):
         'clips': reverse('clip-list', request=request, format=format)
     })
 
-
+from urllib.parse import urlparse
 class RelationshipListViewSet(ListViewSet):
     serializer_class = RelationshipSerializer
     permission_classes = (permissions.IsAuthenticated, )
@@ -36,26 +40,38 @@ class RelationshipListViewSet(ListViewSet):
     def get_queryset(self):
         """
         This view should return a list of all the Relationships for
-        the user as determined by the username portion of the URL. If the Person
-        does not exist then return an empty queryset. If no username is given,
-        return the ones related to the current user.
+        the authenticated User / Person.
         """
-        username = self.kwargs.get('username', None)
-        if username is not None:
-            try:
-                person = (User.objects.get(username=username)).person
-            except ObjectDoesNotExist:
-                return Relationship.objects.none()
-        else:
-            person = self.request.user.person
-        return Relationship.objects.filter(Q(from_person=person) | Q(to_person=person))
+        ##Check for the url keyword arguments
+        return Relationship.objects.filter(
+            Q(from_person=self.request.user.person) |
+            Q(to_person=self.request.user.person))
 
     def post(self, request, *args, **kwargs):
+        """
+        This view should create between the authenticated Person and
+        the target with the given status and return a Relationship
+        """
         return self.create(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        #validate whether authenticated user is from_user
+        from_person = request.DATA.get('from_person', '')
+        u = urlparse(from_person).path.split('/')[3]
+        serializer = RelationshipSerializer(data=request.DATA, context={'request': request})
+
+        if u != self.request.user.person.username:
+            return Response(serializer.errors, status=status.HTTP_)
+        if serializer.is_valid():
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def pre_save(self, obj):
+        obj.from_person = self.request.user.person
 
 
 class RelationshipDetailViewSet(DetailViewSet):
-    #lookup_field = 'from_person'
+    lookup_field = 'pk'
     queryset = Relationship.objects.all()
     serializer_class = RelationshipSerializer
     permission_classes = (permissions.IsAuthenticated, RelationshipIsOwnerOrAdmin)
@@ -68,6 +84,9 @@ class RelationshipDetailViewSet(DetailViewSet):
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+    def pre_save(self, obj):
+        obj.from_person = self.request.user.person
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -92,9 +111,9 @@ class ClipListViewSet(ListViewSet):
 
     def get_queryset(self):
         #filter based on the provided username
-        person = self.kwargs.get('person', '')
-        if person:
-            return Clip.objects.filter(author__user__username=person)
+        username = self.kwargs.get('username', None)
+        if username is not None:
+            return Clip.objects.filter(author__user__username=username)
         return Clip.objects.all() ##By 'following'
 
     def get_paginate_by(self):
@@ -171,7 +190,7 @@ class UserDetailViewSet(DetailViewSet):
         return self.destroy(request, *args, **kwargs)
 
 
-class PersonListView(ListOnlyViewSet):
+class PersonListView(generics.ListCreateAPIView):
     """
     List only; DO NOT allow create Person -- do this through User
     """
@@ -182,7 +201,7 @@ class PersonListView(ListOnlyViewSet):
         return self.list(request, *args, **kwargs)
 
 
-class PersonDetailView(RetrieveOnlyView):
+class PersonDetailView(generics.RetrieveAPIView):
     """
     Retrieve a Person
     """

@@ -111,7 +111,13 @@ class RelationshipListViewSet(APITestCase):
     fixtures = ['shellac.json', 'auth.json']
 
     def setUp(self):
-       pass
+        username = 'jvwong'
+        password = 'b'
+        self.status = 'following'
+        self.urlname = 'http://testserver/api/people/' + username + '/'
+        self.user = User.objects.get(username=username)
+        self.person = self.user.person
+        self.client.login(username=username, password=password)
 
     # view for '/api/relationships/'
     def test_RelationshipListViewSet_noparam_resolves_to_correct_view(self):
@@ -119,41 +125,64 @@ class RelationshipListViewSet(APITestCase):
         self.assertEqual(url, '/api/relationships/')
 
     def test_RelationshipListViewSet_GET_returns_ALL_Rel_objects(self):
-
-        username = 'jvwong'
-        password = 'b'
-        user = User.objects.get(username=username)
-        person = user.person
-        self.client.login(username=username, password=password)
-
         response = self.client.get('/api/relationships/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         resp = json.loads(response.content.decode())
         results = resp['results']
-        self.assertEqual(len(results), Relationship.objects.filter(Q(from_person=person) | Q(to_person=person)).count())
+        #print(results)
+        self.assertEqual(len(results), Relationship.objects.filter(
+            Q(from_person=self.person) | Q(to_person=self.person)).count())
 
+        for result in results:
+            self.assertTrue(result['to_person'] == self.urlname or result['from_person'] == self.urlname)
 
-    def test_RelationshipListViewSet_GET_returns_ALL_Rel_objects(self):
+    def test_RelationshipListViewSet_POST_creates_Relationship_with_target(self):
+        qurlname = 'http://testserver/api/people/aray/'
+        qstat = 'following'
 
-        username = 'jvwong'
-        password = 'b'
-        user = User.objects.get(username=username)
-        person = user.person
-        self.client.login(username=username, password=password)
+        payload = {'from_person': qurlname, 'status': qstat, 'to_person': qurlname, 'private': False}
 
-        response = self.client.get('/api/relationships/.json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.post('/api/relationships/', payload)
+        #print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        resp = json.loads(response.content.decode())
-        results = resp['results']
-        self.assertEqual(len(results), Relationship.objects.filter(Q(from_person=person) | Q(to_person=person)).count())
+        response = json.loads(response.content.decode())
+        self.assertEqual(response['from_person'], self.urlname)
+        self.assertEqual(response['to_person'], qurlname)
+        self.assertEqual(response['status'], qstat)
 
 
 class RelationshipDetailViewSet(APITestCase):
     fixtures = ['shellac.json', 'auth.json']
 
+    def setUp(self):
+        username = 'jvwong'
+        password = 'b'
+        self.status = 'following'
+        self.urlname = 'http://testserver/api/people/' + username + '/.json'
+        self.user = User.objects.get(username=username)
+        self.person = self.user.person
+        self.client.login(username=username, password=password)
+
     # line up view for '/'
     def test_RelationshipDetailViewSet_resolves_to_correct_view(self):
         url = reverse('relationship-detail', kwargs={'pk': 1})
         self.assertEqual(url, '/api/relationships/1/')
+
+    # def test_RelationshipDetailViewSet_GET_returns_correct_REL_object(self):
+    #     targetUser = User.objects.get(username='aray')
+    #     urlname = 'http://testserver/api/people/aray/.json'
+    #     qstat = 'following'
+    #
+    #     response = self.client.get('/api/relationships/' + targetUser.username + '/following/.json')
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #
+    #     resp = json.loads(response.content.decode())
+    #     results = resp['results']
+    #     self.assertEqual(len(results), Relationship.objects.filter(
+    #         Q(from_person=targetUser.person) & Q(status=qstat)).count())
+    #
+    #     for result in results:
+    #         self.assertTrue(result['from_person'] == urlname and result['status'] == qstat)
+
