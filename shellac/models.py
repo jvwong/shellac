@@ -63,6 +63,9 @@ class Person(models.Model):
     def get_following(self):
         return self.get_relationships(Relationship.RELATIONSHIP_FOLLOWING)
 
+    def get_blocked(self):
+        return self.get_relationships(Relationship.RELATIONSHIP_BLOCKED)
+
 
     ##Query Relationships model
     def get_related_to(self, status):
@@ -114,6 +117,7 @@ class Relationship(models.Model):
         (RELATIONSHIP_FOLLOWING, 'Following'),
         (RELATIONSHIP_BLOCKED, 'Blocked'),
     )
+    RELATIONSHIPS = ('following', 'followers', 'friends', 'blocked')
 
     from_person = models.ForeignKey(Person, related_name='from_people')
     to_person = models.ForeignKey(Person, related_name='to_people')

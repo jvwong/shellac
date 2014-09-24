@@ -10,6 +10,7 @@ from rest_framework import generics
 from rest_framework import status
 
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
 from shellac.models import Clip, Category, Person, Relationship
@@ -121,19 +122,24 @@ class ClipListFollowingView(generics.ListAPIView):
         #Retrieve the User
         username = kwargs.get('username', None)
         qstatus = kwargs.get('status', None)
-        if username is None or qstatus is None:
+        if username is None:
             return Response({'invalid username'}, status.HTTP_400_BAD_REQUEST)
+        if qstatus is None or qstatus != 'following':
+            return Response({'invalid status'}, status.HTTP_400_BAD_REQUEST)
 
         #Retrieve following set (get_following) for Person corresponding to User
-        user = User.objects.get(username=username)
-        following = user.person.get_following()
+        try:
+            user = get_object_or_404(User, username=username)
+            following = user.person.get_following()
 
-        #Retrieve Clips from each Person in set following
-        clips = [p.clips.all() for p in following]
-        data = list(chain(*clips))
+            #Retrieve Clips from each Person in set following
+            clips = [p.clips.all() for p in following]
+            data = list(chain(*clips))
 
-        serializer = ClipSerializer(data, many=True, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer = ClipSerializer(data, many=True, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except IOError:
+            return Response({'IOError'}, status.HTTP_400_BAD_REQUEST)
 
 
 class ClipDetailViewSet(DetailViewSet):
@@ -190,6 +196,50 @@ class PersonListView(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
+class PersonListStatusView(generics.ListCreateAPIView):
+    """
+    List by status for User with username;
+    """
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+
+        #Retrieve the User
+        username = kwargs.get('username', None)
+        qstatus = kwargs.get('status', None)
+        #print(kwargs)
+        if username is None:
+            return Response({'invalid username'}, status.HTTP_400_BAD_REQUEST)
+        if qstatus is None or qstatus not in Relationship.RELATIONSHIPS:
+            return Response({'invalid status'}, status.HTTP_400_BAD_REQUEST)
+
+        #Retrieve following set (get_following) for Person corresponding to User
+        try:
+            user = get_object_or_404(User, username=username)
+            data = None
+
+            if qstatus == 'following':
+                data = user.person.get_following().order_by('username')
+
+            elif qstatus == 'followers':
+                data = user.person.get_followers().order_by('username')
+
+            elif qstatus == 'friends':
+                data = user.person.get_friends().order_by('username')
+
+            elif qstatus == 'blocked':
+                data = user.person.get_blocked().order_by('username')
+
+            if data is not None:
+                serializer = PersonSerializer(data, many=True, context={'request': request})
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({'Error: no data '}, status=status.HTTP_400_BAD_REQUEST)
+        except IOError:
+            return Response({'IOError'}, status.HTTP_400_BAD_REQUEST)
 
 class PersonDetailView(generics.RetrieveAPIView):
     """

@@ -102,6 +102,76 @@ class PersonDetailView(APITestCase):
         self.assertIn('"username": "jvwong"', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
+
+class PersonListStatusView(APITestCase):
+    fixtures = ['shellac.json', 'auth.json']
+
+    def setUp(self):
+        username = 'jray'
+        password = 'jray'
+        self.status = 'following'
+        self.urlname = 'http://testserver/api/people/' + username + '/'
+        self.user = User.objects.get(username=username)
+        self.person = self.user.person
+        self.client.login(username=username, password=password)
+
+    def test_PersonListStatusView_url_resolves_to_api_category_view(self):
+        url = reverse('person-list-status', kwargs={'status': self.status, 'username': self.person.username})
+        self.assertEqual(url, '/api/people/' + self.status + '/' + self.person.username + '/')
+
+    def test_PersonListStatusView_GET_following_returns_correct_Person_list(self):
+        # jray --> jvwong; # jray --> kray;
+
+        qurl = '/api/people/following/' + self.person.username + '/'
+        response = self.client.get(qurl)
+        resp = json.loads(response.content.decode())
+        #print((resp))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp), 2)
+        self.assertEqual(resp[0]['username'], 'jvwong')
+        self.assertEqual(resp[1]['username'], 'kray')
+        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+
+    def test_PersonListStatusView_GET_followers_returns_correct_Person_list(self):
+        # aray --> jray; # jvwong--> jray;
+
+        qurl = '/api/people/followers/' + self.person.username + '/'
+        response = self.client.get(qurl)
+        resp = json.loads(response.content.decode())
+        #print((resp))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp), 2)
+        self.assertEqual(resp[0]['username'], 'aray')
+        self.assertEqual(resp[1]['username'], 'jvwong')
+        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+
+    def test_PersonListStatusView_GET_friends_returns_correct_Person_list(self):
+        # jvwong --> jray; # jray --> jvwong
+
+        qurl = '/api/people/friends/' + self.person.username + '/'
+        response = self.client.get(qurl)
+        resp = json.loads(response.content.decode())
+        #print((resp))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp), 1)
+        self.assertEqual(resp[0]['username'], 'jvwong')
+        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+
+
+    def test_PersonListStatusView_GET_blocked_returns_correct_Person_list(self):
+        qurl = '/api/people/blocked/' + self.person.username + '/'
+        response = self.client.get(qurl)
+        resp = json.loads(response.content.decode())
+        #print((resp))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp), 0)
+        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+
+
 # """
 #  BEGIN Relationship API
 # """
