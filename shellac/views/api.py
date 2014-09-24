@@ -120,7 +120,8 @@ class ClipListFollowingView(generics.ListAPIView):
 
         #Retrieve the User
         username = kwargs.get('username', None)
-        if username is None:
+        qstatus = kwargs.get('status', None)
+        if username is None or qstatus is None:
             return Response({'invalid username'}, status.HTTP_400_BAD_REQUEST)
 
         #Retrieve following set (get_following) for Person corresponding to User
@@ -132,7 +133,6 @@ class ClipListFollowingView(generics.ListAPIView):
         data = list(chain(*clips))
 
         serializer = ClipSerializer(data, many=True, context={'request': request})
-        #print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
