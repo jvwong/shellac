@@ -17,8 +17,8 @@ from shellac.models import Clip, Category, Person, Relationship
 from shellac.serializers import CategorySerializer, UserSerializer, \
     ClipSerializer, PersonSerializer, RelationshipSerializer
 from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, \
-    UserIsAdminOrPost, RelationshipIsOwnerOrAdmin
-from shellac.viewsets import DetailViewSet, ListViewSet, FirehoseViewSet
+    UserIsAdminOrPost, RelationshipIsOwnerOrAdminOrReadOnly
+from shellac.viewsets import DetailViewSet, ListViewSet
 
 
 @api_view(('GET',))
@@ -34,7 +34,7 @@ def api_root(request, format=None):
 
 class RelationshipListViewSet(ListViewSet):
     serializer_class = RelationshipSerializer
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -56,19 +56,17 @@ class RelationshipListViewSet(ListViewSet):
         """
         o = urlparse(request.DATA.get('from_person'))
         path_elements = o.path.split('/')
-        if request.user.person.username in path_elements:
+        if request.user.person.username in path_elements or request.user.is_staff:
             return self.create(request, *args, **kwargs)
         return Response({'from_person': 'from_user does not match authenticated User'}, status=status.HTTP_400_BAD_REQUEST)
 
-    def pre_save(self, obj):
-        obj.from_person = self.request.user.person
 
 
 class RelationshipDetailViewSet(DetailViewSet):
     lookup_field = 'pk'
     queryset = Relationship.objects.all()
     serializer_class = RelationshipSerializer
-    permission_classes = (permissions.IsAuthenticated, RelationshipIsOwnerOrAdmin)
+    permission_classes = (permissions.IsAuthenticated, RelationshipIsOwnerOrAdminOrReadOnly)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -79,9 +77,6 @@ class RelationshipDetailViewSet(DetailViewSet):
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-    def pre_save(self, obj):
-        obj.from_person = self.request.user.person
-
 
 class CategoryViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
@@ -91,6 +86,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class ClipListViewSet(ListViewSet):
     lookup_field = 'pk'
+    model = Clip
     serializer_class = ClipSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
@@ -103,13 +99,6 @@ class ClipListViewSet(ListViewSet):
     def pre_save(self, obj):
         obj.author = Person.objects.get(user=self.request.user)
 
-    def get_queryset(self):
-        #filter based on the provided username
-        username = self.kwargs.get('username', None)
-        if username is not None:
-            return Clip.objects.filter(author__user__username=username)
-        return Clip.objects.all() ##By 'following'
-
     def get_paginate_by(self):
         #print(self.request.accepted_renderer.format)
         if self.request.accepted_renderer.format == 'api':
@@ -120,7 +109,7 @@ class ClipListViewSet(ListViewSet):
             return 100
 
 
-class ClipFirehoseViewSet(FirehoseViewSet):
+class ClipFirehoseViewSet(generics.ListAPIView):
     serializer_class = ClipSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
@@ -144,7 +133,7 @@ class ClipDetailViewSet(DetailViewSet):
     lookup_field = 'pk'
     queryset = Clip.objects.all()
     serializer_class = ClipSerializer
-    permission_classes = (permissions.IsAuthenticated, IsAuthorOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated, IsAuthorOrReadOnly)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)

@@ -13,7 +13,3 @@ class DetailViewSet(mixins.RetrieveModelMixin,
     pass
 
 
-class FirehoseViewSet(mixins.ListModelMixin,
-                      viewsets.GenericViewSet):
-    pass
-

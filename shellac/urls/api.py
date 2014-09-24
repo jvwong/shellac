@@ -28,10 +28,6 @@ category_detail = CategoryViewSet.as_view({
     'delete': 'destroy'
 })
 
-clip_firehose = ClipFirehoseViewSet.as_view({
-    'get': 'get'
-})
-
 clip_list = ClipListViewSet.as_view({
     'get': 'get',
     'post': 'post'
@@ -57,9 +53,8 @@ relationship_detail = RelationshipDetailViewSet.as_view({
 
 urlpatterns = patterns('shellac.views.api',
     url(r'^$', api_root, name='api_root'),
+
     url(r'^clips/$', clip_list, name='clip-list'), #By 'following'
-    url(r'^clips/firehose/$', clip_firehose, name='clip-firehose'), #Firehose
-    url(r'^clips/search/(?P<username>[\w.@+-]+)/$', clip_list, name='clip-list'), #By Person
     url(r'^clips/(?P<pk>[0-9]+)/$', clip_detail, name='clip-detail'), #By pk
 
     url(r'^categories/$', category_list, name='category-list'),

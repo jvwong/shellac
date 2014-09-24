@@ -14,11 +14,14 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
         return obj.author == request.user.person
 
 
-class RelationshipIsOwnerOrAdmin(permissions.BasePermission):
+class RelationshipIsOwnerOrAdminOrReadOnly(permissions.BasePermission):
     """
     Custom permission to only allow 1) staff 2) from_person to view.
     """
     def has_object_permission(self, request, view, obj):
+        #print("PERMISSIONS OBJECT")
+        if request.method in permissions.SAFE_METHODS:
+            return True
         return (request.user.is_staff or obj.from_person == request.user.person)
 
 

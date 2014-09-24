@@ -1,11 +1,12 @@
-from rest_framework.test import APITestCase
-from shellac.models import Category, Clip
-from django.core.urlresolvers import reverse
 from rest_framework import status
-from django.contrib.auth import get_user_model
-User = get_user_model()
-from shellac.tests.utils.unit import setFileAttributefromLocal, cleanClips
+from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
+
+from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
+
+from shellac.models import Category, Clip
+from shellac.tests.utils.unit import setFileAttributefromLocal, cleanClips
 
 ### API root (/api/)
 class Api_Root(APITestCase):
@@ -151,157 +152,6 @@ class CategoryDetail(APITestCase):
         # print(get_response.data)
         self.assertNotIn("arts", get_response.data)
 
-# """
-#  BEGIN USER API
-# """
-class UserListViewSet(APITestCase):
-
-    # line up view for '/'
-    def test_UserListViewSet_url_resolves_to_api_category_view(self):
-        url = reverse('user-list')
-        self.assertEqual(url, '/api/users/')
-
-
-    def test_UserListViewSet_GET_byStaff_returns_correct_response(self):
-        u  = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        u.is_staff = True
-        u.save()
-        u2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-
-        self.client.login(username='andrea', password='a')
-        response = self.client.get('/api/users/.json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        #print(response.data)
-        self.assertIn('"username": "andrea"', response.content.decode())
-        self.assertIn('"username": "jvwong"', response.content.decode())
-        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
-
-    def test_UserListViewSet_GET_byNonStaff_returns_correct_403FORBIDDEN(self):
-        u  = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        u2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-
-        self.client.login(username='andrea', password='a')
-        response = self.client.get('/api/users/.json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        #print(response.data)
-
-    def test_UserListViewSet_POST_by_unauthenticated_creates_new_user(self):
-
-        payload = json.dumps({'username': 'ronald', 'password': 'ron'})
-
-        response = self.client.post('/api/users/.json', payload, content_type='application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        #print(response.data)
-        self.assertIn('"username": "ronald"', response.content.decode())
-        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
-
-
-
-class UserDetailViewSet(APITestCase):
-
-    # line up view for '/'
-    def test_UserDetail_username_user_url_resolves_to_api_userlist_view(self):
-        url = reverse('user-detail', kwargs={'username': 'jvwong'})
-        self.assertEqual(url, '/api/users/jvwong/')
-
-    def test_UserDetailViewSet_GET_same_User_bynonstaff_returns_correct_response(self):
-        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-
-        self.client.login(username='andrea', password='a')
-        response = self.client.get('/api/users/andrea/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.assertIn('"username": "andrea"', response.content.decode())
-        self.assertIn('"email": "aray@outlook.com"', response.content.decode())
-        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
-
-    def test_UserDetailViewSet_GET_other_User_bynonstaff_returns_correct_response(self):
-        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-
-        self.client.login(username='andrea', password='a')
-        response = self.client.get('/api/users/jvwong/')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_UserDetailViewSet_GET_other_User_bystaff_returns_correct_response(self):
-        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        u.is_staff = True
-        u.save()
-        u2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-
-        self.client.login(username='andrea', password='a')
-        response = self.client.get('/api/users/jvwong/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.assertIn('"username": "jvwong"', response.content.decode())
-        self.assertIn('"email": "jray@outlook.com"', response.content.decode())
-        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
-
-    def test_UserDetailViewSet_PUT_same_bynonstaff_returns_correct_response(self):
-        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        self.client.login(username='andrea', password='a')
-        response = self.client.put('/api/users/andrea/', data={'username': 'andrea',
-                                                               'email': 'aray2@outlook.com'})
-        #print(response.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.assertIn('"username": "andrea"', response.content.decode())
-        self.assertIn('"email": "aray2@outlook.com"', response.content.decode())
-        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
-
-    def test_UserDetailViewSet_PUT_other_bynonstaff_returns_correct_response(self):
-        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        u2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-        self.client.login(username='jvwong', password='j')
-        response = self.client.put('/api/users/andrea/', data={'username': 'andrea',
-                                                               'email': 'aray2@outlook.com'})
-        #print(response.data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_UserDetailViewSet_PUT_other_byStaff_returns_correct_response(self):
-        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        u.is_staff = True
-        u.save()
-        u2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-
-        self.client.login(username='andrea', password='a')
-        response = self.client.put('/api/users/jvwong/', data={'username': 'jvwong',
-                                                               'email': 'jray2@outlook.com'})
-        #print(response.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.assertIn('"username": "jvwong"', response.content.decode())
-        self.assertIn('"email": "jray2@outlook.com"', response.content.decode())
-        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
-
-    def test_UserDetailViewSet_DELETE_same_bynonstaff_returns_correct_response(self):
-        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        self.client.login(username='andrea', password='a')
-        response = self.client.delete('/api/users/andrea/')
-        #print(response.data)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-    def test_UserDetailViewSet_DELETE_other_bynonstaff_returns_correct_response(self):
-        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        u2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-        self.client.login(username='jvwong', password='a')
-        response = self.client.delete('/api/users/andrea/')
-        #print(response.data)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_UserDetailViewSet_DELETE_other_byStaff_returns_correct_response(self):
-        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        u.is_staff = True
-        u.save()
-        u2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-        self.client.login(username='andrea', password='a')
-        response = self.client.delete('/api/users/jvwong/')
-        #print(response.data)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
 
 # """
 #  BEGIN CLIP API
@@ -365,35 +215,6 @@ class ClipListViewSet(APITestCase):
         # print(Clip.objects.all().count())
         response = self.client.get('/api/clips/.json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-        cleanClips()
-
-    def test_ClipListViewSet_GET_byUsername_returns_correct_response(self):
-        ##authenticate REST style
-        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-
-        #create the clips
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
-        clip1.description = "clip1 description"
-        setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
-        clip3 = Clip.objects.create(title='clip3 title', author=user1.person)
-        clip3.description = "clip3 description"
-        setFileAttributefromLocal(clip3.audio_file, audio_path, "song3.mp3")
-
-        clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
-        clip2.description = "clip2 description"
-        setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
-        clip4 = Clip.objects.create(title='clip4 title', author=user2.person)
-        clip4.description = "clip4 description"
-        setFileAttributefromLocal(clip4.audio_file, audio_path, "song4.mp3")
-
-        self.client.login(username='andrea', password='a')
-        response1 = self.client.get('/api/clips/search/andrea/.json')
-        results = dict(response1.data).get('results')
-        #print(results)
-        self.assertEqual(response1.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(results), 2)
 
         cleanClips()
 
