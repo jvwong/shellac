@@ -21,40 +21,48 @@ var shellac = (function () {
 
     configMap = {
         main_html: String() +
-            '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
+            '<div class="shellac-app-container">' +
 
-                '<div class="panel-group" id="accordion">' +
-
-                    '<div class="panel panel-default">' +
-                        '<div class="panel-heading">' +
-                            '<a data-toggle="collapse" data-parent="#accordion" href="#collapseCategories">' +
-                                'Categories' +
-                            '</a>' +
+                '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
+                    '<div class="panel-group" id="accordion">' +
+                        '<p class="text-right"><a href="#" id="nav-close">X</a></p>' +
+                        '<div class="panel panel-default">' +
+                            '<div class="panel-heading">' +
+                                '<a data-toggle="collapse" data-parent="#accordion" href="#collapseCategories">' +
+                                    'Categories' +
+                                '</a>' +
+                            '</div>' +
+                            '<div id="collapseCategories" class="panel-collapse collapse">' +
+                                '<div class="panel-body">' +
+                                    '<div class="shellac-app nav nav-sidebar list-group"></div>' +
+                                '</div>' +
+                            '</div>' +
                         '</div>' +
-                        '<div id="collapseCategories" class="panel-collapse collapse">' +
-                            '<div class="panel-body">' +
-                                '<div class="shellac-app nav nav-sidebar list-group"></div>' +
+                        '<div class="panel panel-default">' +
+                            '<div class="panel-heading">' +
+                                '<a data-toggle="collapse" data-parent="#accordion" href="#collapsePeople">' +
+                                    'People' +
+                                '</a>' +
+                            '</div>' +
+                            '<div id="collapsePeople" class="panel-collapse collapse">' +
+                                '<div class="panel-body">' +
+                                    '//Person List TODO' +
+                                '</div>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
-
-                    '<div class="panel panel-default">' +
-                        '<div class="panel-heading">' +
-                            '<a data-toggle="collapse" data-parent="#accordion" href="#collapsePeople">' +
-                                'People' +
-                            '</a>' +
-                        '</div>' +
-                        '<div id="collapsePeople" class="panel-collapse collapse">' +
-                            '<div class="panel-body">' +
-                                '//Person List TODO' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
-
                 '</div>' +
-            '</div>' +
 
-            '<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 shellac-app clip content"></div>',
+                '<div class="shellac-app clip content"></div>' +
+            '</div>',
+
+
+        offcanvas_html: String() +
+            '<div class="navbar-header pull-right">' +
+                '<a id="nav-expander" class="nav-expander fixed">' +
+                'MENU &nbsp;<i class="fa fa-bars fa-lg white"></i>' +
+                '</a>' +
+            '</div>',
 
         truncatemax: 25
     },
@@ -96,6 +104,7 @@ var shellac = (function () {
 
         jqueryMap = {
             $outerDiv               : $outerDiv,
+            $app_container          : $outerDiv.find('.shellac-app-container'),
             $nav_sidebar            : $outerDiv.find('.shellac-app.sidebar'),
             $nav_sidebar_categories : $outerDiv.find('.shellac-app.sidebar #collapseCategories .shellac-app.nav.nav-sidebar.list-group'),
             $nav_sidebar_people     : $outerDiv.find('.shellac-app.sidebar #collapsePeople .shellac-app.nav.nav-sidebar.list-group'),
@@ -362,10 +371,11 @@ var shellac = (function () {
         stateMap.STATIC_URL = STATIC_URL;
         stateMap.MEDIA_URL = MEDIA_URL;
 
-        $container.html( configMap.main_html );
+        $container.html( configMap.offcanvas_html );
+        $container.append( configMap.main_html );
         setJqueryMap();
 
-        //register pub-sub methods
+         //register pub-sub methods
         PubSub.on("clipLoadComplete", display_clips);
         PubSub.on("categoryLoadComplete", display_categories);
 
@@ -373,7 +383,16 @@ var shellac = (function () {
         loadClips("following", username);
         renderCategories();
 
-//        console.log($container);
+        //Navigation Menu Slider
+        $('#nav-expander').on('click',function(e){
+            e.preventDefault();
+            $('body').toggleClass('nav-expanded');
+        });
+        $('#nav-close').on('click',function(e){
+            e.preventDefault();
+            $('body').removeClass('nav-expanded');
+        });
+        console.log($container);
     };
 
     return { initModule: initModule };

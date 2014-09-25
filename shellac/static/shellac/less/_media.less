@@ -10,7 +10,7 @@
 @caption_opacity_playing: 0.8;
 @progress_opacity: 1.0;
 @media_desc_padding: 5px;
-@media_img_max_dim: 500px;
+@media_max_dim: 350px;
 
 .media:first-child {
     margin-top: @media_margin_top;
@@ -23,6 +23,9 @@
 }
 
 .media.clip {
+
+    max-height: @media_max_dim;
+    max-width: @media_max_dim;
 
     .media-description{
         position:absolute; /* absolute position (so we can position it where we want)*/

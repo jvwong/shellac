@@ -28,7 +28,7 @@
         {% if debug %}
             <link rel="stylesheet/less" type="text/css" href="{% static 'shellac/less/app.less' %}" />
             <script src="{% static 'shellac/js/lib/less/dist/less-1.7.5.min.js' %}"></script>
-        {% else %}
+    {% else %}
             <link rel="stylesheet" type="text/css" href="{% static 'shellac/css/base.css' %}" />
         {% endif %}
     {% endblock custom_css %}
@@ -36,7 +36,6 @@
     <!-- Third party javascript -->
     <script src="{% static 'shellac/js/lib/jquery/dist/jquery.min.js' %}"></script>
     <script src="{% static 'shellac/js/lib/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-
     <title>{% block title %}{% endblock title %} | SHELLAC</title>
     {% block head %}
     {% endblock head %}
