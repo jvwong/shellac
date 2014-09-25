@@ -58,7 +58,7 @@ def user_accounts_signin(request):
             if not request.POST.get('remember_me', None):
                 request.session.set_expiry(0)
             login(request, user)
-            return HttpResponseRedirect("/profile")
+            return HttpResponseRedirect('/')
     else:
         form = LoginForm()
     return render(request,

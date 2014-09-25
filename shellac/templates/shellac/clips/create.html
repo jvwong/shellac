@@ -7,7 +7,7 @@
 
 <!-- Main -->
     {% block content %}
-    <div class="container-fluid content-record">
+    <div class="col-sm-9 col-md-12 record">
         <form class="form-signin" role="form" enctype="multipart/form-data" action="" method="POST">{% csrf_token %}
              {% for field in form %}
                 {% if field.label == "Audio file" or field.label == "Brand" %}

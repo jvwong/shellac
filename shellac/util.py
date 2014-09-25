@@ -8,7 +8,10 @@ def setFileAttributefromLocal(field, path, fname):
 
 
 brand_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/beatles.jpg'))
-brand_path2 = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/german.jpg'))
+brand_path2 = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/black.jpg'))
+brand_path3 = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/purple.jpg'))
+brand_path5 = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/victor.jpg'))
+
 audio_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/water.mp3'))
 audio_path2 = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/heart.mp3'))
 
