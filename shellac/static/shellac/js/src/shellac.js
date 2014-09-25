@@ -22,11 +22,41 @@ var shellac = (function () {
     configMap = {
         main_html: String() +
             '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
-                '<div class="shellac-app nav nav-sidebar list-group"></div>' +
+
+                '<div class="panel-group" id="accordion">' +
+
+                    '<div class="panel panel-default">' +
+                        '<div class="panel-heading">' +
+                            '<a data-toggle="collapse" data-parent="#accordion" href="#collapseCategories">' +
+                                'Categories' +
+                            '</a>' +
+                        '</div>' +
+                        '<div id="collapseCategories" class="panel-collapse collapse">' +
+                            '<div class="panel-body">' +
+                                '<div class="shellac-app nav nav-sidebar list-group"></div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+
+                    '<div class="panel panel-default">' +
+                        '<div class="panel-heading">' +
+                            '<a data-toggle="collapse" data-parent="#accordion" href="#collapsePeople">' +
+                                'People' +
+                            '</a>' +
+                        '</div>' +
+                        '<div id="collapsePeople" class="panel-collapse collapse">' +
+                            '<div class="panel-body">' +
+                                '//Person List TODO' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+
+                '</div>' +
             '</div>' +
+
             '<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 shellac-app clip content"></div>',
 
-        truncate_max: 25
+        truncatemax: 25
     },
 
     stateMap = {
@@ -54,11 +84,25 @@ var shellac = (function () {
     parseClipData, loadClips, display_clips,
 
     onClickCategory,
+
     PubSub = util.PubSub;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
     //--------------------- BEGIN MODULE SCOPE METHODS --------------------
+
+    setJqueryMap = function(){
+        var $outerDiv = stateMap.$container;
+
+        jqueryMap = {
+            $outerDiv               : $outerDiv,
+            $nav_sidebar            : $outerDiv.find('.shellac-app.sidebar'),
+            $nav_sidebar_categories : $outerDiv.find('.shellac-app.sidebar #collapseCategories .shellac-app.nav.nav-sidebar.list-group'),
+            $nav_sidebar_people     : $outerDiv.find('.shellac-app.sidebar #collapsePeople .shellac-app.nav.nav-sidebar.list-group'),
+            $clip_content           : $outerDiv.find('.shellac-app.clip.content')
+        };
+    };
+
 
     /*
      * method renderCategories: make an api call to gather the Categories in database
@@ -188,15 +232,6 @@ var shellac = (function () {
 
     //--------------------- BEGIN DOM METHODS --------------------
 
-    setJqueryMap = function(){
-        var $outerDiv = stateMap.$container;
-
-        jqueryMap = {
-            $outerDiv       : $outerDiv,
-            $nav_sidebar    : $outerDiv.find('.shellac-app.sidebar .shellac-app.nav.nav-sidebar.list-group'),
-            $clip_content        : $outerDiv.find('.shellac-app.clip.content')
-        };
-    };
 
 
     display_categories = function(){
@@ -204,7 +239,7 @@ var shellac = (function () {
         var all_anchor = String(),
             items = String(),
             clip_list = [];
-        jqueryMap.$nav_sidebar.append(all_anchor);
+        jqueryMap.$nav_sidebar_categories.append(all_anchor);
 
         stateMap.categories.forEach(function(object){
             items +=
@@ -223,7 +258,7 @@ var shellac = (function () {
                 '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
             '</a>';
 
-        jqueryMap.$nav_sidebar.append(all_anchor, items);
+        jqueryMap.$nav_sidebar_categories.append(all_anchor, items);
 
         //register listeners
         $('.list-group-item-heading').on('click', onClickCategory);
