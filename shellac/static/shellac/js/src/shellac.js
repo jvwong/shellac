@@ -31,6 +31,7 @@ var shellac = (function () {
 
     stateMap = {
         $container: undefined,
+        username: undefined,
 
         STATIC_URL: undefined,
         MEDIA_URL: undefined,
@@ -50,19 +51,12 @@ var shellac = (function () {
     urlParse,
 
     parseCategoryData, renderCategories, display_categories,
-    parseClipData, renderClips, display_clips,
+    parseClipData, loadClips, display_clips,
 
     onClickCategory,
     PubSub = util.PubSub;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
-
-    /*
-     * method :
-     * parameters
-     * return
-     *   *
-     **/
 
     //--------------------- BEGIN MODULE SCOPE METHODS --------------------
 
@@ -94,22 +88,20 @@ var shellac = (function () {
 
 
     /*
-     * method renderClips: make an api call to gather the Clips in database
-     * precondition: the category passed in is a valid Category object in database
-     * parameters
-     *  * category - a valid Category object to filter on
-     * return
-     *   * jsonArray - a list of valid JSON objects representing
-     *   serialized Clip objects
+     * method loadClips: make an api call to gather the Clips in database
+     * @param status type of Relationship
+     * @param username username of the intended target Person
+     * @return jsonArray list of valid JSON objects representing serialized Clip objects
      **/
-    renderClips = function(category){
+    loadClips = function(status, username){
 
-        var url = '/api/clips/';
+        var url = ['/api/clips', status, username, ""].join('/');
+
         $.ajax({
             url: url
         })
             .done(function(clips){
-                stateMap.clip_db.insert(parseClipData(clips.results));
+                stateMap.clip_db.insert(parseClipData(clips));
                 stateMap.clips = stateMap.clip_db().order("id desc").get();
                 console.log(stateMap.clips);
                 PubSub.emit("clipLoadComplete");
@@ -122,15 +114,13 @@ var shellac = (function () {
             });
     };
 
-
-
-    /*
+    /**
      * method parseCategoryData: transform any Category fields to javascript-compatible
      * parameters
      *   * raw - a string describing an array of valid JSON
      * return
      *   * jsonArray - a list of valid JSON objects
-     **/
+     */
     parseCategoryData = function(raw){
         var jsonArray;
 
@@ -145,13 +135,11 @@ var shellac = (function () {
         return jsonArray;
     };
 
-    /*
-    * method parseClipData: transform any Clip fields to javascript-compatible
-    * parameters
-    *   * raw - a string describing an array of valid JSON
-    * return
-    *   * jsonArray - a list of valid JSON objects
-    **/
+    /**
+    * parseClipData: transform any Clip fields to javascript-compatible
+    * @param raw a string describing an array of valid JSON
+    * @return jsonArray - a list of valid JSON objects
+    */
     parseClipData = function(raw){
         var jsonArray;
 
@@ -321,25 +309,20 @@ var shellac = (function () {
     //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
-    // Begin Public method /initModule/
-    // Example   : spa.shell.initModule( $('#div') );
-    // Purpose   :
-    //   Directs this app to offer its capability to the user
-    // Arguments :
-    //   * $container (example: $('#div')).
-    //     A jQuery collection that should represent
-    //     a single DOM container
-    //   * MEDIA_URL - the Django media url prefix (settings.MEDIA_URL)
-    //   * STATIC_URL - the django static url prefix (settings.STATIC_URL)
-    // Action    :
-    //   Populates $container with the shell of the UI
+    // initModule //   Populates $container with the shell of the UI
     //   and then configures and initializes feature modules.
     //   The Shell is also responsible for browser-wide issues
-    // Returns   : none
-    // Throws    : none
-    initModule = function( $container, STATIC_URL, MEDIA_URL){
+    //   Directs this app to offer its capability to the user
+    // @param $container A jQuery collection that should represent
+    // a single DOM container
+    // @param MEDIA_URL Django media url prefix (settings.MEDIA_URL)
+    // @param STATIC_URL Django static url prefix (settings.STATIC_URL)
+    // @param username account holder username for retrieving clips
+
+    initModule = function( $container, STATIC_URL, MEDIA_URL, username){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
+        stateMap.username = username;
         stateMap.$nav_sidebar = $container.parent;
         stateMap.STATIC_URL = STATIC_URL;
         stateMap.MEDIA_URL = MEDIA_URL;
@@ -352,7 +335,7 @@ var shellac = (function () {
         PubSub.on("categoryLoadComplete", display_categories);
 
         //load data into in-browser database
-        renderClips();
+        loadClips("following", username);
         renderCategories();
 
 //        console.log($container);
