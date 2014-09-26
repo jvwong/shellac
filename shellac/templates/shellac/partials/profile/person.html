@@ -1,0 +1,22 @@
+{% load staticfiles %}
+
+<!-- profile div -->
+<div class="partial-profile-person">
+    <!-- profile-image -->
+    <img class="partial-profile-person-avatar img-thumbnail"
+         src="{% if person.avatar %}
+                {{ person.avatar_thumbnail.url }}
+              {% else %}
+                {% static 'shellac/assets/avatar.jpeg' %}
+              {% endif %}" alt="{{ person.username }}" />
+
+    <div class="partial-profile-person-description">
+        <a class="partial-profile-person-url" href="{{person.get_absolute_url}}">
+            <span class="partial-profile-person-description-content lead">{{ person.username | truncatechars:15  }}</span><br />
+        </a>
+        <span class="partial-profile-person-description-content"><em>{{ person.joined|date:"M j, Y" }}</em></span><br />
+    </div>
+
+    <!-- end profile-description div -->
+</div>
+<!-- end profile div -->

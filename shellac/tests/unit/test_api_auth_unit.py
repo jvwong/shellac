@@ -134,7 +134,7 @@ class UserDetailViewSet(APITestCase):
         u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         self.client.login(username='andrea', password='a')
         response = self.client.delete('/api/users/andrea/')
-        #print(response.data)
+        #print(response)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_UserDetailViewSet_DELETE_other_bynonstaff_returns_correct_response(self):

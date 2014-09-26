@@ -2,10 +2,8 @@ from django import template
 from django.db.models import get_model
 
 #@method: do_latest_content
-#@parameters
-#   - parser: template parser
-#   - token: object representing part of template being parsed
-#@return
+# @param parser template parser
+# @param token object representing part of template being parsed
 #   - an instance of Django template Node
 def do_latest_content(parser, token):
     bits = token.split_contents()
@@ -31,15 +29,12 @@ class LatestContentNode(template.Node):
         self.varname = varname
 
     #method render
-    #parameters
-    #   - context: the dict of variables avaiable to template
-    #return
-    #   - string of output to template
+    # @param context dict of variables avaiable to template
+    # @return string of output to template
 
     def render(self, context):
         context[self.varname] = self.model._default_manager.all()[:self.n]
         return ''
-
 
 register = template.Library()
 register.tag('get_latest_content', do_latest_content)

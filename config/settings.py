@@ -159,6 +159,7 @@ INSTALLED_APPS = (
     'taggit',
     'rest_framework',
     'rest_framework.authtoken',
+    'imagekit',
 )
 
 REST_FRAMEWORK = {

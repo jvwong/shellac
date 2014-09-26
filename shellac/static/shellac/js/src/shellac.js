@@ -202,7 +202,7 @@ var shellac = (function () {
                 jsonObj.created = moment(jsonObj.created);
                 return jsonObj;
             }catch(err){
-                console.error(err);
+                console.log(err);
             }
         });
         return jsonArray;
@@ -292,7 +292,7 @@ var shellac = (function () {
                                 '<span class="media-description-content"><small>' + object.owner + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
                             '</div>' +
                             '<div class="media-progress"></div>' +
-                        '</span>' +
+                        '</span>'  +
                         //END $player
 
                     '</div>' +

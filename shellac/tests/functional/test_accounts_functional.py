@@ -1,40 +1,13 @@
-from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-# from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
-import time
-import sys
+from shellac.tests.utils.functional import FunctionalTest
 
 ##Fake user
 username_dummy = 'andrea'
 password_dummy = 'a'
 email_dummy = 'aray@outlook.com'
 
-
-class NewUserTest(StaticLiveServerTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls.server_url == cls.server_url:
-            super().tearDownClass()
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
-
-    def tearDown(self):
-        self.browser.quit()
-
+class NewUserTest(FunctionalTest):
     def test_new_user_can_sign_up(self):
 
         # A potential user hears about a new web-app that plays audio clips from sports
@@ -96,27 +69,7 @@ class NewUserTest(StaticLiveServerTestCase):
         #time.sleep(2)
 
 
-class DuplicateUserTest(StaticLiveServerTestCase):
-    @classmethod
-    def setUpClass(cls):
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
-
-    @classmethod
-    def tearDOwnClass(cls):
-        if cls.server_url == cls.server_url:
-            super().tearDownClass()
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
-
-    def tearDown(self):
-        self.browser.quit()
+class DuplicateUserTest(FunctionalTest):
 
     def test_new_user_can_sign_up(self):
 
@@ -168,27 +121,7 @@ class DuplicateUserTest(StaticLiveServerTestCase):
         #time.sleep(1)
 
 
-class ReturningUserTest(StaticLiveServerTestCase):
-    @classmethod
-    def setUpClass(cls):
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
-
-    @classmethod
-    def tearDOwnClass(cls):
-        if cls.server_url == cls.server_url:
-            super().tearDownClass()
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
-
-    def tearDown(self):
-        self.browser.quit()
+class ReturningUserTest(FunctionalTest):
 
     def test_returning_user_can_sign_in(self):
 
@@ -218,17 +151,5 @@ class ReturningUserTest(StaticLiveServerTestCase):
         #When she hits 'enter' the user is redirected to the 'profile' page
         submit_button = self.browser.find_element_by_id('signin_submit')
         submit_button.send_keys(Keys.ENTER)
-        self.assertIn('Profile', self.browser.title)
-        #check existence of sidebar
-        profile_div = self.browser.find_element_by_class_name('profile')
-        profile_lis = profile_div.find_elements_by_tag_name('li')
-
-        #check existence of profile info
-        self.assertTrue(
-            any(li.text == 'Login: ' + username_dummy for li in profile_lis)
-        )
-        self.assertTrue(
-            any(li.text == 'Email: ' + email_dummy for li in profile_lis)
-        )
-
+        self.assertIn('App', self.browser.title)
         #time.sleep(1)

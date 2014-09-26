@@ -70,7 +70,7 @@
 
                         {% block navbar-collapse-right-bar %}
                         <li id="nav-navbar-right-bar-help"><a href="">Help</a></li>
-                        <li id="nav-navbar-right-bar-user"><a href="{% url 'shellac_profile' %}">{{user.username}}</a></li>
+                        <li id="nav-navbar-right-bar-user"><a href="{{ user.person.get_absolute_url }}">{{user.username}}</a></li>
                         <li id="nav-navbar-right-bar-listen"><a href="{% url 'shellac_app' %}"><span class="glyphicon glyphicon-headphones"></span></a></li>
                         <li id="nav-navbar-right-bar-record"><a href="{% url 'shellac_clips_create' %}"><span class="glyphicon glyphicon-record"></span></a></li>
                         <li id="nav-navbar-right-bar-tune"><a href="{% url 'shellac_tune' %}"><span class="glyphicon glyphicon-globe"></span></a></li>
@@ -81,7 +81,7 @@
                         <li id=" nav-navbar-right-dropdown" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a id="navbar-collapse-right-dropdown-profile" href="{% url 'shellac_profile' %}">Profile</a></li>
+                                <li><a id="navbar-collapse-right-dropdown-profile" href="{{ user.person.get_absolute_url }}">Profile</a></li>
                                 <li class="divider"></li>
                                 <li><a id="navbar-collapse-right-dropdown-signout" href="{% url 'shellac_accounts_signout' %}?next={{ request.path }}">Signout</a></li>
                             </ul>

@@ -29,11 +29,6 @@ c = {
 # a new Clip object.
 class NewClipTest(FunctionalTest):
 
-    def tearDown(self):
-        for clip in Clip.objects.all():
-            clip.delete(False)
-        super(NewClipTest, self).tearDown()
-
     def test_user_can_add_a_clip_and_view_permalink(self):
         self.create_pre_authenticated_session(u['username_dummy'])
         self.browser.get(self.server_url + '/clips/create')

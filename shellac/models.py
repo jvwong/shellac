@@ -8,19 +8,26 @@ from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
 
 from taggit.managers import TaggableManager
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 from shellac.fixtures import categories
-
-
 
 ## One-to-one model -- extend User to accomodate relationships
 class PersonManager(models.Model):
     pass
 
 ## One-to-one model -- extend User to accomodate relationships
+APP_DIR = os.path.abspath(os.path.dirname(__file__))
+DEFAULT_AVATAR = os.path.abspath(os.path.join(APP_DIR, './static/shellac/assets/avatar.jpeg'))
 class Person(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     username = models.CharField(max_length=30, editable=False)
     joined = models.DateTimeField(auto_now_add=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars', blank=True)
+    avatar_thumbnail = ImageSpecField(source='avatar',
+                                      processors=[ResizeToFill(150, 150)],
+                                      format='JPEG',
+                                      options={'quality': 60})
     relationships = models.ManyToManyField('self',
                                            through='Relationship',
                                            symmetrical=False,
@@ -99,7 +106,18 @@ class Person(models.Model):
     class Meta:
         verbose_name_plural = "People"
 
+    def get_absolute_url(self):
+        return ('shellac_profile', (), {'username': self.username})
+    get_absolute_url = models.permalink(get_absolute_url)
+
     objects = PersonManager()
+
+@receiver(post_delete, sender=Person)
+def on_user_delete(sender, instance, **kwargs):
+    if instance.avatar:
+        if os.path.isfile(instance.avatar.url):
+            os.remove(instance.avatar.url)
+
 
 # Receive the post_save signal
 @receiver(post_save, sender=User)
@@ -195,9 +213,11 @@ class Clip(models.Model):
     description = models.TextField(blank=True)
 
     ###upload to subdirectory with user id prefixed
-    ### -- /media/brands/<userid>/filename
-    brand = models.ImageField(upload_to='brands/%Y/%m/%d',
-                              blank=True)
+    brand = models.ImageField(upload_to='brands/%Y/%m/%d', blank=True)
+    brand_thumbnail = ImageSpecField(source='brand',
+                                     processors=[ResizeToFill(150, 150)],
+                                     format='JPEG',
+                                     options={'quality': 60})
 
     ### Default
     plays = models.PositiveSmallIntegerField(default=0, editable=False)
@@ -249,8 +269,6 @@ class Clip(models.Model):
         return cats
 
     objects = ClipManager()
-
-
 
 
 @receiver(post_delete, sender=Clip)

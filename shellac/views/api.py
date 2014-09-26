@@ -136,6 +136,9 @@ class ClipListFollowingView(generics.ListAPIView):
             clips = [p.clips.all() for p in following]
             data = list(chain(*clips))
 
+            # For the result_list, you may want to sort. Adding sorting columns as need.
+            data.sort(key=lambda x: x.created, reverse=True)
+
             serializer = ClipSerializer(data, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except IOError:

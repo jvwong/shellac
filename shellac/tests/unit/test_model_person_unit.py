@@ -34,6 +34,19 @@ class PersonModelTest(TestCase):
         self.assertIsNotNone(Person.objects.get(user=u1).relationships)
 
 
+    # def test_creating_User_accompanied_by_Person_default_avatar_creation(self):
+    #
+    #     u1 = User.objects.create_user(username=username1, password=password1)
+    #     person = User.objects.get(username=username1).person
+    #
+    #     self.assertTrue(Person.objects.all().count(), 1)
+    #
+    #     #Verify the avatar attribute exists on the User
+    #     self.assertIsNotNone(person.avatar)
+    #     self.assertEqual(person.avatar.url, '/media/avatars/avatar.jpeg')
+
+
+
 class RelationshipModelTest(TestCase):
 
     def test_creating_add_and_remove_relationship_FOLLOWING(self):
