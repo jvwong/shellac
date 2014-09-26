@@ -158,8 +158,7 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'taggit',
     'rest_framework',
-    'rest_framework.authtoken',
-    'imagekit',
+    'rest_framework.authtoken'
 )
 
 REST_FRAMEWORK = {

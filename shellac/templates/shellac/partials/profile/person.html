@@ -5,7 +5,7 @@
     <!-- profile-image -->
     <img class="partial-profile-person-avatar img-thumbnail"
          src="{% if person.avatar %}
-                {{ person.avatar_thumbnail.url }}
+                {{ person.avatar.url }}
               {% else %}
                 {% static 'shellac/assets/avatar.jpeg' %}
               {% endif %}" alt="{{ person.username }}" />

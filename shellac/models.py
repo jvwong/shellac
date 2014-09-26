@@ -8,8 +8,6 @@ from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
 
 from taggit.managers import TaggableManager
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
 from shellac.fixtures import categories
 
 ## One-to-one model -- extend User to accomodate relationships
@@ -24,10 +22,6 @@ class Person(models.Model):
     username = models.CharField(max_length=30, editable=False)
     joined = models.DateTimeField(auto_now_add=True, blank=True)
     avatar = models.ImageField(upload_to='avatars', blank=True)
-    avatar_thumbnail = ImageSpecField(source='avatar',
-                                      processors=[ResizeToFill(150, 150)],
-                                      format='JPEG',
-                                      options={'quality': 60})
     relationships = models.ManyToManyField('self',
                                            through='Relationship',
                                            symmetrical=False,
@@ -214,10 +208,6 @@ class Clip(models.Model):
 
     ###upload to subdirectory with user id prefixed
     brand = models.ImageField(upload_to='brands/%Y/%m/%d', blank=True)
-    brand_thumbnail = ImageSpecField(source='brand',
-                                     processors=[ResizeToFill(150, 150)],
-                                     format='JPEG',
-                                     options={'quality': 60})
 
     ### Default
     plays = models.PositiveSmallIntegerField(default=0, editable=False)
