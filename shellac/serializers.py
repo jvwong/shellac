@@ -32,6 +32,13 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'username', 'first_name', 'last_name', 'joined',
                   'clips', 'relationships')
 
+class PaginatedPersonSerializer(pagination.PaginationSerializer):
+    """
+    Serializes page objects of user querysets.
+    """
+    class Meta:
+        object_serializer_class = PersonSerializer
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -424,6 +424,6 @@ class ClipListFollowingView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, 'results')
 
-        #results = response.data['results']
+        results = response.data['results']
         #print(results)
-        # self.assertEqual(len(results), n)
+        self.assertEqual(len(results), n)

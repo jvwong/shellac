@@ -16,7 +16,8 @@ from django.conf import settings
 from shellac.models import Clip, Category, Person, Relationship
 from shellac.serializers import CategorySerializer, UserSerializer, \
     ClipSerializer, PaginatedClipSerializer, \
-    PersonSerializer, RelationshipSerializer
+    PersonSerializer, PaginatedPersonSerializer, \
+    RelationshipSerializer
 from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, \
     UserIsAdminOrPost, RelationshipIsOwnerOrAdminOrReadOnly
 from shellac.viewsets import DetailViewSet, ListViewSet
@@ -224,32 +225,37 @@ class PersonListStatusView(generics.ListCreateAPIView):
             return Response({'invalid status'}, status.HTTP_400_BAD_REQUEST)
 
         #Retrieve following set (get_following) for Person corresponding to User
+        user = get_object_or_404(User, username=username)
+        data = Person.objects.none()
+
+        if qstatus == 'following':
+            data = user.person.get_following().order_by('username')
+        elif qstatus == 'followers':
+            data = user.person.get_followers().order_by('username')
+        elif qstatus == 'friends':
+            data = user.person.get_friends().order_by('username')
+        ##Authenticated User can only view own blocked list
+        elif qstatus == 'blocked':
+            if user == request.user:
+                data = user.person.get_blocked().order_by('username')
+
+        #print(type(data))
+        #print(data)
+        page_size = request.QUERY_PARAMS.get('page_size', settings.REST_FRAMEWORK.get('PAGINATE_BY', '50'))
+        page = request.QUERY_PARAMS.get('page')
+        paginator = Paginator(data, page_size)
         try:
-            user = get_object_or_404(User, username=username)
-            data = None
+            person_page = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            person_page = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999),
+            # deliver last page of results.
+            person_page = paginator.page(paginator.num_pages)
 
-            if qstatus == 'following':
-                data = user.person.get_following().order_by('username')
-
-            elif qstatus == 'followers':
-                data = user.person.get_followers().order_by('username')
-
-            elif qstatus == 'friends':
-                data = user.person.get_friends().order_by('username')
-
-            ##Authenticated User can only view own blocked list
-            elif qstatus == 'blocked':
-                if user == request.user:
-                    data = user.person.get_blocked().order_by('username')
-                else:
-                    data = Person.objects.none()
-
-            if data is not None:
-                serializer = PersonSerializer(data, many=True, context={'request': request})
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response({'Error: no data '}, status=status.HTTP_400_BAD_REQUEST)
-        except IOError:
-            return Response({'IOError'}, status.HTTP_400_BAD_REQUEST)
+        serializer = PaginatedPersonSerializer(person_page, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class PersonDetailView(generics.RetrieveAPIView):

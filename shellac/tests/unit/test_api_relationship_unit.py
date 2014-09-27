@@ -141,7 +141,7 @@ class PersonListStatusView(APITestCase):
 
         qurl = '/api/people/following/' + self.person.username + '/'
         response = self.client.get(qurl)
-        resp = json.loads(response.content.decode())
+        resp = json.loads(response.content.decode())['results']
         #print((resp))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -155,7 +155,7 @@ class PersonListStatusView(APITestCase):
 
         qurl = '/api/people/followers/' + self.person.username + '/'
         response = self.client.get(qurl)
-        resp = json.loads(response.content.decode())
+        resp = json.loads(response.content.decode())['results']
         #print((resp))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -169,7 +169,7 @@ class PersonListStatusView(APITestCase):
 
         qurl = '/api/people/friends/' + self.person.username + '/'
         response = self.client.get(qurl)
-        resp = json.loads(response.content.decode())
+        resp = json.loads(response.content.decode())['results']
         #print((resp))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -181,12 +181,27 @@ class PersonListStatusView(APITestCase):
     def test_PersonListStatusView_GET_blocked_returns_correct_Person_list(self):
         qurl = '/api/people/blocked/' + self.person.username + '/'
         response = self.client.get(qurl)
-        resp = json.loads(response.content.decode())
+        resp = json.loads(response.content.decode())['results']
         #print((resp))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(resp), 0)
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+
+    def test_PersonListStatusView_GET_paginate_returns_correct_number_of_records(self):
+        n = 1
+        qstatus = 'following'
+        qusername = 'jvwong'
+        qurl = '/api/people/followers/' + self.person.username + '/.json?page_size=' + str(n)
+
+        response = self.client.get(qurl)
+        #print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'results')
+
+        results = response.data['results']
+        #print(results)
+        self.assertEqual(len(results), n)
 
 
 # """
