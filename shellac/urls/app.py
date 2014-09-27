@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url('', include('social.apps.django_app.urls', namespace='social')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
     url(r'^$', shellac_app, name='shellac_app'),
+    url(r'^app/(?P<username>[\w.@+-]+)/$', shellac_app, name='shellac_app'),
     url(r'^profile/(?P<username>[\w.@+-]+)/$', user_profile, name='shellac_profile'),
     url(r'^tune/', shellac_tune, name='shellac_tune'),
 

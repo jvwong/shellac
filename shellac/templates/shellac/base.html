@@ -71,7 +71,7 @@
                         {% block navbar-collapse-right-bar %}
                         <li id="nav-navbar-right-bar-help"><a href="">Help</a></li>
                         <li id="nav-navbar-right-bar-user"><a href="{{ user.person.get_absolute_url }}">{{user.username}}</a></li>
-                        <li id="nav-navbar-right-bar-listen"><a href="{% url 'shellac_app' %}"><span class="glyphicon glyphicon-headphones"></span></a></li>
+                       {# <li id="nav-navbar-right-bar-listen"><a href="{% url 'shellac_app' user.person.username %}"><span class="glyphicon glyphicon-headphones"></span></a></li> #}
                         <li id="nav-navbar-right-bar-record"><a href="{% url 'shellac_clips_create' %}"><span class="glyphicon glyphicon-record"></span></a></li>
                         <li id="nav-navbar-right-bar-tune"><a href="{% url 'shellac_tune' %}"><span class="glyphicon glyphicon-globe"></span></a></li>
 

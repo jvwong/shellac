@@ -3,12 +3,14 @@
 <!-- profile div -->
 <div class="partial-profile-person">
     <!-- profile-image -->
-    <img class="partial-profile-person-avatar img-thumbnail"
-         src="{% if person.avatar %}
-                {{ person.avatar.url }}
-              {% else %}
-                {% static 'shellac/assets/avatar.jpeg' %}
-              {% endif %}" alt="{{ person.username }}" />
+    <a class="partial-profile-person-app" href="{% url 'shellac_app' person.username %}">
+        <img class="partial-profile-person-avatar img-responsive img-thumbnail"
+             src="{% if person.avatar %}
+                    {{ person.avatar.url }}
+                  {% else %}
+                    {% static 'shellac/assets/avatar.jpeg' %}
+                  {% endif %}" alt="{{ person.username }}" />
+    </a>
 
     <div class="partial-profile-person-description">
         <a class="partial-profile-person-url" href="{{person.get_absolute_url}}">
@@ -16,7 +18,6 @@
         </a>
         <span class="partial-profile-person-description-content"><em>{{ person.joined|date:"M j, Y" }}</em></span><br />
     </div>
-
     <!-- end profile-description div -->
 </div>
 <!-- end profile div -->

@@ -17,6 +17,11 @@ class AppPageTest(TestCase):
         found = resolve('/')
         self.assertEqual(found.func, shellac_app)
 
+    # line up view for '/app/(?<username>[\w.@+-]+)/' with app_page
+    def test_root_url_resolvers_to_app_page_view(self):
+        found = resolve('/app/jvwong/')
+        self.assertEqual(found.func, shellac_app)
+
     #This is dynamic javascript so cannot judge html
     def test_app_page_returns_correct_template(self):
         user = User.objects.create_user(username_dummy, password_dummy, email_dummy)

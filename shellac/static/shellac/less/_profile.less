@@ -3,41 +3,33 @@
  */
 @import "_elements";
 
-@media_margin_bottom: 4px;
-@media_margin_top: 0px;
-@media_margin_left: 2px;
-@caption_opacity: 0.8;
-@caption_opacity_playing: 0.8;
-@progress_opacity: 1.0;
-@media_desc_padding: 5px;
-@media_max_dim: 350px;
+@profile_margin_bottom: 4px;
+@profile_margin_top: 0px;
+@profile_margin_left: 12em;
+@profile_caption_opacity: 0.7;
+@profile_desc_padding: 1em;
+@profile_avatar_max_dim: 15em;
 
 .partial-profile-person {
-    width: 95%;
 
-     .partial-profile-person-avatar{
-
+    img.partial-profile-person-avatar{
+        left: 2em;
+        width: @profile_avatar_max_dim;
+        height: @profile_avatar_max_dim;
+        float: left;
     }
 
     .partial-profile-person-description{
-        //position:absolute; /* absolute position (so we can position it where we want)*/
-        bottom:0px; /* position will be on bottom */
-        left:0px;
-        width:100%;
-
-        margin-left: @media_margin_left;
-        padding: @media_desc_padding;
-        padding-left: 2*@media_desc_padding;
+        height: @profile_avatar_max_dim;
+        margin-left: @profile_avatar_max_dim + 1em;
+        padding: @profile_desc_padding;
+        padding-left: 2*@profile_desc_padding;
 
         /* styling bellow */
         background-color: black;
         background: black;
         color: white;
-        .opacity(@caption_opacity);
-
-        p.media-description-content{
-            margin:0px;
-        }
+        .opacity(@profile_caption_opacity);
     }
 
 
@@ -45,10 +37,4 @@
 }
 
 @media (max-width: 768px) {
-
-    .media.clip {
-        padding-left: 0px;
-        padding-right: 0px;
-
-    }
 }

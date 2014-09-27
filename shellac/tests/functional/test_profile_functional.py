@@ -33,6 +33,15 @@ class ProfileTest(FunctionalTest):
         self.assertEqual(detail_list[0].text, self.user.person.username)
         self.assertIn(self.user.person.joined.strftime("%d, %Y"), detail_list[1].text)
 
+    def test_profile_page_can_navigate_to_clip_app(self):
+        app_link = self.browser.find_element_by_css_selector('.content-profile .partial-profile-person-app')
+        print(app_link)
+        app_link.click()
+
+        title = self.browser.find_element_by_tag_name('title')
+        self.assertIn(title.text, 'App')
+
+
 
 
 

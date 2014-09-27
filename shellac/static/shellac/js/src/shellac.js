@@ -280,7 +280,7 @@ var shellac = (function () {
         stateMap.clips.forEach(function(object){
 
             var clip = String() +
-                '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 media clip">' +
+                '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 media clip">' +
                     '<div class="ui360">' +
 
                         //BEGIN $player
