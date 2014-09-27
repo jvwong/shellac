@@ -85,7 +85,7 @@ var shellac = (function () {
     parseCategoryData, renderCategories, display_categories,
     parseClipData, loadClips, display_clips,
 
-    onClickCategory, onTapStatusBar, onSwipeStatusBar,
+    onClickCategory, onTapStatusBar, onSwipeSideBar,
 
     PubSub = util.PubSub;
 
@@ -350,8 +350,8 @@ var shellac = (function () {
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
-    onSwipeStatusBar = function(evt){
-//        console.log("tap deteceted");
+    onSwipeSideBar = function(evt){
+//        console.log("swipe deteceted");
 //        console.log(evt);
         evt.preventDefault();
         jqueryMap.$app_container.toggleClass('nav-expanded');
@@ -396,10 +396,9 @@ var shellac = (function () {
         $( '.shellac-app-statusbar' )
             .on( 'utap.utap',   onTapStatusBar   );
 
-        $( '.shellac-app-sidebar' )
-            .bind( 'udragstart.udrag', onSwipeStatusBar )
-            .bind( 'udragmove.udrag',  function(){} )
-            .bind( 'udragend.udrag',   function(){} );
+        $( '.shellac-app.sidebar' )
+            .on( 'udragstart.udrag', onSwipeSideBar );
+
         jqueryMap.$statusbar_playing.html(username);
 
         console.log(jqueryMap.$nav_sidebar);
