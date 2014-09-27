@@ -5,80 +5,6 @@
 <!-- Head -->
     {% block title %}App{% endblock title %}
     {% block head %}
-        <style type="text/css">
-            a.nav-expander {
-                background: none repeat scroll 0 0 #000000;
-                color: #FFFFFF;
-                display: block;
-                font-size: 15px;
-                font-weight: 400;
-                height: 50px;
-                margin-right: 0;
-                padding: 1em 1.6em 2em;
-                position: absolute;
-                right: 0;
-                text-decoration: none;
-                text-transform: uppercase;
-                top: 15;
-                transition: right 0.3s ease-in-out 0s;
-                width: 130px;
-                z-index: 12;
-
-                transition: right 0.3s ease-in-out 0s;
-                -webkit-transition: right 0.3s ease-in-out 0s;
-                -moz-transition: right 0.3s ease-in-out 0s;
-                -o-transition: right 0.3s ease-in-out 0s;
-
-            }
-
-            a.nav-expander:hover {
-                cursor: pointer;
-            }
-
-            a.nav-expander.fixed {
-                position: fixed;
-            }
-
-            .nav-expanded .shellac-app.sidebar {
-                left: 0em;
-
-                transition: right 0.3s ease-in-out 0s;
-                -webkit-transition: left 0.3s ease-in-out 0s;
-                -moz-transition: left 0.3s ease-in-out 0s;
-                -o-transition: left 0.3s ease-in-out 0s;
-            }
-
-            .shellac-app.sidebar {
-                background: #2d2f33;
-                display: block;
-                height: 100%;
-                overflow: auto;
-                position: fixed;
-                left: -18em;
-                font-size: 15px;
-                top: 4em;
-                width: 20em;
-                z-index: 2000;
-
-                transition: left 0.3s ease-in-out 0s;
-                -webkit-transition: left 0.3s ease-in-out 0s;
-                -moz-transition: left 0.3s ease-in-out 0s;
-                -o-transition: left 0.3s ease-in-out 0s;
-
-            }
-            .nav-expanded .shellac-app.sidebar {
-                right: 0;
-            }
-
-            .shellac-app-container.nav-expanded {
-                margin-left: 0em;
-                transition: right 0.4s ease-in-out 0s;
-                -webkit-transition: right 0.4s ease-in-out 0s;
-                -moz-transition: right 0.4s ease-in-out 0s;
-                -o-transition: right 0.4s ease-in-out 0s;
-            }
-
-        </style>
         <script type="text/javascript"> var STATIC_URL = "{{ STATIC_URL }}", MEDIA_URL = "{{ MEDIA_URL }}", username = "{{ username }}"</script>
         <script type="text/javascript" src="{% static 'shellac/js/dist/bundle.js' %}"></script>
     {% endblock head %}
@@ -87,4 +13,10 @@
     {% block main %}
         <div id="shellac-app"></div>
     {% endblock main %}
+
+
+<!-- Footer -->
+    {% block footer %}
+    {% endblock footer %}
+
 

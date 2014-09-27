@@ -20,12 +20,14 @@ var shellac = (function () {
     initModule,
 
     configMap = {
+
         main_html: String() +
             '<div class="shellac-app-container">' +
 
+                '<div class="shellac-app-statusbar">Playlist: <span class="shellac-app-statusbar-playing"></span></div>' +
+
                 '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
                     '<div class="panel-group" id="accordion">' +
-                        '<p class="text-right"><a href="#" id="nav-close">X</a></p>' +
                         '<div class="panel panel-default">' +
                             '<div class="panel-heading">' +
                                 '<a data-toggle="collapse" data-parent="#accordion" href="#collapseCategories">' +
@@ -56,14 +58,6 @@ var shellac = (function () {
                 '<div class="shellac-app clip content"></div>' +
             '</div>',
 
-
-        offcanvas_html: String() +
-            '<div class="navbar-header pull-right">' +
-                '<a id="nav-expander" class="nav-expander fixed">' +
-                'MENU &nbsp;<i class="fa fa-bars fa-lg white"></i>' +
-                '</a>' +
-            '</div>',
-
         truncatemax: 25
     },
 
@@ -91,7 +85,7 @@ var shellac = (function () {
     parseCategoryData, renderCategories, display_categories,
     parseClipData, loadClips, display_clips,
 
-    onClickCategory,
+    onClickCategory, onTapStatusBar, onSwipeStatusBar,
 
     PubSub = util.PubSub;
 
@@ -105,6 +99,8 @@ var shellac = (function () {
         jqueryMap = {
             $outerDiv               : $outerDiv,
             $app_container          : $outerDiv.find('.shellac-app-container'),
+            $statusbar              : $outerDiv.find('.shellac-app-statusbar'),
+            $statusbar_playing      : $outerDiv.find('.shellac-app-statusbar .shellac-app-statusbar-playing'),
             $nav_sidebar            : $outerDiv.find('.shellac-app.sidebar'),
             $nav_sidebar_categories : $outerDiv.find('.shellac-app.sidebar #collapseCategories .shellac-app.nav.nav-sidebar.list-group'),
             $nav_sidebar_people     : $outerDiv.find('.shellac-app.sidebar #collapsePeople .shellac-app.nav.nav-sidebar.list-group'),
@@ -347,6 +343,20 @@ var shellac = (function () {
         );
     };
 
+    onTapStatusBar = function(evt){
+//        console.log("tap deteceted");
+//        console.log(evt);
+        evt.preventDefault();
+        jqueryMap.$app_container.toggleClass('nav-expanded');
+    };
+
+    onSwipeStatusBar = function(evt){
+//        console.log("tap deteceted");
+//        console.log(evt);
+        evt.preventDefault();
+        jqueryMap.$app_container.toggleClass('nav-expanded');
+    };
+
 
 
     //-------------------- END EVENT HANDLERS --------------------
@@ -383,15 +393,16 @@ var shellac = (function () {
         renderCategories();
 
         //Navigation Menu Slider
-        $('#nav-expander').on('click',function(e){
-            e.preventDefault();
-            $('body').toggleClass('nav-expanded');
-        });
-        $('#nav-close').on('click',function(e){
-            e.preventDefault();
-            $('body').removeClass('nav-expanded');
-        });
-        console.log($container);
+        $( '.shellac-app-statusbar' )
+            .on( 'utap.utap',   onTapStatusBar   );
+
+        $( '.shellac-app-sidebar' )
+            .bind( 'udragstart.udrag', onSwipeStatusBar )
+            .bind( 'udragmove.udrag',  function(){} )
+            .bind( 'udragend.udrag',   function(){} );
+        jqueryMap.$statusbar_playing.html(username);
+
+        console.log(jqueryMap.$nav_sidebar);
     };
 
     return { initModule: initModule };
