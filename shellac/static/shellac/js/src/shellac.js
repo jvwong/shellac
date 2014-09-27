@@ -154,7 +154,8 @@ var shellac = (function () {
             url: url
         })
             .done(function(clips){
-                stateMap.clip_db.insert(parseClipData(clips));
+                //console.log(clips);
+                stateMap.clip_db.insert(parseClipData(clips['results']));
                 stateMap.clips = stateMap.clip_db().order("id desc").get();
                 console.log(stateMap.clips);
                 PubSub.emit("clipLoadComplete");
