@@ -350,12 +350,12 @@ var shellac = (function () {
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
-    onSwipeSideBar = function(evt){
-//        console.log("swipe deteceted");
-//        console.log(evt);
-        evt.preventDefault();
-        jqueryMap.$app_container.toggleClass('nav-expanded');
-    };
+//    onSwipeSideBar = function(evt){
+////        console.log("swipe deteceted");
+////        console.log(evt);
+//        evt.preventDefault();
+//        jqueryMap.$app_container.toggleClass('nav-expanded');
+//    };
 
 
 
