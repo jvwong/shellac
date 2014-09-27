@@ -29,14 +29,14 @@ class Api_Root(APITestCase):
 
 
 ### API categories(/api/categories/)
-class Api_Category_Root(APITestCase):
+class CategoryViewSet(APITestCase):
 
     # line up view for '/'
-    def test_api_root_category_url_resolves_to_api_categorylist_view(self):
+    def test_CategoryViewSet_url_resolves_to_correct_view(self):
         url = reverse('category-list')
         self.assertEqual(url, '/api/categories/')
 
-    def test_CategoryList_GET_returns_correct_response(self):
+    def test_CategoryViewSet_GET_returns_correct_response(self):
         User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         self.client.login(username='andrea', password='a')
 
@@ -52,7 +52,7 @@ class Api_Category_Root(APITestCase):
         self.assertIn('"clips": []', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
-    def test_CategoryList_POST_creates_and_returns_correct_response(self):
+    def test_CategoryViewSet_POST_creates_and_returns_correct_response(self):
         # Category.objects.autopopulate()
         User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         self.client.login(username='andrea', password='a')
@@ -70,7 +70,7 @@ class Api_Category_Root(APITestCase):
         self.assertEqual(response.data['clips'], [])
 
 
-    def test_CategoryList_POST_with_token_auth_creates_and_returns_correct_response(self):
+    def test_CategoryViewSet_POST_with_token_auth_creates_and_returns_correct_response(self):
 
         #make some users
         user = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
@@ -93,6 +93,21 @@ class Api_Category_Root(APITestCase):
         self.assertEqual(response.data['title'], "CAT1")
         self.assertEqual(response.data['description'], "cat1 description")
         self.assertEqual(response.data['clips'], [])
+
+    def test_CategoryViewSet_GET_paginate_returns_correct_number_of_records(self):
+        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        self.client.login(username='andrea', password='a')
+        Category.objects.autopopulate()
+
+        n = 1
+
+        response = self.client.get('/api/categories/.json?page_size=' + str(n))
+        #print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        results = response.data['results']
+        #print(results)
+        self.assertEqual(len(results), n)
 
 
 

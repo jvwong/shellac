@@ -72,7 +72,7 @@ class ClipListViewSet(APITestCase):
         cleanClips()
 
 
-    def test_ClipList_POST_creates_and_returns_correct_response(self):
+    def test_ClipListViewSet_POST_creates_and_returns_correct_response(self):
 
         #make some users
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
@@ -105,7 +105,7 @@ class ClipListViewSet(APITestCase):
         cleanClips()
 
 
-    def test_ClipList_POST_returns_corrent_authorization_token(self):
+    def test_ClipListViewSet_POST_returns_corrent_authorization_token(self):
 
         #make some users
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
@@ -126,7 +126,7 @@ class ClipListViewSet(APITestCase):
         self.assertEqual(token[0].key, data['token'])
 
 
-    def test_ClipList_POST_with_token_auth_creates_and_returns_correct_response(self):
+    def test_ClipListViewSet_POST_with_token_auth_creates_and_returns_correct_response(self):
 
         #make some users
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
@@ -165,6 +165,29 @@ class ClipListViewSet(APITestCase):
         self.assertEqual(data['owner'], 'andrea')
 
         cleanClips()
+
+    def test_ClipListViewSet_GET_paginate_returns_correct_number_of_records(self):
+        ##authenticate REST style
+        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+
+        #create the clips
+        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1.description = "clip1 description"
+        setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
+        clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
+        clip2.description = "clip2 description"
+        setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
+
+        n = 1
+
+        self.client.login(username='andrea', password='a')
+        response = self.client.get('/api/people/.json?page_size=' + str(n))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        results = response.data['results']
+        #print(results)
+        self.assertEqual(len(results), n)
 
 
 class ClipDetailViewSet(APITestCase):

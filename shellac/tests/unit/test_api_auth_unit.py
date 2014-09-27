@@ -50,6 +50,24 @@ class UserListViewSet(APITestCase):
         self.assertIn('"username": "ronald"', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
+    def test_UserListViewSet_GET_paginate_returns_correct_number_of_records(self):
+        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        u.is_staff = True
+        u.save()
+        u2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+        self.assertEqual(User.objects.all().count(), 2)
+
+        n = 1
+
+        self.client.login(username='andrea', password='a')
+        response = self.client.get('/api/users/.json?page_size=' + str(n))
+        #print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        results = response.data['results']
+        #print(results)
+        self.assertEqual(len(results), n)
+
 
 
 class UserDetailViewSet(APITestCase):

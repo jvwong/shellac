@@ -61,7 +61,6 @@ class RelationshipListViewSet(ListViewSet):
         return Response({'from_person': 'from_user does not match authenticated User'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class RelationshipDetailViewSet(DetailViewSet):
     lookup_field = 'pk'
     queryset = Relationship.objects.all()
@@ -99,14 +98,14 @@ class ClipListViewSet(ListViewSet):
     def pre_save(self, obj):
         obj.author = Person.objects.get(user=self.request.user)
 
-    def get_paginate_by(self):
-        #print(self.request.accepted_renderer.format)
-        if self.request.accepted_renderer.format == 'api':
-            return 20
-        elif self.request.accepted_renderer.format == 'json':
-            return 100
-        else:
-            return 100
+    # def get_paginate_by(self):
+    #     #print(self.request.accepted_renderer.format)
+    #     if self.request.accepted_renderer.format == 'api':
+    #         return 20
+    #     elif self.request.accepted_renderer.format == 'json':
+    #         return 100
+    #     else:
+    #         return 100
 
 
 class ClipListFollowingView(generics.ListAPIView):
@@ -143,6 +142,15 @@ class ClipListFollowingView(generics.ListAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except IOError:
             return Response({'IOError'}, status.HTTP_400_BAD_REQUEST)
+
+    # def get_paginate_by(self):
+    #     #print(self.request.accepted_renderer.format)
+    #     if self.request.accepted_renderer.format == 'api':
+    #         return 2
+    #     elif self.request.accepted_renderer.format == 'json':
+    #         return 2
+    #     else:
+    #         return 2
 
 
 class ClipDetailViewSet(DetailViewSet):
@@ -199,6 +207,7 @@ class PersonListView(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
+
 class PersonListStatusView(generics.ListCreateAPIView):
     """
     List by status for User with username;
@@ -247,6 +256,7 @@ class PersonListStatusView(generics.ListCreateAPIView):
             return Response({'Error: no data '}, status=status.HTTP_400_BAD_REQUEST)
         except IOError:
             return Response({'IOError'}, status.HTTP_400_BAD_REQUEST)
+
 
 class PersonDetailView(generics.RetrieveAPIView):
     """

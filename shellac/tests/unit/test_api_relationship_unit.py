@@ -73,6 +73,23 @@ class PersonListView(APITestCase):
         self.assertIn('"username": "andrea"', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
+    def test_PersonListView_GET_paginate_returns_correct_number_of_records(self):
+        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        u.is_staff = True
+        u.save()
+        u2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+        self.assertEqual(User.objects.all().count(), 2)
+
+        n = 1
+
+        self.client.login(username='andrea', password='a')
+        response = self.client.get('/api/people/.json?page_size=' + str(n))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        results = response.data['results']
+        #print(results)
+        self.assertEqual(len(results), n)
+
 
 class PersonDetailView(APITestCase):
 
@@ -251,6 +268,19 @@ class RelationshipListViewSet(APITestCase):
         self.assertEqual(response.data['from_person'], surlname)
         self.assertEqual(response.data['to_person'], qurlname)
         self.assertEqual(response.data['status'], qstat)
+
+
+    def test_RelationshipListViewSet_GET_paginate_returns_correct_number_of_records(self):
+        n = 1
+        self.assertEqual(Relationship.objects.all().count(), 6)
+
+        self.client.login(username='jvwong', password='b')
+        response = self.client.get('/api/relationships/.json?page_size=' + str(n))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        results = response.data['results']
+        #print(results)
+        self.assertEqual(len(results), n)
 
 
 

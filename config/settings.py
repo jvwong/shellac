@@ -176,7 +176,9 @@ REST_FRAMEWORK = {
         'user': '1000/day',
 
     },
-    'PAGINATE_BY': 50,
+    'PAGINATE_BY': 2,                 # Default to 20
+    'PAGINATE_BY_PARAM': 'page_size',  # Allow client to override, using `?page_size=xxx`.
+    'MAX_PAGINATE_BY': 250             # Maximum limit allowed when using `?page_size=xxx`.
 }
 
 LOGIN_URL = '/accounts/signin/'

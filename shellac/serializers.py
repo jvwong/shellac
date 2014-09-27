@@ -1,7 +1,10 @@
-from rest_framework import serializers
-from shellac.models import Category, Clip, Person, Relationship
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+
+from rest_framework import serializers
+from rest_framework import pagination
+
+from shellac.models import Category, Clip, Person, Relationship
 
 
 class RelationshipSerializer(serializers.HyperlinkedModelSerializer):
