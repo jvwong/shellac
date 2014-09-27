@@ -396,7 +396,7 @@ var shellac = (function () {
         $( '.shellac-app-statusbar' )
             .on( 'utap.utap',   onTapStatusBar   );
 
-        $( '.shellac-app.sidebar' )
+        $( '.shellac-app.sidebar').parent()
             .on( 'udragstart.udrag', onSwipeSideBar );
 
         jqueryMap.$statusbar_playing.html(username);
