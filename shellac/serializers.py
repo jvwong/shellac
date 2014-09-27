@@ -100,3 +100,11 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
         # Create new instance
         attrs.pop('categories', None)
         return Clip(**attrs)
+
+
+class PaginatedClipSerializer(pagination.PaginationSerializer):
+    """
+    Serializes page objects of user querysets.
+    """
+    class Meta:
+        object_serializer_class = ClipSerializer

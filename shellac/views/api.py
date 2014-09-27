@@ -1,4 +1,3 @@
-from itertools import chain
 from urllib.parse import urlparse
 
 from rest_framework.response import Response
@@ -12,10 +11,12 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.conf import settings
 
 from shellac.models import Clip, Category, Person, Relationship
 from shellac.serializers import CategorySerializer, UserSerializer, \
-    ClipSerializer, PersonSerializer, RelationshipSerializer
+    ClipSerializer, PaginatedClipSerializer, \
+    PersonSerializer, RelationshipSerializer
 from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, \
     UserIsAdminOrPost, RelationshipIsOwnerOrAdminOrReadOnly
 from shellac.viewsets import DetailViewSet, ListViewSet
@@ -98,20 +99,12 @@ class ClipListViewSet(ListViewSet):
     def pre_save(self, obj):
         obj.author = Person.objects.get(user=self.request.user)
 
-    # def get_paginate_by(self):
-    #     #print(self.request.accepted_renderer.format)
-    #     if self.request.accepted_renderer.format == 'api':
-    #         return 20
-    #     elif self.request.accepted_renderer.format == 'json':
-    #         return 100
-    #     else:
-    #         return 100
-
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 class ClipListFollowingView(generics.ListAPIView):
-    model = Clip
-    serializer_class = ClipSerializer
     permission_classes = (permissions.IsAuthenticated, )
+    paginate_by = 10
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -127,30 +120,31 @@ class ClipListFollowingView(generics.ListAPIView):
             return Response({'invalid status'}, status.HTTP_400_BAD_REQUEST)
 
         #Retrieve following set (get_following) for Person corresponding to User
+        user = get_object_or_404(User, username=username)
+        following = user.person.get_following()
+        qclips = Clip.objects.filter(author__in=following).order_by('-created')
+
+        ## Get the url page_by parameter OR the settings value OR 50
+        page_size = request.QUERY_PARAMS.get('page_size', settings.REST_FRAMEWORK.get('PAGINATE_BY', '50'))
+        page = request.QUERY_PARAMS.get('page')
+        paginator = Paginator(qclips, page_size)
+
+        ###Extract a django Page object (clip_page) from the paginator.
+        # Can call clip_page.object_list etc
+        # Each Page has a 'paginator' attribute that can access parent data
+        ### e.g. clips.paginator.count, clips.paginator.object_list
         try:
-            user = get_object_or_404(User, username=username)
-            following = user.person.get_following()
+            clip_page = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            clip_page = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999),
+            # deliver last page of results.
+            clip_page = paginator.page(paginator.num_pages)
 
-            #Retrieve Clips from each Person in set following
-            clips = [p.clips.all() for p in following]
-            data = list(chain(*clips))
-
-            # For the result_list, you may want to sort. Adding sorting columns as need.
-            data.sort(key=lambda x: x.created, reverse=True)
-
-            serializer = ClipSerializer(data, many=True, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except IOError:
-            return Response({'IOError'}, status.HTTP_400_BAD_REQUEST)
-
-    # def get_paginate_by(self):
-    #     #print(self.request.accepted_renderer.format)
-    #     if self.request.accepted_renderer.format == 'api':
-    #         return 2
-    #     elif self.request.accepted_renderer.format == 'json':
-    #         return 2
-    #     else:
-    #         return 2
+        serializer = PaginatedClipSerializer(clip_page, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ClipDetailViewSet(DetailViewSet):

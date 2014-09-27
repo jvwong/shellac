@@ -184,6 +184,7 @@ class ClipListViewSet(APITestCase):
         self.client.login(username='andrea', password='a')
         response = self.client.get('/api/people/.json?page_size=' + str(n))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'results')
 
         results = response.data['results']
         #print(results)
@@ -397,18 +398,32 @@ class ClipListFollowingView(APITestCase):
     def test_ClipListFollowingView_GET_username_returns_correct_list(self):
         qstatus = 'following'
         qusername = 'jvwong'
-        qurl = '/api/clips/' + qstatus + '/' + qusername + '/'
+        qurl = '/api/clips/' + qstatus + '/' + qusername + '/.json'
 
         response = self.client.get(qurl)
-        #self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         resp = json.loads(response.content.decode())
-        #print(resp)
 
         # #jvwong is following everyone else
         qclips = Clip.objects.filter(Q(author__username='aray') |
                                      Q(author__username='jray') |
                                      Q(author__username='kray'))
-        self.assertEqual(len(qclips), len(resp))
+        self.assertEqual(len(qclips), len(resp['results']))
         self.assertContains(response, 'aray')
         self.assertContains(response, 'jray')
         self.assertContains(response, 'kray')
+
+    def test_ClipListFollowingView_GET_paginate_returns_correct_number_of_records(self):
+        n = 1
+        qstatus = 'following'
+        qusername = 'jvwong'
+        qurl = '/api/clips/' + qstatus + '/' + qusername + '/.json?page_size=' + str(n)
+
+        response = self.client.get(qurl)
+        #print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'results')
+
+        #results = response.data['results']
+        #print(results)
+        # self.assertEqual(len(results), n)
