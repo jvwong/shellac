@@ -16,7 +16,7 @@
                 <div class="panel-body">
                     <div class="content-tune-relationship following">
                         {% for person in user.person.get_following %}
-                            {% include 'shellac/partials/relationships/following.html' %}
+                            {% include 'shellac/partials/relationships/person.html' %}
                         {% endfor %}
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                 <div class="panel-body">
                     <div class="content-tune-relationship followers">
                         {% for person in user.person.get_followers %}
-                            {% include 'shellac/partials/relationships/followers.html' %}
+                            {% include 'shellac/partials/relationships/person.html' %}
                         {% endfor %}
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                 <div class="panel-body">
                     <div class="content-tune-relationship friends">
                         {% for person in user.person.get_followers %}
-                            {% include 'shellac/partials/relationships/friends.html' %}
+                            {% include 'shellac/partials/relationships/person.html' %}
                         {% endfor %}
                     </div>
                 </div>

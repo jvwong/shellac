@@ -2,6 +2,10 @@
 {% load staticfiles %}
 
 <!-- Head -->
+    {% block head %}
+         <script type="text/javascript" src="{% static 'shellac/js/dist/relationships_bundle.js' %}"></script>
+    {% endblock head %}
+
     {% block title %}People{% endblock title %}
 
 <!-- Navigation bar -->
@@ -17,10 +21,10 @@
         <p id="search-title" > Search results for "{{ query }}":</p>
     {% endif %}
     <div class="container-fluid">
-        <div class="content-people clearfix">
+        <div id="shellac-people-relationships" class="content-people clearfix">
             {% for person in page_obj.object_list %}
                 {% if person != user.person %}
-                    {% include 'shellac/partials/relationships/people.html' %}
+                    {% include 'shellac/partials/relationships/person.html' %}
                 {% endif %}
             {% endfor %}
         </div>

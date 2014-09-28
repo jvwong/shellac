@@ -7,8 +7,7 @@
   "private": true,
   "scripts": {
     "test": "grunt test",
-    "build": "browserify main.js -o bundle.js",
-    "watch": "watchify src/main.js -o dist/bundle.js --debug --verbose"
+    "build": "browserify main.js -o bundle.js"
   },
   "keywords": [
     "audio"

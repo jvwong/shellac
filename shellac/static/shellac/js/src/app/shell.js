@@ -1,17 +1,17 @@
 /*
- * shellac.js
+ * shell.js
  * Root namespace module
 */
 /* global $, window, AudioContext, XMLHttpRequest */
 'use strict';
 
-var shellac = (function () {
+var shell = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var moment = require('moment'),
         TAFFY = require('taffydb').taffy,
         audio = require('./audio.js'),
-        util = require('./util.js');
+        util = require('../util.js');
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -20,7 +20,6 @@ var shellac = (function () {
     initModule,
 
     configMap = {
-
         main_html: String() +
             '<div class="shellac-app-container">' +
 
@@ -57,7 +56,6 @@ var shellac = (function () {
 
                 '<div class="shellac-app clip content"></div>' +
             '</div>',
-
         truncatemax: 25
     },
 
@@ -122,17 +120,17 @@ var shellac = (function () {
         $.ajax({
             url: url
         })
-            .done(function(categories){
-                stateMap.category_db.insert(parseCategoryData(categories.results));
-                stateMap.categories = stateMap.category_db().get();
-                PubSub.emit("categoryLoadComplete");
-            })
-            .fail(function(){
-                console.error("Could not load Clip archive");
-            })
-            .always(function(){
+        .done(function(categories){
+            stateMap.category_db.insert(parseCategoryData(categories.results));
+            stateMap.categories = stateMap.category_db().get();
+            PubSub.emit("categoryLoadComplete");
+        })
+        .fail(function(){
+            console.error("Could not load Clip archive");
+        })
+        .always(function(){
 
-            });
+        });
     };
 
 
@@ -150,7 +148,7 @@ var shellac = (function () {
             url: url
         })
             .done(function(clips){
-                stateMap.clip_db.insert(parseClipData(clips['results']));
+                stateMap.clip_db.insert(parseClipData(clips.results));
                 stateMap.clips = stateMap.clip_db().order("id desc").get();
                 PubSub.emit("clipLoadComplete");
             })
@@ -407,5 +405,5 @@ var shellac = (function () {
     return { initModule: initModule };
 }());
 
-module.exports = shellac;
+module.exports = shell;
 

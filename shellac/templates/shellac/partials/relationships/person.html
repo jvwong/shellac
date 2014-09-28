@@ -1,22 +1,20 @@
 {% load staticfiles %}
 
-<div class="partial-relationships friends col-xs-12 col-md-6">
+<div class="partial-relationships person col-xs-12 col-md-6">
     <a class="partial-relationships-app" href="{% url 'shellac_app' person.username %}">
-        <img class="partial-relationships-avatar friends img-responsive img-thumbnail"
+        <img class="partial-relationships-avatar person img-responsive img-thumbnail"
              src="{% if person.avatar %}
                     {{ person.avatar.url }}
                   {% else %}
                     {% static 'shellac/assets/avatar.jpeg' %}
                   {% endif %}" alt="{{ person.username }}" />
     </a>
-    <div class="partial-relationships-description friends">
+    <div class="partial-relationships-description person">
         <a class="partial-relationships-url" href="{{person.get_absolute_url}}">
             <span class="partial-relationships-description-content lead">{{ person.username | truncatechars:15  }}</span><br />
         </a>
         <span class="partial-relationships-description-content">{{ person.joined|date:"m/Y" }}</span><br />
-        <div class="btn-group partial-relationships-action">
-            <button type="button" class="btn btn-warning unfollow">Unfollow</button>
-            <button type="button" class="btn btn-danger block">Block</button>
-        </div>
+        <div class="btn-group partial-relationships-action"
+             data-status="{% if person in user.person.get_friends %}friend{% else %}{% if person in user.person.get_following %}following{% elif person in user.person.get_followers %}follower{% elif person in user.person.get_blocked %}blocked{% endif %}{% endif %}"></div>
     </div>
 </div>

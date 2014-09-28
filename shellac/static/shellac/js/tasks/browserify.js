@@ -7,14 +7,23 @@ module.exports = function browserify(grunt) {
 
 	// Options
 	return {
-		build: {
+		app: {
 			files: {
-				'dist/bundle.js': ['src/**/main.js']
+				'dist/app_bundle.js': ['src/app/main.js']
 			},
 			options: {
 			    debug: true,
 			    watch: true
 			}
-		}
+		},
+        people: {
+            files: {
+                'dist/relationships_bundle.js': ['src/relationships/main.js']
+            },
+            options: {
+                debug: true,
+                watch: true
+            }
+        }
 	};
 };

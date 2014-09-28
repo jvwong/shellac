@@ -8,8 +8,8 @@
 var audio = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
-    var util = require('./util.js'),
-        soundManager = require('../lib/soundmanager2/script/soundmanager2.js').soundManager;
+    var util = require('../util.js'),
+        soundManager = require('../../lib/soundmanager2/script/soundmanager2.js').soundManager;
 
     //---------------- END MODULE DEPENDENCIES --------------
 

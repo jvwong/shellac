@@ -56,7 +56,6 @@ urlpatterns = patterns('shellac.views.api',
 
     url(r'^clips/$', clip_list, name='clip-list'),
     url(r'^clips/(?P<pk>[0-9]+)/$', clip_detail, name='clip-detail'),
-
     url(r'^clips/(?P<status>[\w-]+)/(?P<username>[\w.@+-]+)/$', ClipListFollowingView.as_view(), name='clip-list-following'),
 
     url(r'^categories/$', category_list, name='category-list'),
