@@ -4,16 +4,17 @@
 {% block content %}
 <div class="content-tune">
     <div class="content-tune-relationship following clearfix">
-        <h4 class="content-tune title">Following</h4>
+        <h3 class="content-tune title">Following</h3>
         {% for person in user.person.get_following %}
             {% include 'shellac/partials/relationships/following.html' %}
         {% endfor %}
     </div>
+    <hr/>
 
-    <div class="content-tune-relationship following clearfix">
-        <h4 class="content-tune title">Following</h4>
-        {% for person in user.person.get_following %}
-            {% include 'shellac/partials/relationships/following.html' %}
+    <div class="content-tune-relationship followers clearfix">
+        <h3 class="content-tune title">Followers</h3>
+        {% for person in user.person.get_followers %}
+            {% include 'shellac/partials/relationships/followers.html' %}
         {% endfor %}
     </div>
 </div>
