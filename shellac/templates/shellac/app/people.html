@@ -4,8 +4,18 @@
 <!-- Head -->
     {% block title %}People{% endblock title %}
 
+<!-- Navigation bar -->
+    {% block navbar-right-form %}
+    <form class="navbar-form navbar-right" method="GET" action="/search/">
+        <input type="text" name="search_term" id="search" class="form-control" placeholder="Find people...">
+    </form>
+    {% endblock navbar-right-form %}
+
 <!-- Content -->
     {% block content %}
+    {% if query %}
+        <p id="search-title" > Search results for "{{ query }}":</p>
+    {% endif %}
     <div class="container-fluid">
         <div class="content-people clearfix">
             {% for person in page_obj.object_list %}

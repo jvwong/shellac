@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
-from shellac.models import Clip, Person
+from shellac.models import Person
 from django.views.generic.list import ListView
 
 ### app
@@ -32,7 +32,7 @@ class PersonListView(ListView):
     template_name = 'shellac/app/people.html'
     queryset = Person.objects.all().order_by('-joined')
     allow_empty = True
-    paginate_by = 50
+    paginate_by = 25
 
 
 

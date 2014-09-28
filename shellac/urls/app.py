@@ -1,6 +1,8 @@
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
 from shellac.views.app import user_profile, shellac_app, shellac_tune, PersonListView
+
+from search.views import search
 admin.autodiscover()
 urlpatterns = patterns('',
 
@@ -16,6 +18,7 @@ urlpatterns = patterns('',
 
     url(r'^api/', include('shellac.urls.api')),
     url(r'^clips/', include('shellac.urls.clips')),
+    url(r'^search/', search, name='search'),
 )
 
 # Login and logout views for the browsable API

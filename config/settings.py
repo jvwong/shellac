@@ -157,6 +157,7 @@ INSTALLED_APPS = (
     'shellac',
     'social.apps.django_app.default',
     'taggit',
+    'search',
     'rest_framework',
     'rest_framework.authtoken'
 )
