@@ -3,33 +3,33 @@
  */
 @import "_elements";
 
-@profile_margin_bottom: 4px;
-@profile_margin_top: 0px;
-@profile_margin_left: 12em;
-@profile_caption_opacity: 0.7;
-@profile_desc_padding: 1em;
-@profile_avatar_max_dim: 15em;
+@person_margin_bottom: 4px;
+@person_margin_top: 0px;
+@person_margin_left: 12em;
+@person_caption_opacity: 0.7;
+@person_desc_padding: 1em;
+@person_avatar_max_dim: 15em;
 
 .partial-profile-person {
 
     img.partial-profile-person-avatar{
         left: 2em;
-        width: @profile_avatar_max_dim;
-        height: @profile_avatar_max_dim;
+        width: @person_avatar_max_dim;
+        height: @person_avatar_max_dim;
         float: left;
     }
 
     .partial-profile-person-description{
-        height: @profile_avatar_max_dim;
-        margin-left: @profile_avatar_max_dim + 1em;
-        padding: @profile_desc_padding;
-        padding-left: 2*@profile_desc_padding;
+        height: @person_avatar_max_dim;
+        margin-left: @person_avatar_max_dim + 1em;
+        padding: @person_desc_padding;
+        padding-left: 2*@person_desc_padding;
 
         /* styling bellow */
         background-color: black;
         background: black;
         color: white;
-        .opacity(@profile_caption_opacity);
+        .opacity(@person_caption_opacity);
     }
 
 

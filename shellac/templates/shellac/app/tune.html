@@ -1,40 +1,20 @@
 {% extends "shellac/base.html" %}
-
 <!-- Head -->
-    {% block title %}Profile{% endblock title %}
-
+{% block title %}Tune{% endblock title %}
 {% block content %}
-    <div class="content-tune">
-
-        <div class="content-tune-following">
-            <h4>Following</h4>
-            <ul class="list-group">
-            {% for person in user.person.get_following %}
-                <a href="{{ person.get_absolute_url }}"><li>Name: {{ person.username }}</li></a>
-                <button type="button" class="btn btn-primary">Unfollow</button>
-            {% endfor %}
-            </ul>
-        </div>
-
-        <div class="content-tune-followers">
-            <h4>Followers</h4>
-            <ul class="list-group">
-            {% for person in user.person.get_followers %}
-                <a href="{{ person.get_absolute_url }}"><li>Name: {{ person.username }}</li></a>
-                <button type="button" class="btn btn-danger">Block</button>
-            {% endfor %}
-            </ul>
-        </div>
-
-        <div class="content-tune-friends">
-            <h4>Friends</h4>
-            <ul class="list-group">
-            {% for person in user.person.get_friends %}
-                <a href="{{ person.get_absolute_url }}"><li>Name: {{ person.username }}</li></a>
-                <button type="button" class="btn btn-danger">Block</button>
-            {% endfor %}
-            </ul>
-        </div>
-
+<div class="content-tune">
+    <div class="content-tune-relationship following clearfix">
+        <h4 class="content-tune title">Following</h4>
+        {% for person in user.person.get_following %}
+            {% include 'shellac/partials/relationships/following.html' %}
+        {% endfor %}
     </div>
+
+    <div class="content-tune-relationship following clearfix">
+        <h4 class="content-tune title">Following</h4>
+        {% for person in user.person.get_following %}
+            {% include 'shellac/partials/relationships/following.html' %}
+        {% endfor %}
+    </div>
+</div>
 {% endblock content %}
