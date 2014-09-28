@@ -3,19 +3,61 @@
 {% block title %}Tune{% endblock title %}
 {% block content %}
 <div class="content-tune">
-    <div class="content-tune-relationship following clearfix">
-        <h3 class="content-tune title">Following</h3>
-        {% for person in user.person.get_following %}
-            {% include 'shellac/partials/relationships/following.html' %}
-        {% endfor %}
-    </div>
-    <hr/>
-
-    <div class="content-tune-relationship followers clearfix">
-        <h3 class="content-tune title">Followers</h3>
-        {% for person in user.person.get_followers %}
-            {% include 'shellac/partials/relationships/followers.html' %}
-        {% endfor %}
-    </div>
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFollowing">
+                        Following
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseFollowing" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="content-tune-relationship following">
+                        {% for person in user.person.get_following %}
+                            {% include 'shellac/partials/relationships/following.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFollowers">
+                        Followers
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseFollowers" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="content-tune-relationship followers">
+                        {% for person in user.person.get_followers %}
+                            {% include 'shellac/partials/relationships/followers.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFriends">
+                        Friends
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseFriends" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="content-tune-relationship friends">
+                        {% for person in user.person.get_followers %}
+                            {% include 'shellac/partials/relationships/friends.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+   </div>
 </div>
 {% endblock content %}
