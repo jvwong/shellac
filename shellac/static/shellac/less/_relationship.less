@@ -7,7 +7,7 @@
 @relationships_margin_top: 1em;
 @relationships_margin_left: 12em;
 @relationships_caption_opacity: 0.7;
-@relationships_desc_padding: 0.8em;
+@relationships_desc_padding: 0.4em;
 @relationships_avatar_max_dim: 5em;
 
 .partial-relationships {
@@ -28,7 +28,7 @@
         height: @relationships_avatar_max_dim;
         margin-left: @relationships_avatar_max_dim;
         padding: @relationships_desc_padding;
-        padding-left: 2*@relationships_desc_padding;
+        //padding-left: 2*@relationships_desc_padding;
 
         /* styling below */
         background-color: black;
@@ -36,13 +36,17 @@
         color: white;
         .opacity(@relationships_caption_opacity);
 
+        .partial-relationships-description-content.joined{
+            font-size: 0.9em;
+        }
+
         .btn-group.partial-relationships-action{
             position: absolute;
             top: 25%;
-            right: 1em;
+            right: 2px;
             button{
                 color: #000000;
-                font-weight: bold;
+                font-size: 0.9em;
             }
         }
     }

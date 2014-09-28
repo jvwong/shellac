@@ -13,7 +13,7 @@
         <a class="partial-relationships-url" href="{{person.get_absolute_url}}">
             <span class="partial-relationships-description-content lead">{{ person.username | truncatechars:15  }}</span><br />
         </a>
-        <span class="partial-relationships-description-content"><em>Following: {{ person.joined|date:"M j, Y" }}</em></span><br />
+        <span class="partial-relationships-description-content joined">{{ person.joined|date:"m/Y" }}</span><br />
         <div class="btn-group partial-relationships-action">
             <button type="button" class="btn btn-warning unfollow">Unfollow</button>
         </div>
