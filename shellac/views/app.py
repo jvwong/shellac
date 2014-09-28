@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from shellac.models import Clip, Person
-
+from django.views.generic.list import ListView
 
 ### app
 @login_required(login_url='/accounts/signin/')
@@ -26,7 +26,13 @@ def shellac_tune(request, *args, **kwargs):
     return render(request, 'shellac/app/tune.html')
 
 
-
+### View list of Persons
+class PersonListView(ListView):
+    model = Person
+    template_name = 'shellac/app/people.html'
+    queryset = Person.objects.all().order_by('-joined')
+    allow_empty = True
+    paginate_by = 50
 
 
 

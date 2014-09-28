@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
-from django.conf import settings
-from shellac.views.app import user_profile, shellac_app, shellac_tune
+from shellac.views.app import user_profile, shellac_app, shellac_tune, PersonListView
 admin.autodiscover()
 urlpatterns = patterns('',
 
@@ -12,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^$', shellac_app, name='shellac_app'),
     url(r'^app/(?P<username>[\w.@+-]+)/$', shellac_app, name='shellac_app'),
     url(r'^profile/(?P<username>[\w.@+-]+)/$', user_profile, name='shellac_profile'),
+    url(r'^people/$', PersonListView.as_view(), name='shellac_person_list'),
     url(r'^tune/', shellac_tune, name='shellac_tune'),
 
     url(r'^api/', include('shellac.urls.api')),
