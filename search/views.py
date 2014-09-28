@@ -25,5 +25,5 @@ def search(request):
         page_obj = paginator.page(paginator.num_pages)
 
     return render(request, 'shellac/app/people.html',
-                  {'query': query, 'page_obj': page_obj})
+                  {'query': query, 'page_obj': page_obj, 'paginator': paginator})
 
