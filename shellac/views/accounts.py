@@ -35,7 +35,7 @@ def user_accounts_signup(request):
 
             if new_user:
                 login(request, new_user)
-                return HttpResponseRedirect("/profile/")
+                return HttpResponseRedirect("/profile/" + new_user.username + "/")
     else:
         form = UserCreateForm()
     return render(request,

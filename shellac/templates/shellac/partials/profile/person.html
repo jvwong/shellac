@@ -16,7 +16,10 @@
         <a class="partial-profile-person-url" href="{{person.get_absolute_url}}">
             <span class="partial-profile-person-description-content lead">{{ person.username | truncatechars:15  }}</span><br />
         </a>
-        <span class="partial-profile-person-description-content"><em>{{ person.joined|date:"M j, Y" }}</em></span><br />
+        <span class="partial-profile-person-description-content">{{ person.user.first_name }}</span><br />
+        <span class="partial-profile-person-description-content">{{ person.user.last_name }}</span><br />
+        <span class="partial-profile-person-description-content">{{ person.user.email }}</span><br />
+        <span class="partial-profile-person-description-content">{{ person.joined|date:"M j, Y" }}</span><br />
     </div>
     <!-- end profile-description div -->
 </div>

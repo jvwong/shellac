@@ -1,5 +1,3 @@
-import os
-#!/usr/bin/python
 import time
 
 from django.contrib.auth.models import User
@@ -27,18 +25,22 @@ class TuneFollowers(FunctionalTest):
     def test_tune_page_displays_list_of_correct_relationships(self):
         # jvwong --> jray
         # aray --> jray
-        lis_following = self.browser.find_elements_by_css_selector('.content-tune-following li')
-        self.assertIn('jvwong', lis_following[0].text)
-        self.assertIn('kray', lis_following[1].text)
+        #Select the anchor headings
+        title_anchors = self.browser.find_elements_by_css_selector('.panel-title-link')
 
-        lis_following = self.browser.find_elements_by_css_selector('.content-tune-followers li')
-        self.assertIn('jvwong', lis_following[0].text)
-        self.assertIn('aray', lis_following[1].text)
+        following_spans = self.browser.find_elements_by_css_selector('.content-tune-relationship.following span')
+        self.assertTrue(any(span.text == 'jvwong' for span in following_spans))
+        self.assertTrue(any(span.text == 'kray' for span in following_spans))
 
-        lis_following = self.browser.find_elements_by_css_selector('.content-tune-friends li')
-        self.assertIn('jvwong', lis_following[0].text)
+        #These are not visible at the time of presentation
+        title_anchors[1].click()
+        followers_spans = self.browser.find_elements_by_css_selector('.content-tune-relationship.followers span')
+        self.assertTrue(any(span.text == 'jvwong' for span in followers_spans))
+        self.assertTrue(any(span.text == 'aray' for span in followers_spans))
 
-
+        title_anchors[2].click()
+        friends_spans = self.browser.find_elements_by_css_selector('.content-tune-relationship.friends span')
+        self.assertTrue(any(span.text == 'jvwong' for span in friends_spans))
 
 
 

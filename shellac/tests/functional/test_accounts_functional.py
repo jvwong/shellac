@@ -1,6 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 from django.contrib.auth.models import User
 from shellac.tests.utils.functional import FunctionalTest
+import time
 
 ##Fake user
 username_dummy = 'andrea'
@@ -42,18 +43,17 @@ class NewUserTest(FunctionalTest):
         submit_button = self.browser.find_element_by_id('signup_submit')
         submit_button.send_keys(Keys.ENTER)
 
-        #time.sleep(1)
+        #time.sleep(2)
         self.assertIn('Profile', self.browser.title)
-        #check existence of sidebar
-        profile_div = self.browser.find_element_by_class_name('profile')
-        profile_lis = profile_div.find_elements_by_tag_name('li')
 
         #check existence of profile info
+        profile_div = self.browser.find_element_by_class_name('partial-profile-person-description')
+        profile_spans = profile_div.find_elements_by_tag_name('span')
         self.assertTrue(
-            any(li.text == 'Login: ' + username_dummy for li in profile_lis)
+            any(span.text == username_dummy for span in profile_spans)
         )
         self.assertTrue(
-            any(li.text == 'Email: ' + email_dummy for li in profile_lis)
+            any(span.text == email_dummy for span in profile_spans)
         )
 
         #She is presented with a sign out menubar cog option

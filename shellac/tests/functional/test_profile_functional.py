@@ -30,12 +30,16 @@ class ProfileTest(FunctionalTest):
         self.assertEqual(img_avatar.get_attribute('alt'), self.user.person.username)
 
         detail_list = self.browser.find_elements_by_css_selector('.content-profile .partial-profile-person .partial-profile-person-description span')
-        self.assertEqual(detail_list[0].text, self.user.person.username)
-        self.assertIn(self.user.person.joined.strftime("%d, %Y"), detail_list[1].text)
+        self.assertTrue(
+            any(span.text == self.user.person.username for span in detail_list)
+        )
+        self.assertTrue(
+            any(span.text == self.user.person.joined.strftime("%b %d, %Y") for span in detail_list)
+        )
 
     def test_profile_page_can_navigate_to_clip_app(self):
         app_link = self.browser.find_element_by_css_selector('.content-profile .partial-profile-person-app')
-        print(app_link)
+        #print(app_link)
         app_link.click()
 
         title = self.browser.find_element_by_tag_name('title')
