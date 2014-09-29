@@ -2,7 +2,7 @@
  * shell.js
  * Root namespace module
 */
-/* global $, window, AudioContext, XMLHttpRequest */
+/* global $, window, AudioContext, XMLHttpRequest, target_username */
 'use strict';
 
 var shell = (function () {
@@ -61,7 +61,7 @@ var shell = (function () {
 
     stateMap = {
         $container: undefined,
-        username: undefined,
+        target_username: undefined,
 
         STATIC_URL: undefined,
         MEDIA_URL: undefined,
@@ -137,12 +137,12 @@ var shell = (function () {
     /*
      * method loadClips: make an api call to gather the Clips in database
      * @param status type of Relationship
-     * @param username username of the intended target Person
+     * @param target_username username of the intended target Person
      * @return jsonArray list of valid JSON objects representing serialized Clip objects
      **/
-    loadClips = function(status, username){
+    loadClips = function(status, target_username){
 
-        var url = ['/api/clips', status, username, ""].join('/');
+        var url = ['/api/clips', status, target_username, ""].join('/');
 
         $.ajax({
             url: url
@@ -368,12 +368,12 @@ var shell = (function () {
     // a single DOM container
     // @param MEDIA_URL Django media url prefix (settings.MEDIA_URL)
     // @param STATIC_URL Django static url prefix (settings.STATIC_URL)
-    // @param username account holder username for retrieving clips
+    // @param target_username account holder username for retrieving clips
 
-    initModule = function( $container, STATIC_URL, MEDIA_URL, username){
+    initModule = function( $container, STATIC_URL, MEDIA_URL, target_username){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
-        stateMap.username = username;
+        stateMap.target_username = target_username;
         stateMap.$nav_sidebar = $container.parent;
         stateMap.STATIC_URL = STATIC_URL;
         stateMap.MEDIA_URL = MEDIA_URL;
@@ -387,7 +387,7 @@ var shell = (function () {
         PubSub.on("categoryLoadComplete", display_categories);
 
         //load data into in-browser database
-        loadClips("following", username);
+        loadClips("following", target_username);
         renderCategories();
 
         //Navigation Menu Slider
@@ -397,7 +397,7 @@ var shell = (function () {
         $( '.shellac-app.sidebar')
             .on( 'udragstart.udrag', onSwipeSideBar );
 
-        jqueryMap.$statusbar_playing.html(username);
+        jqueryMap.$statusbar_playing.html(target_username);
 
         console.log(jqueryMap.$nav_sidebar);
     };

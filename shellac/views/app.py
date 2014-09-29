@@ -8,8 +8,8 @@ from django.views.generic.list import ListView
 def shellac_app(request, *args, **kwargs):
     username = kwargs.get('username', None)
     if username is not None:
-        return render(request, 'shellac/app/app.html', {'username': username})
-    return render(request, 'shellac/app/app.html', {'username': request.user.username})
+        return render(request, 'shellac/app/app.html', {'target_username': username})
+    return render(request, 'shellac/app/app.html', {'target_username': request.user.username})
 
 
 ### User profile
