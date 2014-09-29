@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
 <div class="partial-relationships person col-xs-12 col-md-6">
-    <a class="partial-relationships-app" href="{% url 'shellac_app' person.username %}">
+    <a class="partial-relationships-url" href="{{person.get_absolute_url}}">
         <img class="partial-relationships-avatar person img-responsive img-thumbnail"
              src="{% if person.avatar %}
                     {{ person.avatar.url }}
@@ -10,7 +10,7 @@
                   {% endif %}" alt="{{ person.username }}" />
     </a>
     <div class="partial-relationships-description person">
-        <a class="partial-relationships-url" href="{{person.get_absolute_url}}">
+        <a class="partial-relationships-app" href="{% url 'shellac_app' person.username %}">
             <span class="partial-relationships-description-content username">{{ person.username | truncatechars:15  }}</span><br />
         </a>
         <span class="partial-relationships-description-content joined">{{ person.joined|date:"m/Y" }}</span><br />
