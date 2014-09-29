@@ -2,7 +2,7 @@
  * shell.js
  * Root module
 */
-/* global $, window, XMLHttpRequest */
+/* global $, window, XMLHttpRequest, DEBUG */
 'use strict';
 
 var shell = (function () {
@@ -28,11 +28,15 @@ var shell = (function () {
     stateMap = {
         $container: undefined,
         csrf_token: undefined,
-        username: undefined
+        username: undefined,
+        endpoint: undefined,
+        debug: undefined,
+        relationships_db: TAFFY()
     },
 
     jqueryMap = {},
     setJqueryMap,
+    load_relationships,
     setActionButtons,
     onClickRelationshipsButton,
     PubSub = util.PubSub;
@@ -48,6 +52,28 @@ var shell = (function () {
             $outerDiv               : $outerDiv,
             $person_list            : $outerDiv.find('.partial-relationships.person')
         };
+    };
+
+    load_relationships = function()
+    {
+        $.ajax({
+            withCredentials: true,
+            type: 'GET',
+            url: stateMap.endpoint + "relationships/",
+            dataType: 'json',
+            beforeSend: function(xhr, settings) {
+                if (!util.csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", stateMap.csrf_token);
+                }
+            }
+        })
+        .done(function(relationships) {
+            stateMap.relationships_db.insert(relationships.results);
+            PubSub.emit("relationshipsLoadComplete");
+        })
+        .fail(function(error) {
+            console.log( error );
+        });
     };
     //--------------------- END MODULE SCOPE METHODS --------------------
 
@@ -97,46 +123,77 @@ var shell = (function () {
      */
     onClickRelationshipsButton = function(event) {
 
-        var $parent, $button, $div_btn_group, username,
-            payload, url,
-            current_status = String(), status = String();
+        var $parent, $button, $div_btn_group, $div_status, username,
+            from_person = String(), to_person = String(),
+            http_method = '',
+            payload = {},
+            url = String(),
+            status = String(), status_update = String(),
+            button_update = String();
 
         $button = $(this);
         $parent = ($button.parent()).parent();
-        username = $parent.find('.username').html();
+        $div_status = $parent.find('.partial-relationships-description-content.status');
         $div_btn_group = $button.parent();
 
-        current_status = $div_btn_group.attr('data-status');
+        console.log($div_status);
 
-        console.log("current_status: %s", current_status);
-        console.log("button: %s", $button.html());
+        username = $parent.find('.username').html();
+        from_person = stateMap.endpoint + "people/" + stateMap.username + "/";
+        to_person = stateMap.endpoint + "people/" + username + "/";
 
-        //Only concerned with the action dictated by the button and the data-status
-        switch(current_status){
-            case 'Follow':
-                break;
-            case 'Unfollow':
-                break;
-            case 'Block':
-                break;
-            case 'Unblock':
-                break;
-            default:
-                //none
-                status = "";
+        if($button.html() === 'Follow' & $div_btn_group.attr('data-status') === '')
+        {
+            //No Relationship exists --- POST
+            http_method = 'POST';
+            url = stateMap.endpoint + "relationships/";
+            status_update = status = 'following';
+            button_update = 'Unfollow';
+        }
+        else if($button.html() === 'Follow' & $div_btn_group.attr('data-status') === 'follower')
+        {
+            //There is a Person with a following Relationship --- POST
+            //No Relationship exists --- POST
+            http_method = 'POST';
+            url = stateMap.endpoint + "relationships/";
+            status = 'following';
+            status_update = 'friend';
+            button_update = 'Unfollow';
+        }
+        else
+        {
+            var relationship = stateMap.relationships_db({from_person: from_person, to_person: to_person}).first() || {};
+
+            if($button.html() === 'Unfollow' & $div_btn_group.attr('data-status') === 'following')
+            {
+                //Relationship exists --- DELETE
+                http_method = 'DELETE';
+                url = stateMap.endpoint + "relationships/" + relationship.id.toString() + "/";
+                status_update = status = '';
+                button_update = 'Follow';
+            }
+            else if($button.html() === 'Unfollow' & $div_btn_group.attr('data-status') === 'friend')
+            {
+                //Relationship exists --- DELETE
+                http_method = 'DELETE';
+                url = stateMap.endpoint + "relationships/" + relationship.id.toString() + "/";
+                status_update = status = 'follower';
+                button_update = 'Block';
+            }
+
         }
 
-        url = '/api/relationships/';
         payload = {
-            "from_person": "http://localhost/api/people/" + stateMap.username + "/",
-            "status": "following",
-            "to_person": "http://localhost/api/people/" + username + "/",
+            "from_person": from_person,
+            "status": status,
+            "to_person": to_person,
             "private": false
         };
 
         //make some url call
         $.ajax({
-            type: "POST",
+            withCredentials: true,
+            type: http_method,
             url: url,
             data: payload,
             dataType: 'json',
@@ -145,19 +202,32 @@ var shell = (function () {
                     xhr.setRequestHeader("X-CSRFToken", stateMap.csrf_token);
                 }
             }
-        }).done(function(response) {
-            console.log( response );
-            //Update buttons and status based on Relationships (auto)
+        })
+        .done(function(data, textStatus, jqXHR) {
+
+            console.log(jqXHR.status);
+            ///we'll need to update the TAFFY database
+            if(http_method === 'POST' & jqXHR.status === 201) //201 CREATED
+            {
+                stateMap.relationships_db.insert(data);
+            }
+            else if(http_method === 'DELETE' & jqXHR.status === 204 & relationship.hasOwnProperty('id')) //204 NO_CONTENT
+            {
+                stateMap.relationships_db({id: relationship.id}).remove();
+            }
+
+            //Update the button-related status and UI status
+            $button.html(button_update);
+            $div_btn_group.attr('data-status', status_update);
+            $div_status.html(status_update);
             setActionButtons(jqueryMap.$person_list);
         })
         .fail(function(error) {
-            console.log( "error" );
             console.log( error );
         })
-        .always(function() {
-            console.log( "finished" );
+        .complete(function(jqXHR, textStatus){
+            console.log(jqXHR.status);
         });
-
 
     };
     //-------------------- END EVENT HANDLERS --------------------
@@ -169,17 +239,27 @@ var shell = (function () {
     // @param username the username of the logged in user
     // a single DOM container with modules containing the generic
     // Relationship attributes
-    initModule = function( $container, username){
+    initModule = function( $container, username, DEBUG){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         stateMap.csrf_token = util.getCookie('csrftoken');
         stateMap.username = username;
+
+        stateMap.debug = DEBUG === 'True';
+        stateMap.endpoint = stateMap.debug === true ? 'http://localhost:8000/api/': 'http://shellac.no-ip.ca/api/';
         setJqueryMap();
+
+        //register pub-sub methods
+        PubSub.on("relationshipsLoadComplete", function(){
+            console.log("loaded relationships");
+            //console.log(stateMap.relationships_db().get());
+        });
+        load_relationships();
 
         //Set the correct action buttons on each Person template
         setActionButtons(jqueryMap.$person_list);
 
-        console.log(username);
+        //console.log(stateMap.debug);
     };
 
     return { initModule: initModule };

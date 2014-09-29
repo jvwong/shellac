@@ -382,7 +382,7 @@ var shell = (function () {
         $container.append( configMap.main_html );
         setJqueryMap();
 
-         //register pub-sub methods
+        //register pub-sub methods
         PubSub.on("clipLoadComplete", display_clips);
         PubSub.on("categoryLoadComplete", display_categories);
 

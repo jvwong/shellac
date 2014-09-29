@@ -37,8 +37,11 @@ class PeopleTest(FunctionalTest):
         #jvwong_button = relationships_buttons[2] #friend
 
         self.assertEqual(kray_button.text, 'Unfollow')
+        print(kray_button.text)
         ##Unfollow kray
         kray_button.click()
+
+        print(kray_button.text)
         self.assertEqual(kray_button.text, 'Follow')
 
 

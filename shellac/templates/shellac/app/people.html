@@ -3,7 +3,7 @@
 
 <!-- Head -->
     {% block head %}
-         <script type="text/javascript"> var username = "{{ user.username }}"</script>
+         <script type="text/javascript"> var username = "{{ user.username }}", DEBUG = "{{ debug }}"</script>
          <script type="text/javascript" src="{% static 'shellac/js/dist/relationships_bundle.js' %}"></script>
     {% endblock head %}
 
