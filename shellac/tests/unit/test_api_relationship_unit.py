@@ -243,7 +243,7 @@ class RelationshipListViewSet(APITestCase):
         #curl -X POST http://localhost:8000/api/relationships/ -H "Authorization:Token 180d6d22335f2471f717ce3c121eebc47a0fa2a8" -H "Content-Type: application/json" -d '{"from_person": "http://localhost:8000/api/people/aray/", "status": "following", "to_person": "http://localhost:8000/api/people/new/", "private": "False"}'
 
         ###logged in -- aray
-        qurlname = 'http://testserver/api/people/aray/'
+        qurlname = 'http://testserver/api/people/jvwong/'
         qstat = 'following'
 
         payload = {'from_person': self.urlname, 'status': qstat, 'to_person': qurlname, 'private': False}
@@ -256,6 +256,32 @@ class RelationshipListViewSet(APITestCase):
         self.assertEqual(response.data['from_person'], self.urlname)
         self.assertEqual(response.data['to_person'], qurlname)
         self.assertEqual(response.data['status'], qstat)
+
+    def test_RelationshipListViewSet_POST_owner_ignores_self_Relationship(self):
+        ###logged in -- aray
+        qurlname = 'http://testserver/api/people/aray/'
+        qstat = 'following'
+
+        payload = {'from_person': self.urlname, 'status': qstat, 'to_person': qurlname, 'private': False}
+
+        response = self.client.post('/api/relationships/', payload)
+        #print(response.data)
+        #print(response.status_code)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_RelationshipListViewSet_POST_owner_is_idempotent(self):
+        ###logged in -- aray
+        qurlname = 'http://testserver/api/people/jvwong/'
+        qstat = 'following'
+
+        payload = {'from_person': self.urlname, 'status': qstat, 'to_person': qurlname, 'private': False}
+        response1 = self.client.post('/api/relationships/', payload)
+        response2 = self.client.post('/api/relationships/', payload)
+
+        rels = Relationship.objects.filter(from_person=Person.objects.get(username='aray'), to_person=Person.objects.get(username='jvwong'))
+        self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(len(rels), 1)
 
 
     def test_RelationshipListViewSet_POST_nonowner_forbidden(self):

@@ -23,12 +23,50 @@ class PeopleTest(FunctionalTest):
     def test_people_page_displays_list_of_correct_Person_profiles(self):
         #will exclude jray
         self.browser.get(self.server_url + '/people/')
-        usernames = self.browser.find_elements_by_css_selector('.content-people .partial-relationships .partial-relationships-description-content.lead')
+        usernames = self.browser.find_elements_by_css_selector('.content-people .partial-relationships.person .partial-relationships-description-content.username')
         self.assertIn('kray', usernames[0].text)
         self.assertIn('aray', usernames[1].text)
         self.assertIn('jvwong', usernames[2].text)
 
+    def test_People_user_can_unfollow_following(self):
+        #jray will unfollow kray
+        self.browser.get(self.server_url + '/people/')
+        relationships_buttons = self.browser.find_elements_by_css_selector('.content-people .partial-relationships.person button')
+        kray_button = relationships_buttons[0] #Following
+        #aray_button = relationships_buttons[1] #Follower
+        #jvwong_button = relationships_buttons[2] #friend
 
+        self.assertEqual(kray_button.text, 'Unfollow')
+        ##Unfollow kray
+        kray_button.click()
+        self.assertEqual(kray_button.text, 'Follow')
+
+
+    def test_People_user_can_unfollow_friend(self):
+        #jray will unfollow jvwong
+        self.browser.get(self.server_url + '/people/')
+        relationships_buttons = self.browser.find_elements_by_css_selector('.content-people .partial-relationships.person button')
+        #kray_button = relationships_buttons[0] #Following
+        #aray_button = relationships_buttons[1] #Follower
+        jvwong_button = relationships_buttons[2] #friend
+
+        self.assertEqual(jvwong_button.text, 'Unfollow')
+        ##Unfollow jvwong
+        jvwong_button.click()
+        self.assertEqual(jvwong_button.text, 'Block')
+
+    def test_People_user_can_block_follower(self):
+        #jray will block aray
+        self.browser.get(self.server_url + '/people/')
+        relationships_buttons = self.browser.find_elements_by_css_selector('.content-people .partial-relationships.person button')
+        #kray_button = relationships_buttons[0] #Following
+        aray_button = relationships_buttons[1] #Follower
+        #jvwong_button = relationships_buttons[2] #friend
+
+        self.assertEqual(aray_button.text, 'Follow')
+        ##Block aray
+        aray_button.click()
+        self.assertEqual(aray_button.text, 'Block')
 
 
 

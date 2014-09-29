@@ -3,6 +3,7 @@
 
 <!-- Head -->
     {% block head %}
+         <script type="text/javascript"> var username = "{{ user.username }}"</script>
          <script type="text/javascript" src="{% static 'shellac/js/dist/relationships_bundle.js' %}"></script>
     {% endblock head %}
 
@@ -20,33 +21,30 @@
     {% if query %}
         <p id="search-title" > Search results for "{{ query }}":</p>
     {% endif %}
-    <div class="container-fluid">
-        <div id="shellac-people-relationships" class="content-people clearfix">
-            {% for person in page_obj.object_list %}
-                {% if person != user.person %}
-                    {% include 'shellac/partials/relationships/person.html' %}
-                {% endif %}
-            {% endfor %}
-        </div>
-
-        <ul class="pagination col-xs-offset-3 col-xs-9">
-
-            {% if page_obj.has_previous %}
-                <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    <div id="shellac-people-relationships" class="content-people clearfix">
+        {% for person in page_obj.object_list %}
+            {% if person != user.person %}
+                {% include 'shellac/partials/relationships/person.html' %}
             {% endif %}
-
-            {% for page_num in paginator.page_range %}
-                {% if page_obj.number == page_num %}
-                    <li class="disabled"><a href="#">{{ page_obj.number }}</a></li>
-                {% else %}
-                    <li><a href="{% url 'shellac_person_list' %}?page={{ page_num }}">{{ page_num }}</a></li>
-                {% endif %}
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-                <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-            {% endif %}
-        </ul>
-
+        {% endfor %}
     </div>
+
+    <ul class="pagination col-xs-offset-3 col-xs-9">
+
+        {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% endif %}
+
+        {% for page_num in paginator.page_range %}
+            {% if page_obj.number == page_num %}
+                <li class="disabled"><a href="#">{{ page_obj.number }}</a></li>
+            {% else %}
+                <li><a href="{% url 'shellac_person_list' %}?page={{ page_num }}">{{ page_num }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% endif %}
+    </ul>
     {% endblock content %}

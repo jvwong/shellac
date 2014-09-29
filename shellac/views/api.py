@@ -56,15 +56,27 @@ class RelationshipListViewSet(ListViewSet):
         This view will always create Relationship between the authenticated Person
         and the target regardless of the from_person field
         """
-        path = urlparse(request.DATA.get('from_person')).path
-        if type(path) is str:
-            path_elements = path.split('/')
-        else:
-            return Response({'error: invalid mime-type'}, status=status.HTTP_400_BAD_REQUEST)
+        frompath = urlparse(request.DATA.get('from_person')).path
+        topath = urlparse(request.DATA.get('to_person')).path
 
-        if request.user.person.username in path_elements or request.user.is_staff:
+        #print(request.DATA)
+        if type(frompath) is str and type(topath) is str:
+            frompath_elements = frompath.split('/')
+            topath_elements = topath.split('/')
+        else:
+            return Response({'error: invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+
+        fromPerson = get_object_or_404(Person, username=frompath_elements[-2])
+        toPerson = get_object_or_404(Person, username=topath_elements[-2])
+        count = Relationship.objects.filter(from_person=fromPerson, to_person=toPerson).count()
+
+        #Reject a request to create Relationship with self
+        if request.user.person.username == toPerson.username or count > 0:
+            return Response({'error: Relationship with self not permitted'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if request.user.person.username == fromPerson.username or request.user.is_staff:
             return self.create(request, *args, **kwargs)
-        return Response({'from_person': 'from_user does not match authenticated User'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'from_user does not match authenticated User'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RelationshipDetailViewSet(DetailViewSet):

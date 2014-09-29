@@ -11,10 +11,12 @@
     </a>
     <div class="partial-relationships-description person">
         <a class="partial-relationships-url" href="{{person.get_absolute_url}}">
-            <span class="partial-relationships-description-content lead">{{ person.username | truncatechars:15  }}</span><br />
+            <span class="partial-relationships-description-content username">{{ person.username | truncatechars:15  }}</span><br />
         </a>
-        <span class="partial-relationships-description-content">{{ person.joined|date:"m/Y" }}</span><br />
+        <span class="partial-relationships-description-content joined">{{ person.joined|date:"m/Y" }}</span><br />
+        <span class="partial-relationships-description-content status">{% if person in user.person.get_friends %}friend{% else %}{% if person in user.person.get_following %}following{% elif person in user.person.get_followers %}follower{% elif person in user.person.get_blocked %}blocked{% endif %}{% endif %}</span>
         <div class="btn-group partial-relationships-action"
              data-status="{% if person in user.person.get_friends %}friend{% else %}{% if person in user.person.get_following %}following{% elif person in user.person.get_followers %}follower{% elif person in user.person.get_blocked %}blocked{% endif %}{% endif %}"></div>
+        <!-- <button> placeholder-->
     </div>
 </div>
