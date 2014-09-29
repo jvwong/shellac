@@ -225,7 +225,7 @@ class RelationshipListViewSet(APITestCase):
         url = reverse('relationship-list')
         self.assertEqual(url, '/api/relationships/')
 
-    def test_RelationshipListViewSet_GET_returns_ALL_Rel_objects(self):
+    def test_RelationshipListViewSet_GET_returns_ALL_Rel_objects_for_User(self):
         response = self.client.get('/api/relationships/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -239,6 +239,10 @@ class RelationshipListViewSet(APITestCase):
             self.assertTrue(result['to_person'] == self.urlname or result['from_person'] == self.urlname)
 
     def test_RelationshipListViewSet_POST_owner_creates_Relationship_with_target(self):
+        ## sample curl request
+        #curl -X POST http://localhost:8000/api/relationships/ -H "Authorization:Token 180d6d22335f2471f717ce3c121eebc47a0fa2a8" -H "Content-Type: application/json" -d '{"from_person": "http://localhost:8000/api/people/aray/", "status": "following", "to_person": "http://localhost:8000/api/people/new/", "private": "False"}'
+
+        ###logged in -- aray
         qurlname = 'http://testserver/api/people/aray/'
         qstat = 'following'
 
@@ -255,6 +259,7 @@ class RelationshipListViewSet(APITestCase):
 
 
     def test_RelationshipListViewSet_POST_nonowner_forbidden(self):
+        ###logged in -- aray
         ### try kray -- > jray
         qurlname = 'http://testserver/api/people/jray/'
         qstat = 'following'
@@ -267,6 +272,7 @@ class RelationshipListViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_RelationshipListViewSet_POST_nonowner_bystaff_OK(self):
+        ###logged in -- aray
         ### try kray -- > jray
         surlname = 'http://testserver/api/people/kray/'
         qurlname = 'http://testserver/api/people/jray/'

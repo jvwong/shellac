@@ -56,8 +56,12 @@ class RelationshipListViewSet(ListViewSet):
         This view will always create Relationship between the authenticated Person
         and the target regardless of the from_person field
         """
-        o = urlparse(request.DATA.get('from_person'))
-        path_elements = o.path.split('/')
+        path = urlparse(request.DATA.get('from_person')).path
+        if type(path) is str:
+            path_elements = path.split('/')
+        else:
+            return Response({'error: invalid mime-type'}, status=status.HTTP_400_BAD_REQUEST)
+
         if request.user.person.username in path_elements or request.user.is_staff:
             return self.create(request, *args, **kwargs)
         return Response({'from_person': 'from_user does not match authenticated User'}, status=status.HTTP_400_BAD_REQUEST)
