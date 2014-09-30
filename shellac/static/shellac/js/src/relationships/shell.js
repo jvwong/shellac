@@ -216,14 +216,11 @@ var shell = (function () {
             //Update the button-related status and UI status
 
             ///update ALL similarly named buttons --  by username key in this case
-            console.log(jqueryMap.$person_list);
             var matching = jqueryMap.$person_list.filter(function(index){
                 return $(this).attr('data-person') === username;
             });
-            console.log(matching);
 
             matching.each(function(index, element){
-                console.log($(this));
                 //update button text
                 $(this).find('button').html(button_update);
                 //update btn group data-status
