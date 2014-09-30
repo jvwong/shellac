@@ -82,20 +82,31 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
                                                      lookup_field='slug',
                                                      view_name='category-detail')
     avatar = serializers.SerializerMethodField('get_avatar')
-    brand = serializers.Field(source='brand.url')
-    audio_file = serializers.Field(source='audio_file.url')
-
+    audio_file_url = serializers.SerializerMethodField('get_audio_file_url')
+    brand = serializers.SerializerMethodField('get_brand')
 
     def get_avatar(self, obj):
         options = {'size': (200, 200), 'crop': True}
-        return get_thumbnailer(obj.brand).get_thumbnail(options).url
+        if obj.brand:
+            return get_thumbnailer(obj.brand).get_thumbnail(options).url
+        return ""
+
+    def get_audio_file_url(self, obj):
+        if obj.audio_file:
+            return obj.audio_file.url
+        return ""
+
+    def get_brand(self, obj):
+        if obj.brand:
+            return obj.brand.url
+        return ""
 
     class Meta:
         lookup_field = 'pk'
         model = Clip
         fields = ('url', 'id', 'title', 'author', 'description', 'categories',
                   'brand', 'avatar', 'plays', 'rating', 'status', 'slug',
-                  'audio_file', 'created', 'owner')
+                  'audio_file', 'audio_file_url', 'created', 'owner')
         # read_only_fields = ('categories',)
 
     def restore_object(self, attrs, instance=None):

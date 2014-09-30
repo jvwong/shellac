@@ -50,7 +50,7 @@ class ClipListViewSet(APITestCase):
         self.assertEqual(resp['results'][0].get('plays'), clip1.plays)
         self.assertEqual(resp['results'][0].get('status'), clip1.status)
         self.assertEqual(resp['results'][0].get('rating'), clip1.rating)
-        self.assertEqual(resp['results'][0].get('audio_file'), clip1.audio_file.name)
+        self.assertEqual(resp['results'][0].get('audio_file'), clip1.audio_file)
 
         cleanClips()
 

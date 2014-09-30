@@ -348,7 +348,10 @@ class RelationshipDetailViewSet(APITestCase):
         self.assertEqual(url, '/api/relationships/1/')
 
     def test_RelationshipDetailViewSet_GET_by_owner_returns_correct_REL_object(self):
-        pk = 6 ### aray --> jray
+        ### aray --> jray
+        rel_a_j = Relationship.objects.get(from_person=self.person, to_person=Person.objects.get(username='jray'))
+        pk = rel_a_j.pk
+
         qurl = '/api/relationships/' + str(pk) + '/'
         response = self.client.get(qurl)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -358,7 +361,9 @@ class RelationshipDetailViewSet(APITestCase):
         self.assertEqual(resp['id'], pk)
 
     def test_RelationshipDetailViewSet_GET_other_nonstaff_OK(self):
-        pk = 5 ### jray --> kray
+        ### jray --> kray
+        rel_j_k = Relationship.objects.get(from_person=Person.objects.get(username='jray'), to_person=Person.objects.get(username='kray'))
+        pk = rel_j_k.pk
         qurl = '/api/relationships/' + str(pk) + '/'
         response = self.client.get(qurl)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -373,13 +378,14 @@ class RelationshipDetailViewSet(APITestCase):
         qurlname = 'http://testserver/api/people/jray/'
         qstat = 'blocked'
         qprivate = True
-
+        rel_a_j = Relationship.objects.get(from_person=self.person, to_person=Person.objects.get(username='jray'))
+        pk = rel_a_j.pk
         payload = {'from_person': surlname,
                    'to_person': qurlname,
                    'status': qstat,
                    'private': qprivate}
 
-        response = self.client.put('/api/relationships/6/', data=payload)
+        response = self.client.put('/api/relationships/' + str(pk) + '/', data=payload)
         data = response.data
         #print(response.data)
         #print(response.status_code)
@@ -427,24 +433,27 @@ class RelationshipDetailViewSet(APITestCase):
         self.assertEqual(data['private'], True)
 
     def test_RelationshipDetailViewSet_DELETE_by_owner_deletes(self):
-        ### update (Rel pk=6): aray(2) -- > jray(3)
-        pk = 6
-        response = self.client.delete('/api/relationships/' + str(pk) + '/')
-        #data = response.data
-        #print(response.data)
-        #print(response.status_code)
+        ##logged in as aray
+        ### delete: aray -- > jray
+        rel_a_j = Relationship.objects.get(from_person=self.person, to_person=Person.objects.get(username='jray'))
+
+        response = self.client.delete('/api/relationships/' + str(rel_a_j.pk) + '/')
+        # data = response.data
+        # print(response.data)
+        # #print(response.status_code)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(len(Relationship.objects.filter(pk=pk)), 0)
+        self.assertEqual(len(Relationship.objects.filter(pk=rel_a_j.pk)), 0)
 
     def test_RelationshipDetailViewSet_DELETE_by_nonowner_rejected(self):
-        ### update (Rel pk=6): aray(2) -- > jray(3)
-        pk = 5
-        response = self.client.delete('/api/relationships/' + str(pk) + '/')
+        ### delete jray -- > kray
+        rel_j_k = Relationship.objects.get(from_person=Person.objects.get(username='jray'), to_person=Person.objects.get(username='kray'))
+
+        response = self.client.delete('/api/relationships/' + str(rel_j_k.pk) + '/')
         #data = response.data
         #print(response.data)
         #print(response.status_code)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(len(Relationship.objects.filter(pk=pk)), 1)
+        self.assertEqual(len(Relationship.objects.filter(pk=rel_j_k.pk)), 1)
 
     def test_RelationshipDetailViewSet_DELETE_by_staff_deletes(self):
         ### update (Rel pk=6): aray(2) -- > jray(3)

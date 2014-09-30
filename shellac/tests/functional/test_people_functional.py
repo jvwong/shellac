@@ -23,7 +23,7 @@ class PeopleTest(FunctionalTest):
     def test_people_page_displays_list_of_correct_Person_profiles(self):
         #will exclude jray
         self.browser.get(self.server_url + '/people/')
-        usernames = self.browser.find_elements_by_css_selector('.content-people .partial-relationships.person .partial-relationships-description-content.username')
+        usernames = self.browser.find_elements_by_css_selector('.content-relationships.people .partial-relationships.person .partial-relationships-description-content.username')
         self.assertIn('kray', usernames[0].text)
         self.assertIn('aray', usernames[1].text)
         self.assertIn('jvwong', usernames[2].text)
