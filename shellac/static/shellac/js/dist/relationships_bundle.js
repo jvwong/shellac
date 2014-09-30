@@ -4988,7 +4988,7 @@ var shell = (function () {
                     break;
                 case 'follower':
                     $button_container.html(configMap.follow_button_html);
-                    $button_container.append(configMap.block_button_html);
+                    //$button_container.append(configMap.block_button_html);
                     break;
                 case 'following':
                     $button_container.html(configMap.unfollow_button_html);
@@ -5107,9 +5107,23 @@ var shell = (function () {
             }
 
             //Update the button-related status and UI status
-            $button.html(button_update);
-            $div_btn_group.attr('data-status', status_update);
-            $div_status.html(status_update);
+
+            ///update ALL similarly named buttons --  by username key in this case
+            console.log(jqueryMap.$person_list);
+            var matching = jqueryMap.$person_list.filter(function(index){
+                return $(this).attr('data-person') === username;
+            });
+            console.log(matching);
+
+            matching.each(function(index, element){
+                console.log($(this));
+                //update button text
+                $(this).find('button').html(button_update);
+                //update btn group data-status
+                $(this).find('.btn-group.partial-relationships-action').attr('data-status', status_update);
+                //update div_status
+                $(this).find('.partial-relationships-description-content.status').html(status_update);
+            });
             setActionButtons(jqueryMap.$person_list);
         })
         .fail(function(error) {
@@ -5140,11 +5154,13 @@ var shell = (function () {
         PubSub.on("relationshipsLoadComplete", function(){
             //console.log("loaded relationships");
             //console.log(stateMap.relationships_db().get());
+
         });
         load_relationships();
 
         //Set the correct action buttons on each Person template
         setActionButtons(jqueryMap.$person_list);
+
     };
 
     return { initModule: initModule };
