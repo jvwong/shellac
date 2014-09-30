@@ -26,12 +26,21 @@
         padding-left: 2*@person_desc_padding;
 
         /* styling bellow */
-        background-color: black;
-        background: black;
-        color: white;
+        color: black;
         .opacity(@person_caption_opacity);
     }
 }
 
 @media (max-width: 768px) {
+
+  .partial-profile-person {
+
+    img.partial-profile-person-avatar{
+      float: none;
+    }
+    .partial-profile-person-description{
+      margin-left: 0;
+
+    }
+  }
 }
