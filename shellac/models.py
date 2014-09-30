@@ -9,7 +9,6 @@ from django.db.models.signals import post_save
 
 from taggit.managers import TaggableManager
 from shellac.fixtures import categories
-from easy_thumbnails.fields import ThumbnailerImageField
 
 ## One-to-one model -- extend User to accomodate relationships
 class PersonManager(models.Model):
@@ -209,7 +208,7 @@ class Clip(models.Model):
 
     ###upload to subdirectory with user id prefixed
     # brand = models.ImageField(upload_to='brands/%Y/%m/%d', blank=True)
-    brand = ThumbnailerImageField(upload_to='brands/%Y/%m/%d', blank=True)
+    brand = models.ImageField(upload_to='brands/%Y/%m/%d', blank=True)
 
     ### Default
     plays = models.PositiveSmallIntegerField(default=0, editable=False)

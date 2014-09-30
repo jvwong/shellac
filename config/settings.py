@@ -163,8 +163,7 @@ INSTALLED_APPS = (
     'search',
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders',
-    'easy_thumbnails'
+    'corsheaders'
 )
 
 REST_FRAMEWORK = {
@@ -250,11 +249,4 @@ LOGGING = {
         },
     }
 }
-
-THUMBNAIL_ALIASES = {
-    '': {
-        'avatar': {'size': (50, 50), 'crop': True},
-    },
-}
-
 from .secret_key import SECRET_KEY

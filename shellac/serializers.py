@@ -72,7 +72,6 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
         attrs.pop('clips', None)
         return Category(**attrs)
 
-from easy_thumbnails.files import get_thumbnailer
 class ClipSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.Field(source='author.user.username')
     author = serializers.HyperlinkedRelatedField(lookup_field='username',
@@ -81,13 +80,12 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
     categories = serializers.HyperlinkedRelatedField(many=True,
                                                      lookup_field='slug',
                                                      view_name='category-detail')
-    avatar = serializers.SerializerMethodField('get_avatar')
     audio_file_url = serializers.SerializerMethodField('get_audio_file_url')
+    brand_url = serializers.SerializerMethodField('get_brand_url')
 
-    def get_avatar(self, obj):
-        options = {'size': (200, 200), 'crop': True}
+    def get_brand_url(self, obj):
         if obj.brand:
-            return get_thumbnailer(obj.brand).get_thumbnail(options).url
+            return obj.brand.url
         return ""
 
     def get_audio_file_url(self, obj):
@@ -99,7 +97,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
         lookup_field = 'pk'
         model = Clip
         fields = ('url', 'id', 'title', 'author', 'description', 'categories',
-                  'brand', 'avatar', 'plays', 'rating', 'status', 'slug',
+                  'brand', 'brand_url', 'plays', 'rating', 'status', 'slug',
                   'audio_file', 'audio_file_url', 'created', 'owner')
         # read_only_fields = ('categories',)
 
