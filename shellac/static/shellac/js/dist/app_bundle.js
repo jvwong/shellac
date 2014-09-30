@@ -11516,8 +11516,8 @@ var shell = (function () {
                     '<div class="ui360">' +
 
                         //BEGIN $player
-                        '<span class="media-url" data-clip-url="' + object.audio_file + '">' +
-                            '<img class="media-img img-responsive" src="' + object.avatar  + '" alt="' + object.title + '" />' +
+                        '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
+                            '<img class="media-img img-responsive" src="' + object.brand_url  + '" alt="' + object.title + '" />' +
                             '<div class="media-description">' +
                                 '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
                                 '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
