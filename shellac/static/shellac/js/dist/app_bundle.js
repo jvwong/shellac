@@ -11517,7 +11517,7 @@ var shell = (function () {
 
                         //BEGIN $player
                         '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
-                            '<img class="media-img img-responsive" src="' + stateMap.MEDIA_URL + object.brand + '" alt="' + object.title + '" />' +
+                            '<img class="media-img img-responsive" src="' + stateMap.MEDIA_URL + object.brand  + '" alt="' + object.title + '" />' +
                             '<div class="media-description">' +
                                 '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
                                 '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +

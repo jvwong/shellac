@@ -163,7 +163,8 @@ INSTALLED_APPS = (
     'search',
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders'
+    'corsheaders',
+    'easy_thumbnails'
 )
 
 REST_FRAMEWORK = {
