@@ -188,7 +188,6 @@ var shell = (function () {
     */
     parseClipData = function(raw){
         var jsonArray;
-
         jsonArray = raw.map(function(jsonObj){
 
             try{
@@ -198,6 +197,7 @@ var shell = (function () {
                 console.log(err);
             }
         });
+        //console.log(jsonArray);
         return jsonArray;
     };
 
@@ -277,8 +277,8 @@ var shell = (function () {
                     '<div class="ui360">' +
 
                         //BEGIN $player
-                        '<span class="media-url" data-clip-url="' + stateMap.MEDIA_URL + object.audio_file + '">' +
-                            '<img class="media-img img-responsive" src="' + stateMap.MEDIA_URL + object.brand  + '" alt="' + object.title + '" />' +
+                        '<span class="media-url" data-clip-url="' + object.audio_file + '">' +
+                            '<img class="media-img img-responsive" src="' + object.avatar  + '" alt="' + object.title + '" />' +
                             '<div class="media-description">' +
                                 '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
                                 '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +

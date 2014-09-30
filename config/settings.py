@@ -251,5 +251,10 @@ LOGGING = {
     }
 }
 
+THUMBNAIL_ALIASES = {
+    '': {
+        'avatar': {'size': (50, 50), 'crop': True},
+    },
+}
 
 from .secret_key import SECRET_KEY
