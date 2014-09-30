@@ -11265,6 +11265,7 @@ var shell = (function () {
                 '<div class="shellac-app-statusbar">Playlist: <span class="shellac-app-statusbar-playing"></span></div>' +
 
                 '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
+                    '<div class="shellac-app-sidebar-closer"><a><span class="glyphicon glyphicon-remove-sign"></span></a></div>' +
                     '<div class="panel-group" id="accordion">' +
                         '<div class="panel panel-default">' +
                             '<div class="panel-heading">' +
@@ -11322,7 +11323,7 @@ var shell = (function () {
     parseCategoryData, renderCategories, display_categories,
     parseClipData, loadClips, display_clips,
 
-    onClickCategory, onTapStatusBar, onDragSideBar,
+    onClickCategory, onTapStatusBar, onTapClose,
 
     PubSub = util.PubSub;
 
@@ -11587,10 +11588,10 @@ var shell = (function () {
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
-    onDragSideBar = function(evt){
+    onTapClose = function(event){
         console.log("swipe detected");
-        console.log(evt.target);
-        evt.preventDefault();
+        console.log(event.target);
+        event.preventDefault();
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
@@ -11630,10 +11631,12 @@ var shell = (function () {
 
         //Navigation Menu Slider
         $( '.shellac-app-statusbar' )
-            .on( 'utap.utap',   onTapStatusBar   );
-        $( '.shellac-app.sidebar')
-            .on( 'udragstart.udrag', onDragSideBar );
+            .on( 'utap',   onTapStatusBar   );
+        $( '.shellac-app-sidebar-closer' )
+            .on( 'utap',   onTapClose );
         jqueryMap.$statusbar_playing.html(target_username);
+
+
     };
 
     return { initModule: initModule };
