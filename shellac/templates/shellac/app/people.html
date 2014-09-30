@@ -21,7 +21,7 @@
     {% if query %}
         <p id="search-title" > Search results for "{{ query }}":</p>
     {% endif %}
-    <div id="shellac-people-relationships" class="content-people clearfix">
+    <div id="shellac-people-relationships" class="content-relationships people clearfix">
         {% for person in page_obj.object_list %}
             {% if person != user.person %}
                 {% include 'shellac/partials/relationships/person.html' %}

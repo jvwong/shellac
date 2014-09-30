@@ -136,8 +136,6 @@ var shell = (function () {
         $div_status = $parent.find('.partial-relationships-description-content.status');
         $div_btn_group = $button.parent();
 
-        console.log($div_status);
-
         username = $parent.find('.username').html();
         from_person = stateMap.endpoint + "people/" + stateMap.username + "/";
         to_person = stateMap.endpoint + "people/" + username + "/";
@@ -205,7 +203,6 @@ var shell = (function () {
         })
         .done(function(data, textStatus, jqXHR) {
 
-            console.log(jqXHR.status);
             ///we'll need to update the TAFFY database
             if(http_method === 'POST' & jqXHR.status === 201) //201 CREATED
             {
@@ -224,9 +221,6 @@ var shell = (function () {
         })
         .fail(function(error) {
             console.log( error );
-        })
-        .complete(function(jqXHR, textStatus){
-            console.log(jqXHR.status);
         });
 
     };
@@ -251,15 +245,13 @@ var shell = (function () {
 
         //register pub-sub methods
         PubSub.on("relationshipsLoadComplete", function(){
-            console.log("loaded relationships");
+            //console.log("loaded relationships");
             //console.log(stateMap.relationships_db().get());
         });
         load_relationships();
 
         //Set the correct action buttons on each Person template
         setActionButtons(jqueryMap.$person_list);
-
-        //console.log(stateMap.debug);
     };
 
     return { initModule: initModule };
