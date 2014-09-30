@@ -4895,7 +4895,7 @@ $( document ).ready(function() {
  * shell.js
  * Root module
 */
-/* global $, window, XMLHttpRequest, DEBUG */
+/* global $, window, XMLHttpRequest, DEBUG, navigator*/
 'use strict';
 
 var shell = (function () {
@@ -4920,6 +4920,7 @@ var shell = (function () {
 
     stateMap = {
         $container: undefined,
+        localhost: undefined,
         csrf_token: undefined,
         username: undefined,
         endpoint: undefined,
@@ -4952,7 +4953,7 @@ var shell = (function () {
         $.ajax({
             withCredentials: true,
             type: 'GET',
-            url: stateMap.endpoint + "relationships/",
+            url: "/api/relationships/",
             dataType: 'json',
             beforeSend: function(xhr, settings) {
                 if (!util.csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -5037,7 +5038,7 @@ var shell = (function () {
         {
             //No Relationship exists --- POST
             http_method = 'POST';
-            url = stateMap.endpoint + "relationships/";
+            url = "/api/relationships/";
             status_update = status = 'following';
             button_update = 'Unfollow';
         }
@@ -5046,7 +5047,7 @@ var shell = (function () {
             //There is a Person with a following Relationship --- POST
             //No Relationship exists --- POST
             http_method = 'POST';
-            url = stateMap.endpoint + "relationships/";
+            url = "/api/relationships/";
             status = 'following';
             status_update = 'friend';
             button_update = 'Unfollow';
@@ -5059,7 +5060,7 @@ var shell = (function () {
             {
                 //Relationship exists --- DELETE
                 http_method = 'DELETE';
-                url = stateMap.endpoint + "relationships/" + relationship.id.toString() + "/";
+                url = "/api/relationships/" + relationship.id.toString() + "/";
                 status_update = status = '';
                 button_update = 'Follow';
             }
@@ -5067,7 +5068,7 @@ var shell = (function () {
             {
                 //Relationship exists --- DELETE
                 http_method = 'DELETE';
-                url = stateMap.endpoint + "relationships/" + relationship.id.toString() + "/";
+                url = "/api/relationships/" + relationship.id.toString() + "/";
                 status_update = status = 'follower';
                 button_update = 'Block';
             }
@@ -5144,14 +5145,21 @@ var shell = (function () {
         stateMap.username = username;
 
         stateMap.debug = DEBUG === 'True';
-        stateMap.endpoint = stateMap.debug === true ? 'http://localhost:8000/api/': 'http://shellac.no-ip.ca/api/';
+
+        if (navigator.userAgent.search("Firefox") > -1)
+        {
+            stateMap.localhost = 'http://localhost:8000/api/';
+        }
+        else if (navigator.userAgent.search("Chrome") > -1)
+        {
+            stateMap.localhost = 'http://127.0.0.1:8000/api/';
+        }
+        stateMap.endpoint = stateMap.debug === true ? stateMap.localhost: 'http://shellac.no-ip.ca/api/';
         setJqueryMap();
 
         //register pub-sub methods
         PubSub.on("relationshipsLoadComplete", function(){
-            //console.log("loaded relationships");
             //console.log(stateMap.relationships_db().get());
-
         });
         load_relationships();
 

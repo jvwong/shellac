@@ -23,36 +23,36 @@ var shell = (function () {
         main_html: String() +
             '<div class="shellac-app-container">' +
 
-//                '<div class="shellac-app-statusbar">Playlist: <span class="shellac-app-statusbar-playing"></span></div>' +
-//
-//                '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
-//                    '<div class="panel-group" id="accordion">' +
-//                        '<div class="panel panel-default">' +
-//                            '<div class="panel-heading">' +
-//                                '<a data-toggle="collapse" data-parent="#accordion" href="#collapseCategories">' +
-//                                    'Categories' +
-//                                '</a>' +
-//                            '</div>' +
-//                            '<div id="collapseCategories" class="panel-collapse collapse">' +
-//                                '<div class="panel-body">' +
-//                                    '<div class="shellac-app nav nav-sidebar list-group"></div>' +
-//                                '</div>' +
-//                            '</div>' +
-//                        '</div>' +
-//                        '<div class="panel panel-default">' +
-//                            '<div class="panel-heading">' +
-//                                '<a data-toggle="collapse" data-parent="#accordion" href="#collapsePeople">' +
-//                                    'People' +
-//                                '</a>' +
-//                            '</div>' +
-//                            '<div id="collapsePeople" class="panel-collapse collapse">' +
-//                                '<div class="panel-body">' +
-//                                    '//Person List TODO' +
-//                                '</div>' +
-//                            '</div>' +
-//                        '</div>' +
-//                    '</div>' +
-//                '</div>' +
+                '<div class="shellac-app-statusbar">Playlist: <span class="shellac-app-statusbar-playing"></span></div>' +
+
+                '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
+                    '<div class="panel-group" id="accordion">' +
+                        '<div class="panel panel-default">' +
+                            '<div class="panel-heading">' +
+                                '<a data-toggle="collapse" data-parent="#accordion" href="#collapseCategories">' +
+                                    'Categories' +
+                                '</a>' +
+                            '</div>' +
+                            '<div id="collapseCategories" class="panel-collapse collapse">' +
+                                '<div class="panel-body">' +
+                                    '<div class="shellac-app nav nav-sidebar list-group"></div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="panel panel-default">' +
+                            '<div class="panel-heading">' +
+                                '<a data-toggle="collapse" data-parent="#accordion" href="#collapsePeople">' +
+                                    'People' +
+                                '</a>' +
+                            '</div>' +
+                            '<div id="collapsePeople" class="panel-collapse collapse">' +
+                                '<div class="panel-body">' +
+                                    '//Person List TODO' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
 
                 '<div class="shellac-app clip content"></div>' +
             '</div>',
@@ -83,7 +83,7 @@ var shell = (function () {
     parseCategoryData, renderCategories, display_categories,
     parseClipData, loadClips, display_clips,
 
-    onClickCategory, onTapStatusBar, onSwipeSideBar,
+    onClickCategory, onTapStatusBar, onDragSideBar,
 
     PubSub = util.PubSub;
 
@@ -348,12 +348,12 @@ var shell = (function () {
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
-//    onSwipeSideBar = function(evt){
-////        console.log("swipe deteceted");
-////        console.log(evt);
-//        evt.preventDefault();
-//        jqueryMap.$app_container.toggleClass('nav-expanded');
-//    };
+    onDragSideBar = function(evt){
+        console.log("swipe detected");
+        console.log(evt.target);
+        evt.preventDefault();
+        jqueryMap.$app_container.toggleClass('nav-expanded');
+    };
 
 
 
@@ -390,11 +390,11 @@ var shell = (function () {
         renderCategories();
 
         //Navigation Menu Slider
-//        $( '.shellac-app-statusbar' )
-//            .on( 'utap.utap',   onTapStatusBar   );
-//        $( '.shellac-app.sidebar')
-//            .on( 'udragstart.udrag', onSwipeSideBar );
-//        jqueryMap.$statusbar_playing.html(target_username);
+        $( '.shellac-app-statusbar' )
+            .on( 'utap.utap',   onTapStatusBar   );
+        $( '.shellac-app.sidebar')
+            .on( 'udragstart.udrag', onDragSideBar );
+        jqueryMap.$statusbar_playing.html(target_username);
     };
 
     return { initModule: initModule };
