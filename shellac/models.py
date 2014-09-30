@@ -271,6 +271,7 @@ def on_clip_delete(sender, instance, **kwargs):
         # Pass false so ImageField doesn't save the model.
         instance.brand.delete(False)
 
+
     if instance.audio_file:
         if os.path.isfile(instance.audio_file.url):
             os.remove(instance.audio_file.url)

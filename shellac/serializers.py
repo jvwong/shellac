@@ -83,7 +83,6 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
                                                      view_name='category-detail')
     avatar = serializers.SerializerMethodField('get_avatar')
     audio_file_url = serializers.SerializerMethodField('get_audio_file_url')
-    brand = serializers.SerializerMethodField('get_brand')
 
     def get_avatar(self, obj):
         options = {'size': (200, 200), 'crop': True}
@@ -94,11 +93,6 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
     def get_audio_file_url(self, obj):
         if obj.audio_file:
             return obj.audio_file.url
-        return ""
-
-    def get_brand(self, obj):
-        if obj.brand:
-            return obj.brand.url
         return ""
 
     class Meta:
