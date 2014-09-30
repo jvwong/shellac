@@ -3,7 +3,7 @@
 <!-- profile div -->
 <div class="partial-profile-person">
     <!-- profile-image -->
-    <a class="partial-profile-person-app" href="{% url 'shellac_app' person.username %}">
+    <a class="partial-profile-person-url" href="{{person.get_absolute_url}}">
         <img class="partial-profile-person-avatar img-responsive img-thumbnail"
              src="{% if person.avatar %}
                     {{ person.avatar.url }}
@@ -13,7 +13,7 @@
     </a>
 
     <div class="partial-profile-person-description">
-        <a class="partial-profile-person-url" href="{{person.get_absolute_url}}">
+        <a class="partial-profile-person-app" href="{% url 'shellac_app' person.username %}">
             <span class="partial-profile-person-description-content lead">{{ person.username | truncatechars:15  }}</span><br />
         </a>
         <span class="partial-profile-person-description-content">{{ person.user.first_name }}</span><br />
