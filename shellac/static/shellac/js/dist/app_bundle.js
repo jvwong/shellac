@@ -11326,7 +11326,9 @@ var shell = (function () {
     parseCategoryData, renderCategories, display_categories,
     parseClipData, loadClips, display_clips,
 
-    onClickCategory, onTapStatusBar, onTapClose,
+    onClickCategory, onTapStatusBar, onSwipeClose,
+
+    swipeData,
 
     PubSub = util.PubSub;
 
@@ -11472,6 +11474,17 @@ var shell = (function () {
     };
 
 
+    swipeData = function(event, direction, distance, duration, fingerCount, fingerData) {
+        console.log($(this));
+        console.log("event: %s", event);
+        console.log("direction: %s", direction);
+        console.log("distance: %s", distance);
+        console.log("duration: %s", duration);
+        console.log("fingerCount: %s", fingerCount);
+        console.log("fingerData: %s", fingerData);
+    };
+
+
     //--------------------- END MODULE SCOPE METHODS --------------------
 
 
@@ -11584,22 +11597,15 @@ var shell = (function () {
         );
     };
 
-    onTapStatusBar = function(evt){
-//        console.log("tap deteceted");
-//        console.log(evt);
-        evt.preventDefault();
-        jqueryMap.$app_container.toggleClass('nav-expanded');
-    };
-
-    onTapClose = function(event){
-        console.log("swipe detected");
-        console.log(event.target);
+    onTapStatusBar = function(event, direction, distance, duration, fingerCount){
         event.preventDefault();
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
-
-
+    onSwipeClose = function(event, direction, distance, duration, fingerCount){
+        event.preventDefault();
+        jqueryMap.$app_container.toggleClass('nav-expanded');
+    };
     //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
@@ -11633,13 +11639,14 @@ var shell = (function () {
         renderCategories();
 
         //Navigation Menu Slider
-        $( '.shellac-app-statusbar' )
-            .on( 'utap',   onTapStatusBar   );
-        $( '.shellac-app-sidebar-closer' )
-            .on( 'utap',   onTapClose );
+        $( '.shellac-app-sidebar-closer' ).on('click', onTapStatusBar);
+        $( '.shellac-app-statusbar' ).on('click', onTapStatusBar);
         jqueryMap.$statusbar_playing.html(target_username);
 
-
+        $( '.shellac-app.sidebar' ).swipe({
+            swipeLeft: onSwipeClose,
+            threshold: 75
+        });
     };
 
     return { initModule: initModule };
