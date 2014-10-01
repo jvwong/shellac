@@ -124,7 +124,14 @@ def watch():
     local('cd %s && grunt watch' % (ljs_dir,))
 
 def test():
-    local('../virtualenv/bin/python3.4 manage.py test %s.tests' % (APP_NAME,))
+    local('../virtualenv/bin/python3.4 manage.py test %s.tests.unit' % (APP_NAME,))
+    local('../virtualenv/bin/python3.4 manage.py test %s.tests.functional' % (APP_NAME,))
+
+def unit():
+    local('../virtualenv/bin/python3.4 manage.py test %s.tests.unit' % (APP_NAME,))
+
+def functional():
+    local('../virtualenv/bin/python3.4 manage.py test %s.tests.functional' % (APP_NAME,))
 
 def make_test_fixtures():
     local('../virtualenv/bin/python3.4 manage.py dumpdata shellac --exclude=shellac.Person --format=json --indent=4 > %s/shellac.json' % (lfixtures_dir,))
