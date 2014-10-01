@@ -46,20 +46,20 @@ main .container-fluid {
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
-.media:first-child {
-  margin-top: 0px;
-  margin-bottom: 4px;
-}
 .media,
 .media .media {
-  margin-top: 0px;
-  margin-bottom: 4px;
+  margin: 0px;
 }
 .media.clip {
   max-width: 250px;
   max-height: 250px;
   min-width: 250px;
   min-height: 250px;
+  border-style: solid;
+  border-color: #000000;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin: 1px;
 }
 .media.clip .media-description {
   position: absolute;
@@ -68,11 +68,9 @@ main .container-fluid {
   /* position will be on bottom */
   left: 0px;
   width: 100%;
-  margin-left: 2px;
-  padding: 5px;
-  padding-left: 10px;
+  height: 6em;
+  padding: 0.5em;
   /* styling bellow */
-  background-color: black;
   background: black;
   color: white;
   -moz-opacity: 0.8;
@@ -113,10 +111,9 @@ main .container-fluid {
   top: 0px;
   /* position will be on bottom */
   left: 0px;
-  width: 100%;
-  margin-left: 2px;
-  padding: 5px;
-  padding-left: 10px;
+  width: 90%;
+  padding: 0.5em;
+  padding-left: 1em;
   /* styling bellow */
   background-color: transparent;
   background: transparent;
@@ -132,13 +129,8 @@ main .container-fluid {
   /* the height of the progress bar */
   height: 0.7em;
 }
-.media.clip .media-progress .progress-bar {
-  /* the progress bar color*/
-  /* background-color: ; */
-}
-.media.clip .media-img.img-responsive {
-  height: 95%;
-  width: 95%;
+.media.clip .media-img {
+  width: 100%;
 }
 .media.clip:hover {
   cursor: pointer;
@@ -154,8 +146,8 @@ main .container-fluid {
     max-height: 175px;
     min-width: 175px;
     min-height: 175px;
-    padding-left: 0px;
-    padding-right: 0px;
+    border-style: solid black;
+    border-width: 1px;
   }
 }
 
@@ -447,20 +439,20 @@ main .container-fluid {
 /*
  * Media
  */
-.media:first-child {
-  margin-top: 0px;
-  margin-bottom: 4px;
-}
 .media,
 .media .media {
-  margin-top: 0px;
-  margin-bottom: 4px;
+  margin: 0px;
 }
 .media.clip {
   max-width: 250px;
   max-height: 250px;
   min-width: 250px;
   min-height: 250px;
+  border-style: solid;
+  border-color: #000000;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin: 1px;
 }
 .media.clip .media-description {
   position: absolute;
@@ -469,11 +461,9 @@ main .container-fluid {
   /* position will be on bottom */
   left: 0px;
   width: 100%;
-  margin-left: 2px;
-  padding: 5px;
-  padding-left: 10px;
+  height: 6em;
+  padding: 0.5em;
   /* styling bellow */
-  background-color: black;
   background: black;
   color: white;
   -moz-opacity: 0.8;
@@ -514,10 +504,9 @@ main .container-fluid {
   top: 0px;
   /* position will be on bottom */
   left: 0px;
-  width: 100%;
-  margin-left: 2px;
-  padding: 5px;
-  padding-left: 10px;
+  width: 90%;
+  padding: 0.5em;
+  padding-left: 1em;
   /* styling bellow */
   background-color: transparent;
   background: transparent;
@@ -533,13 +522,8 @@ main .container-fluid {
   /* the height of the progress bar */
   height: 0.7em;
 }
-.media.clip .media-progress .progress-bar {
-  /* the progress bar color*/
-  /* background-color: ; */
-}
-.media.clip .media-img.img-responsive {
-  height: 95%;
-  width: 95%;
+.media.clip .media-img {
+  width: 100%;
 }
 .media.clip:hover {
   cursor: pointer;
@@ -555,8 +539,8 @@ main .container-fluid {
     max-height: 175px;
     min-width: 175px;
     min-height: 175px;
-    padding-left: 0px;
-    padding-right: 0px;
+    border-style: solid black;
+    border-width: 1px;
   }
 }
 /*
