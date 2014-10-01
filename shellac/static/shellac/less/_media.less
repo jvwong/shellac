@@ -1,6 +1,7 @@
 /*
  * Media
  */
+
 @import "_elements";
 
 @media_margin: 0px;
@@ -15,6 +16,8 @@
 @media_desc_padding: 0.5em;
 @media_dim_small: 175px;
 @media_dim_medium: 250px;
+
+@media_img_dim: 100%;
 
 .media, .media .media{
     margin: @media_margin;
@@ -93,7 +96,10 @@
     }
 
     .media-img{
-      width: 100%;
+      width: @media_img_dim;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
 }

@@ -132,6 +132,9 @@ main .container-fluid {
 }
 .media.clip .media-img {
   width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .media.clip:hover {
   cursor: pointer;
@@ -526,6 +529,9 @@ main .container-fluid {
 }
 .media.clip .media-img {
   width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .media.clip:hover {
   cursor: pointer;
