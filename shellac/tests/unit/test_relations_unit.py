@@ -4,12 +4,12 @@ from django.http import HttpRequest
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 
-from shellac.views.app import shellac_tune
+from shellac.views.app import shellac_relations
 
 # """
-#  BEGIN Tune page unit testing
+#  BEGIN Relations page unit testing
 # """
-class TunePage(TestCase):
+class RelationsPage(TestCase):
     fixtures = ['shellac.json', 'auth.json']
 
     def setUp(self):
@@ -20,16 +20,16 @@ class TunePage(TestCase):
         self.client.login(username=username, password=password)
 
     def test_tune_url_returns_correct_url(self):
-        url = reverse('shellac_tune')
-        self.assertEqual(url, '/tune/')
+        url = reverse('shellac_relations')
+        self.assertEqual(url, '/relations/')
 
     def test_tune_url_resolves_to_correct_view(self):
-        found = resolve('/tune/')
-        self.assertEqual(found.func, shellac_tune)
+        found = resolve('/relations/')
+        self.assertEqual(found.func, shellac_relations)
 
     def test_tune_page_returns_correct_html(self):
         request = HttpRequest()
         request.user = self.user
-        response = shellac_tune(request)
-        expected_html = render_to_string('shellac/app/tune.html', {'user': self.user})
+        response = shellac_relations(request)
+        expected_html = render_to_string('shellac/app/relations.html', {'user': self.user})
         self.assertEqual(response.content.decode(), expected_html)

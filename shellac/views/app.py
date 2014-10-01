@@ -22,8 +22,8 @@ def user_profile(request, *args, **kwargs):
 
 ### Tune in
 @login_required(login_url='/accounts/signin/')
-def shellac_tune(request, *args, **kwargs):
-    return render(request, 'shellac/app/tune.html')
+def shellac_relations(request, *args, **kwargs):
+    return render(request, 'shellac/app/relations.html')
 
 
 ### View list of Persons
