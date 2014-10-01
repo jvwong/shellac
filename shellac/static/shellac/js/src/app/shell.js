@@ -21,7 +21,7 @@ var shell = (function () {
 
     configMap = {
         main_html: String() +
-            '<div class="shellac-app-container  nav-expanded">' +
+            '<div class="shellac-app-container">' +
 
                 '<div class="shellac-app-statusbar">Playlist: <span class="shellac-app-statusbar-playing"></span></div>' +
 
