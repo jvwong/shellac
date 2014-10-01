@@ -24,12 +24,7 @@
 
     <!-- Custom css -->
     {% block custom_css %}
-        {% if debug %}
-            <link rel="stylesheet/less" type="text/css" href="{% static 'shellac/less/app.less' %}" />
-            <script src="{% static 'shellac/js/lib/less/dist/less-1.7.5.min.js' %}"></script>
-    {% else %}
-            <link rel="stylesheet" type="text/css" href="{% static 'shellac/css/base.css' %}" />
-        {% endif %}
+        <link rel="stylesheet" type="text/css" href="{% static 'shellac/css/base.css' %}" />
     {% endblock custom_css %}
 
     <!-- Third party javascript -->
@@ -111,13 +106,6 @@
     </main>
 
     <!-- Footer -->
-    <footer>
-        <div class="container-fluid">
-        {% block footer %}
-            {% include 'shellac/partials/footer/generic.html' %}
-        {% endblock footer %}
-        </div>
-    </footer>
 
 </body>
 </html>

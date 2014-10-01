@@ -15,6 +15,14 @@ module.exports = function watch(grunt) {
                 'jshint',
                 'browserify'
             ]
+        },
+        styles: {
+            files: [
+                '../less/**/*.less'
+            ],
+            tasks: [
+                'less:development'
+            ]
         }
 	};
 };

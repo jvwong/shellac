@@ -26,8 +26,7 @@ var shell = (function () {
                 '<div class="shellac-app-statusbar">Playlist: <span class="shellac-app-statusbar-playing"></span></div>' +
 
                 '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
-                    '<div class="shellac-app-sidebar-closer"><a><span class="glyphicon glyphicon-remove-sign"></span></a></div>' +
-                    '<div class="panel-group" id="accordion">' +
+                    '<div class="panel-group noSwipe" id="accordion">' +
 
                         '<div class="panel panel-default">' +
                             '<div class="panel-heading">' +
@@ -87,7 +86,7 @@ var shell = (function () {
     parseCategoryData, renderCategories, display_categories,
     parseClipData, loadClips, display_clips,
 
-    onClickCategory, onTapStatusBar, onSwipeClose,
+    onClickCategory, onTapClose, onSwipeClose,
 
     swipeData,
 
@@ -287,6 +286,16 @@ var shell = (function () {
     display_clips = function(){
 
         jqueryMap.$clip_content.html("");
+
+        if(stateMap.clips.length === 0)
+        {
+            var message = String() +
+                '<div class="col-xs-12 clip no-content">' +
+                    '<h3>Nothing to hear here...<a href="/people/">yet</a></h3>' +
+                '</div>';
+            jqueryMap.$clip_content.html(message);
+            return;
+        }
         stateMap.clips.forEach(function(object){
 
             var clip = String() +
@@ -309,8 +318,6 @@ var shell = (function () {
                 '</div>';
 
             jqueryMap.$clip_content.append(clip);
-
-
         });
         $('.media.clip .media-url').on('click', function(e){
             var url = $(this).attr('data-clip-url'),
@@ -358,7 +365,7 @@ var shell = (function () {
         );
     };
 
-    onTapStatusBar = function(event, direction, distance, duration, fingerCount){
+    onTapClose = function(event, direction, distance, duration, fingerCount){
         event.preventDefault();
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
@@ -400,11 +407,13 @@ var shell = (function () {
         renderCategories();
 
         //Navigation Menu Slider
-        $( '.shellac-app-sidebar-closer' ).on('click', onTapStatusBar);
-        $( '.shellac-app-statusbar' ).on('click', onTapStatusBar);
+        $( '.shellac-app-statusbar' ).swipe({
+            tap: onTapClose
+        });
         jqueryMap.$statusbar_playing.html(target_username);
 
         $( '.shellac-app.sidebar' ).swipe({
+            tap: onTapClose,
             swipeLeft: onSwipeClose,
             threshold: 75
         });

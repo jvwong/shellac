@@ -7,12 +7,26 @@ module.exports = function less(grunt) {
 
 	// Options
 	return {
+        development: {
+            options: {
+                compress: false
+            },
+            files:{
+                "../css/base.css": "../less/**/*.less"
+            }
+        },
         production: {
             options: {
-                cleancss: true
-                , paths : ["public/css"]
+                paths: ["assets/css"],
+                cleancss: true,
+                modifyVars: {
+                    imgPath: '"http://mycdn.com/path/to/images"',
+                    bgColor: 'red'
+                }
             },
-            files: { '.build/css/app.css': 'public/css/app.less' }
-	    }
+            files: {
+                "path/to/result.css": "path/to/source.less"
+            }
+        }
 	};
 };
