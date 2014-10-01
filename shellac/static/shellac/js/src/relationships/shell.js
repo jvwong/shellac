@@ -137,9 +137,13 @@ var shell = (function () {
         $div_status = $parent.find('.partial-relationships-description-content.status');
         $div_btn_group = $button.parent();
 
-        username = $parent.find('.username').html();
+        username = $parent.find('.username').html().trim();
         from_person = stateMap.endpoint + "people/" + stateMap.username + "/";
         to_person = stateMap.endpoint + "people/" + username + "/";
+
+//        console.log("from_person: %s", from_person);
+//        console.log("to_person: %s", to_person);
+//        console.log("username: %s", username);
 
         if($button.html() === 'Follow' & $div_btn_group.attr('data-status') === '')
         {
@@ -162,6 +166,8 @@ var shell = (function () {
         else
         {
             var relationship = stateMap.relationships_db({from_person: from_person, to_person: to_person}).first() || {};
+//            console.log(stateMap.relationships_db({from_person: from_person, to_person: to_person}).get());
+
 
             if($button.html() === 'Unfollow' & $div_btn_group.attr('data-status') === 'following')
             {
