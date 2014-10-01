@@ -11441,12 +11441,7 @@ var shell = (function () {
                 //sub-in dummy image
                 if(jsonObj.brand === "")
                 {
-                    if (stateMap.DEBUG){
-                        jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
-                    } else {
-                        jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
-                    }
-
+                    jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
                 }
                 return jsonObj;
             }catch(err){
