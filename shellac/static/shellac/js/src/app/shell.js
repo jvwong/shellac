@@ -28,6 +28,7 @@ var shell = (function () {
                 '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
                     '<div class="shellac-app-sidebar-closer"><a><span class="glyphicon glyphicon-remove-sign"></span></a></div>' +
                     '<div class="panel-group" id="accordion">' +
+
                         '<div class="panel panel-default">' +
                             '<div class="panel-heading">' +
                                 '<a data-toggle="collapse" data-parent="#accordion" href="#collapseCategories">' +
@@ -40,6 +41,7 @@ var shell = (function () {
                                 '</div>' +
                             '</div>' +
                         '</div>' +
+
                         '<div class="panel panel-default">' +
                             '<div class="panel-heading">' +
                                 '<a data-toggle="collapse" data-parent="#accordion" href="#collapsePeople">' +
@@ -52,6 +54,7 @@ var shell = (function () {
                                 '</div>' +
                             '</div>' +
                         '</div>' +
+
                     '</div>' +
                 '</div>' +
 

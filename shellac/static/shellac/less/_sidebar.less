@@ -13,21 +13,23 @@
 }
 
 .shellac-app.sidebar {
-  background: #222222;
-  display: block;
-  height: 100%;
-  overflow-y: scroll;
-  position: fixed;
-  left: -15em;
-  font-size: 15px;
-  width: 15em;
-  z-index: 1000;
 
+  position: fixed;
+  height: 100%;
+  width: 15em;
+  left: -15em;
   top: 51px;
   bottom: 0;
 
-  border-color: #111111;
   opacity: 0.9;
+  background: #222222;
+  border-color: #111111;
+
+  display: block;
+  overflow: auto;
+  z-index: 1000;
+
+  font-size: 15px;
 
   transition: left 0.3s ease-in-out 0s;
   -webkit-transition: left 0.3s ease-in-out 0s;
@@ -36,7 +38,6 @@
 
   .panel-group{
     margin-top: 1em;
-    z-index: 2000;
   }
 
   .shellac-app-sidebar-closer{
