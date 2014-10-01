@@ -11444,7 +11444,7 @@ var shell = (function () {
                     if (stateMap.DEBUG){
                         jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
                     } else {
-                        jsonObj.brand_url = 'shellac/assets/seventyEight.png';
+                        jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
                     }
 
                 }
