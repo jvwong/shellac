@@ -73,33 +73,24 @@ var audio = (function () {
         }
     };
 
-    // Begin private method /onCategoryChange/
-    // Example   : onCategoryChange;
-    // Purpose   :
-    //   PubSub callback for changes in the category UI
-    // Arguments :
-    //  * urls - array of urls for Clip objects currently displayed
-    // Action    : for each url, update the given progress bar. Find the "current" sound object
-    //  and reassign the jqueryMap to reflect the updated / new DOM element
-    // Returns   : none
-    // Throws    : none
+    /**
+    *onCategoryChange PubSub callback for changes in the category UI
+    * @param urls - array of urls for Clip objects currently displayed
+    * @return: none
+    */
     onCategoryChange = function(urls){
-
         urls.forEach(function(url){
-            var murl,
-                $player,
+            var $player,
                 $description,
                 $progress,
                 $progress_bar,
                 pplayed,
                 sound;
 
-            //tack on the media tag
-            murl = '/media/' + url;
             //get the span.media-url
-            $player = $('.media.clip').find("[data-clip-url='" + murl + "']");
+            $player = $('.media.clip').find("[data-clip-url='" + url + "']");
             //get the sound and check if it was created
-            sound = soundManager.getSoundById(murl);
+            sound = soundManager.getSoundById(url);
             if(sound){
 
                 //inject the progress bar and update the state
@@ -117,7 +108,7 @@ var audio = (function () {
                 $progress_bar.width(pplayed + '%');
 
                 // if the sound === stateMap.audio then reassign the jQuery map
-                if(stateMap.audio.id === murl){
+                if(stateMap.audio.id === url){
                     setJqueryMap($progress, $description);
                 }
             }
@@ -213,8 +204,8 @@ var audio = (function () {
     //------------------- BEGIN PUBLIC METHODS -------------------
     onClickPlayer = function(url, $progress, $description){
 
-        console.log(url);
-        console.log($progress);
+//        console.log(url);
+//        console.log($progress);
 
         // *** CASE 0
         // State: Clip selected does was not created yet

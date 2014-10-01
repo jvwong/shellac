@@ -21,7 +21,7 @@ var shell = (function () {
 
     configMap = {
         main_html: String() +
-            '<div class="shellac-app-container">' +
+            '<div class="shellac-app-container  nav-expanded">' +
 
                 '<div class="shellac-app-statusbar">Playlist: <span class="shellac-app-statusbar-playing"></span></div>' +
 
@@ -34,7 +34,7 @@ var shell = (function () {
                                     'Categories' +
                                 '</a>' +
                             '</div>' +
-                            '<div id="collapseCategories" class="panel-collapse collapse">' +
+                            '<div id="collapseCategories" class="panel-collapse collapse in">' +
                                 '<div class="panel-body">' +
                                     '<div class="shellac-app nav nav-sidebar list-group"></div>' +
                                 '</div>' +
@@ -84,7 +84,7 @@ var shell = (function () {
 
     urlParse,
 
-    parseCategoryData, renderCategories, display_categories,
+    parseCategoryData, loadCategories, display_categories,
     parseClipData, loadClips, display_clips,
 
     onClickCategory, onTapClose, onSwipeClose,
@@ -114,13 +114,13 @@ var shell = (function () {
 
 
     /*
-     * method renderCategories: make an api call to gather the Categories in database
+     * method loadCategories: make an api call to gather the Categories in database
      * parameters
      * return
      *   * jsonArray - a list of valid JSON objects representing
      *   serialized Category objects
      **/
-    renderCategories = function(){
+    loadCategories = function(){
 
         var url = '/api/categories/';
         $.ajax({
@@ -257,48 +257,36 @@ var shell = (function () {
 
     //--------------------- BEGIN DOM METHODS --------------------
 
-
-
     display_categories = function(){
 
         var all_anchor = String(),
-            items = String(),
-            clip_list = [];
+            items = String();
         jqueryMap.$nav_sidebar_categories.append(all_anchor);
-
-        stateMap.categories.forEach(function(object){
+        stateMap.categories.forEach(function(category){
+            var clip_array = stateMap.clip_db({categories: {has: category.url}});
             items +=
-                '<a class="list-group-item nav-sidebar-category" href="#">' + '<span class="badge">' + object.clips.length + '</span>' +
-                    '<h5 class="list-group-item-heading" id="' + object.slug + '">' + object.title + '</h5>' +
+                '<a class="list-group-item nav-sidebar-category" href="#">' + '<span class="badge">' + clip_array.count() + '</span>' +
+                    '<h5 class="list-group-item-heading" id="' + category.slug + '">' + category.title + '</h5>' +
                 '</a>';
-
-            var filtered = object.clips.filter(function(id){
-                return clip_list.indexOf(id) === -1;
-            });
-            clip_list = clip_list.concat(filtered);
         });
-
         all_anchor +=
-            '<a class="list-group-item nav-sidebar-category active" href="#">' + '<span class="badge">' + clip_list.length + '</span>' +
+            '<a class="list-group-item nav-sidebar-category active" href="#">' + '<span class="badge">' + stateMap.clip_db().count() + '</span>' +
                 '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
             '</a>';
-
         jqueryMap.$nav_sidebar_categories.append(all_anchor, items);
 
-        //register listeners
+        //register listeners on <h5> element
         $('.list-group-item-heading').on('click', onClickCategory);
     };
 
-
     display_clips = function(){
-
         jqueryMap.$clip_content.html("");
 
         if(stateMap.clips.length === 0)
         {
             var message = String() +
                 '<div class="col-xs-12 clip no-content">' +
-                    '<h3>Nothing to hear here...<a href="/people/">yet</a></h3>' +
+                    '<h3>Nothing to hear here...</h3>' +
                 '</div>';
             jqueryMap.$clip_content.html(message);
             return;
@@ -308,20 +296,15 @@ var shell = (function () {
             var clip = String() +
                 '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 media clip">' +
                     '<div class="ui360">' +
-
-                        //BEGIN $player
                         '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
                             '<img class="media-img" src="' + object.brand_url  + '" alt="' + object.title + '" />' +
                             '<div class="media-description">' +
                                 '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
                                 '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
                                 '<span class="media-description-content"><small>' + object.owner + " " + object.created.startOf('minute').fromNow() + '</small></span><br/>' +
-//                                '<span class="media-description-content"><small>' + object.owner + "  -- " + object.created._d.toDateString() + '</small></span><br/>' +
                             '</div>' +
                             '<div class="media-progress"></div>' +
                         '</span>'  +
-                        //END $player
-
                     '</div>' +
                 '</div>';
 
@@ -339,17 +322,13 @@ var shell = (function () {
     //--------------------- END DOM METHODS ----------------------
 
     //------------------- BEGIN EVENT HANDLERS -------------------
-    // Begin Event handler /onClickCategory/
-    // Purpose    : Handles the event for sidebar category selection
-    // Arguments  :
-    // Settings   : none
-    // Returns    :
-    // Actions    : Should signal to audio module to update progress bar state for each clip
-    //   * binds to category DOM elements and reloads corresponding clips into
-    //     stateMap.clips
+    /**
+     * onClickCategory callback for changes in the category UI
+     * @param event jQuery event object
+     */
     onClickCategory = function(event){
 
-        var category_object;
+        var category;
 
         //empty the clip array
         stateMap.clips = [];
@@ -359,17 +338,12 @@ var shell = (function () {
             stateMap.clips = stateMap.clip_db().get();
 
         } else {
-            category_object = stateMap.category_db({slug: event.target.id}).first();
-
-            //push in any matching clip id from the url
-            stateMap.clips = category_object.clips.map(function(clip_url){
-                var URL = urlParse(clip_url);
-                return stateMap.clip_db({id: parseInt(URL.pk)}).first();
-            });
+            category = stateMap.category_db({slug: event.target.id}).first();
+            stateMap.clips = stateMap.clip_db({categories: {has: category.url}}).get();
         }
         display_clips();
         util.PubSub.emit("shellac-categorychange",
-            stateMap.clips.map(function(clip){return clip.audio_file;})
+            stateMap.clips.map(function(clip){return clip.audio_file_url;})
         );
     };
 
@@ -385,16 +359,16 @@ var shell = (function () {
     //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
-    // initModule //   Populates $container with the shell of the UI
-    //   and then configures and initializes feature modules.
-    //   The Shell is also responsible for browser-wide issues
-    //   Directs this app to offer its capability to the user
-    // @param $container A jQuery collection that should represent
-    // a single DOM container
-    // @param MEDIA_URL Django media url prefix (settings.MEDIA_URL)
-    // @param STATIC_URL Django static url prefix (settings.STATIC_URL)
-    // @param target_username account holder username for retrieving clips
-
+    /**
+     * initModule Populates $container with the shell of the UI
+     * and then configures and initializes feature modules.
+     * The Shell is also responsible for browser-wide issues
+     * Directs this app to offer its capability to the user
+     * @param $container A jQuery collection that should represent a single DOM container
+     * @param MEDIA_URL Django media url prefix (settings.MEDIA_URL)
+     * @param STATIC_URL Django static url prefix (settings.STATIC_URL)
+     * @param target_username account holder username for retrieving clips
+     */
     initModule = function( $container, STATIC_URL, MEDIA_URL, target_username, DEBUG){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
@@ -409,11 +383,11 @@ var shell = (function () {
 
         //register pub-sub methods
         PubSub.on("clipLoadComplete", display_clips);
+        PubSub.on("clipLoadComplete", loadCategories);
         PubSub.on("categoryLoadComplete", display_categories);
 
         //load data into in-browser database
         loadClips("following", target_username);
-        renderCategories();
 
         //Navigation Menu Slider
         $( '.shellac-app-statusbar' ).swipe({
