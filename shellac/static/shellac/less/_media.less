@@ -5,6 +5,8 @@
 
 @media_margin: 0px;
 @media_clip_margin: 1px;
+@media_border_width: 2px;
+@media_border_color: #000000;
 
 @caption_opacity: 0.8;
 @caption_opacity_playing: 0.8;
@@ -25,7 +27,8 @@
   min-height: @media_dim_medium;
 
   border-style: solid;
-  border-color: #000000;
+  border-width: @media_border_width;
+  border-color: @media_border_color;
 
   padding-left: 0px;
   padding-right: 0px;

@@ -2,7 +2,7 @@
  * shell.js
  * Root namespace module
 */
-/* global $, window, AudioContext, XMLHttpRequest, target_username */
+/* global $, window, AudioContext, XMLHttpRequest, target_username, DEBUG */
 'use strict';
 
 var shell = (function () {
@@ -75,7 +75,8 @@ var shell = (function () {
         clips: undefined,
         clip_db: TAFFY(),
 
-        isPlaying: false
+        isPlaying: false,
+        DEBUG: undefined
     },
 
     jqueryMap = {},
@@ -201,7 +202,12 @@ var shell = (function () {
                 //sub-in dummy image
                 if(jsonObj.brand === "")
                 {
-                    jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
+                    if (stateMap.DEBUG){
+                        jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
+                    } else {
+                        jsonObj.brand_url = 'shellac/assets/seventyEight.png';
+                    }
+
                 }
                 return jsonObj;
             }catch(err){
@@ -394,13 +400,14 @@ var shell = (function () {
     // @param STATIC_URL Django static url prefix (settings.STATIC_URL)
     // @param target_username account holder username for retrieving clips
 
-    initModule = function( $container, STATIC_URL, MEDIA_URL, target_username){
+    initModule = function( $container, STATIC_URL, MEDIA_URL, target_username, DEBUG){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         stateMap.target_username = target_username;
         stateMap.$nav_sidebar = $container.parent;
         stateMap.STATIC_URL = STATIC_URL;
         stateMap.MEDIA_URL = MEDIA_URL;
+        stateMap.DEBUG = DEBUG;
 
         $container.append( configMap.main_html );
         setJqueryMap();
