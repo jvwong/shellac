@@ -39,10 +39,5 @@ class TuneFollowers(FunctionalTest):
         self.assertTrue(any(span.text == 'jvwong' for span in followers_spans))
         self.assertTrue(any(span.text == 'aray' for span in followers_spans))
 
-        title_anchors[2].click()
-        time.sleep(0.5)
-        friends_spans = self.browser.find_elements_by_css_selector('.content-tune-relationship.friends span')
-        self.assertTrue(any(span.text == 'jvwong' for span in friends_spans))
-
 
 
