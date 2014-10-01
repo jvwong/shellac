@@ -34,7 +34,7 @@ var shell = (function () {
                                     'Categories' +
                                 '</a>' +
                             '</div>' +
-                            '<div id="collapseCategories" class="panel-collapse collapse in">' +
+                            '<div id="collapseCategories" class="panel-collapse collapse">' +
                                 '<div class="panel-body">' +
                                     '<div class="shellac-app nav nav-sidebar list-group"></div>' +
                                 '</div>' +
