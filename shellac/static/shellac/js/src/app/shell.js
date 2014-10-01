@@ -97,29 +97,29 @@ var shell = (function () {
 
     //--------------------- BEGIN MODULE SCOPE METHODS --------------------
 
+    /**
+     * setJqueryMap record the jQuery elements of the page
+     */
     setJqueryMap = function(){
         var $outerDiv = stateMap.$container;
 
         jqueryMap = {
-            $outerDiv               : $outerDiv,
-            $app_container          : $outerDiv.find('.shellac-app-container'),
-            $statusbar              : $outerDiv.find('.shellac-app-statusbar'),
-            $statusbar_playing      : $outerDiv.find('.shellac-app-statusbar .shellac-app-statusbar-playing'),
-            $nav_sidebar            : $outerDiv.find('.shellac-app.sidebar'),
-            $nav_sidebar_categories : $outerDiv.find('.shellac-app.sidebar #collapseCategories .shellac-app.nav.nav-sidebar.list-group'),
-            $nav_sidebar_people     : $outerDiv.find('.shellac-app.sidebar #collapsePeople .shellac-app.nav.nav-sidebar.list-group'),
-            $clip_content           : $outerDiv.find('.shellac-app.clip.content')
+            $outerDiv                       : $outerDiv,
+            $app_container                  : $outerDiv.find('.shellac-app-container'),
+            $statusbar                      : $outerDiv.find('.shellac-app-statusbar'),
+            $statusbar_playing              : $outerDiv.find('.shellac-app-statusbar .shellac-app-statusbar-playing'),
+            $nav_sidebar                    : $outerDiv.find('.shellac-app.sidebar'),
+            $nav_sidebar_categories         : $outerDiv.find('.shellac-app.sidebar #collapseCategories .shellac-app.nav.nav-sidebar.list-group'),
+            $nav_sidebar_people             : $outerDiv.find('.shellac-app.sidebar #collapsePeople .shellac-app.nav.nav-sidebar.list-group'),
+            $clip_content                   : $outerDiv.find('.shellac-app.clip.content')
         };
     };
 
 
-    /*
-     * method loadCategories: make an api call to gather the Categories in database
-     * parameters
-     * return
-     *   * jsonArray - a list of valid JSON objects representing
-     *   serialized Category objects
-     **/
+    /**
+     * loadCategories make an api call to gather the Categories in database
+     * @return jsonArray list of valid JSON objects representing serialized Category objects
+     */
     loadCategories = function(){
 
         var url = '/api/categories/';
@@ -140,12 +140,12 @@ var shell = (function () {
     };
 
 
-    /*
-     * method loadClips: make an api call to gather the Clips in database
+    /**
+     * loadClips make an api call to gather the Clips in database
      * @param status type of Relationship
      * @param target_username username of the intended target Person
      * @return jsonArray list of valid JSON objects representing serialized Clip objects
-     **/
+     */
     loadClips = function(status, target_username){
 
         var url = ['/api/clips', status, target_username, ""].join('/');
@@ -168,10 +168,8 @@ var shell = (function () {
 
     /**
      * method parseCategoryData: transform any Category fields to javascript-compatible
-     * parameters
-     *   * raw - a string describing an array of valid JSON
-     * return
-     *   * jsonArray - a list of valid JSON objects
+     * @param a string describing an array of valid JSON
+     * @return jsonArray a list of valid JSON objects
      */
     parseCategoryData = function(raw){
         var jsonArray;
@@ -213,14 +211,12 @@ var shell = (function () {
         return jsonArray;
     };
 
-    /*
+    /**
      * method urlParse: extract the various aspects of the url from a HyperlinkedRelatedField
      * precondition: requires a HyperlinkedRelatedField of the form protocol:host/api/object/pk/
-     * parameters
-     *   * url - the url of the resource
-     * return
-     *   * URLobj - an object literal with fields protocol, host, api, object, and pk
-     **/
+     * @param url url of the resource
+     * @return URLobj - an object literal with fields protocol, host, api, object, and pk
+     */
     urlParse = function(url){
         var URL = {},
             u = url || '',
@@ -257,6 +253,9 @@ var shell = (function () {
 
     //--------------------- BEGIN DOM METHODS --------------------
 
+    /**
+     * display_categories append the html for the category sidebar accordion section
+     */
     display_categories = function(){
 
         var all_anchor = String(),
@@ -270,15 +269,20 @@ var shell = (function () {
                 '</a>';
         });
         all_anchor +=
-            '<a class="list-group-item nav-sidebar-category active" href="#">' + '<span class="badge">' + stateMap.clip_db().count() + '</span>' +
+            '<a class="list-group-item nav-sidebar-category active" href="#">' +
+                '<span class="badge">' + stateMap.clip_db().count() + '</span>' +
                 '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
             '</a>';
         jqueryMap.$nav_sidebar_categories.append(all_anchor, items);
 
         //register listeners on <h5> element
-        $('.list-group-item-heading').on('click', onClickCategory);
+        $('.list-group-item.nav-sidebar-category').on('click', onClickCategory);
     };
 
+
+    /**
+     * display_clips append the html for the clips to the main body of the page
+     */
     display_clips = function(){
         jqueryMap.$clip_content.html("");
 
@@ -323,22 +327,32 @@ var shell = (function () {
 
     //------------------- BEGIN EVENT HANDLERS -------------------
     /**
-     * onClickCategory callback for changes in the category UI
-     * @param event jQuery event object
+     * onClickCategory callback for changes in the category UI.
+     * Extracts the audio file url for each clip for the category
+     * and emits a shellac-categorychange event
+     * @param event jQuery event object for the clicked elements
      */
     onClickCategory = function(event){
 
-        var category;
+        var category, $a, id;
+
+        //remove the active class from all <a>
+        jqueryMap.$nav_sidebar_categories.find('.list-group-item.nav-sidebar-category').removeClass( "active");
+
+        //add the active class to current -- check if we clicked inner h5 and span elements within a
+        $a = $(event.target).closest('a');
+        $a.addClass("active");
+        id = $a.find('.list-group-item-heading').attr('id');
 
         //empty the clip array
         stateMap.clips = [];
 
         //refill the empty the clip array
-        if(event.target.id === "all"){
+        if(id === "all"){
             stateMap.clips = stateMap.clip_db().get();
 
         } else {
-            category = stateMap.category_db({slug: event.target.id}).first();
+            category = stateMap.category_db({slug: id}).first();
             stateMap.clips = stateMap.clip_db({categories: {has: category.url}}).get();
         }
         display_clips();
