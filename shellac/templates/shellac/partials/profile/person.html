@@ -16,10 +16,10 @@
         <a class="partial-profile-person-app" href="{% url 'shellac_app' person.username %}">
             <span class="partial-profile-person-description-content lead">{{ person.username | truncatechars:15  }}</span><br />
         </a>
-        <span class="partial-profile-person-description-content">{{ person.user.first_name }}</span><br />
-        <span class="partial-profile-person-description-content">{{ person.user.last_name }}</span><br />
-        <span class="partial-profile-person-description-content">{{ person.user.email }}</span><br />
-        <span class="partial-profile-person-description-content">{{ person.joined|date:"M j, Y" }}</span><br />
+        <span class="partial-profile-person-description-content first_name">{{ person.user.first_name }}</span><br />
+        <span class="partial-profile-person-description-content last_name">{{ person.user.last_name }}</span><br />
+        <span class="partial-profile-person-description-content email">{{ person.user.email }}</span><br />
+        <span class="partial-profile-person-description-content joined">{{ person.joined|date:"M d, Y" }}</span><br />
     </div>
     <!-- end profile-description div -->
 </div>

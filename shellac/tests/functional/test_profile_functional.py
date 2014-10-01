@@ -29,7 +29,9 @@ class ProfileTest(FunctionalTest):
         img_avatar = self.browser.find_element_by_css_selector('.content-profile .partial-profile-person .partial-profile-person-avatar')
         self.assertEqual(img_avatar.get_attribute('alt'), self.user.person.username)
 
-        detail_list = self.browser.find_elements_by_css_selector('.content-profile .partial-profile-person .partial-profile-person-description span')
+        detail_list = self.browser.find_elements_by_css_selector('.content-profile .partial-profile-person-description-content')
+        # print(detail_list[4].text)
+        # print(self.user.person.joined.strftime("%b %d, %Y"))
         self.assertTrue(
             any(span.text == self.user.person.username for span in detail_list)
         )

@@ -219,7 +219,7 @@ main .container-fluid {
   position: relative;
   height: 6em;
   margin-left: 6em;
-  padding: 0.4em;
+  padding: 0.64em;
   padding-left: 1.6em;
   /* styling below */
   background-color: black;
@@ -606,7 +606,7 @@ main .container-fluid {
   position: relative;
   height: 6em;
   margin-left: 6em;
-  padding: 0.4em;
+  padding: 0.64em;
   padding-left: 1.6em;
   /* styling below */
   background-color: black;
