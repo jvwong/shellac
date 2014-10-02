@@ -11528,17 +11528,19 @@ var shell = (function () {
         stateMap.clips.forEach(function(object){
 
             var clip = String() +
-                '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 media clip">' +
-                    '<div class="ui360">' +
-                        '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
-                            '<img class="media-img" src="' + object.brand_url  + '" alt="' + object.title + '" />' +
-                            '<div class="media-description">' +
-                                '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
-                                '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
-                                '<span class="media-description-content"><small>' + object.owner + " " + object.created.startOf('minute').fromNow() + '</small></span><br/>' +
-                            '</div>' +
-                            '<div class="media-progress"></div>' +
-                        '</span>'  +
+                '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 media clip">' +
+                    '<div class="media-panel">' +
+                        '<div class="ui360">' +
+                            '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
+                                '<img class="media-img" src="' + object.brand_thumb_url  + '" alt="' + object.title + '" />' +
+                                '<div class="media-description">' +
+                                    '<span class="media-description-content lead">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
+                                    '<span class="media-description-content"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
+                                    '<span class="media-description-content"><small>' + object.owner + " " + object.created.startOf('minute').fromNow() + '</small></span><br/>' +
+                                '</div>' +
+                                '<div class="media-progress"></div>' +
+                            '</span>'  +
+                        '</div>' +
                     '</div>' +
                 '</div>';
 

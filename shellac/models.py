@@ -9,6 +9,8 @@ from django.db.models.signals import post_save
 
 from taggit.managers import TaggableManager
 from shellac.fixtures import categories
+from image.models import ThumbnailImageField
+from shellac import util
 
 ## One-to-one model -- extend User to accomodate relationships
 class PersonManager(models.Model):
@@ -207,8 +209,8 @@ class Clip(models.Model):
     description = models.TextField(blank=True)
 
     ###upload to subdirectory with user id prefixed
-    # brand = models.ImageField(upload_to='brands/%Y/%m/%d', blank=True)
     brand = models.ImageField(upload_to='brands/%Y/%m/%d', blank=True)
+    brand_thumb = ThumbnailImageField(upload_to='brands/%Y/%m/%d', blank=True, editable=False)
 
     ### Default
     plays = models.PositiveSmallIntegerField(default=0, editable=False)
@@ -226,6 +228,8 @@ class Clip(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
+        if self.brand:
+            util.squarer(self)
         super(Clip, self).save(*args, **kwargs)
 
     class Meta:
@@ -269,6 +273,12 @@ def on_clip_delete(sender, instance, **kwargs):
             os.remove(instance.brand.url)
         # Pass false so ImageField doesn't save the model.
         instance.brand.delete(False)
+
+    if instance.brand_thumb:
+        if os.path.isfile(instance.brand_thumb.url):
+            os.remove(instance.brand_thumb.url)
+        # Pass false so ImageField doesn't save the model.
+        instance.brand_thumb.delete(False)
 
 
     if instance.audio_file:

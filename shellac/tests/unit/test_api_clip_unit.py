@@ -100,7 +100,7 @@ class ClipListViewSet(APITestCase):
         self.assertEqual(data['plays'], 0)
         self.assertEqual(data['rating'], 0)
         self.assertEqual(data['status'], 1)
-        self.assertEqual(data['brand'], '')
+        self.assertEqual(data['brand_url'], '')
         self.assertEqual(data['categories'], [])
         #self.assertEqual(data['author']['user']['username'], 'andrea')
 

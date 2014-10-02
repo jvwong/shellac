@@ -1,34 +1,41 @@
 import os
+from PIL import Image
 from django.core.files import File
-from shellac.models import Clip, Category
+from io import BytesIO
+from django.core.files.base import ContentFile
+
 
 def setFileAttributefromLocal(field, path, fname):
     with open(path, 'rb') as f:
         field.save(fname, File(f), save=True)
 
+# thumbnailer converts the given file to the size, preserving the aspect ratio as a jpeg
+def thumbnailer(filename, size):
+    file, ext = os.path.splitext(filename)
+    im = Image.open(filename)
+    im.thumbnail(size, Image.ANTIALIAS)
+    im.save(file + ".thumb.jpeg", "JPEG")
 
-brand_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/beatles.jpg'))
-brand_path2 = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/black.jpg'))
-brand_path3 = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/purple.jpg'))
-brand_path5 = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/victor.jpg'))
+# transformer crops the largest square possible, centered on the image
+def squarer(instance):
+    buffer = 5
+    f = BytesIO()
+    try:
+        im = Image.open(instance.brand)
+        im.thumbnail((512, 512), Image.ANTIALIAS)
+        width, height = im.size
+        mind = min(width, height) - buffer
+        center_w = round(width / 2)
+        center_h = round(height / 2)
+        span = round(mind / 2)
+        box = (center_w - span, center_h - span, center_w + span, center_h + span) #left, upper, right, lower
+        region = im.crop(box)
+        region.save(f, format='JPEG')
+        s = f.getvalue()
+        instance.brand_thumb.save(instance.brand.name, ContentFile(s), save=True)
 
-audio_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/water.mp3'))
-audio_path2 = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tests/assets/heart.mp3'))
+    except IOError:
+        return
+    finally:
+        f.close()
 
-
-def autopopulate_clips(author, num):
-    Category.objects.autopopulate()
-
-    for ind in range(num):
-        title = 'clip' + str(ind)
-        clip = Clip.objects.create_clip(title, author)
-
-        if(ind % 2 == 0):
-            brand = brand_path
-            audio = audio_path
-        else:
-            brand = brand_path2
-            audio = audio_path2
-
-        setFileAttributefromLocal(clip.audio_file, audio, 'test.mp3')
-        setFileAttributefromLocal(clip.brand, brand, 'test.jpg')

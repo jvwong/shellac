@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from shellac.forms import CreateClipForm
 from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
-from shellac.util import autopopulate_clips
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -25,14 +24,6 @@ def shellac_clips_create(request):
                   'shellac/clips/create.html',
                   {'form': form})
 
-
-@login_required(login_url='/accounts/signin/')
-def shellac_clips_autopopulate(request):
-    if request.method == 'GET':
-        author = request.user.person
-        autopopulate_clips(author, 50)
-
-    return HttpResponseRedirect('/')
 
 
 
