@@ -229,6 +229,7 @@ class Clip(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         if self.brand:
+            print(self.brand)
             util.squarer(self)
         super(Clip, self).save(*args, **kwargs)
 
