@@ -35,7 +35,7 @@ def squarer(instance):
         instance.brand_thumb.save(instance.brand.name, ContentFile(s), save=True)
 
     except IOError:
-        return
+        print("Image decoding error")
     finally:
         f.close()
 
