@@ -48,6 +48,14 @@
       background: black;
       color: white;
       .opacity(@caption_opacity);
+      margin-bottom: 0px;
+
+      dt{
+        text-align: left;
+      }
+      dd{
+        margin-left: 0px;
+      }
     }
 
     .media-description.played{
@@ -112,6 +120,13 @@
     line-height: 1.1em;
     .media-description-content.lead{
       font-size: 1em;
+    }
+
+    dt{
+      display: none;
+    }
+    dd.categories{
+      display: none;
     }
 
   }

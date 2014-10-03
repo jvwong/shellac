@@ -11538,11 +11538,19 @@ var shell = (function () {
                         '<div class="ui360">' +
                             '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
                                 '<img class="media-img" src="' + object.brand_thumb_url  + '" alt="' + object.title + '" />' +
-                                '<div class="media-description">' +
-                                    '<span class="media-description-content lead title">' + util.truncate(object.title, configMap.truncate_max) + '</span><br/>' +
-                                    '<span class="media-description-content description"><em>' + util.truncate(object.description, configMap.truncate_max) + '</em></span><br/>' +
-                                    '<span class="media-description-content created"><small>' + object.owner + " " + object.created.startOf('minute').fromNow() + '</small></span><br/>' +
-                                '</div>' +
+
+                                '<dl class="media-description dl-horizontal">' +
+                                    '<dt class="media-description-content title">Title</dt>' +
+                                    '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncate_max) + '</dd>' +
+                                    '<dt class="media-description-content description">Description</dt>' +
+                                    '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncate_max) + '</dd>' +
+                                    '<dt class="media-description-content posted">Posted by:</dt>' +
+                                    '<dd class="media-description-content posted">' + object.owner + ' -- ' + object.created.startOf('minute').fromNow() + '</dd>' +
+                                    '<dt class="media-description-content categories">Categories</dt>' +
+                                    '<dd class="media-description-content categories">' + object.categories.map(function(c){ return c.split('/')[5].toUpperCase(); }) + '</dd>' +
+                                '</dl>' +
+
+
                                 '<div class="media-progress"></div>' +
                             '</span>'  +
                         '</div>' +

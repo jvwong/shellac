@@ -1,19 +1,34 @@
 {% load staticfiles %}
-<!-- media div -->
-<div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 media clip">
+{% load shellac_filters %}
 
-    <!-- media-image -->
-    <a class="media-url" href="{{ object.get_absolute_url }}">
-        <img class="media-img img-responsive" src="{% if object.brand %}{{ object.brand.url }}{% else %}{% static 'shellac/assets/seventyEight.png' %}{% endif %}" alt="{{ object.title }}" />
-        <!-- media-description div -->
-        <div class="media-description">
-            <!-- media-description content -->
-            <span class="media-description-content lead">{{ object.title |truncatechars:15  }}</span><br/>
-            <span class="media-description-content"><em>{{ object.description | truncatechars:20  }}</em></span><br/>
-            <span class="media-description-content"><small>{{ object.author.username }} -- {{ object.created | date:"M/d" }}</small></span><br/>
-            <!-- end media-description content -->
+<!--<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 media clip">-->
+<div class="col-xs-offset-2 col-xs-10 col-sm-offset-6 col-sm-5 media clip">
+
+    <div class="media-panel">
+        <div class="ui360">
+
+            <a class="media-url" href="{{ object.audio_file.url }}">
+                <img class="media-img" src="{{ object.brand_thumb.url }}"  alt="{{ object.title }}" />
+                <dl class="media-description dl-horizontal">
+                    <!-- media-description content -->
+                    <dt class="media-description-content title">Title</dt>
+                    <dd class="media-description-content title">{{ object.title }}</dd>
+                    <dt class="media-description-content description">Description</dt>
+                    <dd class="media-description-content description">{{ object.description }}</dd>
+                    <dt class="media-description-content created">Created</dt>
+                    <dd class="media-description-content created">{{ object.created|dayssince }}</dd>
+                    <dt class="media-description-content username">User</dt>
+                    <dd class="media-description-content username">{{ object.author.username }}</dd>
+                    <dt class="media-description-content username">Categories</dt>
+                    <dd class="media-description-content username">
+                        {% for c in object.categories.all %}
+                            {% if not forloop.first %}| {% endif %} {{ c }}
+                        {% endfor %}
+                    </dd>
+                </dl>
+                <div class="media-progress"></div>
+            </a>
         </div>
-    </a>
-    <!-- end media-description div -->
+    </div>
+
 </div>
-<!-- end media div -->
