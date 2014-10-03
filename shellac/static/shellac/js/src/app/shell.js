@@ -255,12 +255,17 @@ var shell = (function () {
 
     /**
      * display_categories append the html for the category sidebar accordion section
+     * Can we make this more generic?
+     * @param item_list
+     * @param inner_db
+     * @param item_html
+     * @param nInnerTotal
      */
     display_categories = function(){
 
         var all_anchor = String(),
             items = String();
-        jqueryMap.$nav_sidebar_categories.append(all_anchor);
+
         stateMap.categories.forEach(function(category){
             var clip_array = stateMap.clip_db({categories: {has: category.url}});
             items +=

@@ -9,7 +9,9 @@ from django.db.models.signals import post_save
 
 from taggit.managers import TaggableManager
 from shellac.fixtures import categories
-from image.models import ThumbnailImageField
+from image.fields import ThumbnailImageField
+from audio.fields import AudioField
+
 from shellac import util
 
 ## One-to-one model -- extend User to accomodate relationships
@@ -223,7 +225,7 @@ class Clip(models.Model):
 
     #AUDIO
     # Add the audio field to your model -- required
-    audio_file = models.FileField(upload_to='sounds/%Y/%m/%d', blank=False,
+    audio_file = AudioField(upload_to='sounds/%Y/%m/%d', blank=False,
                             help_text=("Allowed type - .mp3, .wav, .ogg"))
 
     def save(self, *args, **kwargs):
