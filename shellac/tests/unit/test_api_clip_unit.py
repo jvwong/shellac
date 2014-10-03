@@ -85,13 +85,14 @@ class ClipListViewSet(APITestCase):
         # open a file and attach it to the request payload
         f = open(audio_path, "rb")
         # payload = {"title": "clip1 title", "description": "clip1 description", "audio_file": f}
-        payload = {"title": "clip1 title", "author": "http://testserver/api/people/andrea/", "description": "clip1 description", "audio_file": f}
+        payload = {"title": "clip1 title", "author": "http://testserver/api/people/andrea/",
+                   "description": "clip1 description", "audio_file": f}
 
         # response should be 'HTTP_201_CREATED' and have a clip count of 1
         self.client.login(username='andrea', password='a')
         response = self.client.post("/api/clips/", payload)
         data =response.data
-        #print(data)
+        # print(data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEqual(data['title'], 'clip1 title')

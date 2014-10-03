@@ -225,8 +225,7 @@ class Clip(models.Model):
 
     #AUDIO
     # Add the audio field to your model -- required
-    audio_file = AudioField(upload_to='sounds/%Y/%m/%d', blank=False,
-                            help_text=("Allowed type - .mp3, .wav, .ogg"))
+    audio_file = AudioField(upload_to='sounds/%Y/%m/%d', blank=False, help_text=("Allowed type - .mp3, .wav, .ogg"))
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)

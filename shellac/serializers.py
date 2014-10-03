@@ -6,7 +6,6 @@ from rest_framework import pagination
 
 from shellac.models import Category, Clip, Person, Relationship
 
-
 class RelationshipSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='relationship-detail',
@@ -80,7 +79,9 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
     categories = serializers.HyperlinkedRelatedField(many=True,
                                                      lookup_field='slug',
                                                      view_name='category-detail')
+    audio_file = serializers.FileField(max_length=250, allow_empty_file=False)
     audio_file_url = serializers.SerializerMethodField('get_audio_file_url')
+
     brand_url = serializers.SerializerMethodField('get_brand_url')
     brand_thumb_url = serializers.SerializerMethodField('get_brand_thumb_url')
 

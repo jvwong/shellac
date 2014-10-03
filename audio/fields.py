@@ -8,18 +8,18 @@ from django.core import exceptions, validators, checks
 from audio.files import AudioFileDescriptor, AudioFieldFile
 from audio import forms
 
-
 class AudioField(FileField):
+
     attr_class = AudioFieldFile
     descriptor_class = AudioFileDescriptor
     description = _("Audio")
-
+    #
     def __init__(self, **kwargs):
         super(AudioField, self).__init__(**kwargs)
 
     def check(self, **kwargs):
         errors = super(AudioField, self).check(**kwargs)
-        errors.extend(self._check_valid())
+        #errors.extend(self._check_valid())
         return errors
 
     def _check_valid(self):
