@@ -311,7 +311,7 @@ var shell = (function () {
                 .toString() : "&nbsp;";
 
             var clip = String() +
-                '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 media clip">' +
+                '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 media clip">' +
                     '<div class="media-panel">' +
                         '<div class="ui360">' +
                             '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
