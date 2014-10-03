@@ -48,10 +48,6 @@
       background: black;
       color: white;
       .opacity(@caption_opacity);
-
-      p.media-description-content{
-        margin:0px;
-      }
     }
 
     .media-description.played{
@@ -107,5 +103,17 @@
   position: relative;
   top: 5em;
   text-align: center;
+}
+
+@media (max-width: 768px)
+{
+  .media-description{
+    font-size: 0.9em;
+    line-height: 1.1em;
+    .media-description-content.lead{
+      font-size: 1em;
+    }
+
+  }
 }
 

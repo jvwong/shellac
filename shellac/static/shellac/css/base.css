@@ -79,9 +79,6 @@ main .container-fluid {
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
   filter: alpha(opacity=80);
 }
-.media.clip .media-panel .media-description p.media-description-content {
-  margin: 0px;
-}
 .media.clip .media-panel .media-description.played {
   background-color: #428BCA;
   background: #428BCA;
@@ -138,6 +135,15 @@ main .container-fluid {
   position: relative;
   top: 5em;
   text-align: center;
+}
+@media (max-width: 768px) {
+  .media-description {
+    font-size: 0.9em;
+    line-height: 1.1em;
+  }
+  .media-description .media-description-content.lead {
+    font-size: 1em;
+  }
 }
 
 /*
@@ -461,9 +467,6 @@ main .container-fluid {
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
   filter: alpha(opacity=80);
 }
-.media.clip .media-panel .media-description p.media-description-content {
-  margin: 0px;
-}
 .media.clip .media-panel .media-description.played {
   background-color: #428BCA;
   background: #428BCA;
@@ -520,6 +523,15 @@ main .container-fluid {
   position: relative;
   top: 5em;
   text-align: center;
+}
+@media (max-width: 768px) {
+  .media-description {
+    font-size: 0.9em;
+    line-height: 1.1em;
+  }
+  .media-description .media-description-content.lead {
+    font-size: 1em;
+  }
 }
 /*
  * partials/profile/person
