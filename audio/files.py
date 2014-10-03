@@ -4,6 +4,7 @@ Utility functions for handling audio.
 from django.core.files import File
 from django.db.models.fields.files import FieldFile, FileDescriptor
 
+
 class AudioFile(File):
     """
     A mixin for use alongside audio.files, which provides

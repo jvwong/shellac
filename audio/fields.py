@@ -10,10 +10,11 @@ from audio import forms
 
 class AudioField(FileField):
 
+
     attr_class = AudioFieldFile
     descriptor_class = AudioFileDescriptor
     description = _("Audio")
-    #
+
     def __init__(self, **kwargs):
         super(AudioField, self).__init__(**kwargs)
 
@@ -28,7 +29,7 @@ class AudioField(FileField):
         except ImproperlyConfigured:
             return [
                 checks.Error(
-                    'Invalid audio',
+                    'Invalid',
                     hint=('some hint'),
                     obj=self,
                     id='fields.E210',
