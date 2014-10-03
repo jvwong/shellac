@@ -59,7 +59,7 @@ var shell = (function () {
 
                 '<div class="shellac-app clip content"></div>' +
             '</div>',
-        truncatemax: 25
+        truncatemax: 10
     },
 
     stateMap = {
@@ -302,6 +302,14 @@ var shell = (function () {
         }
         stateMap.clips.forEach(function(object){
 
+            var cats = object.categories.length > 0 ? object.categories
+                .map(function(c){
+                    return c.split('/')[5].toUpperCase();
+                })
+                .slice(0,3)
+                .join(" | ")
+                .toString() : "&nbsp;";
+
             var clip = String() +
                 '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 media clip">' +
                     '<div class="media-panel">' +
@@ -310,17 +318,12 @@ var shell = (function () {
                                 '<img class="media-img" src="' + object.brand_thumb_url  + '" alt="' + object.title + '" />' +
 
                                 '<dl class="media-description dl-horizontal">' +
-                                    '<dt class="media-description-content title">Title</dt>' +
+                                    '<span class="media-description-content posted">' + object.created.startOf('minute').fromNow(true) + '</span>' +
                                     '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncate_max) + '</dd>' +
-                                    '<dt class="media-description-content description">Description</dt>' +
                                     '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncate_max) + '</dd>' +
-                                    '<dt class="media-description-content posted">Posted by:</dt>' +
-                                    '<dd class="media-description-content posted">' + object.owner + ' -- ' + object.created.startOf('minute').fromNow() + '</dd>' +
-                                    '<dt class="media-description-content categories">Categories</dt>' +
-                                    '<dd class="media-description-content categories">' + object.categories.map(function(c){ return c.split('/')[5].toUpperCase(); }) + '</dd>' +
+                                    '<dd class="media-description-content owner">' + object.owner + '</dd>' +
+                                    '<dd class="media-description-content categories">' + cats + '</dd>' +
                                 '</dl>' +
-
-
                                 '<div class="media-progress"></div>' +
                             '</span>'  +
                         '</div>' +
@@ -428,6 +431,24 @@ var shell = (function () {
             tap: onTapClose,
             swipeLeft: onSwipeClose,
             threshold: 75
+        });
+
+        moment.locale('en', {
+            relativeTime : {
+                future: "in %s",
+                past:   "%s ago",
+                s:  "s",
+                m:  "1m",
+                mm: "%dmin",
+                h:  "1h",
+                hh: "%dh",
+                d:  "1d",
+                dd: "%dd",
+                M:  "1mon",
+                MM: "%dmon",
+                y:  "1y",
+                yy: "%dy"
+            }
         });
     };
 

@@ -61,7 +61,7 @@ main .container-fluid {
   border-width: 2px;
   border-color: #000000;
 }
-.media.clip .media-panel .media-description {
+.media.clip .media-panel .media-description.dl-horizontal {
   position: absolute;
   /* absolute position (so we can position it where we want)*/
   bottom: 0px;
@@ -80,11 +80,15 @@ main .container-fluid {
   filter: alpha(opacity=80);
   margin-bottom: 0px;
 }
-.media.clip .media-panel .media-description dt {
-  text-align: left;
-}
-.media.clip .media-panel .media-description dd {
+.media.clip .media-panel .media-description.dl-horizontal dd {
+  font-size: 1.1em;
   margin-left: 0px;
+}
+.media.clip .media-panel span.posted {
+  font-size: 1.2em;
+  position: absolute;
+  top: 5px;
+  right: 8px;
 }
 .media.clip .media-panel .media-description.played {
   background-color: #428BCA;
@@ -144,18 +148,18 @@ main .container-fluid {
   text-align: center;
 }
 @media (max-width: 768px) {
-  .media-description {
+  .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 0.9em;
     line-height: 1.1em;
   }
-  .media-description .media-description-content.lead {
+  .media.clip .media-panel .media-description.dl-horizontal .media-description-content.lead {
     font-size: 1em;
   }
-  .media-description dt {
+  .media.clip .media-panel .media-description.dl-horizontal dd.categories {
     display: none;
   }
-  .media-description dd.categories {
-    display: none;
+  .media.clip .media-panel span.posted {
+    font-size: 0.9em;
   }
 }
 
@@ -462,7 +466,7 @@ main .container-fluid {
   border-width: 2px;
   border-color: #000000;
 }
-.media.clip .media-panel .media-description {
+.media.clip .media-panel .media-description.dl-horizontal {
   position: absolute;
   /* absolute position (so we can position it where we want)*/
   bottom: 0px;
@@ -481,11 +485,15 @@ main .container-fluid {
   filter: alpha(opacity=80);
   margin-bottom: 0px;
 }
-.media.clip .media-panel .media-description dt {
-  text-align: left;
-}
-.media.clip .media-panel .media-description dd {
+.media.clip .media-panel .media-description.dl-horizontal dd {
+  font-size: 1.1em;
   margin-left: 0px;
+}
+.media.clip .media-panel span.posted {
+  font-size: 1.2em;
+  position: absolute;
+  top: 5px;
+  right: 8px;
 }
 .media.clip .media-panel .media-description.played {
   background-color: #428BCA;
@@ -545,18 +553,18 @@ main .container-fluid {
   text-align: center;
 }
 @media (max-width: 768px) {
-  .media-description {
+  .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 0.9em;
     line-height: 1.1em;
   }
-  .media-description .media-description-content.lead {
+  .media.clip .media-panel .media-description.dl-horizontal .media-description-content.lead {
     font-size: 1em;
   }
-  .media-description dt {
+  .media.clip .media-panel .media-description.dl-horizontal dd.categories {
     display: none;
   }
-  .media-description dd.categories {
-    display: none;
+  .media.clip .media-panel span.posted {
+    font-size: 0.9em;
   }
 }
 /*
