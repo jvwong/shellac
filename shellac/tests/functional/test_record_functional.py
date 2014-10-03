@@ -2,12 +2,13 @@ from selenium.webdriver.common.keys import Keys
 from shellac.tests.utils.functional import FunctionalTest
 from shellac.models import Clip, Category
 import os
-
+import time
 
 #file paths
 FUNCTIONAL_DIR = os.path.abspath(os.path.dirname(__file__))
 ASSETS_DIR = os.path.abspath(os.path.join(FUNCTIONAL_DIR, "../assets"))
 CLIP_NAME = os.path.abspath(os.path.join(ASSETS_DIR, "song.mp3"))
+INVALID_CLIP_NAME = os.path.abspath(os.path.join(ASSETS_DIR, "song_invalid.3gpp"))
 BRAND_NAME = os.path.abspath(os.path.join(ASSETS_DIR, "seventyEight.png"))
 
 ##Fake user
@@ -62,6 +63,36 @@ class NewClipTest(FunctionalTest):
         self.assertEqual(descriptors[0].text, c['title'])
         self.assertIn(c['description'], descriptors[1].text)
         self.assertIn(u['username_dummy'], descriptors[2].text)
+
+    def test_user_cannot_add_invalid_audio_type(self):
+        self.create_pre_authenticated_session(u['username_dummy'])
+        self.browser.get(self.server_url + '/clips/create')
+        self.wait_to_be_signed_in(u['username_dummy'])
+
+        #The user is presented with a form that allows her to add a new Clip
+        # including fields for title, categories, description, brand, status, audio, tags
+        title_input = self.browser.find_element_by_css_selector('#id_title')
+        category_input = self.browser.find_element_by_css_selector('#id_categories')
+        description_input = self.browser.find_element_by_css_selector('#id_description')
+        brand_input = self.browser.find_element_by_css_selector('#id_brand')
+        #brand_input.send_keys(BRAND_NAME)
+        status_input = self.browser.find_element_by_css_selector('#id_status')
+        audio_input = self.browser.find_element_by_css_selector('#id_audio_file')
+        audio_input.send_keys(INVALID_CLIP_NAME)
+        tags_input = self.browser.find_element_by_css_selector('#id_tags')
+
+        #User types in fields for title
+        title_input.send_keys(c['title'])
+        description_input.send_keys(c['description'])
+        tags_input.send_keys(c['tags'])
+
+        #When she hits 'enter' the user is not redirected
+        record_button = self.browser.find_element_by_css_selector('#record_submit')
+        record_button.send_keys(Keys.ENTER)
+
+        #Valdiate that we're still on the Record page
+        self.assertIn('Record', self.browser.title)
+        #time.sleep(3)
 
 
     def test_clips_retrieved_via_categorys_clip_set(self):

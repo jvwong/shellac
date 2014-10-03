@@ -12,7 +12,9 @@ from django.db.models import Q
 from shellac.models import Clip
 from shellac.tests.utils.unit import setFileAttributefromLocal, cleanClips
 
+UNIT_DIR = os.path.abspath(os.path.dirname(__file__))
 audio_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../assets/song.mp3")
+audio_path_invalid = os.path.abspath(os.path.join(UNIT_DIR, "../assets/song_invalid.3gpp"))
 # curl -X POST http://localhost:8000/api-token-auth/ -d '{"username": "aray", "password": "aray"}' -H "Content-Type: application/json"
 # curl -X GET http://localhost:8000/api/people/.json -H "Authorization:Token 180d6d22335f2471f717ce3c121eebc47a0fa2a8"
 
@@ -104,6 +106,29 @@ class ClipListViewSet(APITestCase):
         self.assertEqual(data['brand_url'], '')
         self.assertEqual(data['categories'], [])
         #self.assertEqual(data['author']['user']['username'], 'andrea')
+
+        cleanClips()
+
+
+    def test_ClipListViewSet_POST_rejects_invalid_audio_filetype(self):
+        #make some users
+        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
+        self.assertEqual(User.objects.all().count(), 2)
+        self.assertEqual(Clip.objects.all().count(), 0)
+
+        # open a file and attach it to the request payload
+        f = open(audio_path_invalid, "rb")
+        # payload = {"title": "clip1 title", "description": "clip1 description", "audio_file": f}
+        payload = {"title": "clip1 title", "author": "http://testserver/api/people/andrea/",
+                   "description": "clip1 description", "audio_file": f}
+
+        # response should be 'HTTP_201_CREATED' and have a clip count of 1
+        self.client.login(username='andrea', password='a')
+        response = self.client.post("/api/clips/", payload)
+        data =response.data
+        #print(data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         cleanClips()
 

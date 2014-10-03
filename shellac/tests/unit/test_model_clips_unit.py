@@ -7,8 +7,6 @@ from shellac.tests.utils.unit import cleanClips, setFileAttributefromLocal
 UNIT_DIR = os.path.abspath(os.path.dirname(__file__))
 brand_path = os.path.abspath(os.path.join(UNIT_DIR, "../assets/seventyEight.png"))
 audio_path = os.path.abspath(os.path.join(UNIT_DIR, "../assets/song.mp3"))
-audio_path_invalid = os.path.abspath(os.path.join(UNIT_DIR, "../assets/song_invalid.3gpp"))
-
 
 class ClipModelTest(TestCase):
     fixtures = ['shellac.json', 'auth.json']
@@ -52,16 +50,5 @@ class ClipModelTest(TestCase):
 
         cleanClips()
 
-    def test_reject_invalid_file_type(self):
-        clip1 = Clip.objects.create_clip("clip_test_1", self.person)
-        setFileAttributefromLocal(clip1.audio_file, audio_path_invalid, "clip_invalid.3gpp")
-        clip1.categories.add(Category.objects.get(title="MUSIC"))
-        clip1.tags.add("red", "green")
-
-        saved_clips = Clip.objects.all()
-        self.assertEqual(saved_clips.count(), self.numClips)
-
-        # saved_clip_1 = Clip.objects.filter(author=self.person, title="clip_test_1")[0]
-        cleanClips()
 
 

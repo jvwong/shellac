@@ -12,7 +12,7 @@ from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from django.forms.fields import FileField
 
-AUDIO_EXT_WHITELIST = ('.mp3', '.wav', '.ogg')
+from django.conf import settings
 
 class AudioField(FileField):
     default_error_messages = {
@@ -30,9 +30,9 @@ class AudioField(FileField):
         if f is None:
             return None
 
-        #simple, basic file extension validation. Check file contents eventually
+        # simple, basic file extension validation. Check file contents eventually
         file, ext = os.path.splitext(f.name)
-        if ext not in AUDIO_EXT_WHITELIST:
+        if ext not in settings.AUDIO_EXT_WHITELIST:
             six.reraise(ValidationError, ValidationError(
                 self.error_messages['invalid_audio'],
                 code='invalid_audio',

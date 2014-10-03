@@ -1,3 +1,4 @@
+import os
 from django import forms
 from django.db.models.fields.files import FileField
 from django.core.exceptions import ImproperlyConfigured
@@ -8,8 +9,13 @@ from django.core import exceptions, validators, checks
 from audio.files import AudioFileDescriptor, AudioFieldFile
 from audio import forms
 
-class AudioField(FileField):
+from django.conf import settings
 
+
+class AudioField(FileField):
+    default_error_messages = {
+        'invalid_audio': _("Upload a valid audio file. The file you uploaded was either not valid audio type or corrupt"),
+    }
 
     attr_class = AudioFieldFile
     descriptor_class = AudioFileDescriptor
@@ -41,6 +47,35 @@ class AudioField(FileField):
     def deconstruct(self):
         name, path, args, kwargs = super(AudioField, self).deconstruct()
         return name, path, args, kwargs
+
+    def validate(self, value, model_instance):
+        """
+        Validates value and throws ValidationError. Here, value is a
+        AudioFieldFile instance
+        """
+        #simple, basic file extension validation. Check file contents eventually
+        file, ext = os.path.splitext(value.name)
+        #print("file: %s, ext: %s" % (file, ext))
+
+        if ext not in settings.AUDIO_EXT_WHITELIST:
+            raise exceptions.ValidationError(
+                self.error_messages['invalid_audio'],
+                code='invalid_audio',
+                params={'value': value},
+            )
+
+        super(AudioField, self).validate(value, model_instance)
+
+    def clean(self, value, model_instance):
+        """
+        Convert the value's type and run validation. Validation errors
+        from to_python and validate are propagated. The correct value is
+        returned if no error is raised.
+        """
+        value = self.to_python(value)
+        self.validate(value, model_instance)
+        self.run_validators(value)
+        return value
 
     def contribute_to_class(self, cls, name):
         super(AudioField, self).contribute_to_class(cls, name)
