@@ -19,9 +19,12 @@
                     <dd>{{ object.last_name }}<dd>
                 </dl>
                 <hr/>
-                <a class="content-user-detail-button update" href="{% url 'user_update' user.id %}"><button type="button" class="btn btn-primary btn-block">Update</button></a>
+                <div class="btn-group btn-group-justified">
+                    <a class="content-user-detail-button update btn btn-default btn-primary" role="button" href="{% url 'user_update' user.id %}">Update</a>
+                    <a class="content-user-detail-button password btn btn-default btn-primary" role="button" href="{% url 'user_password_change' %}">Password change</a>
+                </div>
                 <hr/>
-                <a class="content-user-detail-button delete" href="{% url 'user_delete' user.id %}"><button type="button" class="btn btn-danger btn-block">Delete</button></a>
+                <a class="content-user-detail-button delete" href="{% url 'user_delete' user.id %}"><button type="button" class="btn btn-danger btn-block">Delete account</button></a>
             </div>
         </div>
     {% endblock main %}

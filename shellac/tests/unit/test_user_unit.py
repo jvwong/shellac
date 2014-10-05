@@ -117,3 +117,26 @@ class UserDeletePage(TestCase):
         self.client.logout()
         response = self.client.get('/user/' + self.userid + '/delete/')
         self.assertEqual(response.status_code, 302)
+
+
+class UserPasswordChangePage(TestCase):
+    fixtures = ['shellac.json', 'auth.json']
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        username = 'jray'
+        password = 'jray'
+        self.user = User.objects.get(username=username)
+        self.person = self.user.person
+        self.userid = str(self.user.id)
+        self.client.login(username=username, password=password)
+
+    def test_UserPasswordChange_url_returns_correct_url(self):
+        url = reverse('user_password_change')
+        self.assertEqual(url, '/user/password_change/')
+
+    def test_UserPasswordChange_url_returns_correct_details(self):
+        response = self.client.get('/user/password_change/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'shellac/user/user_password_change.html')
+

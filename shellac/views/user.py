@@ -27,3 +27,22 @@ class UserDelete(IsAuthenticatedAndOwnerMixin, DeleteView):
     model = User
     template_name = 'shellac/user/user_check_delete.html'
     success_url = reverse_lazy('shellac_accounts_signup')
+
+### Permit User to change password
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+
+@login_required(login_url='/accounts/signin/')
+def user_password_change(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, data=request.POST)
+
+        if form.is_valid():
+            password = form.clean_new_password2()
+            form.save()
+            return HttpResponseRedirect("/user/" + str(request.user.id) + "/")
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'shellac/user/user_password_change.html', {'form': form})

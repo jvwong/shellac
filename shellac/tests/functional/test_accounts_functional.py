@@ -104,10 +104,12 @@ class DuplicateUserTest(FunctionalTest):
         self.assertIn('Sign up', self.browser.title)
 
         # The user notices an error message
-        help_block = self.browser.find_element_by_class_name('help-block')
+        errorlist_lis = self.browser.find_elements_by_css_selector('.errorlist li')
 
         #check existence of profile info
-        self.assertEqual(help_block.text, 'A user with that username already exists.')
+        self.assertTrue(
+            any(li.text == 'A user with that username already exists.' for li in errorlist_lis)
+        )
         #time.sleep(1)
 
 

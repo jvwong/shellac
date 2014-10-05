@@ -1,7 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
-from django.views.generic.edit import UpdateView
-from django.contrib.auth.models import User
 
 from shellac.models import Person
 from shellac.views.util import pagination
