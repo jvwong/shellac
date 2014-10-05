@@ -23,7 +23,7 @@ class ProfileTest(FunctionalTest):
         self.browser.get(self.server_url + '/profile/' + username + '/')
         self.wait_to_be_signed_in(self.user.username)
 
-    def test_profile_page_displays_correct_information(self):
+    def test_profile_page_displays_correct_Person_details(self):
         # jvwong --> jray
         # aray --> jray
         img_avatar = self.browser.find_element_by_css_selector('.content-profile .partial-profile-person .partial-profile-person-avatar')
@@ -33,10 +33,10 @@ class ProfileTest(FunctionalTest):
         # print(detail_list[4].text)
         # print(self.user.person.joined.strftime("%b %d, %Y"))
         self.assertTrue(
-            any(span.text == self.user.person.username for span in detail_list)
+            any(dd.text == self.user.person.username for dd in detail_list)
         )
         self.assertTrue(
-            any(span.text == self.user.person.joined.strftime("%b %d, %Y") for span in detail_list)
+            any(dd.text == self.user.person.joined.strftime("%b %d, %Y") for dd in detail_list)
         )
 
     def test_profile_page_can_navigate_to_clip_app(self):
@@ -47,9 +47,3 @@ class ProfileTest(FunctionalTest):
         time.sleep(1.0)
         title = self.browser.find_element_by_tag_name('title')
         self.assertIn(title.text, 'App')
-
-
-
-
-
-

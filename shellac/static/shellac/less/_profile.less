@@ -2,45 +2,50 @@
  * partials/profile/person
  */
 @import "_elements";
+@profile_avatar_dim: 200px;
+@profile_descr_margin: 25px;
+@margin-top: 25px;
 
-@person_margin_bottom: 4px;
-@person_margin_top: 0px;
-@person_margin_left: 12em;
-@person_caption_opacity: 0.7;
-@person_desc_padding: 1em;
-@person_avatar_max_dim: 15em;
-
-.partial-profile-person {
-
-    img.partial-profile-person-avatar{
-        left: 2em;
-        width: @person_avatar_max_dim;
-        height: @person_avatar_max_dim;
-        float: left;
-    }
-
-    .partial-profile-person-description{
-        height: @person_avatar_max_dim;
-        margin-left: @person_avatar_max_dim + 1em;
-        padding: @person_desc_padding;
-        padding-left: 2*@person_desc_padding;
-
-        /* styling bellow */
-        color: black;
-        .opacity(@person_caption_opacity);
+.content-profile
+{
+    .partial-profile
+    {
+        margin-top: @margin-top;
+        .partial-profile-avatar
+        {
+            float: left;
+            img
+            {
+                width: @profile_avatar_dim;
+            }
+        }
+        .partial-profile-description
+        {
+            margin-left: @profile_avatar_dim + @profile_descr_margin;
+            padding-top: @margin-top;
+        }
     }
 }
 
-@media (max-width: 768px) {
 
-  .partial-profile-person {
-
-    img.partial-profile-person-avatar{
-      float: none;
+@media (max-width: 480px)
+{
+    .content-profile
+    {
+        text-align: center;
+        .partial-profile
+        {
+            .partial-profile-avatar
+            {
+                float: none;
+                img
+                {
+                }
+            }
+            .partial-profile-description
+            {
+                margin-left: 0px;
+            }
+        }
     }
-    .partial-profile-person-description{
-      margin-left: 0;
-
-    }
-  }
 }

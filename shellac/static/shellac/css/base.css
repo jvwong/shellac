@@ -151,6 +151,12 @@ main .container-fluid {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 1.0em;
     line-height: 1.1em;
+    -moz-opacity: 0.6;
+    -khtml-opacity: 0.6;
+    -webkit-opacity: 0.6;
+    opacity: 0.6;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=60);
+    filter: alpha(opacity=60);
   }
   .media.clip .media-panel span.posted {
     font-size: 1.0em;
@@ -160,15 +166,16 @@ main .container-fluid {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 0.8em;
     line-height: 1em;
-    -moz-opacity: 0.72;
-    -khtml-opacity: 0.72;
-    -webkit-opacity: 0.72;
-    opacity: 0.72;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=72.00000000000001);
-    filter: alpha(opacity=72.00000000000001);
+    -moz-opacity: 0.6;
+    -khtml-opacity: 0.6;
+    -webkit-opacity: 0.6;
+    opacity: 0.6;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=60);
+    filter: alpha(opacity=60);
   }
   .media.clip .media-panel .media-description.dl-horizontal dd.categories {
-    display: none;
+    font-size: 0em;
+    visibility: hidden;
   }
   .media.clip .media-panel span.posted {
     font-size: 0.9em;
@@ -184,32 +191,28 @@ main .container-fluid {
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
-.partial-profile-person img.partial-profile-person-avatar {
-  left: 2em;
-  width: 15em;
-  height: 15em;
+.content-profile .partial-profile {
+  margin-top: 25px;
+}
+.content-profile .partial-profile .partial-profile-avatar {
   float: left;
 }
-.partial-profile-person .partial-profile-person-description {
-  height: 15em;
-  margin-left: 16em;
-  padding: 1em;
-  padding-left: 2em;
-  /* styling bellow */
-  color: black;
-  -moz-opacity: 0.7;
-  -khtml-opacity: 0.7;
-  -webkit-opacity: 0.7;
-  opacity: 0.7;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
-  filter: alpha(opacity=70);
+.content-profile .partial-profile .partial-profile-avatar img {
+  width: 200px;
 }
-@media (max-width: 768px) {
-  .partial-profile-person img.partial-profile-person-avatar {
+.content-profile .partial-profile .partial-profile-description {
+  margin-left: 225px;
+  padding-top: 25px;
+}
+@media (max-width: 480px) {
+  .content-profile {
+    text-align: center;
+  }
+  .content-profile .partial-profile .partial-profile-avatar {
     float: none;
   }
-  .partial-profile-person .partial-profile-person-description {
-    margin-left: 0;
+  .content-profile .partial-profile .partial-profile-description {
+    margin-left: 0px;
   }
 }
 
@@ -331,6 +334,19 @@ main .container-fluid {
   .shellac-app-statusbar {
     width: 42%;
   }
+}
+
+/*
+ * user
+ */
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+.content-user .content-user-update {
+  margin-top: 25px;
 }
 
 .btn-file {
@@ -568,6 +584,12 @@ main .container-fluid {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 1.0em;
     line-height: 1.1em;
+    -moz-opacity: 0.6;
+    -khtml-opacity: 0.6;
+    -webkit-opacity: 0.6;
+    opacity: 0.6;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=60);
+    filter: alpha(opacity=60);
   }
   .media.clip .media-panel span.posted {
     font-size: 1.0em;
@@ -577,15 +599,16 @@ main .container-fluid {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 0.8em;
     line-height: 1em;
-    -moz-opacity: 0.72;
-    -khtml-opacity: 0.72;
-    -webkit-opacity: 0.72;
-    opacity: 0.72;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=72.00000000000001);
-    filter: alpha(opacity=72.00000000000001);
+    -moz-opacity: 0.6;
+    -khtml-opacity: 0.6;
+    -webkit-opacity: 0.6;
+    opacity: 0.6;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=60);
+    filter: alpha(opacity=60);
   }
   .media.clip .media-panel .media-description.dl-horizontal dd.categories {
-    display: none;
+    font-size: 0em;
+    visibility: hidden;
   }
   .media.clip .media-panel span.posted {
     font-size: 0.9em;
@@ -594,32 +617,28 @@ main .container-fluid {
 /*
  * partials/profile/person
  */
-.partial-profile-person img.partial-profile-person-avatar {
-  left: 2em;
-  width: 15em;
-  height: 15em;
+.content-profile .partial-profile {
+  margin-top: 25px;
+}
+.content-profile .partial-profile .partial-profile-avatar {
   float: left;
 }
-.partial-profile-person .partial-profile-person-description {
-  height: 15em;
-  margin-left: 16em;
-  padding: 1em;
-  padding-left: 2em;
-  /* styling bellow */
-  color: black;
-  -moz-opacity: 0.7;
-  -khtml-opacity: 0.7;
-  -webkit-opacity: 0.7;
-  opacity: 0.7;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
-  filter: alpha(opacity=70);
+.content-profile .partial-profile .partial-profile-avatar img {
+  width: 200px;
 }
-@media (max-width: 768px) {
-  .partial-profile-person img.partial-profile-person-avatar {
+.content-profile .partial-profile .partial-profile-description {
+  margin-left: 225px;
+  padding-top: 25px;
+}
+@media (max-width: 480px) {
+  .content-profile {
+    text-align: center;
+  }
+  .content-profile .partial-profile .partial-profile-avatar {
     float: none;
   }
-  .partial-profile-person .partial-profile-person-description {
-    margin-left: 0;
+  .content-profile .partial-profile .partial-profile-description {
+    margin-left: 0px;
   }
 }
 /*
@@ -689,6 +708,12 @@ main .container-fluid {
   .shellac-app-statusbar {
     width: 42%;
   }
+}
+/*
+ * user
+ */
+.content-user .content-user-update {
+  margin-top: 25px;
 }
 /*
  * Globals

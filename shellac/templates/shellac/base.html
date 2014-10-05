@@ -64,8 +64,8 @@
                     <ul class="nav navbar-nav navbar-right">
 
                         {% block navbar-collapse-right-bar %}
-                        <li id="nav-navbar-right-bar-user"><a href="{{ user.person.get_absolute_url }}">{{user.username}}</a></li>
-                        <li id="nav-navbar-right-bar-people"><a href="{% url 'shellac_person_list' %}"><span class="glyphicon glyphicon-user"></span></a></li>
+                        <li id="nav-navbar-right-bar-user"><a href="{% url 'user_detail' user.id %}">{{user.username}}</a></li>
+                        <li id="nav-navbar-right-bar-people"><a href="{% url 'shellac_people' %}"><span class="glyphicon glyphicon-user"></span></a></li>
                         <li id="nav-navbar-right-bar-record"><a href="{% url 'shellac_clips_create' %}"><span class="glyphicon glyphicon-record"></span></a></li>
                         <li id="nav-navbar-right-bar-relations"><a href="{% url 'shellac_relations' %}"><span class="glyphicon glyphicon-globe"></span></a></li>
                         {% endblock navbar-collapse-right-bar %}

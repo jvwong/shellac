@@ -1,25 +1,21 @@
 {% load staticfiles %}
 
 <!-- profile div -->
-<div class="partial-profile-person col-xs-offset-2 col-xs-8">
+<div class="partial-profile person">
     <!-- profile-image -->
-    <a class="partial-profile-person-url" href="{{person.get_absolute_url}}">
-        <img class="partial-profile-person-avatar img-responsive img-thumbnail"
-             src="{% if person.avatar %}
-                    {{ person.avatar.url }}
-                  {% else %}
-                    {% static 'shellac/assets/avatar.jpeg' %}
-                  {% endif %}" alt="{{ person.username }}" />
-    </a>
-
-    <div class="partial-profile-person-description">
-        <a class="partial-profile-person-app" href="{% url 'shellac_app' person.username %}">
-            <span class="partial-profile-person-description-content lead">{{ person.username | truncatechars:15  }}</span><br />
+    <div class="partial-profile-avatar person">
+        <a href="{{person.get_absolute_url}}">
+            <img src="{% if person.avatar %} {{ person.avatar.url }}
+            {% else %}{% static 'shellac/assets/avatar.jpeg' %}{% endif %}" alt="{{ person.username }}" />
         </a>
-        <span class="partial-profile-person-description-content first_name">{{ person.user.first_name }}</span><br />
-        <span class="partial-profile-person-description-content last_name">{{ person.user.last_name }}</span><br />
-        <span class="partial-profile-person-description-content email">{{ person.user.email }}</span><br />
-        <span class="partial-profile-person-description-content joined">{{ person.joined|date:"M d, Y" }}</span><br />
+    </div>
+    <div class="partial-profile-description person">
+        <p class="partial-profile-description-content email">
+            <a class="partial-profile-app" href="{% url 'shellac_app' person.username %}">
+                <span class="glyphicon glyphicon-headphones">&nbsp;</span>{{ person.username }}
+            </a>
+        </p><hr/>
+        <p class="partial-profile-description-content joined">Joined: {{ person.joined|date:"M d, Y" }}</p>
     </div>
     <!-- end profile-description div -->
 </div>

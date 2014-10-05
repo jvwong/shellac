@@ -39,7 +39,7 @@
             {% if page_obj.number == page_num %}
                 <li class="disabled"><a href="#">{{ page_obj.number }}</a></li>
             {% else %}
-                <li><a href="{% url 'shellac_person_list' %}?page={{ page_num }}">{{ page_num }}</a></li>
+                <li><a href="{% url 'shellac_people' %}?page={{ page_num }}">{{ page_num }}</a></li>
             {% endif %}
         {% endfor %}
 
