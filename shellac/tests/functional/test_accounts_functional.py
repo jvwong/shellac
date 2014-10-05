@@ -43,18 +43,8 @@ class NewUserTest(FunctionalTest):
         submit_button = self.browser.find_element_by_id('signup_submit')
         submit_button.send_keys(Keys.ENTER)
 
-        #time.sleep(2)
+        time.sleep(2)
         self.assertIn('Profile', self.browser.title)
-
-        #check existence of profile info
-        profile_div = self.browser.find_element_by_class_name('partial-profile-person-description')
-        profile_spans = profile_div.find_elements_by_tag_name('span')
-        self.assertTrue(
-            any(span.text == username_dummy for span in profile_spans)
-        )
-        self.assertTrue(
-            any(span.text == email_dummy for span in profile_spans)
-        )
 
         #She is presented with a sign out menubar cog option
         navbar_cog = self.browser.find_element_by_class_name('dropdown-toggle')
@@ -66,7 +56,7 @@ class NewUserTest(FunctionalTest):
 
         #When she signs out she is redirected to the sign in page
         self.assertIn('Sign in', self.browser.title)
-        #time.sleep(2)
+        time.sleep(2)
 
 
 class DuplicateUserTest(FunctionalTest):

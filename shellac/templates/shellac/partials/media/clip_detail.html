@@ -8,18 +8,21 @@
         <div class="ui360">
 
             <a class="media-url" href="{{ object.audio_file.url }}">
-                <img class="media-img" src="{{ object.brand_thumb.url }}"  alt="{{ object.title }}" />
+                <img class="media-img" src="{% if object.brand_thumb %}
+                {{ object.brand_thumb.url }}{% else %}
+                    {% static 'shellac/assets/seventyEight.png' %}
+                {% endif %}"  alt="{{ object.title }}" />
                 <dl class="media-description dl-horizontal">
                     <!-- media-description content -->
-                    <dt class="media-description-content title">Title</dt>
+                    <dt class="">Title</dt>
                     <dd class="media-description-content title">{{ object.title }}</dd>
-                    <dt class="media-description-content description">Description</dt>
+                    <dt class="">Description</dt>
                     <dd class="media-description-content description">{{ object.description }}</dd>
-                    <dt class="media-description-content created">Created</dt>
+                    <dt class="">Created</dt>
                     <dd class="media-description-content created">{{ object.created|dayssince }}</dd>
-                    <dt class="media-description-content username">User</dt>
+                    <dt class="">User</dt>
                     <dd class="media-description-content username">{{ object.author.username }}</dd>
-                    <dt class="media-description-content username">Categories</dt>
+                    <dt class="">Categories</dt>
                     <dd class="media-description-content username">
                         {% for c in object.categories.all %}
                             {% if not forloop.first %}| {% endif %} {{ c }}

@@ -57,12 +57,19 @@ class NewClipTest(FunctionalTest):
         record_button.send_keys(Keys.ENTER)
 
         #Valdiate that we're on the Permalink site and can examine the Clip details
+        #time.sleep(3)
         self.assertIn('Permalink', self.browser.title)
         descriptors = self.browser.find_elements_by_css_selector(".media-description-content")
 
-        self.assertEqual(descriptors[0].text, c['title'])
-        self.assertIn(c['description'], descriptors[1].text)
-        self.assertIn(u['username_dummy'], descriptors[2].text)
+        self.assertTrue(
+            any(dd.text == c['title'] for dd in descriptors)
+        )
+        self.assertTrue(
+            any(dd.text == c['description'] for dd in descriptors)
+        )
+        self.assertTrue(
+            any(dd.text == u['username_dummy'] for dd in descriptors)
+        )
 
     def test_user_cannot_add_invalid_audio_type(self):
         self.create_pre_authenticated_session(u['username_dummy'])

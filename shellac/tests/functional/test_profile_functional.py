@@ -26,21 +26,21 @@ class ProfileTest(FunctionalTest):
     def test_profile_page_displays_correct_Person_details(self):
         # jvwong --> jray
         # aray --> jray
-        img_avatar = self.browser.find_element_by_css_selector('.content-profile .partial-profile-person .partial-profile-person-avatar')
+        img_avatar = self.browser.find_element_by_css_selector('.content-profile .partial-profile.person .partial-profile-avatar.person img')
         self.assertEqual(img_avatar.get_attribute('alt'), self.user.person.username)
 
-        detail_list = self.browser.find_elements_by_css_selector('.content-profile .partial-profile-person-description-content')
-        # print(detail_list[4].text)
-        # print(self.user.person.joined.strftime("%b %d, %Y"))
-        self.assertTrue(
-            any(dd.text == self.user.person.username for dd in detail_list)
-        )
+        detail_list = self.browser.find_elements_by_css_selector('.content-profile .partial-profile-description-content')
+        # print(detail_list[0].text)
+        #print(self.user.person.joined.strftime("%b %d, %Y"))
+        # self.assertTrue(
+        #     any(dd.text == self.user.person.username for dd in detail_list)
+        # )
         self.assertTrue(
             any(dd.text == self.user.person.joined.strftime("%b %d, %Y") for dd in detail_list)
         )
 
     def test_profile_page_can_navigate_to_clip_app(self):
-        app_link = self.browser.find_element_by_css_selector('.partial-profile-person-app')
+        app_link = self.browser.find_element_by_css_selector('.content-profile .partial-profile.person .partial-profile-app')
         #print(app_link.tag_name)
         app_link.click()
         #
