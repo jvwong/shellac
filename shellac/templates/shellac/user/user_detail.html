@@ -18,7 +18,10 @@
                     <dt>Last Name:</dt>
                     <dd>{{ object.last_name }}<dd>
                 </dl>
-                <a href="{% url 'user_update' user.id %}"><button type="button" class="btn btn-primary btn-block">Update</button></a>
+                <hr/>
+                <a class="content-user-button" href="{% url 'user_update' user.id %}"><button type="button" class="btn btn-primary btn-block">Update</button></a>
+                <hr/>
+                <a class="content-user-button" href="{% url 'user_delete' user.id %}"><button type="button" class="btn btn-danger btn-block">Delete</button></a>
             </div>
         </div>
     {% endblock main %}

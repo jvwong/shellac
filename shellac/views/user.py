@@ -1,5 +1,5 @@
 from django.views.generic.edit import UpdateView, DeleteView
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.models import User
 from django.views.generic.detail import DetailView
 from shellac.views.util.permissions import IsAuthenticatedAndOwnerMixin
@@ -23,6 +23,7 @@ class UserUpdate(IsAuthenticatedAndOwnerMixin, UpdateView):
         return reverse('user_detail', kwargs={'pk': pk})
 
 
-# class UserDelete(DeleteView):
-#     model = User
-#     success_url = reverse_lazy('user-list')
+class UserDelete(IsAuthenticatedAndOwnerMixin, DeleteView):
+    model = User
+    template_name = 'shellac/user/user_check_delete.html'
+    success_url = reverse_lazy('shellac_accounts_signup')

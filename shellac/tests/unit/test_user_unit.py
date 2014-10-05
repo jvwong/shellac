@@ -82,3 +82,38 @@ class UserUpdatePage(TestCase):
         self.client.logout()
         response = self.client.get('/user/' + self.userid + '/update/')
         self.assertEqual(response.status_code, 302)
+
+
+class UserDeletePage(TestCase):
+    fixtures = ['shellac.json', 'auth.json']
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        username = 'jray'
+        password = 'jray'
+        self.user = User.objects.get(username=username)
+        self.person = self.user.person
+        self.userid = str(self.user.id)
+        self.client.login(username=username, password=password)
+
+    def test_UserDelete_url_returns_correct_url(self):
+        url = reverse('user_delete', kwargs={'pk': self.userid})
+        self.assertEqual(url, '/user/' + self.userid + '/delete/')
+
+    def test_UserDelete_url_returns_correct_details(self):
+        response = self.client.get('/user/' + self.userid + '/delete/')
+        expected_html = render_to_string('shellac/user/user_check_delete.html', {'object': self.user, 'user': self.user})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'shellac/user/user_check_delete.html')
+
+    def test_UserDelete_url_inaccessble_to_other_user(self):
+        #logged in as jray, try to delete jvwong stuff nononno
+        u = User.objects.get(username='jvwong')
+        response = self.client.get('/user/' + str(u.id) + '/delete/')
+        #print(response.status_code)
+        self.assertEqual(response.status_code, 403)
+
+    def test_UserDelete_url_rejects_unauthenticated_access_attempt(self):
+        self.client.logout()
+        response = self.client.get('/user/' + self.userid + '/delete/')
+        self.assertEqual(response.status_code, 302)

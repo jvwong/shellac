@@ -31,7 +31,7 @@
             <form class="form-signin" role="form" action="" method="POST">{% csrf_token %}
                 <h3 class="form-login-heading">Sign up</h3>
                 <input type="text" class="form-control username" id="signup_username" name="username" placeholder="User Name" required autofocus>
-                <input type="email" class="form-control" id="signup_email" name="email" placeholder="Email (optional)">
+                <input type="email" class="form-control" id="signup_email" name="email" placeholder="Email (required)">
                 <input type="password" class="form-control" id="signup_password1" name="password1" placeholder="Password" required>
                 <input type="password" class="form-control" id="signup_password2" name="password2" placeholder="Password Confirm" required><br/>
                 <button class="btn btn-lg btn-primary btn-block" id="signup_submit" type="submit">Submit</button>
