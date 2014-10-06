@@ -87,8 +87,8 @@ main .container-fluid {
 .media.clip .media-panel span.posted {
   font-size: 1.2em;
   position: absolute;
-  top: 5px;
-  right: 8px;
+  top: 0.50em;
+  right: 0.10em;
 }
 .media.clip .media-panel .media-description.played {
   background-color: #428BCA;
@@ -535,8 +535,8 @@ main .container-fluid {
 .media.clip .media-panel span.posted {
   font-size: 1.2em;
   position: absolute;
-  top: 5px;
-  right: 8px;
+  top: 0.50em;
+  right: 0.10em;
 }
 .media.clip .media-panel .media-description.played {
   background-color: #428BCA;
