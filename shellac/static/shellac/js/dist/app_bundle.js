@@ -11262,7 +11262,7 @@ var shell = (function () {
                 '<div class="shellac-app-sidebar-container col-sm-3 col-md-2"></div>' +
                 '<div class="shellac-app-clip-container content"></div>' +
             '</div>',
-        truncatemax: 25
+        truncatemax: 28
     },
 
     stateMap = {
@@ -11407,14 +11407,15 @@ var shell = (function () {
                             '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
                                 '<img class="media-img" src="' + object.brand_thumb_url  + '" alt="' + object.title + '" />' +
 
-                                '<dl class="media-description dl-horizontal">' +
-                                    '<span class="media-description-content posted">' + object.created.startOf('minute').fromNow(true) + '</span>' +
-                                    '<a href="' + object.permalink + '"></a><span class="media-description-content permalink glyphicon glyphicon-share"></span>' +
-                                    '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
-                                    '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncatemax + 30) + '</dd>' +
-                                    '<dd class="media-description-content owner">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
-                                    '<dd class="media-description-content categories">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
-                                '</dl>' +
+                                '<a class="permalink" href="' + object.permalink + '">' +
+                                    '<dl class="media-description dl-horizontal">' +
+                                        '<span class="media-description-content posted">' + object.created.startOf('minute').fromNow(true) + '</span>' +
+                                        '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
+                                        '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncatemax) + '</dd>' +
+                                        '<dd class="media-description-content owner">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
+                                        '<dd class="media-description-content categories">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
+                                    '</dl>' +
+                                '</a>' +
                                 '<div class="media-progress"></div>' +
                             '</span>'  +
                         '</div>' +
@@ -11423,10 +11424,10 @@ var shell = (function () {
 
             $container.append(clip);
         });
-        $('.media.clip .media-url').on('click', function(e){
-            var url = $(this).attr('data-clip-url'),
-                $progress = $(this).find('.media-progress'),
-                $description = $(this).find('.media-description');
+        $('.media.clip .media-img').on('click', function(e){
+            var url = $(this).parent().attr('data-clip-url'),
+                $progress = $(this).parent().find('.media-progress'),
+                $description = $(this).parent().find('.media-description');
 
             audio.onClickPlayer(url, $progress, $description);
         });

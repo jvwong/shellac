@@ -84,7 +84,13 @@ main .container-fluid {
   font-size: 1.1em;
   margin-left: 0px;
 }
-.media.clip .media-panel span.posted {
+.media.clip .media-panel .media-description.dl-horizontal a.permalink {
+  position: absolute;
+  bottom: 0.50em;
+  right: 0.10em;
+  z-index: 5000;
+}
+.media.clip .media-panel .media-description.dl-horizontal span.posted {
   font-size: 1.2em;
   position: absolute;
   top: 0.50em;
@@ -144,7 +150,10 @@ main .container-fluid {
 .media.clip .media-panel .media-img {
   width: 100%;
 }
-.media.clip:hover {
+.media.clip .media-img:hover {
+  cursor: pointer;
+}
+.media.clip .media-description:hover {
   cursor: pointer;
 }
 .clip.no-content {
@@ -163,7 +172,7 @@ main .container-fluid {
     -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
     filter: alpha(opacity=80);
   }
-  .media.clip .media-panel span.posted {
+  .media.clip .media-panel .media-description.dl-horizontal span.posted {
     font-size: 1.0em;
   }
 }
@@ -186,8 +195,8 @@ main .container-fluid {
     font-size: 0em;
     visibility: hidden;
   }
-  .media.clip .media-panel span.posted {
-    font-size: 0.9em;
+  .media.clip .media-panel .media-description.dl-horizontal span.posted {
+    font-size: 1em;
   }
 }
 
@@ -563,7 +572,13 @@ main .container-fluid {
   font-size: 1.1em;
   margin-left: 0px;
 }
-.media.clip .media-panel span.posted {
+.media.clip .media-panel .media-description.dl-horizontal a.permalink {
+  position: absolute;
+  bottom: 0.50em;
+  right: 0.10em;
+  z-index: 5000;
+}
+.media.clip .media-panel .media-description.dl-horizontal span.posted {
   font-size: 1.2em;
   position: absolute;
   top: 0.50em;
@@ -623,7 +638,10 @@ main .container-fluid {
 .media.clip .media-panel .media-img {
   width: 100%;
 }
-.media.clip:hover {
+.media.clip .media-img:hover {
+  cursor: pointer;
+}
+.media.clip .media-description:hover {
   cursor: pointer;
 }
 .clip.no-content {
@@ -642,7 +660,7 @@ main .container-fluid {
     -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
     filter: alpha(opacity=80);
   }
-  .media.clip .media-panel span.posted {
+  .media.clip .media-panel .media-description.dl-horizontal span.posted {
     font-size: 1.0em;
   }
 }
@@ -665,8 +683,8 @@ main .container-fluid {
     font-size: 0em;
     visibility: hidden;
   }
-  .media.clip .media-panel span.posted {
-    font-size: 0.9em;
+  .media.clip .media-panel .media-description.dl-horizontal span.posted {
+    font-size: 1em;
   }
 }
 /*
