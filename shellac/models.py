@@ -208,7 +208,7 @@ class Clip(models.Model):
     ### Optional
     categories = models.ManyToManyField("shellac.Category", related_name="clips", blank=True)
     tags = TaggableManager(blank=True, help_text=("Comma separated list"))
-    description = models.TextField(max_length=500, blank=True, help_text=("Limit 250 characters"))
+    description = models.TextField(max_length=2000, blank=True, help_text=("Limit 250 characters"))
 
     ###upload to subdirectory with user id prefixed
     brand = models.ImageField(upload_to='brands/%Y/%m/%d', blank=True, help_text=("Images will be cropped as squares"))
