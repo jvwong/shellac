@@ -11,7 +11,8 @@ var shell = (function () {
     var moment = require('moment'),
         TAFFY = require('taffydb').taffy,
         audio = require('./audio.js'),
-        util = require('../util.js');
+        util = require('../util.js'),
+        sidebar = require('./sidebar.js');
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -22,42 +23,9 @@ var shell = (function () {
     configMap = {
         main_html: String() +
             '<div class="shellac-app-container">' +
-
                 '<div class="shellac-app-statusbar">Playlist: <span class="shellac-app-statusbar-playing"></span></div>' +
-
-                '<div class="col-sm-3 col-md-2 shellac-app sidebar">' +
-                    '<div class="panel-group noSwipe" id="accordion">' +
-
-                        '<div class="panel panel-default">' +
-                            '<div class="panel-heading">' +
-                                '<a data-toggle="collapse" data-parent="#accordion" href="#collapseCategories">' +
-                                    'Categories' +
-                                '</a>' +
-                            '</div>' +
-                            '<div id="collapseCategories" class="panel-collapse collapse">' +
-                                '<div class="panel-body">' +
-                                    '<div class="shellac-app nav nav-sidebar list-group"></div>' +
-                                '</div>' +
-                            '</div>' +
-                        '</div>' +
-
-                        '<div class="panel panel-default">' +
-                            '<div class="panel-heading">' +
-                                '<a data-toggle="collapse" data-parent="#accordion" href="#collapsePeople">' +
-                                    'People' +
-                                '</a>' +
-                            '</div>' +
-                            '<div id="collapsePeople" class="panel-collapse collapse">' +
-                                '<div class="panel-body">' +
-                                    '//Person List TODO' +
-                                '</div>' +
-                            '</div>' +
-                        '</div>' +
-
-                    '</div>' +
-                '</div>' +
-
-                '<div class="shellac-app clip content"></div>' +
+                '<div class="shellac-app-sidebar-container col-sm-3 col-md-2"></div>' +
+                '<div class="shellac-app-clip-container content"></div>' +
             '</div>',
         truncatemax: 10
     },
@@ -68,9 +36,6 @@ var shell = (function () {
 
         STATIC_URL: undefined,
         MEDIA_URL: undefined,
-
-        categories: undefined,
-        category_db: TAFFY(),
 
         clips: undefined,
         clip_db: TAFFY(),
@@ -83,14 +48,9 @@ var shell = (function () {
     setJqueryMap,
 
     urlParse,
-
-    parseCategoryData, loadCategories, display_categories,
     parseClipData, loadClips, display_clips,
-
-    onClickCategory, onTapClose, onSwipeClose,
-
+    onTapClose, onSwipeClose,
     swipeData,
-
     PubSub = util.PubSub;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
@@ -102,87 +62,14 @@ var shell = (function () {
      */
     setJqueryMap = function(){
         var $outerDiv = stateMap.$container;
-
         jqueryMap = {
-            $outerDiv                       : $outerDiv,
-            $app_container                  : $outerDiv.find('.shellac-app-container'),
-            $statusbar                      : $outerDiv.find('.shellac-app-statusbar'),
-            $statusbar_playing              : $outerDiv.find('.shellac-app-statusbar .shellac-app-statusbar-playing'),
-            $nav_sidebar                    : $outerDiv.find('.shellac-app.sidebar'),
-            $nav_sidebar_categories         : $outerDiv.find('.shellac-app.sidebar #collapseCategories .shellac-app.nav.nav-sidebar.list-group'),
-            $nav_sidebar_people             : $outerDiv.find('.shellac-app.sidebar #collapsePeople .shellac-app.nav.nav-sidebar.list-group'),
-            $clip_content                   : $outerDiv.find('.shellac-app.clip.content')
+            $outerDiv                   : $outerDiv,
+            $app_container              : $outerDiv.find('.shellac-app-container'),
+            $statusbar                  : $outerDiv.find('.shellac-app-container .shellac-app-statusbar'),
+            $statusbar_playing          : $outerDiv.find('.shellac-app-container .shellac-app-statusbar .shellac-app-statusbar-playing'),
+            $sidebar_container          : $outerDiv.find('.shellac-app-container .shellac-app-sidebar-container'),
+            $clip_content_container               : $outerDiv.find('.shellac-app-container .shellac-app-clip-container')
         };
-    };
-
-
-    /**
-     * loadCategories make an api call to gather the Categories in database
-     * @return jsonArray list of valid JSON objects representing serialized Category objects
-     */
-    loadCategories = function(){
-
-        var url = '/api/categories/';
-        $.ajax({
-            url: url
-        })
-        .done(function(categories){
-            stateMap.category_db.insert(parseCategoryData(categories.results));
-            stateMap.categories = stateMap.category_db().get();
-            PubSub.emit("categoryLoadComplete");
-        })
-        .fail(function(){
-            console.error("Could not load Clip archive");
-        })
-        .always(function(){
-
-        });
-    };
-
-
-    /**
-     * loadClips make an api call to gather the Clips in database
-     * @param status type of Relationship
-     * @param target_username username of the intended target Person
-     * @return jsonArray list of valid JSON objects representing serialized Clip objects
-     */
-    loadClips = function(status, target_username){
-
-        var url = ['/api/clips', status, target_username, ""].join('/');
-
-        $.ajax({
-            url: url
-        })
-            .done(function(clips){
-                stateMap.clip_db.insert(parseClipData(clips.results));
-                stateMap.clips = stateMap.clip_db().order("id desc").get();
-                PubSub.emit("clipLoadComplete");
-            })
-            .fail(function(){
-                console.error("Could not load Clip archive");
-            })
-            .always(function(){
-
-            });
-    };
-
-    /**
-     * method parseCategoryData: transform any Category fields to javascript-compatible
-     * @param a string describing an array of valid JSON
-     * @return jsonArray a list of valid JSON objects
-     */
-    parseCategoryData = function(raw){
-        var jsonArray;
-
-        jsonArray = raw.map(function(jsonObj){
-
-            try{
-                return jsonObj;
-            }catch(err){
-                console.error(err);
-            }
-        });
-        return jsonArray;
     };
 
     /**
@@ -192,7 +79,7 @@ var shell = (function () {
     */
     parseClipData = function(raw){
         var jsonArray;
-        jsonArray = raw.map(function(jsonObj){
+        jsonArray = raw.results.map(function(jsonObj){
 
             try{
                 jsonObj.created = moment(jsonObj.created);
@@ -247,49 +134,17 @@ var shell = (function () {
         console.log("fingerData: %s", fingerData);
     };
 
-
     //--------------------- END MODULE SCOPE METHODS --------------------
 
 
     //--------------------- BEGIN DOM METHODS --------------------
-
-    /**
-     * display_categories append the html for the category sidebar accordion section
-     * Can we make this more generic?
-     * @param item_list
-     * @param inner_db
-     * @param item_html
-     * @param nInnerTotal
-     */
-    display_categories = function(){
-
-        var all_anchor = String(),
-            items = String();
-
-        stateMap.categories.forEach(function(category){
-            var clip_array = stateMap.clip_db({categories: {has: category.url}});
-            items +=
-                '<a class="list-group-item nav-sidebar-category" href="#">' + '<span class="badge">' + clip_array.count() + '</span>' +
-                    '<h5 class="list-group-item-heading" id="' + category.slug + '">' + category.title + '</h5>' +
-                '</a>';
-        });
-        all_anchor +=
-            '<a class="list-group-item nav-sidebar-category active" href="#">' +
-                '<span class="badge">' + stateMap.clip_db().count() + '</span>' +
-                '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
-            '</a>';
-        jqueryMap.$nav_sidebar_categories.append(all_anchor, items);
-
-        //register listeners on <h5> element
-        $('.list-group-item.nav-sidebar-category').on('click', onClickCategory);
-    };
-
-
     /**
      * display_clips append the html for the clips to the main body of the page
+     * @param clipList the list of clip objects
+     * @param $container jquery object that will contain the clips html
      */
-    display_clips = function(){
-        jqueryMap.$clip_content.html("");
+    display_clips = function(clipList, $container){
+        $container.html("");
 
         if(stateMap.clips.length === 0)
         {
@@ -297,10 +152,10 @@ var shell = (function () {
                 '<div class="col-xs-12 clip no-content">' +
                     '<h3>Nothing to hear here...</h3>' +
                 '</div>';
-            jqueryMap.$clip_content.html(message);
+            $container.html(message);
             return;
         }
-        stateMap.clips.forEach(function(object){
+        clipList.forEach(function(object){
 
             var cats = object.categories.length > 0 ? object.categories
                 .map(function(c){
@@ -330,7 +185,7 @@ var shell = (function () {
                     '</div>' +
                 '</div>';
 
-            jqueryMap.$clip_content.append(clip);
+            $container.append(clip);
         });
         $('.media.clip .media-url').on('click', function(e){
             var url = $(this).attr('data-clip-url'),
@@ -339,44 +194,6 @@ var shell = (function () {
 
             audio.onClickPlayer(url, $progress, $description);
         });
-    };
-
-    //--------------------- END DOM METHODS ----------------------
-
-    //------------------- BEGIN EVENT HANDLERS -------------------
-    /**
-     * onClickCategory callback for changes in the category UI.
-     * Extracts the audio file url for each clip for the category
-     * and emits a shellac-categorychange event
-     * @param event jQuery event object for the clicked elements
-     */
-    onClickCategory = function(event){
-
-        var category, $a, id;
-
-        //remove the active class from all <a>
-        jqueryMap.$nav_sidebar_categories.find('.list-group-item.nav-sidebar-category').removeClass( "active");
-
-        //add the active class to current -- check if we clicked inner h5 and span elements within a
-        $a = $(event.target).closest('a');
-        $a.addClass("active");
-        id = $a.find('.list-group-item-heading').attr('id');
-
-        //empty the clip array
-        stateMap.clips = [];
-
-        //refill the empty the clip array
-        if(id === "all"){
-            stateMap.clips = stateMap.clip_db().get();
-
-        } else {
-            category = stateMap.category_db({slug: id}).first();
-            stateMap.clips = stateMap.clip_db({categories: {has: category.url}}).get();
-        }
-        display_clips();
-        util.PubSub.emit("shellac-categorychange",
-            stateMap.clips.map(function(clip){return clip.audio_file_url;})
-        );
     };
 
     onTapClose = function(event, direction, distance, duration, fingerCount){
@@ -388,6 +205,10 @@ var shell = (function () {
         event.preventDefault();
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
+
+    //--------------------- END DOM METHODS ----------------------
+
+    //------------------- BEGIN EVENT HANDLERS -------------------
     //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
@@ -405,7 +226,6 @@ var shell = (function () {
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         stateMap.target_username = target_username;
-        stateMap.$nav_sidebar = $container.parent;
         stateMap.STATIC_URL = STATIC_URL;
         stateMap.MEDIA_URL = MEDIA_URL;
         stateMap.DEBUG = DEBUG;
@@ -414,12 +234,31 @@ var shell = (function () {
         setJqueryMap();
 
         //register pub-sub methods
-        PubSub.on("clipLoadComplete", display_clips);
-        PubSub.on("clipLoadComplete", loadCategories);
-        PubSub.on("categoryLoadComplete", display_categories);
+        util.PubSub.on("fetchUrlComplete", function(tag, result){
+            switch (tag)
+            {
+                case 'api_clips_status_person':
+                    var formatted = parseClipData(result);
+                    //console.log(formatted);
+                    stateMap.clip_db.insert(formatted);
+                    stateMap.clips = stateMap.clip_db().order("id desc").get();
+                    display_clips(stateMap.clips, jqueryMap.$clip_content_container);
+
+                    //initialize the sidebar module
+                    sidebar.initModule( jqueryMap.$sidebar_container, stateMap.clip_db );
+                    break;
+                default:
+            }
+        });
+
+        //register pub-sub methods
+        util.PubSub.on("shellac-app-sidebar-categorychange", function(clips){
+            display_clips(clips, jqueryMap.$clip_content_container);
+        });
 
         //load data into in-browser database
-        loadClips("following", target_username);
+        var clipsUrl = ['/api/clips', "following", target_username, ""].join('/');
+        util.fetchUrl(clipsUrl, 'api_clips_status_person');
 
         //Navigation Menu Slider
         $( '.shellac-app-statusbar' ).swipe({
@@ -427,7 +266,8 @@ var shell = (function () {
         });
         jqueryMap.$statusbar_playing.html(target_username);
 
-        $( '.shellac-app.sidebar' ).swipe({
+        //Navigation Menu Slider
+        jqueryMap.$sidebar_container.swipe({
             tap: onTapClose,
             swipeLeft: onSwipeClose,
             threshold: 75

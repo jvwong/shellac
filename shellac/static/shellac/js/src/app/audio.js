@@ -75,10 +75,15 @@ var audio = (function () {
 
     /**
     *onCategoryChange PubSub callback for changes in the category UI
-    * @param urls - array of urls for Clip objects currently displayed
+    * @param clips - array of clip objects currently displayed
     * @return: none
     */
-    onCategoryChange = function(urls){
+    onCategoryChange = function(clips){
+
+        var urls = clips.map(function(clip){
+            return clip.audio_file_url;
+        });
+
         urls.forEach(function(url){
             var $player,
                 $description,
@@ -139,7 +144,7 @@ var audio = (function () {
             }
         });
 
-        PubSub.on("shellac-categorychange", onCategoryChange );
+        PubSub.on("shellac-app-sidebar-categorychange", onCategoryChange );
     };
 
     // Begin private method /makeSound/

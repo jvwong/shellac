@@ -268,14 +268,14 @@ main .container-fluid {
  * Sidebar
  */
 /* Hide for mobile, show later */
-.nav-expanded .shellac-app.sidebar {
+.nav-expanded .shellac-app-sidebar-container {
   left: 0em;
   transition: right 0.3s ease-in-out 0s;
   -webkit-transition: left 0.3s ease-in-out 0s;
   -moz-transition: left 0.3s ease-in-out 0s;
   -o-transition: left 0.3s ease-in-out 0s;
 }
-.shellac-app.sidebar {
+.shellac-app-sidebar-container {
   position: fixed;
   height: 100%;
   width: 15em;
@@ -294,16 +294,16 @@ main .container-fluid {
   -moz-transition: left 0.3s ease-in-out 0s;
   -o-transition: left 0.3s ease-in-out 0s;
 }
-.shellac-app.sidebar .panel-group {
+.shellac-app-sidebar-container .panel-group {
   margin-top: 2em;
 }
 @media (max-width: 768px) {
-  .shellac-app.sidebar {
+  .shellac-app-sidebar-container {
     width: 15em;
     font-size: 1.0em;
   }
-  .shellac-app.sidebar .shellac-app.nav.nav-sidebar.list-group h5,
-  .shellac-app.sidebar .badge {
+  .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
+  .shellac-app-sidebar-container .badge {
     font-size: 0.9em;
   }
 }
@@ -420,14 +420,14 @@ main .container-fluid {
  * Sidebar
  */
 /* Hide for mobile, show later */
-.nav-expanded .shellac-app.sidebar {
+.nav-expanded .shellac-app-sidebar-container {
   left: 0em;
   transition: right 0.3s ease-in-out 0s;
   -webkit-transition: left 0.3s ease-in-out 0s;
   -moz-transition: left 0.3s ease-in-out 0s;
   -o-transition: left 0.3s ease-in-out 0s;
 }
-.shellac-app.sidebar {
+.shellac-app-sidebar-container {
   position: fixed;
   height: 100%;
   width: 15em;
@@ -446,16 +446,16 @@ main .container-fluid {
   -moz-transition: left 0.3s ease-in-out 0s;
   -o-transition: left 0.3s ease-in-out 0s;
 }
-.shellac-app.sidebar .panel-group {
+.shellac-app-sidebar-container .panel-group {
   margin-top: 2em;
 }
 @media (max-width: 768px) {
-  .shellac-app.sidebar {
+  .shellac-app-sidebar-container {
     width: 15em;
     font-size: 1.0em;
   }
-  .shellac-app.sidebar .shellac-app.nav.nav-sidebar.list-group h5,
-  .shellac-app.sidebar .badge {
+  .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
+  .shellac-app-sidebar-container .badge {
     font-size: 0.9em;
   }
 }

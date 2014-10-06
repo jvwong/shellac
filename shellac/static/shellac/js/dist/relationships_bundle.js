@@ -5190,15 +5190,33 @@ module.exports = shell;
 
 var util = (function () {
 
-    var PubSub, truncate, getCookie, sameOrigin, csrfSafeMethod;
+    var fetchUrl, PubSub, truncate, getCookie, sameOrigin, csrfSafeMethod;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
-
     //---------------- END MODULE DEPENDENCIES --------------
 
-    //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
+    /**
+     * fetchUrl make a call to the given url and emit a Pubsub on complete
+     * @param url
+     * @param tag string tag to identify results
+     * @return Pubsub event that notifies the url and resulting json
+     */
+    fetchUrl = function(url, tag){
+        $.ajax({
+            url: url
+        })
+            .done(function(results){
+                PubSub.emit("fetchUrlComplete", tag, results);
+            })
+            .fail(function(){
+                console.error("Failed to load data");
+            })
+            .always(function(){});
+    };
+
+
     // Begin Public method /PubSub/
     // Example   : PubSub.on('bark', getDog ); PubSub.emit('bark');
     // Purpose   :
@@ -5287,11 +5305,12 @@ var util = (function () {
     };
 
     return {
-        PubSub: PubSub,
-        truncate: truncate,
-        getCookie: getCookie,
-        csrfSafeMethod: csrfSafeMethod,
-        sameOrigin: sameOrigin
+        fetchUrl        : fetchUrl,
+        PubSub          : PubSub,
+        truncate        : truncate,
+        getCookie       : getCookie,
+        csrfSafeMethod  : csrfSafeMethod,
+        sameOrigin      : sameOrigin
     };
 }());
 
