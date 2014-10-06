@@ -155,7 +155,7 @@ main .container-fluid {
   top: 5em;
   text-align: center;
 }
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 1.0em;
     line-height: 1.1em;
@@ -168,6 +168,10 @@ main .container-fluid {
   }
   .media.clip .media-panel .media-description.dl-horizontal span.posted {
     font-size: 1.0em;
+  }
+  .media.clip .media-panel .media-description.dl-horizontal dd.categories {
+    font-size: 0em;
+    visibility: hidden;
   }
 }
 @media (max-width: 480px) {
@@ -197,12 +201,6 @@ main .container-fluid {
 /*
  * Modal
  */
-/*---------------------------------------------------
-    LESS Elements 0.9
-  ---------------------------------------------------
-    A set of useful LESS mixins
-    More info at: http://lesselements.com
-  ---------------------------------------------------*/
 .modal .modal-dialog .modal-content .modal-header {
   border-bottom: none;
 }
@@ -664,7 +662,7 @@ main .container-fluid {
   top: 5em;
   text-align: center;
 }
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 1.0em;
     line-height: 1.1em;
@@ -677,6 +675,10 @@ main .container-fluid {
   }
   .media.clip .media-panel .media-description.dl-horizontal span.posted {
     font-size: 1.0em;
+  }
+  .media.clip .media-panel .media-description.dl-horizontal dd.categories {
+    font-size: 0em;
+    visibility: hidden;
   }
 }
 @media (max-width: 480px) {
