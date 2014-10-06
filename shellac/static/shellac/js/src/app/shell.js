@@ -27,6 +27,22 @@ var shell = (function () {
                 '<div class="shellac-app-sidebar-container col-sm-3 col-md-2"></div>' +
                 '<div class="shellac-app-clip-container content"></div>' +
             '</div>',
+
+        modal_html: String() +
+            '<div class="modal fade" id="get_absolute_urlModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                '<div class="modal-dialog">' +
+                    '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                            '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+                        '</div>' +
+                        '<div class="modal-body"></div>' +
+                        '<div class="modal-footer">' +
+                            '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>',
+
         truncatemax: 28
     },
 
@@ -68,7 +84,9 @@ var shell = (function () {
             $statusbar                  : $outerDiv.find('.shellac-app-container .shellac-app-statusbar'),
             $statusbar_playing          : $outerDiv.find('.shellac-app-container .shellac-app-statusbar .shellac-app-statusbar-playing'),
             $sidebar_container          : $outerDiv.find('.shellac-app-container .shellac-app-sidebar-container'),
-            $clip_content_container               : $outerDiv.find('.shellac-app-container .shellac-app-clip-container')
+            $clip_content_container     : $outerDiv.find('.shellac-app-container .shellac-app-clip-container'),
+            $modal_container            : $outerDiv.find('#get_absolute_urlModal'),
+            $modal_body                 : $outerDiv.find('#get_absolute_urlModal .modal-dialog .modal-content .modal-body')
         };
     };
 
@@ -172,15 +190,14 @@ var shell = (function () {
                             '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
                                 '<img class="media-img" src="' + object.brand_thumb_url  + '" alt="' + object.title + '" />' +
 
-                                '<a class="permalink" href="' + object.permalink + '">' +
-                                    '<dl class="media-description dl-horizontal">' +
-                                        '<span class="media-description-content posted">' + object.created.startOf('minute').fromNow(true) + '</span>' +
-                                        '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
-                                        '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncatemax) + '</dd>' +
-                                        '<dd class="media-description-content owner">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
-                                        '<dd class="media-description-content categories">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
-                                    '</dl>' +
-                                '</a>' +
+                                '<dl class="media-description dl-horizontal" data-permalink="' + object.permalink + '">' +
+                                    '<span class="media-description-content posted">' + object.created.startOf('minute').fromNow(true) + '</span>' +
+                                    '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
+                                    '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncatemax) + '</dd>' +
+                                    '<dd class="media-description-content owner">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
+                                    '<dd class="media-description-content categories">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
+                                '</dl>' +
+
                                 '<div class="media-progress"></div>' +
                             '</span>'  +
                         '</div>' +
@@ -193,8 +210,11 @@ var shell = (function () {
             var url = $(this).parent().attr('data-clip-url'),
                 $progress = $(this).parent().find('.media-progress'),
                 $description = $(this).parent().find('.media-description');
-
             audio.onClickPlayer(url, $progress, $description);
+        });
+        $('.media.clip .media-description').on('click', function(e){
+            var permalink = $(this).attr('data-permalink');
+            util.fetchUrl(permalink, 'get_absolute_url');
         });
     };
 
@@ -233,6 +253,8 @@ var shell = (function () {
         stateMap.DEBUG = DEBUG;
 
         $container.append( configMap.main_html );
+        $container.append( configMap.modal_html );
+        $container.append( configMap.modal_button_html );
         setJqueryMap();
 
         //register pub-sub methods
@@ -249,6 +271,11 @@ var shell = (function () {
                     //initialize the sidebar module
                     sidebar.initModule( jqueryMap.$sidebar_container, stateMap.clip_db );
                     break;
+                case 'get_absolute_url':
+                    console.log(jqueryMap.$model_button);
+                    jqueryMap.$modal_body.html($(result).find('.permalink'));
+                    jqueryMap.$modal_container.modal('show');
+                    break;
                 default:
             }
         });
@@ -257,6 +284,7 @@ var shell = (function () {
         util.PubSub.on("shellac-app-sidebar-categorychange", function(clips){
             display_clips(clips, jqueryMap.$clip_content_container);
         });
+
 
         //load data into in-browser database
         var clipsUrl = ['/api/clips', "following", target_username, ""].join('/');

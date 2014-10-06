@@ -208,8 +208,6 @@ var audio = (function () {
 
     //------------------- BEGIN PUBLIC METHODS -------------------
     onClickPlayer = function(url, $progress, $description){
-
-//        console.log(url);
 //        console.log($progress);
 
         // *** CASE 0
