@@ -5259,13 +5259,7 @@ var util = (function () {
     // Throws    : none
     truncate = function(string, maxchar){
         var str = string || '';
-
-        console.log(str);
-        console.log(maxchar);
-
         var truncated = str.slice(0, maxchar);
-        console.log(truncated);
-
         if(str.length > maxchar){
             truncated += "...";
         }

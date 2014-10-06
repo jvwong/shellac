@@ -1,0 +1,66 @@
+/*
+ * Permalink
+ */
+
+@import "_elements";
+
+@permalink_margin: 0px;
+
+@caption_opacity: 0.8;
+
+@permalink_desc_padding: 0.5em;
+@permalink_dim_small: 175px;
+@permalink_dim_medium: 250px;
+
+@permalink_img_dim: 250px;
+
+.permalink {
+
+  .permalink-panel
+  {
+    .permalink-description {
+
+      dt
+      {
+        font-size: 1.1em;
+        margin-top: 1em;
+      }
+
+      dd
+      {
+        font-size:1.1em;
+        margin-left: 0px;
+      }
+
+    }
+
+    .permalink-img{
+      max-width: @permalink_dim_medium;
+    }
+  }
+
+
+}
+
+@media (max-width: 767px)
+{
+}
+
+@media (max-width: 480px)
+{
+  .permalink {
+
+    .permalink-panel
+    {
+      .permalink-description
+      {
+      }
+
+      .permalink-img{
+        max-width: @permalink_dim_small;
+      }
+    }
+
+  }
+}
+

@@ -90,6 +90,11 @@ main .container-fluid {
   top: 0.50em;
   right: 0.10em;
 }
+.media.clip .media-panel span.media-description-content.permalink {
+  bottom: 0.50em;
+  right: 0.10em;
+  z-index: 5000;
+}
 .media.clip .media-panel .media-description.played {
   background-color: #428BCA;
   background: #428BCA;
@@ -183,6 +188,32 @@ main .container-fluid {
   }
   .media.clip .media-panel span.posted {
     font-size: 0.9em;
+  }
+}
+
+/*
+ * Permalink
+ */
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+.permalink .permalink-panel .permalink-description dt {
+  font-size: 1.1em;
+  margin-top: 1em;
+}
+.permalink .permalink-panel .permalink-description dd {
+  font-size: 1.1em;
+  margin-left: 0px;
+}
+.permalink .permalink-panel .permalink-img {
+  max-width: 250px;
+}
+@media (max-width: 480px) {
+  .permalink .permalink-panel .permalink-img {
+    max-width: 175px;
   }
 }
 
@@ -538,6 +569,11 @@ main .container-fluid {
   top: 0.50em;
   right: 0.10em;
 }
+.media.clip .media-panel span.media-description-content.permalink {
+  bottom: 0.50em;
+  right: 0.10em;
+  z-index: 5000;
+}
 .media.clip .media-panel .media-description.played {
   background-color: #428BCA;
   background: #428BCA;
@@ -631,6 +667,25 @@ main .container-fluid {
   }
   .media.clip .media-panel span.posted {
     font-size: 0.9em;
+  }
+}
+/*
+ * Permalink
+ */
+.permalink .permalink-panel .permalink-description dt {
+  font-size: 1.1em;
+  margin-top: 1em;
+}
+.permalink .permalink-panel .permalink-description dd {
+  font-size: 1.1em;
+  margin-left: 0px;
+}
+.permalink .permalink-panel .permalink-img {
+  max-width: 250px;
+}
+@media (max-width: 480px) {
+  .permalink .permalink-panel .permalink-img {
+    max-width: 175px;
   }
 }
 /*

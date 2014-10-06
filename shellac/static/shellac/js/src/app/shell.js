@@ -174,8 +174,9 @@ var shell = (function () {
 
                                 '<dl class="media-description dl-horizontal">' +
                                     '<span class="media-description-content posted">' + object.created.startOf('minute').fromNow(true) + '</span>' +
+                                    '<a href="' + object.permalink + '"></a><span class="media-description-content permalink glyphicon glyphicon-share"></span>' +
                                     '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
-                                    '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncatemax) + '</dd>' +
+                                    '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncatemax + 30) + '</dd>' +
                                     '<dd class="media-description-content owner">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
                                     '<dd class="media-description-content categories">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
                                 '</dl>' +
