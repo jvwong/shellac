@@ -195,8 +195,32 @@ main .container-fluid {
 }
 
 /*
- * Permalink
+ * Modal
  */
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+.modal .modal-dialog .modal-content .modal-header {
+  border-bottom: none;
+}
+.modal .modal-dialog .modal-content .modal-body {
+  border-top: none;
+}
+.modal .modal-dialog .modal-content .modal-footer {
+  border-top: none;
+}
+.modal .modal-dialog .modal-content .modal-footer button {
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+}
+
+/*
+* Permalink
+*/
 /*---------------------------------------------------
     LESS Elements 0.9
   ---------------------------------------------------
@@ -679,8 +703,8 @@ main .container-fluid {
   }
 }
 /*
- * Permalink
- */
+* Permalink
+*/
 .permalink .permalink-panel .permalink-description {
   font-size: 0.90em;
 }
@@ -803,6 +827,23 @@ main .container-fluid {
 }
 .content-user .content-user-detail .content-user-button {
   margin-top: 10px;
+}
+/*
+ * Modal
+ */
+.modal .modal-dialog .modal-content .modal-header {
+  border-bottom: none;
+}
+.modal .modal-dialog .modal-content .modal-body {
+  border-top: none;
+}
+.modal .modal-dialog .modal-content .modal-footer {
+  border-top: none;
+}
+.modal .modal-dialog .modal-content .modal-footer button {
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
 }
 /*
  * Globals

@@ -29,7 +29,7 @@ var shell = (function () {
             '</div>',
 
         modal_html: String() +
-            '<div class="modal fade" id="get_absolute_urlModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal fade" id="get_absolute_urlModal" tabindex="-1" role="dialog" aria-labelledby="get_absolute_urlModal" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
                     '<div class="modal-content">' +
                         '<div class="modal-header">' +
@@ -86,7 +86,9 @@ var shell = (function () {
             $sidebar_container          : $outerDiv.find('.shellac-app-container .shellac-app-sidebar-container'),
             $clip_content_container     : $outerDiv.find('.shellac-app-container .shellac-app-clip-container'),
             $modal_container            : $outerDiv.find('#get_absolute_urlModal'),
-            $modal_body                 : $outerDiv.find('#get_absolute_urlModal .modal-dialog .modal-content .modal-body')
+            $modal_header               : $outerDiv.find('#get_absolute_urlModal .modal-dialog .modal-content .modal-header'),
+            $modal_body                 : $outerDiv.find('#get_absolute_urlModal .modal-dialog .modal-content .modal-body'),
+            $modal_footer               : $outerDiv.find('#get_absolute_urlModal .modal-dialog .modal-content .modal-footer'),
         };
     };
 
