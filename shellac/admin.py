@@ -18,24 +18,38 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('title',)
     ordering = ['title']
     prepopulated_fields = {'slug': ['title']}
-
-
-class ClipAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ["title"]}
-    # list_display = ['__unicode__', 'audio_file_player']
-    list_display = ['__unicode__']
-    actions = [custom_delete_selected]
-
-    def get_actions(self, request):
-        actions = super(ClipAdmin, self).get_actions(request)
-        del actions['delete_selected']
-        return actions
-
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Clip, ClipAdmin)
+
+# class ClipAdmin(admin.ModelAdmin):
+#     prepopulated_fields = {"slug": ["title"]}
+#     # list_display = ['__unicode__', 'audio_file_player']
+#     list_display = ['__unicode__']
+#     actions = [custom_delete_selected]
+#
+#     def get_actions(self, request):
+#         actions = super(ClipAdmin, self).get_actions(request)
+#         del actions['delete_selected']
+#         return actions
+#
+# admin.site.register(Clip, ClipAdmin)
+
+class ClipInline(admin.StackedInline):
+    model = Clip
+    fk_name = 'author'
+    #raw_id_fields = ('from_person', 'to_person')
+    extra = 1
+
+    fieldsets = (
+        ('Advanced options', {
+            'classes': ('collapse',),
+            'fields': ('title', 'author', 'categories',
+                       'tags', 'description', 'brand', 'status', 'audio_file')
+        }),
+    )
 
 
-class RelationshipInline(admin.TabularInline):
+
+class RelationshipInline(admin.StackedInline):
     model = Relationship
     fk_name = 'from_person'
     #raw_id_fields = ('from_person', 'to_person')
@@ -53,7 +67,7 @@ class PersonAdmin(admin.ModelAdmin):
     list_filter = ['joined']
     search_fields = ['user__username']
     readonly_fields = ('user',)
-    inlines = (RelationshipInline,)
+    inlines = (RelationshipInline, ClipInline)
 
 # Re-register UserAdmin
 admin.site.register(Person, PersonAdmin)
