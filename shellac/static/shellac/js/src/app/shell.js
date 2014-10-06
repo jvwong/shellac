@@ -27,7 +27,7 @@ var shell = (function () {
                 '<div class="shellac-app-sidebar-container col-sm-3 col-md-2"></div>' +
                 '<div class="shellac-app-clip-container content"></div>' +
             '</div>',
-        truncatemax: 10
+        truncatemax: 25
     },
 
     stateMap = {
@@ -166,7 +166,7 @@ var shell = (function () {
                 .toString() : "&nbsp;";
 
             var clip = String() +
-                '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 media clip">' +
+                '<div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 media clip">' +
                     '<div class="media-panel">' +
                         '<div class="ui360">' +
                             '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
@@ -174,10 +174,10 @@ var shell = (function () {
 
                                 '<dl class="media-description dl-horizontal">' +
                                     '<span class="media-description-content posted">' + object.created.startOf('minute').fromNow(true) + '</span>' +
-                                    '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncate_max) + '</dd>' +
-                                    '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncate_max) + '</dd>' +
-                                    '<dd class="media-description-content owner">' + object.owner + '</dd>' +
-                                    '<dd class="media-description-content categories">' + cats + '</dd>' +
+                                    '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
+                                    '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncatemax) + '</dd>' +
+                                    '<dd class="media-description-content owner">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
+                                    '<dd class="media-description-content categories">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
                                 '</dl>' +
                                 '<div class="media-progress"></div>' +
                             '</span>'  +
@@ -278,7 +278,7 @@ var shell = (function () {
                 future: "in %s",
                 past:   "%s ago",
                 s:  "s",
-                m:  "1m",
+                m:  "1min",
                 mm: "%dmin",
                 h:  "1h",
                 hh: "%dh",
@@ -286,8 +286,8 @@ var shell = (function () {
                 dd: "%dd",
                 M:  "1mon",
                 MM: "%dmon",
-                y:  "1y",
-                yy: "%dy"
+                y:  "1yr",
+                yy: "%dyrs"
             }
         });
     };

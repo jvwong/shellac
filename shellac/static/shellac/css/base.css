@@ -151,12 +151,12 @@ main .container-fluid {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 1.0em;
     line-height: 1.1em;
-    -moz-opacity: 0.6;
-    -khtml-opacity: 0.6;
-    -webkit-opacity: 0.6;
-    opacity: 0.6;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=60);
-    filter: alpha(opacity=60);
+    -moz-opacity: 0.8;
+    -khtml-opacity: 0.8;
+    -webkit-opacity: 0.8;
+    opacity: 0.8;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+    filter: alpha(opacity=80);
   }
   .media.clip .media-panel span.posted {
     font-size: 1.0em;
@@ -166,12 +166,16 @@ main .container-fluid {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 0.8em;
     line-height: 1em;
-    -moz-opacity: 0.6;
-    -khtml-opacity: 0.6;
-    -webkit-opacity: 0.6;
-    opacity: 0.6;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=60);
-    filter: alpha(opacity=60);
+    -moz-opacity: 0.8;
+    -khtml-opacity: 0.8;
+    -webkit-opacity: 0.8;
+    opacity: 0.8;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+    filter: alpha(opacity=80);
+  }
+  .media.clip .media-panel .media-description.dl-horizontal dd {
+    font-size: .95em;
+    margin-left: 0px;
   }
   .media.clip .media-panel .media-description.dl-horizontal dd.categories {
     font-size: 0em;
@@ -595,12 +599,12 @@ main .container-fluid {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 1.0em;
     line-height: 1.1em;
-    -moz-opacity: 0.6;
-    -khtml-opacity: 0.6;
-    -webkit-opacity: 0.6;
-    opacity: 0.6;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=60);
-    filter: alpha(opacity=60);
+    -moz-opacity: 0.8;
+    -khtml-opacity: 0.8;
+    -webkit-opacity: 0.8;
+    opacity: 0.8;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+    filter: alpha(opacity=80);
   }
   .media.clip .media-panel span.posted {
     font-size: 1.0em;
@@ -610,12 +614,16 @@ main .container-fluid {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 0.8em;
     line-height: 1em;
-    -moz-opacity: 0.6;
-    -khtml-opacity: 0.6;
-    -webkit-opacity: 0.6;
-    opacity: 0.6;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=60);
-    filter: alpha(opacity=60);
+    -moz-opacity: 0.8;
+    -khtml-opacity: 0.8;
+    -webkit-opacity: 0.8;
+    opacity: 0.8;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+    filter: alpha(opacity=80);
+  }
+  .media.clip .media-panel .media-description.dl-horizontal dd {
+    font-size: .95em;
+    margin-left: 0px;
   }
   .media.clip .media-panel .media-description.dl-horizontal dd.categories {
     font-size: 0em;
