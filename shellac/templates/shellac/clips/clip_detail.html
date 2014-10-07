@@ -1,6 +1,6 @@
 {% extends "shellac/base.html" %}
 {% load staticfiles %}
-{% load i18n %}
+{% load shellac_filters %}
 
 <!-- Head -->
     {% block title %}Permalink{% endblock title %}
@@ -10,6 +10,39 @@
 
 <!-- Main -->
     {% block main %}
-        {% include 'shellac/partials/media/clip_detail.html' %}
+        <div class="col-xs-12 col-sm-10 permalink">
+            <div class="permalink-panel">
+                <a class="permalink-url" href="{{ object.audio_file.url }}">
+                    <img class="permalink-img" src="{% if object.brand_thumb %}{{ object.brand_thumb.url }}
+                    {% elif object.author.avatar_thumb %}{{ object.author.avatar_thumb.url }}
+                    {% else %}{% static 'shellac/assets/seventyEight.png' %}
+                    {% endif %}"  alt="{{ object.title }}" />
+                </a>
+                <hr/>
+                <dl class="permalink-description">
+                    <!-- permalink-description content -->
+                    <dt class="">Title</dt>
+                    <dd class="permalink-description-content title">{{ object.title }}</dd>
+                    <dt class="">Description</dt>
+                    <dd class="permalink-description-content description">{{ object.description }}</dd>
+                    <dt class="">Author</dt>
+                    <dd class="permalink-description-content created">{{ object.created|dayssince }}</dd>
+                    <dt class="">Owner</dt>
+                    <dd class="permalink-description-content username">{{ object.author }}</dd>
+                    <dt class="">Plays</dt>
+                    <dd class="permalink-description-content plays">{{ object.plays }}</dd>
+                    <dt class="">Rating</dt>
+                    <dd class="permalink-description-content rating">{{ object.rating }}</dd>
+                    <dt class="">Status</dt>
+                    <dd class="permalink-description-content status">{{ object.status }}</dd>
+                    <dt class="">Categories</dt>
+                    <dd class="permalink-description-content username">
+                        {% for c in object.categories.all %}
+                            {% if not forloop.first %}| {% endif %} {{ c }}
+                        {% endfor %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
     {% endblock main %}
 

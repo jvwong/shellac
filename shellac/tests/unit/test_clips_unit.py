@@ -9,7 +9,6 @@ from django.template.loader import render_to_string
 
 from shellac.views.clips import shellac_clips_create
 from shellac.forms import CreateClipForm
-from shellac.models import Category, Clip, Person, Relationship
 
 # GET /
 class CreatePageTest(TestCase):

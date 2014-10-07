@@ -5,7 +5,7 @@ from shellac.models import Clip
 from shellac.views.clips import shellac_clips_create
 
 urlpatterns = patterns('',
-    url(r'^create/',
+    url(r'^create/$',
         shellac_clips_create,
         name='shellac_clips_create'
     ),
