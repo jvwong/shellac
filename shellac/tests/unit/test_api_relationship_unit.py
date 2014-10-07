@@ -247,7 +247,6 @@ class RelationshipListViewSet(APITestCase):
         qstat = 'following'
 
         payload = {'from_person': self.urlname, 'status': qstat, 'to_person': qurlname, 'private': False}
-
         response = self.client.post('/api/relationships/', payload)
         #print(response.data)
         #print(response.status_code)
@@ -319,7 +318,6 @@ class RelationshipListViewSet(APITestCase):
 
     def test_RelationshipListViewSet_GET_paginate_returns_correct_number_of_records(self):
         n = 1
-        self.assertEqual(Relationship.objects.all().count(), 6)
 
         self.client.login(username='jvwong', password='b')
         response = self.client.get('/api/relationships/.json?page_size=' + str(n))

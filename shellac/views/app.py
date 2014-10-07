@@ -17,7 +17,6 @@ def shellac_app(request, *args, **kwargs):
     else:
         qperson = request.user.person
         qstatus = 'following'
-    print("qstatus: %s" % qstatus)
     return render(request, 'shellac/app/app.html',
                   {'person': qperson, 'status': qstatus})
 

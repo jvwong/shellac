@@ -5189,14 +5189,58 @@ module.exports = shell;
 'use strict';
 
 var util = (function () {
+    var moment = require('moment');
 
-    var fetchUrl, PubSub, truncate, getCookie, sameOrigin, csrfSafeMethod;
+    var fetchUrl, PubSub, truncate, getCookie, sameOrigin, csrfSafeMethod, parseClipData;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
+    moment.locale('en', {
+        relativeTime : {
+            future: "in %s",
+            past:   "%s ago",
+            s:  "s",
+            m:  "1min",
+            mm: "%dmin",
+            h:  "1h",
+            hh: "%dh",
+            d:  "1d",
+            dd: "%dd",
+            M:  "1mon",
+            MM: "%dmon",
+            y:  "1yr",
+            yy: "%dyrs"
+        }
+    });
     //---------------- END MODULE DEPENDENCIES --------------
 
 
     //------------------- BEGIN PUBLIC METHODS -------------------
+    /**
+     * parseClipData: transform any Clip fields to javascript-compatible
+     * @param raw a string describing an array of valid JSON
+     * @return jsonArray - a list of valid JSON objects
+     */
+    parseClipData = function(raw){
+        var jsonArray;
+        jsonArray = raw.results.map(function(jsonObj){
+
+            try{
+                jsonObj.created = moment(jsonObj.created);
+
+                //sub-in dummy image
+                if(jsonObj.brand === "")
+                {
+                    jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
+                }
+                return jsonObj;
+            }catch(err){
+                console.log(err);
+            }
+        });
+        //console.log(jsonArray);
+        return jsonArray;
+    };
+
     /**
      * fetchUrl make a call to the given url and emit a Pubsub on complete
      * @param url
@@ -5309,11 +5353,12 @@ var util = (function () {
         truncate        : truncate,
         getCookie       : getCookie,
         csrfSafeMethod  : csrfSafeMethod,
-        sameOrigin      : sameOrigin
+        sameOrigin      : sameOrigin,
+        parseClipData   : parseClipData
     };
 }());
 
 module.exports = util;
 
 
-},{}]},{},[3]);
+},{"moment":1}]},{},[3]);

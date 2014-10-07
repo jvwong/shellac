@@ -11241,8 +11241,7 @@ $( document ).ready(function() {
 var shell = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
-    var moment = require('moment'),
-        TAFFY = require('taffydb').taffy,
+    var TAFFY = require('taffydb').taffy,
         audio = require('./audio.js'),
         util = require('../util.js'),
         sidebar = require('./sidebar.js');
@@ -11295,7 +11294,7 @@ var shell = (function () {
     setJqueryMap,
 
     urlParse,
-    parseClipData, loadClips, display_clips,
+    loadClips, display_clips,
     onTapClose, onSwipeClose,
     swipeData,
     PubSub = util.PubSub;
@@ -11323,31 +11322,6 @@ var shell = (function () {
         };
     };
 
-    /**
-    * parseClipData: transform any Clip fields to javascript-compatible
-    * @param raw a string describing an array of valid JSON
-    * @return jsonArray - a list of valid JSON objects
-    */
-    parseClipData = function(raw){
-        var jsonArray;
-        jsonArray = raw.results.map(function(jsonObj){
-
-            try{
-                jsonObj.created = moment(jsonObj.created);
-
-                //sub-in dummy image
-                if(jsonObj.brand === "")
-                {
-                    jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
-                }
-                return jsonObj;
-            }catch(err){
-                console.log(err);
-            }
-        });
-        //console.log(jsonArray);
-        return jsonArray;
-    };
 
     /**
      * method urlParse: extract the various aspects of the url from a HyperlinkedRelatedField
@@ -11493,7 +11467,7 @@ var shell = (function () {
             switch (tag)
             {
                 case 'api_clips_status_person':
-                    var formatted = parseClipData(result);
+                    var formatted = util.parseClipData(result);
                     stateMap.clip_db.insert(formatted);
                     stateMap.clips = stateMap.clip_db().order("id desc").get();
                     display_clips(stateMap.clips, jqueryMap.$clip_content_container);
@@ -11532,23 +11506,7 @@ var shell = (function () {
             threshold: 75
         });
 
-        moment.locale('en', {
-            relativeTime : {
-                future: "in %s",
-                past:   "%s ago",
-                s:  "s",
-                m:  "1min",
-                mm: "%dmin",
-                h:  "1h",
-                hh: "%dh",
-                d:  "1d",
-                dd: "%dd",
-                M:  "1mon",
-                MM: "%dmon",
-                y:  "1yr",
-                yy: "%dyrs"
-            }
-        });
+
 
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
@@ -11559,7 +11517,7 @@ var shell = (function () {
 module.exports = shell;
 
 
-},{"../util.js":8,"./audio.js":4,"./sidebar.js":7,"moment":2,"taffydb":3}],7:[function(require,module,exports){
+},{"../util.js":8,"./audio.js":4,"./sidebar.js":7,"taffydb":3}],7:[function(require,module,exports){
 /*
 * sidebar.js
 * Sidebar module
@@ -11878,6 +11836,7 @@ var sidebar = (function () {
                     break;
                 case 'api_clips_search':
                     console.log(result.results);
+                    util.PubSub.emit( "shellac-app-sidebar-change", util.parseClipData(result));
                     break;
                 default:
             }
@@ -11910,14 +11869,58 @@ module.exports = sidebar;
 'use strict';
 
 var util = (function () {
+    var moment = require('moment');
 
-    var fetchUrl, PubSub, truncate, getCookie, sameOrigin, csrfSafeMethod;
+    var fetchUrl, PubSub, truncate, getCookie, sameOrigin, csrfSafeMethod, parseClipData;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
+    moment.locale('en', {
+        relativeTime : {
+            future: "in %s",
+            past:   "%s ago",
+            s:  "s",
+            m:  "1min",
+            mm: "%dmin",
+            h:  "1h",
+            hh: "%dh",
+            d:  "1d",
+            dd: "%dd",
+            M:  "1mon",
+            MM: "%dmon",
+            y:  "1yr",
+            yy: "%dyrs"
+        }
+    });
     //---------------- END MODULE DEPENDENCIES --------------
 
 
     //------------------- BEGIN PUBLIC METHODS -------------------
+    /**
+     * parseClipData: transform any Clip fields to javascript-compatible
+     * @param raw a string describing an array of valid JSON
+     * @return jsonArray - a list of valid JSON objects
+     */
+    parseClipData = function(raw){
+        var jsonArray;
+        jsonArray = raw.results.map(function(jsonObj){
+
+            try{
+                jsonObj.created = moment(jsonObj.created);
+
+                //sub-in dummy image
+                if(jsonObj.brand === "")
+                {
+                    jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
+                }
+                return jsonObj;
+            }catch(err){
+                console.log(err);
+            }
+        });
+        //console.log(jsonArray);
+        return jsonArray;
+    };
+
     /**
      * fetchUrl make a call to the given url and emit a Pubsub on complete
      * @param url
@@ -12030,11 +12033,12 @@ var util = (function () {
         truncate        : truncate,
         getCookie       : getCookie,
         csrfSafeMethod  : csrfSafeMethod,
-        sameOrigin      : sameOrigin
+        sameOrigin      : sameOrigin,
+        parseClipData   : parseClipData
     };
 }());
 
 module.exports = util;
 
 
-},{}]},{},[5]);
+},{"moment":2}]},{},[5]);

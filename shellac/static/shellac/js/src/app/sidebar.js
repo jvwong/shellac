@@ -316,6 +316,7 @@ var sidebar = (function () {
                     break;
                 case 'api_clips_search':
                     console.log(result.results);
+                    util.PubSub.emit( "shellac-app-sidebar-change", util.parseClipData(result));
                     break;
                 default:
             }
