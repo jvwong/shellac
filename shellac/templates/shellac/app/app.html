@@ -4,7 +4,11 @@
 <!-- Head -->
     {% block title %}App{% endblock title %}
     {% block head %}
-        <script type="text/javascript"> var STATIC_URL = "{{ STATIC_URL }}", MEDIA_URL = "{{ MEDIA_URL }}", target_username = "{{ person.username }}", DEBUG = "{{ debug }}"</script>
+        <script type="text/javascript">
+            var target_username = "{{ person.username }}",
+                status = "{{ status }}",
+                DEBUG = "{{ debug }}";
+        </script>
         <script type="text/javascript" src="{% static 'shellac/js/dist/app_bundle.js' %}"></script>
     {% endblock head %}
 

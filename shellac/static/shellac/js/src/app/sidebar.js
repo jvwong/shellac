@@ -39,7 +39,7 @@ var sidebar = (function () {
                 '</div>' +
             '</div>' +
 
-            '<div class="author panel panel-default">' +
+            '<div class="authors panel panel-default">' +
                 '<div class="panel-heading">' +
                     '<a data-toggle="collapse" data-parent="#accordion" href="#collapseAuthors">' +
                         'Authors' +
@@ -47,7 +47,7 @@ var sidebar = (function () {
                 '</div>' +
                 '<div id="collapseAuthors" class="panel-collapse collapse">' +
                     '<div class="panel-body">' +
-                        '<div class="list-group">//ToDo</div>' +
+                        '<div class="list-group"></div>' +
                     '</div>' +
                 '</div>' +
             '</div>' +
@@ -67,7 +67,10 @@ var sidebar = (function () {
 
     init_sidebar, fetchUrl,
     parseCategoryData,
-    onTapClose, onSwipeClose, onClickCategory, display_categories,
+    onTapClose, onSwipeClose,
+
+    onClickCategory, display_categories,
+    onClickAuthor, display_authors,
 
     jqueryMap = {};
 
@@ -86,8 +89,8 @@ var sidebar = (function () {
             $sidebar_panel                  : $outerDiv.find('.shellac-app-sidebar-panel'),
             $sidebar_category_panel         : $outerDiv.find('.shellac-app-sidebar-panel .category.panel'),
             $sidebar_category_listGroup     : $outerDiv.find('.shellac-app-sidebar-panel .category.panel #collapseCategories .panel-body .list-group'),
-            $sidebar_people_panel           : $outerDiv.find('.shellac-app-sidebar-panel .people.panel'),
-            $sidebar_people_listGroup       : $outerDiv.find('.shellac-app-sidebar-panel .people.panel #collapsePeople .panel-body .list-group')
+            $sidebar_authors_panel          : $outerDiv.find('.shellac-app-sidebar-panel .authors.panel'),
+            $sidebar_authors_listGroup      : $outerDiv.find('.shellac-app-sidebar-panel .authors.panel #collapseAuthors .panel-body .list-group')
         };
     };
 
@@ -148,48 +151,53 @@ var sidebar = (function () {
         );
     };
 
-//    /**
-//     * display_authors append the html for the "currently displayed clips" (not all clips?)
-//     * @param category_list list containing formatted category objects
-//     * @param $container jquery container
-//     * @param clip_db the TAFFY db containing relevant clip objects
-//     */
-//    display_categories = function($container, category_db, clip_db){
-//        var all_anchor = String(),
-//            items = String(),
-//            count = clip_db().count();
-//
-//        (category_db().get()).forEach(function(category){
-//            var clip_array = clip_db({categories: {has: category.url}});
-//            items +=
-//                '<a class="list-group-item nav-sidebar-category" href="#">' + '<span class="badge">' + clip_array.count() + '</span>' +
-//                '<h5 class="list-group-item-heading" id="' + category.slug + '">' + category.title + '</h5>' +
-//                '</a>';
-//        });
-//
-//        all_anchor +=
-//            '<a class="list-group-item nav-sidebar-category active" href="#">' +
-//            '<span class="badge">' + count + '</span>' +
-//            '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
-//            '</a>';
-//        $container.append(all_anchor, items);
-//
-//        //register listeners on <h5> element
-//        $('.list-group-item.nav-sidebar-category').on('click',
-//            {
-//                category_db: category_db,
-//                clip_db: clip_db
-//            },
-//            onClickCategory
-//        );
-//    };
+    /**
+     * display_authors append the html for the currently displayed clips
+     * @param category_list list containing formatted category objects
+     * @param $container jquery container
+     * @param clip_db the TAFFY db containing relevant clip objects
+     */
+    display_authors = function($container, clip_db){
+
+        var all_anchor = String(),
+            items = String(),
+            owner_list = clip_db().distinct("owner");
+
+
+
+        owner_list.forEach(function(owner){
+            var clip_array = clip_db({owner: {has: owner}});
+
+            items +=
+                '<a class="list-group-item nav-sidebar-authors" href="#">' + '<span class="badge">' + clip_array.count() + '</span>' +
+                '<h5 class="list-group-item-heading" id="' + owner + '">' + owner + '</h5>' +
+                '</a>';
+        });
+
+        all_anchor +=
+            '<a class="list-group-item nav-sidebar-authors active" href="#">' +
+            '<span class="badge">' + clip_db().count() + '</span>' +
+            '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
+            '</a>';
+        $container.append(all_anchor, items);
+
+        //register listeners on <h5> element
+        $('.list-group-item.nav-sidebar-authors').on('click',
+            {
+                clip_db: clip_db
+            },
+            onClickAuthor
+        );
+
+        console.log($('.list-group-item.nav-sidebar-authors'));
+    };
     //--------------------- END DOM METHODS ----------------------
 
     //------------------- BEGIN EVENT HANDLERS -------------------
     /**
      * onClickCategory callback for changes in the category UI.
      * Extracts the audio file url for each clip for the category
-     * and emits a shellac-categorychange event
+     * and emits a sidebar change event
      * @param event jQuery event object for the clicked elements
      */
     onClickCategory = function(event){
@@ -216,7 +224,42 @@ var sidebar = (function () {
             clips = clip_db({categories: {has: category.url}}).get();
         }
 
-        util.PubSub.emit( "shellac-app-sidebar-categorychange", clips);
+        util.PubSub.emit( "shellac-app-sidebar-change", clips);
+    };
+
+
+    /**
+     * onClickAuthor callback for changes in the author UI.
+     * Extracts the audio file url for each clip for the category
+     * and emits a sidebar change event
+     * @param event jQuery event object for the clicked elements
+     */
+    onClickAuthor = function(event){
+
+        console.log("clicked");
+
+        var clip_db = event.data.clip_db,
+            clips = [],
+            owner, $a, id;
+
+        //remove the active class from all <a>
+        jqueryMap.$sidebar_authors_listGroup.find('.list-group-item.nav-sidebar-authors').removeClass( "active");
+
+        //add the active class to current -- check if we clicked inner h5 and span elements within a
+        $a = $(event.target).closest('a');
+        $a.addClass("active");
+        id = $a.find('.list-group-item-heading').attr('id'); //owner
+        console.log(id);
+
+        //refill the empty the clip array
+        if(id === "all"){
+            clips = clip_db().get();
+
+        } else {
+            clips = clip_db({owner: {has: id}}).get();
+        }
+
+        util.PubSub.emit( "shellac-app-sidebar-change", clips);
     };
 
 
@@ -234,8 +277,6 @@ var sidebar = (function () {
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         stateMap.clip_db = clip_db;
-
-        console.log(stateMap.clip_db().get());
 
         $container.append( configMap.main_html );
         setJqueryMap();
@@ -258,7 +299,8 @@ var sidebar = (function () {
         });
 
         //Inject Category, People data
-        util.fetchUrl('api/categories/', 'api_categories');
+        display_authors(jqueryMap.$sidebar_authors_listGroup, stateMap.clip_db);
+        util.fetchUrl('/api/categories/', 'api_categories');
 
     };
     return { initModule: initModule };

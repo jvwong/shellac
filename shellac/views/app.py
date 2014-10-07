@@ -6,14 +6,20 @@ from shellac.views.util.permissions import IsAuthenticatedAndOwnerMixin
 from shellac.models import Person
 from shellac.views.util import pagination
 
-### app
+### player - default to this user's following set
 @login_required(login_url='/accounts/signin/')
 def shellac_app(request, *args, **kwargs):
     username = kwargs.get('username', None)
-    if username is not None:
-        person = Person.objects.get(username=username)
-        return render(request, 'shellac/app/app.html', {'person': person})
-    return render(request, 'shellac/app/app.html', {'person': request.user.person})
+    status = kwargs.get('status', None)
+    if username is not None and status is not None:
+        qperson = Person.objects.get(username=username)
+        qstatus = status
+    else:
+        qperson = request.user.person
+        qstatus = 'following'
+    print("qstatus: %s" % qstatus)
+    return render(request, 'shellac/app/app.html',
+                  {'person': qperson, 'status': qstatus})
 
 ### Tune in
 @login_required(login_url='/accounts/signin/')

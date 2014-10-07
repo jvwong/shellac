@@ -11098,7 +11098,7 @@ var audio = (function () {
             }
         });
 
-        PubSub.on("shellac-app-sidebar-categorychange", onCategoryChange );
+        PubSub.on("shellac-app-sidebar-change", onCategoryChange );
     };
 
     // Begin private method /makeSound/
@@ -11222,11 +11222,11 @@ module.exports = audio;
  * main.js
  * Entry point for audio app
 */
-/* global $, document, STATIC_URL, MEDIA_URL, target_username, DEBUG */
+/* global $, document, target_username, status, DEBUG */
 'use strict';
 $( document ).ready(function() {
     var shell = require('./shell.js');
-    shell.initModule($("#shellac-app"), STATIC_URL, MEDIA_URL, target_username, DEBUG);
+    shell.initModule($("#shellac-app"), target_username, status, DEBUG);
 });
 
 
@@ -11280,17 +11280,15 @@ var shell = (function () {
     },
 
     stateMap = {
-        $container: undefined,
-        target_username: undefined,
+        $container          : undefined,
+        target_username     : undefined,
+        status              : undefined,
 
-        STATIC_URL: undefined,
-        MEDIA_URL: undefined,
+        clips               : undefined,
+        clip_db             : TAFFY(),
 
-        clips: undefined,
-        clip_db: TAFFY(),
-
-        isPlaying: false,
-        DEBUG: undefined
+        isPlaying           : false,
+        DEBUG               : undefined
     },
 
     jqueryMap = {},
@@ -11475,17 +11473,14 @@ var shell = (function () {
      * The Shell is also responsible for browser-wide issues
      * Directs this app to offer its capability to the user
      * @param $container A jQuery collection that should represent a single DOM container
-     * @param MEDIA_URL Django media url prefix (settings.MEDIA_URL)
-     * @param STATIC_URL Django static url prefix (settings.STATIC_URL)
      * @param target_username account holder username for retrieving clips
      * @param DEBUG for debug purposes (root url)
      */
-    initModule = function( $container, STATIC_URL, MEDIA_URL, target_username, DEBUG){
+    initModule = function( $container, target_username, status, DEBUG){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         stateMap.target_username = target_username;
-        stateMap.STATIC_URL = STATIC_URL;
-        stateMap.MEDIA_URL = MEDIA_URL;
+        stateMap.status = status;
         stateMap.DEBUG = DEBUG;
 
         $container.append( configMap.main_html );
@@ -11515,13 +11510,13 @@ var shell = (function () {
         });
 
         //register pub-sub methods
-        util.PubSub.on("shellac-app-sidebar-categorychange", function(clips){
+        util.PubSub.on("shellac-app-sidebar-change", function(clips){
             display_clips(clips, jqueryMap.$clip_content_container);
         });
 
 
         //load data into in-browser database
-        var clipsUrl = ['/api/clips', "following", target_username, ""].join('/');
+        var clipsUrl = ['/api/clips', stateMap.status, target_username, ""].join('/');
         util.fetchUrl(clipsUrl, 'api_clips_status_person');
 
         //Navigation Menu Slider
@@ -11606,7 +11601,7 @@ var sidebar = (function () {
                 '</div>' +
             '</div>' +
 
-            '<div class="author panel panel-default">' +
+            '<div class="authors panel panel-default">' +
                 '<div class="panel-heading">' +
                     '<a data-toggle="collapse" data-parent="#accordion" href="#collapseAuthors">' +
                         'Authors' +
@@ -11614,7 +11609,7 @@ var sidebar = (function () {
                 '</div>' +
                 '<div id="collapseAuthors" class="panel-collapse collapse">' +
                     '<div class="panel-body">' +
-                        '<div class="list-group">//ToDo</div>' +
+                        '<div class="list-group"></div>' +
                     '</div>' +
                 '</div>' +
             '</div>' +
@@ -11634,7 +11629,10 @@ var sidebar = (function () {
 
     init_sidebar, fetchUrl,
     parseCategoryData,
-    onTapClose, onSwipeClose, onClickCategory, display_categories,
+    onTapClose, onSwipeClose,
+
+    onClickCategory, display_categories,
+    onClickAuthor, display_authors,
 
     jqueryMap = {};
 
@@ -11653,8 +11651,8 @@ var sidebar = (function () {
             $sidebar_panel                  : $outerDiv.find('.shellac-app-sidebar-panel'),
             $sidebar_category_panel         : $outerDiv.find('.shellac-app-sidebar-panel .category.panel'),
             $sidebar_category_listGroup     : $outerDiv.find('.shellac-app-sidebar-panel .category.panel #collapseCategories .panel-body .list-group'),
-            $sidebar_people_panel           : $outerDiv.find('.shellac-app-sidebar-panel .people.panel'),
-            $sidebar_people_listGroup       : $outerDiv.find('.shellac-app-sidebar-panel .people.panel #collapsePeople .panel-body .list-group')
+            $sidebar_authors_panel          : $outerDiv.find('.shellac-app-sidebar-panel .authors.panel'),
+            $sidebar_authors_listGroup      : $outerDiv.find('.shellac-app-sidebar-panel .authors.panel #collapseAuthors .panel-body .list-group')
         };
     };
 
@@ -11715,48 +11713,53 @@ var sidebar = (function () {
         );
     };
 
-//    /**
-//     * display_authors append the html for the "currently displayed clips" (not all clips?)
-//     * @param category_list list containing formatted category objects
-//     * @param $container jquery container
-//     * @param clip_db the TAFFY db containing relevant clip objects
-//     */
-//    display_categories = function($container, category_db, clip_db){
-//        var all_anchor = String(),
-//            items = String(),
-//            count = clip_db().count();
-//
-//        (category_db().get()).forEach(function(category){
-//            var clip_array = clip_db({categories: {has: category.url}});
-//            items +=
-//                '<a class="list-group-item nav-sidebar-category" href="#">' + '<span class="badge">' + clip_array.count() + '</span>' +
-//                '<h5 class="list-group-item-heading" id="' + category.slug + '">' + category.title + '</h5>' +
-//                '</a>';
-//        });
-//
-//        all_anchor +=
-//            '<a class="list-group-item nav-sidebar-category active" href="#">' +
-//            '<span class="badge">' + count + '</span>' +
-//            '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
-//            '</a>';
-//        $container.append(all_anchor, items);
-//
-//        //register listeners on <h5> element
-//        $('.list-group-item.nav-sidebar-category').on('click',
-//            {
-//                category_db: category_db,
-//                clip_db: clip_db
-//            },
-//            onClickCategory
-//        );
-//    };
+    /**
+     * display_authors append the html for the currently displayed clips
+     * @param category_list list containing formatted category objects
+     * @param $container jquery container
+     * @param clip_db the TAFFY db containing relevant clip objects
+     */
+    display_authors = function($container, clip_db){
+
+        var all_anchor = String(),
+            items = String(),
+            owner_list = clip_db().distinct("owner");
+
+
+
+        owner_list.forEach(function(owner){
+            var clip_array = clip_db({owner: {has: owner}});
+
+            items +=
+                '<a class="list-group-item nav-sidebar-authors" href="#">' + '<span class="badge">' + clip_array.count() + '</span>' +
+                '<h5 class="list-group-item-heading" id="' + owner + '">' + owner + '</h5>' +
+                '</a>';
+        });
+
+        all_anchor +=
+            '<a class="list-group-item nav-sidebar-authors active" href="#">' +
+            '<span class="badge">' + clip_db().count() + '</span>' +
+            '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
+            '</a>';
+        $container.append(all_anchor, items);
+
+        //register listeners on <h5> element
+        $('.list-group-item.nav-sidebar-authors').on('click',
+            {
+                clip_db: clip_db
+            },
+            onClickAuthor
+        );
+
+        console.log($('.list-group-item.nav-sidebar-authors'));
+    };
     //--------------------- END DOM METHODS ----------------------
 
     //------------------- BEGIN EVENT HANDLERS -------------------
     /**
      * onClickCategory callback for changes in the category UI.
      * Extracts the audio file url for each clip for the category
-     * and emits a shellac-categorychange event
+     * and emits a sidebar change event
      * @param event jQuery event object for the clicked elements
      */
     onClickCategory = function(event){
@@ -11783,7 +11786,42 @@ var sidebar = (function () {
             clips = clip_db({categories: {has: category.url}}).get();
         }
 
-        util.PubSub.emit( "shellac-app-sidebar-categorychange", clips);
+        util.PubSub.emit( "shellac-app-sidebar-change", clips);
+    };
+
+
+    /**
+     * onClickAuthor callback for changes in the author UI.
+     * Extracts the audio file url for each clip for the category
+     * and emits a sidebar change event
+     * @param event jQuery event object for the clicked elements
+     */
+    onClickAuthor = function(event){
+
+        console.log("clicked");
+
+        var clip_db = event.data.clip_db,
+            clips = [],
+            owner, $a, id;
+
+        //remove the active class from all <a>
+        jqueryMap.$sidebar_authors_listGroup.find('.list-group-item.nav-sidebar-authors').removeClass( "active");
+
+        //add the active class to current -- check if we clicked inner h5 and span elements within a
+        $a = $(event.target).closest('a');
+        $a.addClass("active");
+        id = $a.find('.list-group-item-heading').attr('id'); //owner
+        console.log(id);
+
+        //refill the empty the clip array
+        if(id === "all"){
+            clips = clip_db().get();
+
+        } else {
+            clips = clip_db({owner: {has: id}}).get();
+        }
+
+        util.PubSub.emit( "shellac-app-sidebar-change", clips);
     };
 
 
@@ -11801,8 +11839,6 @@ var sidebar = (function () {
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         stateMap.clip_db = clip_db;
-
-        console.log(stateMap.clip_db().get());
 
         $container.append( configMap.main_html );
         setJqueryMap();
@@ -11825,7 +11861,8 @@ var sidebar = (function () {
         });
 
         //Inject Category, People data
-        util.fetchUrl('api/categories/', 'api_categories');
+        display_authors(jqueryMap.$sidebar_authors_listGroup, stateMap.clip_db);
+        util.fetchUrl('/api/categories/', 'api_categories');
 
     };
     return { initModule: initModule };

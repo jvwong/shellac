@@ -5,6 +5,7 @@
     {% block title %}Profile{% endblock title %}
 
 {% block main %}
+
     <div class="content-profile">
         <div class="partial-profile person">
             <form enctype="multipart/form-data" role="form" action="" method="post">{% csrf_token %}
@@ -22,7 +23,7 @@
                 </div>
                 <div class="partial-profile-description person">
                     <p class="partial-profile-description-content email">
-                        <a class="partial-profile-app" href="{% url 'shellac_app' person.username %}">
+                        <a class="partial-profile-app" href="{% url 'shellac_app' person.username 'following' %}">
                             <span class="glyphicon glyphicon-headphones">&nbsp;</span>{{ person.username }}
                         </a>
                     </p><hr/>

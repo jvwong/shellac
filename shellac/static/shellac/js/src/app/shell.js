@@ -47,17 +47,15 @@ var shell = (function () {
     },
 
     stateMap = {
-        $container: undefined,
-        target_username: undefined,
+        $container          : undefined,
+        target_username     : undefined,
+        status              : undefined,
 
-        STATIC_URL: undefined,
-        MEDIA_URL: undefined,
+        clips               : undefined,
+        clip_db             : TAFFY(),
 
-        clips: undefined,
-        clip_db: TAFFY(),
-
-        isPlaying: false,
-        DEBUG: undefined
+        isPlaying           : false,
+        DEBUG               : undefined
     },
 
     jqueryMap = {},
@@ -242,17 +240,14 @@ var shell = (function () {
      * The Shell is also responsible for browser-wide issues
      * Directs this app to offer its capability to the user
      * @param $container A jQuery collection that should represent a single DOM container
-     * @param MEDIA_URL Django media url prefix (settings.MEDIA_URL)
-     * @param STATIC_URL Django static url prefix (settings.STATIC_URL)
      * @param target_username account holder username for retrieving clips
      * @param DEBUG for debug purposes (root url)
      */
-    initModule = function( $container, STATIC_URL, MEDIA_URL, target_username, DEBUG){
+    initModule = function( $container, target_username, status, DEBUG){
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         stateMap.target_username = target_username;
-        stateMap.STATIC_URL = STATIC_URL;
-        stateMap.MEDIA_URL = MEDIA_URL;
+        stateMap.status = status;
         stateMap.DEBUG = DEBUG;
 
         $container.append( configMap.main_html );
@@ -282,13 +277,13 @@ var shell = (function () {
         });
 
         //register pub-sub methods
-        util.PubSub.on("shellac-app-sidebar-categorychange", function(clips){
+        util.PubSub.on("shellac-app-sidebar-change", function(clips){
             display_clips(clips, jqueryMap.$clip_content_container);
         });
 
 
         //load data into in-browser database
-        var clipsUrl = ['/api/clips', "following", target_username, ""].join('/');
+        var clipsUrl = ['/api/clips', stateMap.status, target_username, ""].join('/');
         util.fetchUrl(clipsUrl, 'api_clips_status_person');
 
         //Navigation Menu Slider

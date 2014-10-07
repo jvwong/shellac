@@ -10,7 +10,7 @@
                   {% endif %}" alt="{{ person.username }}" />
     </a>
     <div class="partial-relationships-description person">
-        <a class="partial-relationships-app" href="{% url 'shellac_app' person.username %}">
+        <a class="partial-relationships-app" href="{% url 'shellac_app' person.username 'following' %}">
             <span class="partial-relationships-description-content username glyphicon glyphicon-headphones">&ThinSpace;{{ person.username | truncatechars:15  }}</span><br />
         </a>
         <span class="partial-relationships-description-content joined">{{ person.joined|date:"m/Y" }}</span><br />

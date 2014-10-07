@@ -144,7 +144,7 @@ var audio = (function () {
             }
         });
 
-        PubSub.on("shellac-app-sidebar-categorychange", onCategoryChange );
+        PubSub.on("shellac-app-sidebar-change", onCategoryChange );
     };
 
     // Begin private method /makeSound/
