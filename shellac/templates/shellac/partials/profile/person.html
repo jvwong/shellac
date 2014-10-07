@@ -3,12 +3,15 @@
 <div class="partial-profile person">
     <form enctype="multipart/form-data" role="form" action="" method="post">{% csrf_token %}
         <div class="partial-profile-avatar person">
-            <img src="{% if person.avatar %} {{ person.avatar_thumb.url }}
-                {% else %}{% static 'shellac/assets/avatar.jpeg' %}{% endif %}" alt="{{ person.username }}" />
             {% if person == user.person %}
             <span class="btn btn-default btn-file">
+                <img src="{% if person.avatar %} {{ person.avatar_thumb.url }}
+                    {% else %}{% static 'shellac/assets/avatar.jpeg' %}{% endif %}" alt="{{ person.username }}" />
                 <input id="id_avatar" type="file" name="avatar">
             </span>
+            {% else %}
+            <img src="{% if person.avatar %} {{ person.avatar_thumb.url }}
+                {% else %}{% static 'shellac/assets/avatar.jpeg' %}{% endif %}" alt="{{ person.username }}" />
             {% endif %}
         </div>
         <div class="partial-profile-description person">
