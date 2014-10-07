@@ -278,7 +278,7 @@ var sidebar = (function () {
     onSubmitSearch = function(event){
         var q = jqueryMap.$sidebar_search_input.val(),
             endpoint = ['/api/clips/?q=', q].join('');
-        console.log(encodeURI(endpoint));
+//        console.log(encodeURI(endpoint));
         util.fetchUrl(endpoint, 'api_clips_search');
     };
 
@@ -315,7 +315,7 @@ var sidebar = (function () {
                     );
                     break;
                 case 'api_clips_search':
-                    console.log(result.results);
+//                    console.log(result.results);
                     util.PubSub.emit( "shellac-app-sidebar-change", util.parseClipData(result));
                     break;
                 default:
