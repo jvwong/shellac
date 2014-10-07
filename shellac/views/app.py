@@ -9,8 +9,9 @@ from shellac.views.util import pagination
 def shellac_app(request, *args, **kwargs):
     username = kwargs.get('username', None)
     if username is not None:
-        return render(request, 'shellac/app/app.html', {'target_username': username})
-    return render(request, 'shellac/app/app.html', {'target_username': request.user.username})
+        person = Person.objects.get(username=username)
+        return render(request, 'shellac/app/app.html', {'person': person})
+    return render(request, 'shellac/app/app.html', {'person': request.user.person})
 
 
 ### User profile

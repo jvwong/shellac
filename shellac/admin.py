@@ -20,19 +20,6 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ['title']}
 admin.site.register(Category, CategoryAdmin)
 
-# class ClipAdmin(admin.ModelAdmin):
-#     prepopulated_fields = {"slug": ["title"]}
-#     # list_display = ['__unicode__', 'audio_file_player']
-#     list_display = ['__unicode__']
-#     actions = [custom_delete_selected]
-#
-#     def get_actions(self, request):
-#         actions = super(ClipAdmin, self).get_actions(request)
-#         del actions['delete_selected']
-#         return actions
-#
-# admin.site.register(Clip, ClipAdmin)
-
 class ClipInline(admin.StackedInline):
     model = Clip
     fk_name = 'author'

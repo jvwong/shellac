@@ -245,6 +245,7 @@ var shell = (function () {
      * @param MEDIA_URL Django media url prefix (settings.MEDIA_URL)
      * @param STATIC_URL Django static url prefix (settings.STATIC_URL)
      * @param target_username account holder username for retrieving clips
+     * @param DEBUG for debug purposes (root url)
      */
     initModule = function( $container, STATIC_URL, MEDIA_URL, target_username, DEBUG){
         // load HTML and map jQuery collections
@@ -265,7 +266,7 @@ var shell = (function () {
             {
                 case 'api_clips_status_person':
                     var formatted = parseClipData(result);
-                    //console.log(formatted);
+//                    console.log(formatted);
                     stateMap.clip_db.insert(formatted);
                     stateMap.clips = stateMap.clip_db().order("id desc").get();
                     display_clips(stateMap.clips, jqueryMap.$clip_content_container);

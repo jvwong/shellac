@@ -17,11 +17,11 @@ def thumbnailer(filename, size):
     im.save(file + ".thumb.jpeg", "JPEG")
 
 # transformer crops the largest square possible, centered on the image
-def squarer(instance):
+def squarer(field, thumb_field, name):
     buffer = 5
     f = BytesIO()
     try:
-        im = Image.open(instance.brand)
+        im = Image.open(field)
         im.thumbnail((512, 512), Image.ANTIALIAS)
         width, height = im.size
         mind = min(width, height) - buffer
@@ -32,7 +32,7 @@ def squarer(instance):
         region = im.crop(box)
         region.save(f, format='JPEG')
         s = f.getvalue()
-        instance.brand_thumb.save(instance.brand.name, ContentFile(s), save=True)
+        thumb_field.save(name, ContentFile(s), save=True)
 
     except IOError:
         print("Image decoding error")

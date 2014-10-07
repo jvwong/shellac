@@ -26,6 +26,8 @@ class Person(models.Model):
     username = models.CharField(max_length=30, editable=False)
     joined = models.DateTimeField(auto_now_add=True, blank=True)
     avatar = models.ImageField(upload_to='avatars', blank=True)
+    avatar_thumb = ThumbnailImageField(upload_to='avatars', blank=True, editable=False)
+
     relationships = models.ManyToManyField('self',
                                            through='Relationship',
                                            symmetrical=False,
@@ -95,6 +97,8 @@ class Person(models.Model):
 
     def save(self, *args, **kwargs):
         self.username = self.user.username
+        if self.avatar:
+           util.squarer(self.avatar, self.avatar_thumb, self.avatar.name)
         super(Person, self).save(*args, **kwargs)
 
 
@@ -230,7 +234,7 @@ class Clip(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         if self.brand:
-            util.squarer(self)
+            util.squarer(self.brand, self.brand_thumb, self.brand.name)
         super(Clip, self).save(*args, **kwargs)
 
     class Meta:

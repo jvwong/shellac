@@ -90,12 +90,18 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
     def get_brand_url(self, obj):
         if obj.brand:
             return obj.brand.url
-        return ""
+        elif obj.author.avatar:
+            return obj.author.avatar.url
+        else:
+            return ""
 
     def get_brand_thumb_url(self, obj):
         if obj.brand_thumb:
             return obj.brand_thumb.url
-        return ""
+        elif obj.author.avatar:
+            return obj.author.avatar_thumb.url
+        else:
+            return ""
 
     def get_audio_file_url(self, obj):
         if obj.audio_file:
