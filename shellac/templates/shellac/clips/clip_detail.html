@@ -35,6 +35,8 @@
                     <dd class="permalink-description-content rating">{{ object.rating }}</dd>
                     <dt class="">Status</dt>
                     <dd class="permalink-description-content status">{{ object.status }}</dd>
+                    <dt class="">Tags</dt>
+                    <dd class="permalink-description-content tags">{{ object.tags.names }}</dd>
                     <dt class="">Categories</dt>
                     <dd class="permalink-description-content username">
                         {% for c in object.categories.all %}
