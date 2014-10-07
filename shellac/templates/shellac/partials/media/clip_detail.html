@@ -6,7 +6,7 @@
         <a class="permalink-url" href="{{ object.audio_file.url }}">
             <img class="permalink-img" src="{% if object.brand_thumb %}
             {{ object.brand_thumb.url }}{% else %}
-                {% static 'shellac/assets/seventyEight.png' %}
+                {{ object.author.avatar_thumb.url }}
             {% endif %}"  alt="{{ object.title }}" />
         </a>
         <hr/>
