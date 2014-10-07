@@ -119,11 +119,11 @@ class ClipListViewSet(ListViewSet):
         q = self.request.QUERY_PARAMS.get('q', None)
         if q:
             return Clip.objects.filter(
-                Q(title__in=[q]) |
-                Q(author__username__in=[q]) |
+                Q(title__icontains=[q]) |
+                Q(author__username__icontains=[q]) |
                 Q(categories__slug__in=[q]) |
                 Q(tags__name__in=[q]) |
-                Q(description__in=[q])
+                Q(description__icontains=[q])
             ).distinct()
 
         return Clip.objects.all()
