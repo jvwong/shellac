@@ -4,9 +4,9 @@
 <div class="col-xs-12 col-sm-10 permalink">
     <div class="permalink-panel">
         <a class="permalink-url" href="{{ object.audio_file.url }}">
-            <img class="permalink-img" src="{% if object.brand_thumb %}
-            {{ object.brand_thumb.url }}{% else %}
-                {{ object.author.avatar_thumb.url }}
+            <img class="permalink-img" src="{% if object.brand_thumb %}{{ object.brand_thumb.url }}
+            {% elif object.author.avatar_thumb %}{{ object.author.avatar_thumb.url }}
+            {% else %}{% static 'shellac/assets/seventyEight.png' %}
             {% endif %}"  alt="{{ object.title }}" />
         </a>
         <hr/>
