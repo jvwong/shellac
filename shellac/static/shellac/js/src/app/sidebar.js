@@ -20,6 +20,12 @@ var sidebar = (function () {
         main_html: String() +
         '<div class="shellac-app-sidebar-panel panel-group noSwipe" id="accordion">' +
 
+            '<div class="search panel panel-default">' +
+                '<div class="panel-heading">' +
+                    'Search' +
+                '</div>' +
+            '</div>' +
+
             '<div class="category panel panel-default">' +
                 '<div class="panel-heading">' +
                     '<a data-toggle="collapse" data-parent="#accordion" href="#collapseCategories">' +
@@ -33,13 +39,13 @@ var sidebar = (function () {
                 '</div>' +
             '</div>' +
 
-            '<div class="people panel panel-default">' +
+            '<div class="author panel panel-default">' +
                 '<div class="panel-heading">' +
-                    '<a data-toggle="collapse" data-parent="#accordion" href="#collapsePeople">' +
-                        'People' +
+                    '<a data-toggle="collapse" data-parent="#accordion" href="#collapseAuthors">' +
+                        'Authors' +
                     '</a>' +
                 '</div>' +
-                '<div id="collapsePeople" class="panel-collapse collapse">' +
+                '<div id="collapseAuthors" class="panel-collapse collapse">' +
                     '<div class="panel-body">' +
                         '<div class="list-group">//ToDo</div>' +
                     '</div>' +
@@ -108,7 +114,6 @@ var sidebar = (function () {
     //--------------------- BEGIN DOM METHODS --------------------
     /**
      * display_categories append the html for the category sidebar accordion section
-     * Can we make this more generic?
      * @param category_list list containing formatted category objects
      * @param $container jquery container
      * @param clip_db the TAFFY db containing relevant clip objects
@@ -142,6 +147,42 @@ var sidebar = (function () {
             onClickCategory
         );
     };
+
+//    /**
+//     * display_authors append the html for the "currently displayed clips" (not all clips?)
+//     * @param category_list list containing formatted category objects
+//     * @param $container jquery container
+//     * @param clip_db the TAFFY db containing relevant clip objects
+//     */
+//    display_categories = function($container, category_db, clip_db){
+//        var all_anchor = String(),
+//            items = String(),
+//            count = clip_db().count();
+//
+//        (category_db().get()).forEach(function(category){
+//            var clip_array = clip_db({categories: {has: category.url}});
+//            items +=
+//                '<a class="list-group-item nav-sidebar-category" href="#">' + '<span class="badge">' + clip_array.count() + '</span>' +
+//                '<h5 class="list-group-item-heading" id="' + category.slug + '">' + category.title + '</h5>' +
+//                '</a>';
+//        });
+//
+//        all_anchor +=
+//            '<a class="list-group-item nav-sidebar-category active" href="#">' +
+//            '<span class="badge">' + count + '</span>' +
+//            '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
+//            '</a>';
+//        $container.append(all_anchor, items);
+//
+//        //register listeners on <h5> element
+//        $('.list-group-item.nav-sidebar-category').on('click',
+//            {
+//                category_db: category_db,
+//                clip_db: clip_db
+//            },
+//            onClickCategory
+//        );
+//    };
     //--------------------- END DOM METHODS ----------------------
 
     //------------------- BEGIN EVENT HANDLERS -------------------
@@ -179,8 +220,6 @@ var sidebar = (function () {
     };
 
 
-
-
     //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
@@ -195,6 +234,8 @@ var sidebar = (function () {
         // load HTML and map jQuery collections
         stateMap.$container = $container;
         stateMap.clip_db = clip_db;
+
+        console.log(stateMap.clip_db().get());
 
         $container.append( configMap.main_html );
         setJqueryMap();
@@ -216,7 +257,7 @@ var sidebar = (function () {
             }
         });
 
-        //load Category data from url
+        //Inject Category, People data
         util.fetchUrl('api/categories/', 'api_categories');
 
     };

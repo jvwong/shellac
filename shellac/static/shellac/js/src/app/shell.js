@@ -266,7 +266,6 @@ var shell = (function () {
             {
                 case 'api_clips_status_person':
                     var formatted = parseClipData(result);
-//                    console.log(formatted);
                     stateMap.clip_db.insert(formatted);
                     stateMap.clips = stateMap.clip_db().order("id desc").get();
                     display_clips(stateMap.clips, jqueryMap.$clip_content_container);
@@ -275,7 +274,6 @@ var shell = (function () {
                     sidebar.initModule( jqueryMap.$sidebar_container, stateMap.clip_db );
                     break;
                 case 'get_absolute_url':
-                    console.log(jqueryMap.$model_button);
                     jqueryMap.$modal_body.html($(result).find('.permalink'));
                     jqueryMap.$modal_container.modal('show');
                     break;
@@ -323,6 +321,8 @@ var shell = (function () {
                 yy: "%dyrs"
             }
         });
+
+        jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
     return { initModule: initModule };

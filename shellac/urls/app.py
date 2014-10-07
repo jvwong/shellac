@@ -13,14 +13,14 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('shellac.urls.accounts')),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
+
     url(r'^$', shellac_app, name='shellac_app'),
-    url(r'^app/(?P<username>[\w.@+-]+)/$', shellac_app, name='shellac_app'),
+    url(r'^player/(?P<username>[\w.@+-]+)/$', shellac_app, name='shellac_app'),
 
     url(r'profile/(?P<username>[\w.@+-]+)/$', person_avatar_update, name='shellac_profile'),
 
     url(r'^user/', include('shellac.urls.user')),
     url(r'^people/$', shellac_people, name='shellac_people'),
-
     url(r'^relations/$', shellac_relations, name='shellac_relations'),
 
     url(r'^api/', include('shellac.urls.api')),

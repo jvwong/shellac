@@ -19,7 +19,7 @@ class AppPageTest(TestCase):
 
     # line up view for '/app/(?<username>[\w.@+-]+)/' with app_page
     def test_root_url_resolvers_to_app_page_view(self):
-        found = resolve('/app/jvwong/')
+        found = resolve('/player/jvwong/')
         self.assertEqual(found.func, shellac_app)
 
     #This is dynamic javascript so cannot judge html
