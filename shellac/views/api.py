@@ -46,7 +46,7 @@ class RelationshipListViewSet(ListViewSet):
         This view should return a list of all the Relationships for
         the authenticated User / Person.
         """
-        ##Check for the url keyword arguments
+
         return Relationship.objects.filter(
             Q(from_person=self.request.user.person) |
             Q(to_person=self.request.user.person))
@@ -109,6 +109,26 @@ class ClipListViewSet(ListViewSet):
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned clips  by filtering against
+        a query parameter (q) in the URL.
+        """
+        ##Check for the url keyword arguments
+        q = self.request.QUERY_PARAMS.get('q', None)
+        if q:
+            return Clip.objects.filter(
+                Q(title__in=[q]) |
+                Q(author__username__in=[q]) |
+                Q(categories__slug__in=[q]) |
+                Q(tags__name__in=[q]) |
+                Q(description__in=[q])
+            )
+
+        return Clip.objects.all()
+
+
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)

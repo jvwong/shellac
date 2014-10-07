@@ -87,6 +87,9 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
 
     permalink = serializers.Field(source='get_absolute_url')
 
+    tags = serializers.Field(source='tags.names')
+
+
     def get_brand_url(self, obj):
         if obj.brand:
             return obj.brand.url
@@ -111,7 +114,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         lookup_field = 'pk'
         model = Clip
-        fields = ('url', 'id', 'title', 'author', 'description', 'categories',
+        fields = ('url', 'id', 'title', 'author', 'description', 'categories', 'tags',
                   'brand', 'brand_url', 'brand_thumb_url', 'plays', 'rating', 'status', 'slug',
                   'audio_file', 'audio_file_url', 'created', 'owner', 'permalink')
         # read_only_fields = ('categories',)

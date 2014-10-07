@@ -20,9 +20,11 @@ var sidebar = (function () {
         main_html: String() +
         '<div class="shellac-app-sidebar-panel panel-group noSwipe" id="accordion">' +
 
-            '<div class="search panel panel-default">' +
-                '<div class="panel-heading">' +
-                    'Search' +
+            '<div class="search-container">' +
+                '<div class="form-group has-success has-feedback">' +
+                    '<label class="control-label" for="inputSuccess"></label>' +
+                    '<input type="text" class="form-control" id="inputSuccess">' +
+                    '<span class="glyphicon glyphicon-search form-control-feedback"></span>' +
                 '</div>' +
             '</div>' +
 
@@ -53,6 +55,7 @@ var sidebar = (function () {
             '</div>' +
 
         '</div>',
+
         truncatemax: 10
     },
 

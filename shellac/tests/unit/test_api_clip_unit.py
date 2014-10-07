@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, resolve
 from django.contrib.auth.models import User
 from django.db.models import Q
 
@@ -218,6 +218,48 @@ class ClipListViewSet(APITestCase):
         #print(results)
         self.assertEqual(len(results), n)
 
+class ClipListViewSetSearch(APITestCase):
+    fixtures = ['shellac.json', 'auth.json', 'taggit.json']
+
+    def setUp(self):
+        username = 'jvwong'
+        password = 'b'
+        self.urlname = 'http://testserver/api/people/' + username + '/'
+        self.user = User.objects.get(username=username)
+        self.person = self.user.person
+        self.client.login(username=username, password=password)
+
+    def test_ClipListViewSet_url_resolves_correctly_view(self):
+        url = reverse('clip-list')
+        self.assertEqual(url, '/api/clips/')
+
+    def test_ClipListViewSet_accepts_search_query_on_parameter_tags(self):
+        q = 'a1a' #belongs to at least two clips
+        response = self.client.get('/api/clips/?q=' + q)
+        results = response.data['results']
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(len(results) > 0)
+
+    def test_ClipListViewSet_accepts_search_query_on_parameter_categories(self):
+        q = 'technology' #belongs to at least two clips
+        response = self.client.get('/api/clips/?q=' + q)
+        results = response.data['results']
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(len(results) > 0)
+
+    def test_ClipListViewSet_accepts_search_query_on_parameter_username(self):
+        q = 'jvwong' #belongs to at least two clips
+        response = self.client.get('/api/clips/?q=' + q)
+        results = response.data['results']
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(len(results) > 0)
+
+    def test_ClipListViewSet_returns_no_results_on_garbage(self):
+        q = 'garbage_in_is_nothing' #belongs to at least two clips
+        response = self.client.get('/api/clips/?q=' + q)
+        results = response.data['results']
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(len(results) == 0)
 
 
 class ClipDetailViewSet(APITestCase):

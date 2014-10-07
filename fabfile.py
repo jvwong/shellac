@@ -136,11 +136,14 @@ def functional():
 def make_test_fixtures():
     local('../virtualenv/bin/python3.4 manage.py dumpdata shellac --exclude=shellac.Person --format=json --indent=4 > %s/shellac.json' % (lfixtures_dir,))
     local('../virtualenv/bin/python3.4 manage.py dumpdata auth --natural --exclude auth.permission --exclude contenttypes --format=json --indent=4 > %s/auth.json' % (lfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py dumpdata taggit --format=json --indent=4 > %s/taggit.json' % (lfixtures_dir,))
 
 def make_db_fixture():
     local('../virtualenv/bin/python3.4 manage.py dumpdata shellac --format=json --indent=4 > %s/shellac_working.json' % (lfixtures_dir,))
     local('../virtualenv/bin/python3.4 manage.py dumpdata auth --format=json --indent=4 > %s/auth_working.json' % (lfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py dumpdata taggit --format=json --indent=4 > %s/taggit_working.json' % (lfixtures_dir,))
 
 def load_db_fixture():
     local('../virtualenv/bin/python3.4 manage.py loaddata %s/auth_working.json' % (lfixtures_dir,))
     local('../virtualenv/bin/python3.4 manage.py loaddata %s/shellac_working.json' % (lfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py loaddata %s/taggit_working.json' % (lfixtures_dir,))
