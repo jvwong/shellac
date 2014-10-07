@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.admin import User
 from django.contrib.auth.forms import UserCreationForm
-from shellac.models import Clip
+from shellac.models import Clip, Person
 from django.forms import ModelForm
 
 class UserCreateForm(UserCreationForm):
@@ -39,3 +39,13 @@ class CreateClipForm(ModelForm):
     class Meta:
         model = Clip
         exclude = ['author', 'slug', 'plays', 'rating']
+
+
+class PersonUpdateForm(ModelForm):
+    class Meta:
+        model = Person
+        exclude = ['relationships', 'user']
+
+    def clean_avatar(self):
+        print(self.cleaned_data)
+        return self.cleaned_data['avatar']

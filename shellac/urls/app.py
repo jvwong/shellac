@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url, include
 from django.contrib import admin
 
 from shellac.views.app import user_profile, shellac_app, \
-    shellac_relations, shellac_people
+    shellac_relations, shellac_people, person_avatar_update
 
 from search.views import search
 
@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^$', shellac_app, name='shellac_app'),
     url(r'^app/(?P<username>[\w.@+-]+)/$', shellac_app, name='shellac_app'),
 
-    url(r'^profile/(?P<username>[\w.@+-]+)/$', user_profile, name='shellac_profile'),
+    url(r'profile/(?P<username>[\w.@+-]+)/update/$', person_avatar_update, name='shellac_profile'),
 
     url(r'^user/', include('shellac.urls.user')),
     url(r'^people/$', shellac_people, name='shellac_people'),

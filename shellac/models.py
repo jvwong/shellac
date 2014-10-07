@@ -109,7 +109,7 @@ class Person(models.Model):
         verbose_name_plural = "People"
 
     def get_absolute_url(self):
-        return ('shellac_profile', (), {'username': self.username})
+        return ('shellac_profile', (), { 'username': self.username })
     get_absolute_url = models.permalink(get_absolute_url)
 
     objects = PersonManager()

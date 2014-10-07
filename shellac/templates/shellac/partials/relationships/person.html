@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
 <div class="partial-relationships person col-xs-12 col-sm-6" data-person="{{ person.username}}">
-    <a class="partial-relationships-url" href="{{person.get_absolute_url}}">
+    <a class="partial-relationships-url" href="{{ person.get_absolute_url}}">
         <img class="partial-relationships-avatar person img-responsive img-thumbnail"
              src="{% if person.avatar %}
                     {{ person.avatar.url }}

@@ -59,8 +59,7 @@ class NewClipTest(FunctionalTest):
         #Valdiate that we're on the Permalink site and can examine the Clip details
         #time.sleep(3)
         self.assertIn('Permalink', self.browser.title)
-        descriptors = self.browser.find_elements_by_css_selector(".media-description-content")
-
+        descriptors = self.browser.find_elements_by_css_selector(".permalink-description-content")
         self.assertTrue(
             any(dd.text == c['title'] for dd in descriptors)
         )

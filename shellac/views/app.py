@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
+from django.core.urlresolvers import reverse
+from shellac.views.util.permissions import IsAuthenticatedAndOwnerMixin
 
 from shellac.models import Person
 from shellac.views.util import pagination
@@ -12,15 +14,6 @@ def shellac_app(request, *args, **kwargs):
         person = Person.objects.get(username=username)
         return render(request, 'shellac/app/app.html', {'person': person})
     return render(request, 'shellac/app/app.html', {'person': request.user.person})
-
-
-### User profile
-@login_required(login_url='/accounts/signin/')
-def user_profile(request, *args, **kwargs):
-    #print(kwargs.get('username', None))
-    if request.method == 'GET':
-        person = get_object_or_404(Person, username=kwargs.get('username', None))
-    return render(request, 'shellac/app/profile.html', {'person': person})
 
 ### Tune in
 @login_required(login_url='/accounts/signin/')
@@ -35,7 +28,28 @@ def shellac_people(request, *args, **kwargs):
     page_by = 25
     return render(request, 'shellac/app/people.html', pagination.make_paginator(queryset, request, page_by))
 
+### User profile
+@login_required(login_url='/accounts/signin/')
+def user_profile(request, *args, **kwargs):
+    #print(kwargs.get('username', None))
+    if request.method == 'GET':
+        person = get_object_or_404(Person, username=kwargs.get('username', None))
+    return render(request, 'shellac/app/profile.html', {'person': person})
 
+### Permit User to change password
+from django.http import HttpResponseRedirect
+from shellac.forms import PersonUpdateForm
 
-
-
+@login_required(login_url='/accounts/signin/')
+def person_avatar_update(request, username):
+    person = get_object_or_404(Person, username=username)
+    if request.method == 'POST':
+        form = PersonUpdateForm(request.POST, request.FILES)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            person.avatar = instance.avatar
+            person.save()
+            return HttpResponseRedirect("/profile/" + person.username + "/update/")
+    else:
+        form = PersonUpdateForm()
+    return render(request, 'shellac/app/profile.html', {'form': form, 'person': person})

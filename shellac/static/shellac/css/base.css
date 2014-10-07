@@ -267,6 +267,10 @@ main .container-fluid {
   margin-left: 225px;
   padding-top: 25px;
 }
+.content-profile .partial-profile button {
+  margin-top: 1em;
+  width: 200px;
+}
 @media (max-width: 480px) {
   .content-profile {
     text-align: center;
@@ -741,6 +745,10 @@ main .container-fluid {
 .content-profile .partial-profile .partial-profile-description {
   margin-left: 225px;
   padding-top: 25px;
+}
+.content-profile .partial-profile button {
+  margin-top: 1em;
+  width: 200px;
 }
 @media (max-width: 480px) {
   .content-profile {

@@ -20,7 +20,7 @@ class ProfileTest(FunctionalTest):
         self.user = User.objects.get(username=username)
         self.person = self.user.person
         self.enable_pre_authenticated_session(self.user.username)
-        self.browser.get(self.server_url + '/profile/' + username + '/')
+        self.browser.get(self.server_url + '/profile/' + username + '/update/')
         self.wait_to_be_signed_in(self.user.username)
 
     def test_profile_page_displays_correct_Person_details(self):
@@ -47,3 +47,12 @@ class ProfileTest(FunctionalTest):
         time.sleep(1.0)
         title = self.browser.find_element_by_tag_name('title')
         self.assertIn(title.text, 'App')
+
+    def test_profile_page_can_edit_avatar(self):
+        button_select_image = self.browser.find_element_by_css_selector('.content-profile .partial-profile.person button')
+        #print(button_select_image)
+        #button_select_image.click()
+        #
+        #time.sleep(1.0)
+        #title = self.browser.find_element_by_tag_name('title')
+        #self.assertIn(title.text, 'App')

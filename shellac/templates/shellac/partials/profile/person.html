@@ -1,22 +1,27 @@
 {% load staticfiles %}
 
-<!-- profile div -->
 <div class="partial-profile person">
-    <!-- profile-image -->
-    <div class="partial-profile-avatar person">
-        <a href="{{person.get_absolute_url}}">
-            <img src="{% if person.avatar %} {{ person.avatar.url }}
-            {% else %}{% static 'shellac/assets/avatar.jpeg' %}{% endif %}" alt="{{ person.username }}" />
-        </a>
-    </div>
-    <div class="partial-profile-description person">
-        <p class="partial-profile-description-content email">
-            <a class="partial-profile-app" href="{% url 'shellac_app' person.username %}">
-                <span class="glyphicon glyphicon-headphones">&nbsp;</span>{{ person.username }}
-            </a>
-        </p><hr/>
-        <p class="partial-profile-description-content joined">{{ person.joined|date:"M d, Y" }}</p>
-    </div>
-    <!-- end profile-description div -->
+    <form enctype="multipart/form-data" role="form" action="" method="post">{% csrf_token %}
+        <div class="partial-profile-avatar person">
+            <img src="{% if person.avatar %} {{ person.avatar_thumb.url }}
+                {% else %}{% static 'shellac/assets/avatar.jpeg' %}{% endif %}" alt="{{ person.username }}" />
+            {% if person == user.person %}
+            <span class="btn btn-default btn-file">
+                <input id="id_avatar" type="file" name="avatar">
+            </span>
+            {% endif %}
+        </div>
+        <div class="partial-profile-description person">
+            <p class="partial-profile-description-content email">
+                <a class="partial-profile-app" href="{% url 'shellac_app' user.person.username %}">
+                    <span class="glyphicon glyphicon-headphones">&nbsp;</span>{{ person.username }}
+                </a>
+            </p><hr/>
+            <p class="partial-profile-description-content joined">{{ person.joined|date:"M d, Y" }}</p>
+        </div>
+        <span class="clearfix"></span>
+        {% if person == user.person %}
+            <button type="submit" value="Update" class="btn btn-primary">Update</button>
+        {% endif %}
+    </form>
 </div>
-<!-- end profile div -->
