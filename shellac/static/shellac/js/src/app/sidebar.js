@@ -23,7 +23,7 @@ var sidebar = (function () {
             '<div class="search-container">' +
                 '<div class="form-group has-success has-feedback">' +
                     '<label class="control-label" for="inputSuccess"></label>' +
-                    '<input type="text" class="form-control" id="inputSuccess">' +
+                    '<input type="text" class="form-control search-query" id="inputSuccess">' +
                     '<span class="glyphicon glyphicon-search form-control-feedback"></span>' +
                 '</div>' +
             '</div>' +
@@ -68,6 +68,8 @@ var sidebar = (function () {
 
     initModule, setJqueryMap,
 
+    onSubmitSearch,
+
     init_sidebar, fetchUrl,
     parseCategoryData,
     onTapClose, onSwipeClose,
@@ -90,8 +92,14 @@ var sidebar = (function () {
         jqueryMap = {
             $outerDiv                       : $outerDiv,
             $sidebar_panel                  : $outerDiv.find('.shellac-app-sidebar-panel'),
+
+            $sidebar_search_container       : $outerDiv.find('.shellac-app-sidebar-panel .search-container'),
+            $sidebar_search_input           : $outerDiv.find('.shellac-app-sidebar-panel .search-container .search-query'),
+            $sidebar_search_submit          : $outerDiv.find('.shellac-app-sidebar-panel .search-container .glyphicon.glyphicon-search'),
+
             $sidebar_category_panel         : $outerDiv.find('.shellac-app-sidebar-panel .category.panel'),
             $sidebar_category_listGroup     : $outerDiv.find('.shellac-app-sidebar-panel .category.panel #collapseCategories .panel-body .list-group'),
+
             $sidebar_authors_panel          : $outerDiv.find('.shellac-app-sidebar-panel .authors.panel'),
             $sidebar_authors_listGroup      : $outerDiv.find('.shellac-app-sidebar-panel .authors.panel #collapseAuthors .panel-body .list-group')
         };
@@ -191,8 +199,6 @@ var sidebar = (function () {
             },
             onClickAuthor
         );
-
-        console.log($('.list-group-item.nav-sidebar-authors'));
     };
     //--------------------- END DOM METHODS ----------------------
 
@@ -252,7 +258,6 @@ var sidebar = (function () {
         $a = $(event.target).closest('a');
         $a.addClass("active");
         id = $a.find('.list-group-item-heading').attr('id'); //owner
-        console.log(id);
 
         //refill the empty the clip array
         if(id === "all"){
@@ -263,6 +268,18 @@ var sidebar = (function () {
         }
 
         util.PubSub.emit( "shellac-app-sidebar-change", clips);
+    };
+
+    /**
+     * onSubmitSearch callback for search box enter action
+     * Calls the search api and responds with a sidebar change event emit
+     * @param event jQuery event object for the clicked elements
+     */
+    onSubmitSearch = function(event){
+        var q = jqueryMap.$sidebar_search_input.val(),
+            endpoint = ['/api/clips/?q=', q].join('');
+        console.log(encodeURI(endpoint));
+        util.fetchUrl(endpoint, 'api_clips_search');
     };
 
 
@@ -297,9 +314,19 @@ var sidebar = (function () {
                         stateMap.clip_db
                     );
                     break;
+                case 'api_clips_search':
+                    console.log(result.results);
+                    break;
                 default:
             }
         });
+
+        //register search listener
+        jqueryMap.$sidebar_search_submit.on('click', onSubmitSearch);
+        jqueryMap.$sidebar_search_input.keypress(function(e){
+
+                if (e.keyCode === 13){onSubmitSearch();}
+            });
 
         //Inject Category, People data
         display_authors(jqueryMap.$sidebar_authors_listGroup, stateMap.clip_db);

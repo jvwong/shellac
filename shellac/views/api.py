@@ -124,7 +124,7 @@ class ClipListViewSet(ListViewSet):
                 Q(categories__slug__in=[q]) |
                 Q(tags__name__in=[q]) |
                 Q(description__in=[q])
-            )
+            ).distinct()
 
         return Clip.objects.all()
 
