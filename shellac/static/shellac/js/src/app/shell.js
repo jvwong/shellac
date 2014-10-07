@@ -275,7 +275,7 @@ var shell = (function () {
 
 
 
-        jqueryMap.$app_container.toggleClass('nav-expanded');
+        //jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
     return { initModule: initModule };
