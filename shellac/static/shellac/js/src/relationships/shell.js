@@ -19,9 +19,9 @@ var shell = (function () {
     initModule,
 
     configMap = {
-        follow_button_html: String() + '<button type="button" class="btn btn-primary relationships unfollow">Follow</button>',
+        follow_button_html: String() + '<button type="button" class="btn btn-primary relationships follow">Follow</button>',
         unfollow_button_html: String() + '<button type="button" class="btn btn-warning relationships unfollow">Unfollow</button>',
-        block_button_html: String() + '<button type="button" class="btn btn-danger relationships unfollow">Block</button>',
+        block_button_html: String() + '<button type="button" class="btn btn-danger relationships block">Block</button>',
         unblock_button_html: String() + '<button type="button" class="btn btn-success relationships unblock">Unblock</button>'
     },
 
@@ -84,9 +84,10 @@ var shell = (function () {
      * @param $person_list a jquery list of selection of Person templates
      */
     setActionButtons = function($person_list){
-        //console.log($person_list);
+
         $person_list.each(function(index){
-            var $button_container, status;
+//            console.log($(this));
+            var $button_container, username_span, status;
             $button_container = $( this ).find('.partial-relationships-action');
             status = $button_container.attr('data-status').trim();
 
@@ -136,8 +137,8 @@ var shell = (function () {
         $parent = ($button.parent()).parent();
         $div_status = $parent.find('.partial-relationships-description-content.status');
         $div_btn_group = $button.parent();
+        username = $parent.find('.partial-relationships-description-content.username').attr('data-username');
 
-        username = $parent.find('.username').html().trim();
         from_person = stateMap.endpoint + "people/" + stateMap.username + "/";
         to_person = stateMap.endpoint + "people/" + username + "/";
 
