@@ -38,7 +38,7 @@ class CreateClipForm(ModelForm):
 
     class Meta:
         model = Clip
-        exclude = ['author', 'slug', 'plays', 'rating', 'created']
+        exclude = ['author', 'slug', 'plays', 'rating']
 
 
 class PersonUpdateForm(ModelForm):
@@ -47,5 +47,4 @@ class PersonUpdateForm(ModelForm):
         exclude = ['relationships', 'user']
 
     def clean_avatar(self):
-        print(self.cleaned_data)
         return self.cleaned_data['avatar']

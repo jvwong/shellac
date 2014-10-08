@@ -446,6 +446,22 @@ main .container-fluid {
 .form-group ul.errorlist,
 .form-signin ul.errorlist {
   list-style-type: none;
+  padding-top: 5px;
+  padding-left: 5px;
+}
+.form-group ul.errorlist li,
+.form-signin ul.errorlist li {
+  color: red;
+}
+textarea.form-control {
+  height: 5em;
+}
+select#id_categories.form-control {
+  height: 10em;
+}
+.upload-file-text {
+  margin-top: 5px;
+  margin-left: 5px;
 }
 
 /*---------------------------------------------------
@@ -553,6 +569,22 @@ main .container-fluid {
 .form-group ul.errorlist,
 .form-signin ul.errorlist {
   list-style-type: none;
+  padding-top: 5px;
+  padding-left: 5px;
+}
+.form-group ul.errorlist li,
+.form-signin ul.errorlist li {
+  color: red;
+}
+textarea.form-control {
+  height: 5em;
+}
+select#id_categories.form-control {
+  height: 10em;
+}
+.upload-file-text {
+  margin-top: 5px;
+  margin-left: 5px;
 }
 /*
  * Media

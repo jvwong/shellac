@@ -1,4 +1,5 @@
 import os.path
+import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -212,7 +213,7 @@ class Clip(models.Model):
     ### Optional
     categories = models.ManyToManyField("shellac.Category", related_name="clips", blank=True)
     tags = TaggableManager(blank=True, help_text=("Comma separated list"))
-    description = models.TextField(max_length=2000, blank=True, help_text=("Limit 250 characters"))
+    description = models.TextField(max_length=2000, blank=True, help_text=("Limit 2000 characters"))
 
     ###upload to subdirectory with user id prefixed
     brand = models.ImageField(upload_to='brands/%Y/%m/%d', blank=True, help_text=("Images will be cropped as squares"))
@@ -225,7 +226,7 @@ class Clip(models.Model):
 
     ### Auto
     slug = models.SlugField(blank=True)
-    created = models.DateTimeField(auto_now_add=True, blank=True)
+    created = models.DateTimeField(default=datetime.datetime.now, blank=True)
 
     #AUDIO
     # Add the audio field to your model -- required

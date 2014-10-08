@@ -3,12 +3,29 @@
 
 <!-- Head -->
     {% block title %}Profile{% endblock title %}
+    {% block head %}
+        <script type="text/javascript">
+             $(function() {
+                $('input[type=file]').change(function(e){
+                    console.log($(this));
+                    var file, name, type, size, text;
+                    file = $(this).prop('files')[0];
+                    name = file.name;
+                    type = file.type;
+                    size = (file.size / (1024 * 1024)).toFixed(1);
+                    text = String() + "File selected: " + name + " (" + type + " | " + size + " MB)";
+                    $('.upload-file-text').html(text);
+                });
+             });
+        </script>
+    {% endblock head %}
 
-{% block main %}
+<!-- main -->
+    {% block main %}
 
     <div class="content-profile">
         <div class="partial-profile person">
-            <form enctype="multipart/form-data" role="form" action="" method="post">{% csrf_token %}
+            <form enctype="multipart/form-data" class="form-group" role="form" action="" method="post">{% csrf_token %}
                 <div class="partial-profile-avatar person">
                     {% if person == user.person %}
                     <span class="btn btn-default btn-file">
@@ -31,9 +48,11 @@
                 </div>
                 <span class="clearfix"></span>
                 {% if person == user.person %}
-                    <button type="submit" value="Update" class="btn btn-primary">Update</button>
+                    <button type="submit" value="Update" class="btn btn-primary update">Update</button>
+                    {{ form.avatar.errors }}
+                    <p class="upload-file-text"></p>
                 {% endif %}
             </form>
         </div>
     </div>
-{% endblock main %}
+    {% endblock main %}

@@ -11226,6 +11226,7 @@ module.exports = audio;
 'use strict';
 $( document ).ready(function() {
     var shell = require('./shell.js');
+
     shell.initModule($("#shellac-app"), target_username, status, DEBUG);
 });
 
