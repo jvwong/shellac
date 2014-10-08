@@ -36,7 +36,7 @@ register.filter('add_attributes', add_attributes)
 import datetime
 def dayssince(value):
     "Returns number of days between today and value."
-    today = datetime.date.today()
+    today = datetime.datetime.today()
     diff  = today - value
     if diff.days > 1:
         return '%s days ago' % diff.days

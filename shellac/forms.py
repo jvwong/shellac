@@ -38,7 +38,7 @@ class CreateClipForm(ModelForm):
 
     class Meta:
         model = Clip
-        exclude = ['author', 'slug', 'plays', 'rating']
+        exclude = ['author', 'slug', 'plays', 'rating', 'created']
 
 
 class PersonUpdateForm(ModelForm):

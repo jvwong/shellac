@@ -4,8 +4,8 @@
 <!-- Head -->
     {% block title %}Record{% endblock title %}
     {% block head %}
-        <script src="{% static 'shellac/js/lib/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
-        <link rel="stylesheet" href="{% static 'shellac/js/lib/bootstrap-datepicker/css/datepicker.css' %}">
+        {# <script src="{% static 'shellac/js/lib/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script> #}
+        {# <link rel="stylesheet" href="{% static 'shellac/js/lib/bootstrap-datepicker/css/datepicker.css' %}"> #}
     {% endblock head %}
 
 <!-- Main -->
@@ -19,12 +19,6 @@
                         <button class="btn btn-primary btn-lg btn-block" type="button">Add {{ field.label }}</button>
                         <input id="{{ field.id_for_label }}" type="file" name="{{ field.html_name }}">
                     </span>
-                    {% elif field.label == "Created" %}
-                    <div class="form-group">
-                        <p>{{ field.errors }}</p>
-                        {{ field.label_tag }}
-                        <input id="id_created" data-date-format="yyyy-mm-dd" data-provide="datepicker" class="form-control" type="text" value="{{ field.value|date:'Y-m-d' }}" name="created">
-                    </div>
                     {% else %}
                     <div class="form-group">
                         <p>{{ field.errors }}</p>

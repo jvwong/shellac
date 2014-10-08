@@ -11917,7 +11917,7 @@ var util = (function () {
                 console.log(err);
             }
         });
-        //console.log(jsonArray);
+        console.log(jsonArray);
         return jsonArray;
     };
 
