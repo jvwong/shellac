@@ -1,9 +1,12 @@
 {% extends "shellac/base.html" %}
-{% load i18n %}
 {% load shellac_filters %}
-
+{% load staticfiles %}
 <!-- Head -->
     {% block title %}Record{% endblock title %}
+    {% block head %}
+        <script src="{% static 'shellac/js/lib/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'shellac/js/lib/bootstrap-datepicker/css/datepicker.css' %}">
+    {% endblock head %}
 
 <!-- Main -->
     {% block content %}
@@ -15,13 +18,14 @@
                     <span class="btn btn-default btn-file btn-block">
                         <button class="btn btn-primary btn-lg btn-block" type="button">Add {{ field.label }}</button>
                         <input id="{{ field.id_for_label }}" type="file" name="{{ field.html_name }}">
-                    {% if field.label == "Audio file" %}
-                        <input type="hidden" value="0" name="convert_type">
-                        <input type="hidden" value="0" name="channel_type">
-                        <input type="hidden" value="0" name="freq_type">
-                    {% endif %}
                     </span>
-                {% else %}
+                    {% elif field.label == "Created" %}
+                    <div class="form-group">
+                        <p>{{ field.errors }}</p>
+                        {{ field.label_tag }}
+                        <input id="id_created" data-provide="datepicker" class="form-control" type="text" value="{{ field.value }}" name="created">
+                    </div>
+                    {% else %}
                     <div class="form-group">
                         <p>{{ field.errors }}</p>
                         {{ field.label_tag }}
