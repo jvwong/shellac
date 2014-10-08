@@ -29,8 +29,9 @@ class ClipInline(admin.StackedInline):
     fieldsets = (
         ('Advanced options', {
             'classes': ('collapse',),
-            'fields': ('title', 'author', 'categories',
-                       'tags', 'description', 'brand', 'status', 'audio_file')
+            'fields': ('title', 'author', 'categories', 'tags',
+                       'description', 'brand', 'status',
+                       'audio_file', 'created')
         }),
     )
 

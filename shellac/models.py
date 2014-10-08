@@ -1,5 +1,5 @@
 import os.path
-import datetime
+from datetime import date
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -226,7 +226,7 @@ class Clip(models.Model):
 
     ### Auto
     slug = models.SlugField(blank=True)
-    created = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    created = models.DateField(default=date.today(), blank=True)
 
     #AUDIO
     # Add the audio field to your model -- required
