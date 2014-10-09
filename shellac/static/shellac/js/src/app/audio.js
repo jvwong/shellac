@@ -209,6 +209,7 @@ var audio = (function () {
     //------------------- BEGIN PUBLIC METHODS -------------------
     onClickPlayer = function(url, $progress, $description){
 //        console.log($progress);
+        console.log(jqueryMap.$description);
 
         // *** CASE 0
         // State: Clip selected does was not created yet

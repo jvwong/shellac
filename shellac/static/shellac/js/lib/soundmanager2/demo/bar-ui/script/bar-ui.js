@@ -183,7 +183,7 @@
 
       function get(/* parentNode, selector */) {
 
-        var results = getAll.apply(this, arguments);
+        var results = getAll.apply({}, arguments);
 
         // hackish: if more than one match and no third argument, return the last.
         if (results && results.length) {

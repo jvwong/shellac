@@ -8,10 +8,11 @@
 var shell = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
-    var TAFFY = require('taffydb').taffy,
-        audio = require('./audio.js'),
-        util = require('../util.js'),
-        sidebar = require('./sidebar.js');
+    var TAFFY   = require('taffydb').taffy,
+//        audio   = require('./audio.js'),
+        util    = require('../util.js'),
+        sidebar = require('./sidebar.js'),
+        bar     = require('../players/bar.js');
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -22,7 +23,7 @@ var shell = (function () {
     configMap = {
         main_html: String() +
             '<div class="shellac-app-container">' +
-                '<div class="shellac-app-statusbar">Playlist: <span class="shellac-app-statusbar-playing"></span></div>' +
+                '<div class="shellac-app-statusbar"></div>' +
                 '<div class="shellac-app-sidebar-container col-sm-3 col-md-2"></div>' +
                 '<div class="shellac-app-clip-container content"></div>' +
             '</div>',
@@ -184,7 +185,7 @@ var shell = (function () {
             var url = $(this).parent().attr('data-clip-url'),
                 $progress = $(this).parent().find('.media-progress'),
                 $description = $(this).parent().find('.media-description');
-            audio.onClickPlayer(url, $progress, $description);
+//            audio.onClickPlayer(url, $progress, $description);
         });
         $('.media.clip .media-description').on('click', function(e){
             var permalink = $(this).attr('data-permalink');
@@ -255,16 +256,9 @@ var shell = (function () {
             display_clips(clips, jqueryMap.$clip_content_container);
         });
 
-
         //load data into in-browser database
         var clipsUrl = ['/api/clips', stateMap.status, target_username, ""].join('/');
         util.fetchUrl(clipsUrl, 'api_clips_status_person');
-
-        //Navigation Menu Slider
-        $( '.shellac-app-statusbar' ).swipe({
-            tap: onTapClose
-        });
-        jqueryMap.$statusbar_playing.html(target_username);
 
         //Navigation Menu Slider
         jqueryMap.$sidebar_container.swipe({
@@ -273,8 +267,7 @@ var shell = (function () {
             threshold: 75
         });
 
-
-
+        bar.initModule( jqueryMap.$statusbar );
         //jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
