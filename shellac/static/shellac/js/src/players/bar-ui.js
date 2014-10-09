@@ -28,7 +28,6 @@ var bar_ui = (function() {
             i, j;
 
         nodes = utils.dom.getAll(playerSelector);
-        console.log(nodes);
 
         if (nodes && nodes.length) {
             for (i=0, j=nodes.length; i<j; i++) {

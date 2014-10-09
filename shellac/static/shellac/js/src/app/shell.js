@@ -9,10 +9,10 @@ var shell = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var TAFFY   = require('taffydb').taffy,
-//        audio   = require('./audio.js'),
         util    = require('../util.js'),
         sidebar = require('./sidebar.js'),
-        bar     = require('../players/bar.js');
+        bar     = require('../players/bar.js'),
+        bar_api;
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -23,7 +23,7 @@ var shell = (function () {
     configMap = {
         main_html: String() +
             '<div class="shellac-app-container">' +
-                '<div class="shellac-app-player"></div>' +
+                '<div class="shellac-app-player-container"></div>' +
                 '<div class="shellac-app-sidebar-container col-sm-3 col-md-2"></div>' +
                 '<div class="shellac-app-clip-container content"></div>' +
             '</div>',
@@ -78,7 +78,7 @@ var shell = (function () {
         jqueryMap = {
             $outerDiv                   : $outerDiv,
             $app_container              : $outerDiv.find('.shellac-app-container'),
-            $player                     : $outerDiv.find('.shellac-app-container .shellac-app-player'),
+            $player_container           : $outerDiv.find('.shellac-app-container .shellac-app-player-container'),
             $sidebar_container          : $outerDiv.find('.shellac-app-container .shellac-app-sidebar-container'),
             $clip_content_container     : $outerDiv.find('.shellac-app-container .shellac-app-clip-container'),
             $modal_container            : $outerDiv.find('#get_absolute_urlModal'),
@@ -159,32 +159,29 @@ var shell = (function () {
             var clip = String() +
                 '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 media clip">' +
                     '<div class="media-panel">' +
-                        '<div class="ui360">' +
-                            '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
-                                '<img class="media-img" src="' + object.brand_thumb_url  + '" alt="' + object.title + '" />' +
+                        '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
 
-                                '<dl class="media-description dl-horizontal" data-permalink="' + object.permalink + '">' +
-                                    '<span class="media-description-content posted">' + object.created.startOf('minute').fromNow(true) + '</span>' +
-                                    '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
-                                    '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncatemax) + '</dd>' +
-                                    '<dd class="media-description-content owner">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
-                                    '<dd class="media-description-content categories">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
-                                '</dl>' +
+                            '<img class="media-img" src="' + object.brand_thumb_url  + '" alt="' + object.title + '" />' +
+                            '<dl class="media-description dl-horizontal" data-permalink="' + object.permalink + '">' +
+                                '<span class="media-description-content posted">' + object.created.startOf('minute').fromNow(true) + '</span>' +
+                                '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
+                                '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncatemax) + '</dd>' +
+                                '<dd class="media-description-content owner">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
+                                '<dd class="media-description-content categories">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
+                            '</dl>' +
 
-                                '<div class="media-progress"></div>' +
-                            '</span>'  +
-                        '</div>' +
+                        '</span>'  +
                     '</div>' +
                 '</div>';
 
             $container.append(clip);
         });
-        $('.media.clip .media-img').on('click', function(e){
-            var url = $(this).parent().attr('data-clip-url'),
-                $progress = $(this).parent().find('.media-progress'),
-                $description = $(this).parent().find('.media-description');
-//            audio.onClickPlayer(url, $progress, $description);
+
+        //Listener should notify bar that it wishes to add a clip to its 'queue'
+        $('.media.clip .media-img').on('click', function(event){
+            bar_api.handleClipSelect(event);
         });
+
         $('.media.clip .media-description').on('click', function(e){
             var permalink = $(this).attr('data-permalink');
             util.fetchUrl(permalink, 'get_absolute_url');
@@ -265,7 +262,7 @@ var shell = (function () {
             threshold: 75
         });
 
-        bar.initModule( jqueryMap.$player );
+        bar_api = bar.initModule( jqueryMap.$player_container );
         //jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
