@@ -53,7 +53,7 @@ var shell = (function () {
 
         clips               : undefined,
         clip_db             : TAFFY(),
-
+        queued              : [],
         DEBUG               : undefined
     },
 
@@ -161,7 +161,7 @@ var shell = (function () {
 
                     '<div class="media-panel">' +
                         '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
-                            '<span class="shellac-media-check glyphicon glyphicon-ok"></span>' +
+                            '<span class="shellac-media-check glyphicon glyphicon-ok' + (stateMap.queued.indexOf(object.audio_file_url) > -1 ? ' queued' : '') + '"></span>' +
                             '<img class="media-img" src="' + object.brand_thumb_url  + '" alt="' + object.title + '" />' +
                             '<dl class="media-description dl-horizontal" data-permalink="' + object.permalink + '">' +
                                 '<span class="media-description-content posted" data-content="' + object.created.startOf('minute').fromNow(true) + '">' + object.created.startOf('minute').fromNow(true) + '</span>' +
@@ -170,7 +170,6 @@ var shell = (function () {
                                 '<dd class="media-description-content owner" data-content="' + object.owner + '">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
                                 '<dd class="media-description-content categories" data-content="' + cats + '">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
                             '</dl>' +
-
                         '</span>'  +
                     '</div>' +
                 '</div>';
@@ -180,9 +179,23 @@ var shell = (function () {
 
         //Listener should notify bar that it wishes to add a clip to its 'queue'
         $('.media.clip .media-img').on('click', function(event){
-            //toggle as 'queued' somewhere
-            console.log($(this));
-            $(this).siblings().toggleClass('queued');
+
+            var hasQueued, urlQueueIndex, url;
+
+            url = $(this).parent().attr('data-clip-url');
+            hasQueued = $(this).siblings('.shellac-media-check').hasClass('queued');
+            urlQueueIndex = stateMap.queued.indexOf(url);
+
+            if(urlQueueIndex > -1)
+            {
+                stateMap.queued.splice(urlQueueIndex, 1);
+            }
+            else
+            {
+                stateMap.queued.push(url);
+            }
+
+            $(this).siblings('.shellac-media-check').toggleClass('queued');
             bar_api.handleClipSelect(event);
         });
 

@@ -642,7 +642,6 @@ var bar = (function () {
         var isOpen;
 
         isOpen = utils.css.has(dom.o, 'playlist-open');
-        console.log(dom.playlistContainer.offsetHeight);
         dom.playlistContainer.style.height = (isOpen ? dom.playlistContainer.scrollHeight : 0) + 'px';
     };
 
