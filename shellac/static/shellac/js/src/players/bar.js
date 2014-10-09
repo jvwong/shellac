@@ -20,8 +20,8 @@ var bar = (function () {
         initModule,
 
         configMap = {
-            bar_extra_contols: String() +
-                '<div class="sm2-bar-ui full-width">' +
+            bar_html: String() +
+                '<div class="sm2-bar-ui full-width fixed">' +
 
                     '<div class="bd sm2-main-controls">' +
 
@@ -180,7 +180,7 @@ var bar = (function () {
         stateMap.$container = $container;
         stateMap.DEBUG = DEBUG;
 
-        $container.append( configMap.bar_extra_contols );
+        $container.append( configMap.bar_html );
         setJqueryMap();
 
         console.log($container);

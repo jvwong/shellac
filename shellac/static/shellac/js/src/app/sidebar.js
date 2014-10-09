@@ -233,7 +233,7 @@ var sidebar = (function () {
             clips = clip_db({categories: {has: category.url}}).get();
         }
 
-        util.PubSub.emit( "shellac-app-sidebar-change", clips);
+        util.PubSub.emit( "shellac-app-clip-change", clips);
     };
 
 
@@ -244,8 +244,6 @@ var sidebar = (function () {
      * @param event jQuery event object for the clicked elements
      */
     onClickAuthor = function(event){
-
-        console.log("clicked");
 
         var clip_db = event.data.clip_db,
             clips = [],
@@ -267,7 +265,7 @@ var sidebar = (function () {
             clips = clip_db({owner: {has: id}}).get();
         }
 
-        util.PubSub.emit( "shellac-app-sidebar-change", clips);
+        util.PubSub.emit( "shellac-app-clip-change", clips);
     };
 
     /**
@@ -315,8 +313,7 @@ var sidebar = (function () {
                     );
                     break;
                 case 'api_clips_search':
-//                    console.log(result.results);
-                    util.PubSub.emit( "shellac-app-sidebar-change", util.parseClipData(result));
+                    util.PubSub.emit( "shellac-app-clip-change", util.parseClipData(result));
                     break;
                 default:
             }

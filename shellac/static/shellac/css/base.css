@@ -38,185 +38,6 @@ main .container-fluid {
 }
 
 /*
- * Media
- */
-/*---------------------------------------------------
-    LESS Elements 0.9
-  ---------------------------------------------------
-    A set of useful LESS mixins
-    More info at: http://lesselements.com
-  ---------------------------------------------------*/
-.media,
-.media .media {
-  margin: 0px;
-}
-.media.clip {
-  padding-left: 0px;
-  padding-right: 0px;
-  padding: 1px;
-}
-.media.clip .media-panel {
-  position: relative;
-  border-style: solid;
-  border-width: 2px;
-  border-color: #000000;
-}
-.media.clip .media-panel .media-description.dl-horizontal {
-  position: absolute;
-  /* absolute position (so we can position it where we want)*/
-  bottom: 0px;
-  /* position will be on bottom */
-  left: 0px;
-  width: 100%;
-  padding: 0.5em;
-  /* styling bellow */
-  background: black;
-  color: white;
-  -moz-opacity: 0.8;
-  -khtml-opacity: 0.8;
-  -webkit-opacity: 0.8;
-  opacity: 0.8;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-  filter: alpha(opacity=80);
-  margin-bottom: 0px;
-}
-.media.clip .media-panel .media-description.dl-horizontal dd {
-  font-size: 1.1em;
-  margin-left: 0px;
-}
-.media.clip .media-panel .media-description.dl-horizontal span.posted {
-  font-size: 1.2em;
-  position: absolute;
-  top: 0.50em;
-  right: 0.10em;
-}
-.media.clip .media-panel span.media-description-content.permalink {
-  bottom: 0.50em;
-  right: 0.10em;
-  z-index: 5000;
-}
-.media.clip .media-panel .media-description.played {
-  background-color: #428BCA;
-  background: #428BCA;
-  color: white;
-  -moz-opacity: 0.8;
-  -khtml-opacity: 0.8;
-  -webkit-opacity: 0.8;
-  opacity: 0.8;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-  filter: alpha(opacity=80);
-}
-.media.clip .media-panel .media-description.playing {
-  background-color: darkgreen;
-  background: darkgreen;
-  color: white;
-  -moz-opacity: 0.8;
-  -khtml-opacity: 0.8;
-  -webkit-opacity: 0.8;
-  opacity: 0.8;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-  filter: alpha(opacity=80);
-}
-.media.clip .media-panel .media-progress {
-  position: absolute;
-  /* absolute position (so we can position it where we want)*/
-  top: 0px;
-  /* position will be on bottom */
-  left: 0px;
-  width: 90%;
-  padding: 0.5em;
-  padding-left: 1em;
-  /* styling bellow */
-  background-color: transparent;
-  background: transparent;
-  color: white;
-  -moz-opacity: 1;
-  -khtml-opacity: 1;
-  -webkit-opacity: 1;
-  opacity: 1;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=100);
-  filter: alpha(opacity=100);
-}
-.media.clip .media-panel .media-progress .progress {
-  /* the height of the progress bar */
-  height: 0.7em;
-}
-.media.clip .media-panel .media-img {
-  width: 100%;
-}
-.media.clip .media-img:hover {
-  cursor: pointer;
-}
-.media.clip .media-description:hover {
-  cursor: pointer;
-}
-.clip.no-content {
-  position: relative;
-  top: 5em;
-  text-align: center;
-}
-@media (max-width: 768px) {
-  .media.clip .media-panel .media-description.dl-horizontal {
-    font-size: 1.0em;
-    line-height: 1.1em;
-    -moz-opacity: 0.8;
-    -khtml-opacity: 0.8;
-    -webkit-opacity: 0.8;
-    opacity: 0.8;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-    filter: alpha(opacity=80);
-  }
-  .media.clip .media-panel .media-description.dl-horizontal span.posted {
-    font-size: 1.0em;
-  }
-  .media.clip .media-panel .media-description.dl-horizontal dd.categories {
-    font-size: 0em;
-    visibility: hidden;
-  }
-}
-@media (max-width: 480px) {
-  .media.clip .media-panel .media-description.dl-horizontal {
-    font-size: 0.8em;
-    line-height: 1em;
-    -moz-opacity: 0.8;
-    -khtml-opacity: 0.8;
-    -webkit-opacity: 0.8;
-    opacity: 0.8;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-    filter: alpha(opacity=80);
-  }
-  .media.clip .media-panel .media-description.dl-horizontal dd {
-    font-size: .95em;
-    margin-left: 0px;
-  }
-  .media.clip .media-panel .media-description.dl-horizontal dd.categories {
-    font-size: 0em;
-    visibility: hidden;
-  }
-  .media.clip .media-panel .media-description.dl-horizontal span.posted {
-    font-size: 1em;
-  }
-}
-
-/*
- * Modal
- */
-.modal .modal-dialog .modal-content .modal-header {
-  border-bottom: none;
-}
-.modal .modal-dialog .modal-content .modal-body {
-  border-top: none;
-}
-.modal .modal-dialog .modal-content .modal-footer {
-  border-top: none;
-}
-.modal .modal-dialog .modal-content .modal-footer button {
-  position: absolute;
-  bottom: 1em;
-  right: 1em;
-}
-
-/*
 * Permalink
 */
 /*---------------------------------------------------
@@ -329,72 +150,6 @@ main .container-fluid {
 .partial-relationships .partial-relationships-description .btn-group.partial-relationships-action button {
   color: #000000;
   font-size: 0.9em;
-}
-
-/*
- * Sidebar
- */
-/* Hide for mobile, show later */
-.nav-expanded .shellac-app-sidebar-container {
-  left: 0em;
-  transition: right 0.3s ease-in-out 0s;
-  -webkit-transition: left 0.3s ease-in-out 0s;
-  -moz-transition: left 0.3s ease-in-out 0s;
-  -o-transition: left 0.3s ease-in-out 0s;
-}
-.shellac-app-sidebar-container {
-  position: fixed;
-  height: 100%;
-  width: 15em;
-  left: -15em;
-  top: 51px;
-  bottom: 0;
-  opacity: 0.9;
-  background: #222222;
-  border-color: #111111;
-  display: block;
-  overflow: auto;
-  z-index: 1000;
-  font-size: 15px;
-  transition: left 0.3s ease-in-out 0s;
-  -webkit-transition: left 0.3s ease-in-out 0s;
-  -moz-transition: left 0.3s ease-in-out 0s;
-  -o-transition: left 0.3s ease-in-out 0s;
-}
-.shellac-app-sidebar-container .panel-group {
-  margin-top: 2em;
-}
-@media (max-width: 768px) {
-  .shellac-app-sidebar-container {
-    width: 15em;
-    font-size: 1.0em;
-  }
-  .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
-  .shellac-app-sidebar-container .badge {
-    font-size: 0.9em;
-  }
-}
-
-/*
- * Status bar
- */
-.shellac-app-statusbar {
-  position: fixed;
-  background: #222222;
-  display: block;
-  color: white;
-  font-size: 1em;
-  font-weight: 400;
-  text-decoration: none;
-  text-transform: uppercase;
-  height: 3em;
-  margin-right: 0;
-  padding-left: 1.0em;
-  padding-top: 0.8em;
-  bottom: 200px;
-  right: 0;
-  width: 100%;
-  z-index: 12;
 }
 
 /*
@@ -493,49 +248,6 @@ main .container-fluid {
   max-width: 1200px;
   min-width: 375px;
 }
-/*
- * Sidebar
- */
-/* Hide for mobile, show later */
-.nav-expanded .shellac-app-sidebar-container {
-  left: 0em;
-  transition: right 0.3s ease-in-out 0s;
-  -webkit-transition: left 0.3s ease-in-out 0s;
-  -moz-transition: left 0.3s ease-in-out 0s;
-  -o-transition: left 0.3s ease-in-out 0s;
-}
-.shellac-app-sidebar-container {
-  position: fixed;
-  height: 100%;
-  width: 15em;
-  left: -15em;
-  top: 51px;
-  bottom: 0;
-  opacity: 0.9;
-  background: #222222;
-  border-color: #111111;
-  display: block;
-  overflow: auto;
-  z-index: 1000;
-  font-size: 15px;
-  transition: left 0.3s ease-in-out 0s;
-  -webkit-transition: left 0.3s ease-in-out 0s;
-  -moz-transition: left 0.3s ease-in-out 0s;
-  -o-transition: left 0.3s ease-in-out 0s;
-}
-.shellac-app-sidebar-container .panel-group {
-  margin-top: 2em;
-}
-@media (max-width: 768px) {
-  .shellac-app-sidebar-container {
-    width: 15em;
-    font-size: 1.0em;
-  }
-  .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
-  .shellac-app-sidebar-container .badge {
-    font-size: 0.9em;
-  }
-}
 .btn-file {
   position: relative;
   overflow: hidden;
@@ -579,6 +291,109 @@ select#id_categories.form-control {
 .upload-file-text {
   margin-top: 5px;
   margin-left: 5px;
+}
+/*
+* Permalink
+*/
+.permalink .permalink-panel .permalink-description {
+  font-size: 0.90em;
+}
+.permalink .permalink-panel .permalink-description dt {
+  font-size: 1.1em;
+  margin-top: 1em;
+}
+.permalink .permalink-panel .permalink-description dd {
+  font-size: 1.1em;
+  margin-left: 0px;
+}
+.permalink .permalink-panel .permalink-img {
+  max-width: 150px;
+}
+@media (max-width: 480px) {
+  .permalink .permalink-panel .permalink-img {
+    max-width: 125px;
+  }
+}
+/*
+ * partials/profile/person
+ */
+.content-profile .partial-profile {
+  margin-top: 25px;
+}
+.content-profile .partial-profile .partial-profile-avatar {
+  float: left;
+}
+.content-profile .partial-profile .partial-profile-avatar img {
+  width: 200px;
+}
+.content-profile .partial-profile .partial-profile-description {
+  margin-left: 225px;
+  padding-top: 25px;
+}
+.content-profile .partial-profile button {
+  margin-top: 1em;
+  width: 200px;
+}
+@media (max-width: 480px) {
+  .content-profile {
+    text-align: center;
+  }
+  .content-profile .partial-profile .partial-profile-avatar {
+    float: none;
+  }
+  .content-profile .partial-profile .partial-profile-description {
+    margin-left: 0px;
+  }
+}
+/*
+ * partials/relationship
+ */
+.partial-relationships {
+  margin-top: 1em;
+}
+.partial-relationships img.partial-relationships-avatar {
+  left: 2em;
+  width: 6em;
+  height: 6em;
+  float: left;
+}
+.partial-relationships .partial-relationships-description {
+  position: relative;
+  height: 6em;
+  margin-left: 6em;
+  padding: 0.64em;
+  padding-left: 1.6em;
+  /* styling below */
+  background-color: black;
+  background: black;
+  color: white;
+  -moz-opacity: 0.7;
+  -khtml-opacity: 0.7;
+  -webkit-opacity: 0.7;
+  opacity: 0.7;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+  filter: alpha(opacity=70);
+}
+.partial-relationships .partial-relationships-description .partial-relationships-description-content.joined {
+  font-size: 1em;
+}
+.partial-relationships .partial-relationships-description .btn-group.partial-relationships-action {
+  position: absolute;
+  top: 25%;
+  right: 2em;
+}
+.partial-relationships .partial-relationships-description .btn-group.partial-relationships-action button {
+  color: #000000;
+  font-size: 0.9em;
+}
+/*
+ * user
+ */
+.content-user .content-user-update {
+  margin-top: 25px;
+}
+.content-user .content-user-detail .content-user-button {
+  margin-top: 10px;
 }
 /*
  * Media
@@ -735,129 +550,8 @@ select#id_categories.form-control {
   }
 }
 /*
-* Permalink
-*/
-.permalink .permalink-panel .permalink-description {
-  font-size: 0.90em;
-}
-.permalink .permalink-panel .permalink-description dt {
-  font-size: 1.1em;
-  margin-top: 1em;
-}
-.permalink .permalink-panel .permalink-description dd {
-  font-size: 1.1em;
-  margin-left: 0px;
-}
-.permalink .permalink-panel .permalink-img {
-  max-width: 150px;
-}
-@media (max-width: 480px) {
-  .permalink .permalink-panel .permalink-img {
-    max-width: 125px;
-  }
-}
-/*
- * partials/profile/person
- */
-.content-profile .partial-profile {
-  margin-top: 25px;
-}
-.content-profile .partial-profile .partial-profile-avatar {
-  float: left;
-}
-.content-profile .partial-profile .partial-profile-avatar img {
-  width: 200px;
-}
-.content-profile .partial-profile .partial-profile-description {
-  margin-left: 225px;
-  padding-top: 25px;
-}
-.content-profile .partial-profile button {
-  margin-top: 1em;
-  width: 200px;
-}
-@media (max-width: 480px) {
-  .content-profile {
-    text-align: center;
-  }
-  .content-profile .partial-profile .partial-profile-avatar {
-    float: none;
-  }
-  .content-profile .partial-profile .partial-profile-description {
-    margin-left: 0px;
-  }
-}
-/*
- * partials/relationship
- */
-.partial-relationships {
-  margin-top: 1em;
-}
-.partial-relationships img.partial-relationships-avatar {
-  left: 2em;
-  width: 6em;
-  height: 6em;
-  float: left;
-}
-.partial-relationships .partial-relationships-description {
-  position: relative;
-  height: 6em;
-  margin-left: 6em;
-  padding: 0.64em;
-  padding-left: 1.6em;
-  /* styling below */
-  background-color: black;
-  background: black;
-  color: white;
-  -moz-opacity: 0.7;
-  -khtml-opacity: 0.7;
-  -webkit-opacity: 0.7;
-  opacity: 0.7;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
-  filter: alpha(opacity=70);
-}
-.partial-relationships .partial-relationships-description .partial-relationships-description-content.joined {
-  font-size: 1em;
-}
-.partial-relationships .partial-relationships-description .btn-group.partial-relationships-action {
-  position: absolute;
-  top: 25%;
-  right: 2em;
-}
-.partial-relationships .partial-relationships-description .btn-group.partial-relationships-action button {
-  color: #000000;
-  font-size: 0.9em;
-}
-/*
  * Status bar
  */
-.shellac-app-statusbar {
-  position: fixed;
-  background: #222222;
-  display: block;
-  color: white;
-  font-size: 1em;
-  font-weight: 400;
-  text-decoration: none;
-  text-transform: uppercase;
-  height: 3em;
-  margin-right: 0;
-  padding-left: 1.0em;
-  padding-top: 0.8em;
-  bottom: 200px;
-  right: 0;
-  width: 100%;
-  z-index: 12;
-}
-/*
- * user
- */
-.content-user .content-user-update {
-  margin-top: 25px;
-}
-.content-user .content-user-detail .content-user-button {
-  margin-top: 10px;
-}
 /*
  * Modal
  */
@@ -874,6 +568,49 @@ select#id_categories.form-control {
   position: absolute;
   bottom: 1em;
   right: 1em;
+}
+/*
+ * Sidebar
+ */
+/* Hide for mobile, show later */
+.nav-expanded .shellac-app-sidebar-container {
+  left: 0em;
+  transition: right 0.3s ease-in-out 0s;
+  -webkit-transition: left 0.3s ease-in-out 0s;
+  -moz-transition: left 0.3s ease-in-out 0s;
+  -o-transition: left 0.3s ease-in-out 0s;
+}
+.shellac-app-sidebar-container {
+  position: fixed;
+  height: 100%;
+  width: 15em;
+  left: -14em;
+  top: 51px;
+  bottom: 0;
+  opacity: 0.9;
+  background: #222222;
+  border-color: #111111;
+  display: block;
+  overflow: auto;
+  z-index: 1000;
+  font-size: 15px;
+  transition: left 0.3s ease-in-out 0s;
+  -webkit-transition: left 0.3s ease-in-out 0s;
+  -moz-transition: left 0.3s ease-in-out 0s;
+  -o-transition: left 0.3s ease-in-out 0s;
+}
+.shellac-app-sidebar-container .panel-group {
+  margin-top: 2em;
+}
+@media (max-width: 768px) {
+  .shellac-app-sidebar-container {
+    width: 15em;
+    font-size: 1.0em;
+  }
+  .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
+  .shellac-app-sidebar-container .badge {
+    font-size: 0.9em;
+  }
 }
 .sm2-bar-ui {
   position: relative;
@@ -1664,6 +1401,233 @@ body {
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
 }
+
+/*
+ * Media
+ */
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+.media,
+.media .media {
+  margin: 0px;
+}
+.media.clip {
+  padding-left: 0px;
+  padding-right: 0px;
+  padding: 1px;
+}
+.media.clip .media-panel {
+  position: relative;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #000000;
+}
+.media.clip .media-panel .media-description.dl-horizontal {
+  position: absolute;
+  /* absolute position (so we can position it where we want)*/
+  bottom: 0px;
+  /* position will be on bottom */
+  left: 0px;
+  width: 100%;
+  padding: 0.5em;
+  /* styling bellow */
+  background: black;
+  color: white;
+  -moz-opacity: 0.8;
+  -khtml-opacity: 0.8;
+  -webkit-opacity: 0.8;
+  opacity: 0.8;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+  filter: alpha(opacity=80);
+  margin-bottom: 0px;
+}
+.media.clip .media-panel .media-description.dl-horizontal dd {
+  font-size: 1.1em;
+  margin-left: 0px;
+}
+.media.clip .media-panel .media-description.dl-horizontal span.posted {
+  font-size: 1.2em;
+  position: absolute;
+  top: 0.50em;
+  right: 0.10em;
+}
+.media.clip .media-panel span.media-description-content.permalink {
+  bottom: 0.50em;
+  right: 0.10em;
+  z-index: 5000;
+}
+.media.clip .media-panel .media-description.played {
+  background-color: #428BCA;
+  background: #428BCA;
+  color: white;
+  -moz-opacity: 0.8;
+  -khtml-opacity: 0.8;
+  -webkit-opacity: 0.8;
+  opacity: 0.8;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+  filter: alpha(opacity=80);
+}
+.media.clip .media-panel .media-description.playing {
+  background-color: darkgreen;
+  background: darkgreen;
+  color: white;
+  -moz-opacity: 0.8;
+  -khtml-opacity: 0.8;
+  -webkit-opacity: 0.8;
+  opacity: 0.8;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+  filter: alpha(opacity=80);
+}
+.media.clip .media-panel .media-progress {
+  position: absolute;
+  /* absolute position (so we can position it where we want)*/
+  top: 0px;
+  /* position will be on bottom */
+  left: 0px;
+  width: 90%;
+  padding: 0.5em;
+  padding-left: 1em;
+  /* styling bellow */
+  background-color: transparent;
+  background: transparent;
+  color: white;
+  -moz-opacity: 1;
+  -khtml-opacity: 1;
+  -webkit-opacity: 1;
+  opacity: 1;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=100);
+  filter: alpha(opacity=100);
+}
+.media.clip .media-panel .media-progress .progress {
+  /* the height of the progress bar */
+  height: 0.7em;
+}
+.media.clip .media-panel .media-img {
+  width: 100%;
+}
+.media.clip .media-img:hover {
+  cursor: pointer;
+}
+.media.clip .media-description:hover {
+  cursor: pointer;
+}
+.clip.no-content {
+  position: relative;
+  top: 5em;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .media.clip .media-panel .media-description.dl-horizontal {
+    font-size: 1.0em;
+    line-height: 1.1em;
+    -moz-opacity: 0.8;
+    -khtml-opacity: 0.8;
+    -webkit-opacity: 0.8;
+    opacity: 0.8;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+    filter: alpha(opacity=80);
+  }
+  .media.clip .media-panel .media-description.dl-horizontal span.posted {
+    font-size: 1.0em;
+  }
+  .media.clip .media-panel .media-description.dl-horizontal dd.categories {
+    font-size: 0em;
+    visibility: hidden;
+  }
+}
+@media (max-width: 480px) {
+  .media.clip .media-panel .media-description.dl-horizontal {
+    font-size: 0.8em;
+    line-height: 1em;
+    -moz-opacity: 0.8;
+    -khtml-opacity: 0.8;
+    -webkit-opacity: 0.8;
+    opacity: 0.8;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+    filter: alpha(opacity=80);
+  }
+  .media.clip .media-panel .media-description.dl-horizontal dd {
+    font-size: .95em;
+    margin-left: 0px;
+  }
+  .media.clip .media-panel .media-description.dl-horizontal dd.categories {
+    font-size: 0em;
+    visibility: hidden;
+  }
+  .media.clip .media-panel .media-description.dl-horizontal span.posted {
+    font-size: 1em;
+  }
+}
+
+/*
+ * Modal
+ */
+.modal .modal-dialog .modal-content .modal-header {
+  border-bottom: none;
+}
+.modal .modal-dialog .modal-content .modal-body {
+  border-top: none;
+}
+.modal .modal-dialog .modal-content .modal-footer {
+  border-top: none;
+}
+.modal .modal-dialog .modal-content .modal-footer button {
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+}
+
+/*
+ * Sidebar
+ */
+/* Hide for mobile, show later */
+.nav-expanded .shellac-app-sidebar-container {
+  left: 0em;
+  transition: right 0.3s ease-in-out 0s;
+  -webkit-transition: left 0.3s ease-in-out 0s;
+  -moz-transition: left 0.3s ease-in-out 0s;
+  -o-transition: left 0.3s ease-in-out 0s;
+}
+.shellac-app-sidebar-container {
+  position: fixed;
+  height: 100%;
+  width: 15em;
+  left: -14em;
+  top: 51px;
+  bottom: 0;
+  opacity: 0.9;
+  background: #222222;
+  border-color: #111111;
+  display: block;
+  overflow: auto;
+  z-index: 1000;
+  font-size: 15px;
+  transition: left 0.3s ease-in-out 0s;
+  -webkit-transition: left 0.3s ease-in-out 0s;
+  -moz-transition: left 0.3s ease-in-out 0s;
+  -o-transition: left 0.3s ease-in-out 0s;
+}
+.shellac-app-sidebar-container .panel-group {
+  margin-top: 2em;
+}
+@media (max-width: 768px) {
+  .shellac-app-sidebar-container {
+    width: 15em;
+    font-size: 1.0em;
+  }
+  .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
+  .shellac-app-sidebar-container .badge {
+    font-size: 0.9em;
+  }
+}
+
+/*
+ * Status bar
+ */
 
 .sm2-bar-ui {
   position: relative;

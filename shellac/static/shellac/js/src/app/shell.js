@@ -23,7 +23,7 @@ var shell = (function () {
     configMap = {
         main_html: String() +
             '<div class="shellac-app-container">' +
-                '<div class="shellac-app-statusbar"></div>' +
+                '<div class="shellac-app-player"></div>' +
                 '<div class="shellac-app-sidebar-container col-sm-3 col-md-2"></div>' +
                 '<div class="shellac-app-clip-container content"></div>' +
             '</div>',
@@ -54,7 +54,6 @@ var shell = (function () {
         clips               : undefined,
         clip_db             : TAFFY(),
 
-        isPlaying           : false,
         DEBUG               : undefined
     },
 
@@ -63,7 +62,7 @@ var shell = (function () {
 
     urlParse,
     loadClips, display_clips,
-    onTapClose, onSwipeClose,
+    onTapSidebar, onSwipeSidebar,
     swipeData,
     PubSub = util.PubSub;
 
@@ -79,8 +78,7 @@ var shell = (function () {
         jqueryMap = {
             $outerDiv                   : $outerDiv,
             $app_container              : $outerDiv.find('.shellac-app-container'),
-            $statusbar                  : $outerDiv.find('.shellac-app-container .shellac-app-statusbar'),
-            $statusbar_playing          : $outerDiv.find('.shellac-app-container .shellac-app-statusbar .shellac-app-statusbar-playing'),
+            $player                     : $outerDiv.find('.shellac-app-container .shellac-app-player'),
             $sidebar_container          : $outerDiv.find('.shellac-app-container .shellac-app-sidebar-container'),
             $clip_content_container     : $outerDiv.find('.shellac-app-container .shellac-app-clip-container'),
             $modal_container            : $outerDiv.find('#get_absolute_urlModal'),
@@ -193,12 +191,12 @@ var shell = (function () {
         });
     };
 
-    onTapClose = function(event, direction, distance, duration, fingerCount){
+    onTapSidebar = function(event, direction, distance, duration, fingerCount){
         event.preventDefault();
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
-    onSwipeClose = function(event, direction, distance, duration, fingerCount){
+    onSwipeSidebar = function(event, direction, distance, duration, fingerCount){
         event.preventDefault();
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
@@ -252,7 +250,7 @@ var shell = (function () {
         });
 
         //register pub-sub methods
-        util.PubSub.on("shellac-app-sidebar-change", function(clips){
+        util.PubSub.on("shellac-app-clip-change", function(clips){
             display_clips(clips, jqueryMap.$clip_content_container);
         });
 
@@ -262,12 +260,12 @@ var shell = (function () {
 
         //Navigation Menu Slider
         jqueryMap.$sidebar_container.swipe({
-            tap: onTapClose,
-            swipeLeft: onSwipeClose,
+            tap: onTapSidebar,
+            swipeLeft: onSwipeSidebar,
             threshold: 75
         });
 
-        bar.initModule( jqueryMap.$statusbar );
+        bar.initModule( jqueryMap.$player );
         //jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
