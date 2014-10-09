@@ -550,8 +550,11 @@ select#id_categories.form-control {
   }
 }
 /*
- * Status bar
+ * Generic Player styling
  */
+.shellac-app-player-container {
+  z-index: 1000;
+}
 /*
  * Modal
  */
@@ -592,7 +595,7 @@ select#id_categories.form-control {
   border-color: #111111;
   display: block;
   overflow: auto;
-  z-index: 1000;
+  z-index: 100;
   font-size: 15px;
   transition: left 0.3s ease-in-out 0s;
   -webkit-transition: left 0.3s ease-in-out 0s;
@@ -1582,6 +1585,13 @@ body {
 }
 
 /*
+ * Generic Player styling
+ */
+.shellac-app-player-container {
+  z-index: 1000;
+}
+
+/*
  * Sidebar
  */
 /* Hide for mobile, show later */
@@ -1604,7 +1614,7 @@ body {
   border-color: #111111;
   display: block;
   overflow: auto;
-  z-index: 1000;
+  z-index: 100;
   font-size: 15px;
   transition: left 0.3s ease-in-out 0s;
   -webkit-transition: left 0.3s ease-in-out 0s;
@@ -1624,10 +1634,6 @@ body {
     font-size: 0.9em;
   }
 }
-
-/*
- * Status bar
- */
 
 .sm2-bar-ui {
   position: relative;
