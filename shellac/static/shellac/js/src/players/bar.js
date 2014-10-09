@@ -21,7 +21,7 @@ var bar = (function () {
 
         configMap = {
             bar_extra_contols: String() +
-                '<div class="sm2-bar-ui">' +
+                '<div class="sm2-bar-ui full-width">' +
 
                     '<div class="bd sm2-main-controls">' +
 
@@ -96,7 +96,7 @@ var bar = (function () {
 
                         '<div class="sm2-playlist-wrapper">' +
                             '<ul class="sm2-playlist-bd">' +
-                                '<li><a href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20LA%20%28Prod%20Chin%20Injetti%29.mp3"><b>SonReal</b> - LA<span class="label">Explicit</span></a></li>' +
+                                '<li><a href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3"><b>SonReal</b>- Let Me<span class="label">Explicit</span></a></li>' +
                                 '<li><a href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20People%20Asking.mp3"><b>SonReal</b> - People Asking <span class="label">Explicit</span></a></li>' +
                             '</ul>' +
                         '</div>' +
