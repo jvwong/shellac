@@ -11,8 +11,9 @@
 @media_border_color: #000000;
 
 @caption_opacity: 0.8;
-@caption_opacity_mobile: 0.8;
-@caption_opacity_playing: 0.8;
+@caption_opacity_mobile: 0.70;
+@caption_opacity_queued: 0.85;
+@media_background_queued: #428BCA;
 @progress_opacity: 1.0;
 
 @media_desc_padding: 0.5em;
@@ -20,6 +21,9 @@
 @media_dim_medium: 250px;
 
 @media_img_dim: 100%;
+@media_fontsz_desktop: 1em;
+@media_fontsz_mobile: 0.90em;
+
 
 .media, .media .media{
     margin: @media_margin;
@@ -52,13 +56,13 @@
       margin-bottom: 0px;
 
       dd{
-        font-size:1.1em;
+        font-size: @media_fontsz_desktop;
         margin-left: 0px;
       }
 
       span.posted
       {
-        font-size: 1.2em;
+        font-size: @media_fontsz_desktop;
         position: absolute;
         top: 0.50em;
         right: 0.10em;
@@ -74,20 +78,15 @@
       z-index: 5000;
     }
 
-    .media-description.played{
-      background-color: #428BCA;
-      background: #428BCA;
-      color: white;
-      .opacity(@caption_opacity);
+    .shellac-media-check.queued{
+      visibility: visible;
     }
 
-    .media-description.playing{
-      background-color: darkgreen;
-      background: darkgreen;
-      color: white;
-      .opacity(@caption_opacity_playing);
+    .shellac-media-check{
+      visibility: hidden;
+      color: green;
+      font-size: 1.5em;
     }
-
 
     .media-progress{
       position:absolute; /* absolute position (so we can position it where we want)*/
@@ -163,18 +162,22 @@
 
     .media-panel {
 
+      .shellac-media-check{
+        font-size: 1em;
+      }
+
       .media-description.dl-horizontal {
-        font-size: 0.8em;
+        font-size: @media_fontsz_mobile;
         line-height: 1em;
         .opacity(@caption_opacity_mobile);
 
         dd{
-          font-size: .95em;
+          font-size: @media_fontsz_mobile;
           margin-left: 0px;
         }
 
         dd.categories {
-          font-size: 0em;
+          font-size: @media_fontsz_mobile;
           visibility: hidden;
         }
 

@@ -156,18 +156,19 @@ var shell = (function () {
                 .join(" | ")
                 .toString() : "&nbsp;";
 
-            var clip = String() +
+            var clip = String()  +
                 '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 media clip">' +
+
                     '<div class="media-panel">' +
                         '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
-
+                            '<span class="shellac-media-check glyphicon glyphicon-ok"></span>' +
                             '<img class="media-img" src="' + object.brand_thumb_url  + '" alt="' + object.title + '" />' +
                             '<dl class="media-description dl-horizontal" data-permalink="' + object.permalink + '">' +
-                                '<span class="media-description-content posted">' + object.created.startOf('minute').fromNow(true) + '</span>' +
-                                '<dd class="media-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
-                                '<dd class="media-description-content description">' + util.truncate(object.description, configMap.truncatemax) + '</dd>' +
-                                '<dd class="media-description-content owner">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
-                                '<dd class="media-description-content categories">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
+                                '<span class="media-description-content posted" data-content="' + object.created.startOf('minute').fromNow(true) + '">' + object.created.startOf('minute').fromNow(true) + '</span>' +
+                                '<dd class="media-description-content title" data-content="' + object.title + '">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
+                                '<dd class="media-description-content description" data-content="' + object.description + '">' + util.truncate(object.description, configMap.truncatemax) + '</dd>' +
+                                '<dd class="media-description-content owner" data-content="' + object.owner + '">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
+                                '<dd class="media-description-content categories" data-content="' + cats + '">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
                             '</dl>' +
 
                         '</span>'  +
@@ -179,6 +180,9 @@ var shell = (function () {
 
         //Listener should notify bar that it wishes to add a clip to its 'queue'
         $('.media.clip .media-img').on('click', function(event){
+            //toggle as 'queued' somewhere
+            console.log($(this));
+            $(this).siblings().toggleClass('queued');
             bar_api.handleClipSelect(event);
         });
 

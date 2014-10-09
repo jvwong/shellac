@@ -433,11 +433,11 @@ select#id_categories.form-control {
   margin-bottom: 0px;
 }
 .media.clip .media-panel .media-description.dl-horizontal dd {
-  font-size: 1.1em;
+  font-size: 1em;
   margin-left: 0px;
 }
 .media.clip .media-panel .media-description.dl-horizontal span.posted {
-  font-size: 1.2em;
+  font-size: 1em;
   position: absolute;
   top: 0.50em;
   right: 0.10em;
@@ -447,27 +447,13 @@ select#id_categories.form-control {
   right: 0.10em;
   z-index: 5000;
 }
-.media.clip .media-panel .media-description.played {
-  background-color: #428BCA;
-  background: #428BCA;
-  color: white;
-  -moz-opacity: 0.8;
-  -khtml-opacity: 0.8;
-  -webkit-opacity: 0.8;
-  opacity: 0.8;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-  filter: alpha(opacity=80);
+.media.clip .media-panel .shellac-media-check.queued {
+  visibility: visible;
 }
-.media.clip .media-panel .media-description.playing {
-  background-color: darkgreen;
-  background: darkgreen;
-  color: white;
-  -moz-opacity: 0.8;
-  -khtml-opacity: 0.8;
-  -webkit-opacity: 0.8;
-  opacity: 0.8;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-  filter: alpha(opacity=80);
+.media.clip .media-panel .shellac-media-check {
+  visibility: hidden;
+  color: green;
+  font-size: 1.5em;
 }
 .media.clip .media-panel .media-progress {
   position: absolute;
@@ -511,12 +497,12 @@ select#id_categories.form-control {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 1.0em;
     line-height: 1.1em;
-    -moz-opacity: 0.8;
-    -khtml-opacity: 0.8;
-    -webkit-opacity: 0.8;
-    opacity: 0.8;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-    filter: alpha(opacity=80);
+    -moz-opacity: 0.7;
+    -khtml-opacity: 0.7;
+    -webkit-opacity: 0.7;
+    opacity: 0.7;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+    filter: alpha(opacity=70);
   }
   .media.clip .media-panel .media-description.dl-horizontal span.posted {
     font-size: 1.0em;
@@ -527,22 +513,25 @@ select#id_categories.form-control {
   }
 }
 @media (max-width: 480px) {
+  .media.clip .media-panel .shellac-media-check {
+    font-size: 1em;
+  }
   .media.clip .media-panel .media-description.dl-horizontal {
-    font-size: 0.8em;
+    font-size: 0.9em;
     line-height: 1em;
-    -moz-opacity: 0.8;
-    -khtml-opacity: 0.8;
-    -webkit-opacity: 0.8;
-    opacity: 0.8;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-    filter: alpha(opacity=80);
+    -moz-opacity: 0.7;
+    -khtml-opacity: 0.7;
+    -webkit-opacity: 0.7;
+    opacity: 0.7;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+    filter: alpha(opacity=70);
   }
   .media.clip .media-panel .media-description.dl-horizontal dd {
-    font-size: .95em;
+    font-size: 0.9em;
     margin-left: 0px;
   }
   .media.clip .media-panel .media-description.dl-horizontal dd.categories {
-    font-size: 0em;
+    font-size: 0.9em;
     visibility: hidden;
   }
   .media.clip .media-panel .media-description.dl-horizontal span.posted {
@@ -1449,11 +1438,11 @@ body {
   margin-bottom: 0px;
 }
 .media.clip .media-panel .media-description.dl-horizontal dd {
-  font-size: 1.1em;
+  font-size: 1em;
   margin-left: 0px;
 }
 .media.clip .media-panel .media-description.dl-horizontal span.posted {
-  font-size: 1.2em;
+  font-size: 1em;
   position: absolute;
   top: 0.50em;
   right: 0.10em;
@@ -1463,27 +1452,13 @@ body {
   right: 0.10em;
   z-index: 5000;
 }
-.media.clip .media-panel .media-description.played {
-  background-color: #428BCA;
-  background: #428BCA;
-  color: white;
-  -moz-opacity: 0.8;
-  -khtml-opacity: 0.8;
-  -webkit-opacity: 0.8;
-  opacity: 0.8;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-  filter: alpha(opacity=80);
+.media.clip .media-panel .shellac-media-check.queued {
+  visibility: visible;
 }
-.media.clip .media-panel .media-description.playing {
-  background-color: darkgreen;
-  background: darkgreen;
-  color: white;
-  -moz-opacity: 0.8;
-  -khtml-opacity: 0.8;
-  -webkit-opacity: 0.8;
-  opacity: 0.8;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-  filter: alpha(opacity=80);
+.media.clip .media-panel .shellac-media-check {
+  visibility: hidden;
+  color: green;
+  font-size: 1.5em;
 }
 .media.clip .media-panel .media-progress {
   position: absolute;
@@ -1527,12 +1502,12 @@ body {
   .media.clip .media-panel .media-description.dl-horizontal {
     font-size: 1.0em;
     line-height: 1.1em;
-    -moz-opacity: 0.8;
-    -khtml-opacity: 0.8;
-    -webkit-opacity: 0.8;
-    opacity: 0.8;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-    filter: alpha(opacity=80);
+    -moz-opacity: 0.7;
+    -khtml-opacity: 0.7;
+    -webkit-opacity: 0.7;
+    opacity: 0.7;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+    filter: alpha(opacity=70);
   }
   .media.clip .media-panel .media-description.dl-horizontal span.posted {
     font-size: 1.0em;
@@ -1543,22 +1518,25 @@ body {
   }
 }
 @media (max-width: 480px) {
+  .media.clip .media-panel .shellac-media-check {
+    font-size: 1em;
+  }
   .media.clip .media-panel .media-description.dl-horizontal {
-    font-size: 0.8em;
+    font-size: 0.9em;
     line-height: 1em;
-    -moz-opacity: 0.8;
-    -khtml-opacity: 0.8;
-    -webkit-opacity: 0.8;
-    opacity: 0.8;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-    filter: alpha(opacity=80);
+    -moz-opacity: 0.7;
+    -khtml-opacity: 0.7;
+    -webkit-opacity: 0.7;
+    opacity: 0.7;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+    filter: alpha(opacity=70);
   }
   .media.clip .media-panel .media-description.dl-horizontal dd {
-    font-size: .95em;
+    font-size: 0.9em;
     margin-left: 0px;
   }
   .media.clip .media-panel .media-description.dl-horizontal dd.categories {
-    font-size: 0em;
+    font-size: 0.9em;
     visibility: hidden;
   }
   .media.clip .media-panel .media-description.dl-horizontal span.posted {

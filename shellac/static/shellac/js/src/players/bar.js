@@ -693,8 +693,8 @@ var bar = (function () {
             url = parent.getAttribute('data-clip-url');
             if (url === undefined || url === ''){ return; }
 
-            title = utils.dom.get(parent, '.media-description-content.title').textContent || 'Untitled';
-            owner = utils.dom.get(parent, '.media-description-content.owner').textContent || 'Orphan';
+            title = utils.dom.get(parent, '.media-description-content.title').dataset.content || 'Untitled';
+            owner = utils.dom.get(parent, '.media-description-content.owner').dataset.content || 'Orphan';
 
             //test for the presence of the clip (toggle)
             items = utils.dom.getAll(dom.playlist, 'li');
@@ -712,7 +712,7 @@ var bar = (function () {
 
             newClip = document.createElement("li");
             newClip.dataset.url = url;
-            newClip.innerHTML = ['<a href="', url, '"><b>', owner,'</b>- ', title, '</a>'].join('');
+            newClip.innerHTML = ['<a href="', url, '"><b>', owner,'</b> - ', title, '</a>'].join('');
 
             dom.playlist.appendChild(newClip);
             adjustDrawer();
