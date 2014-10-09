@@ -24,6 +24,7 @@
 @media_fontsz_desktop: 1em;
 @media_fontsz_mobile: 0.90em;
 
+@media_checksz: 1.5em;
 
 .media, .media .media{
     margin: @media_margin;
@@ -64,7 +65,7 @@
       {
         font-size: @media_fontsz_desktop;
         position: absolute;
-        top: 0.50em;
+        bottom: 0.50em;
         right: 0.10em;
       }
 
@@ -85,7 +86,7 @@
     .shellac-media-check{
       visibility: hidden;
       color: green;
-      font-size: 1.5em;
+      font-size: @media_checksz;
     }
 
     .media-progress{
@@ -139,16 +140,16 @@
     .media-panel {
 
       .media-description.dl-horizontal {
-        font-size: 1.0em;
+        font-size: @media_fontsz_desktop;
         line-height: 1.1em;
         .opacity(@caption_opacity_mobile);
 
         span.posted {
-          font-size: 1.0em;
+          font-size: @media_fontsz_desktop;
         }
 
         dd.categories {
-          font-size: 0em;
+          font-size: @media_fontsz_desktop;
           visibility: hidden;
         }
       }
@@ -178,11 +179,11 @@
 
         dd.categories {
           font-size: @media_fontsz_mobile;
-          visibility: hidden;
+          display: none;
         }
 
         span.posted {
-          font-size: 1em;
+          font-size: @media_fontsz_mobile;
         }
       }
 

@@ -439,7 +439,7 @@ select#id_categories.form-control {
 .media.clip .media-panel .media-description.dl-horizontal span.posted {
   font-size: 1em;
   position: absolute;
-  top: 0.50em;
+  bottom: 0.50em;
   right: 0.10em;
 }
 .media.clip .media-panel span.media-description-content.permalink {
@@ -495,7 +495,7 @@ select#id_categories.form-control {
 }
 @media (max-width: 768px) {
   .media.clip .media-panel .media-description.dl-horizontal {
-    font-size: 1.0em;
+    font-size: 1em;
     line-height: 1.1em;
     -moz-opacity: 0.7;
     -khtml-opacity: 0.7;
@@ -505,10 +505,10 @@ select#id_categories.form-control {
     filter: alpha(opacity=70);
   }
   .media.clip .media-panel .media-description.dl-horizontal span.posted {
-    font-size: 1.0em;
+    font-size: 1em;
   }
   .media.clip .media-panel .media-description.dl-horizontal dd.categories {
-    font-size: 0em;
+    font-size: 1em;
     visibility: hidden;
   }
 }
@@ -532,10 +532,10 @@ select#id_categories.form-control {
   }
   .media.clip .media-panel .media-description.dl-horizontal dd.categories {
     font-size: 0.9em;
-    visibility: hidden;
+    display: none;
   }
   .media.clip .media-panel .media-description.dl-horizontal span.posted {
-    font-size: 1em;
+    font-size: 0.9em;
   }
 }
 /*
@@ -1444,7 +1444,7 @@ body {
 .media.clip .media-panel .media-description.dl-horizontal span.posted {
   font-size: 1em;
   position: absolute;
-  top: 0.50em;
+  bottom: 0.50em;
   right: 0.10em;
 }
 .media.clip .media-panel span.media-description-content.permalink {
@@ -1500,7 +1500,7 @@ body {
 }
 @media (max-width: 768px) {
   .media.clip .media-panel .media-description.dl-horizontal {
-    font-size: 1.0em;
+    font-size: 1em;
     line-height: 1.1em;
     -moz-opacity: 0.7;
     -khtml-opacity: 0.7;
@@ -1510,10 +1510,10 @@ body {
     filter: alpha(opacity=70);
   }
   .media.clip .media-panel .media-description.dl-horizontal span.posted {
-    font-size: 1.0em;
+    font-size: 1em;
   }
   .media.clip .media-panel .media-description.dl-horizontal dd.categories {
-    font-size: 0em;
+    font-size: 1em;
     visibility: hidden;
   }
 }
@@ -1537,10 +1537,10 @@ body {
   }
   .media.clip .media-panel .media-description.dl-horizontal dd.categories {
     font-size: 0.9em;
-    visibility: hidden;
+    display: none;
   }
   .media.clip .media-panel .media-description.dl-horizontal span.posted {
-    font-size: 1em;
+    font-size: 0.9em;
   }
 }
 
