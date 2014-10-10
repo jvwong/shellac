@@ -42,7 +42,6 @@ class NewClipTest(FunctionalTest):
         description_input = self.browser.find_element_by_css_selector('#id_description')
         brand_input = self.browser.find_element_by_css_selector('#id_brand')
         #brand_input.send_keys(BRAND_NAME)
-        status_input = self.browser.find_element_by_css_selector('#id_status')
         audio_input = self.browser.find_element_by_css_selector('#id_audio_file')
         audio_input.send_keys(CLIP_NAME)
         tags_input = self.browser.find_element_by_css_selector('#id_tags')
