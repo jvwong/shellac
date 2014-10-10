@@ -38,15 +38,10 @@
                             <input id="id_created" class="form-control" type="text" value="{{ form.created.value|date:'Y-m-d H:i:s' }}" name="created">
                             <span class="add-on"><i class="icon-th"></i></span>
                         </div>
-                    {% elif field.label == 'Brand' %}
+                    {% elif field.label == 'Brand' or field.label == 'Audio file' %}
                         <span class="btn btn-default btn-file btn-block brand">
                             <button class="btn btn-primary btn-lg btn-block brand" type="button">Add {{ field.label }}</button>
                             <input id="{{ field.id_for_label }}" type="file" name="{{ field.html_name }}">
-                        </span>
-                    {% elif field.label == 'Audio file' %}
-                        <span class="btn btn-default btn-file btn-block audio_file">
-                            <button class="btn btn-primary btn-lg btn-block audio_file" type="button">Add {{ field.label }}</button>
-                            <input id="{{ field.id_for_label }}" type="file" name="{{ field.html_name }}" onclick=updateButtonText()>
                         </span>
                     {% else %}
                         {{ field | add_class:"form-control" }}
