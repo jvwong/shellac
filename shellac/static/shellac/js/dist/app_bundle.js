@@ -10977,8 +10977,7 @@ var shell = (function () {
     var TAFFY   = require('taffydb').taffy,
         util    = require('../util.js'),
         sidebar = require('./sidebar.js'),
-        bar     = require('../players/bar.js'),
-        bar_api;
+        bar     = require('../players/bar-ui.js');
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -11009,7 +11008,7 @@ var shell = (function () {
                 '</div>' +
             '</div>',
 
-        truncatemax: 28
+        truncatemax: 30
     },
 
     stateMap = {
@@ -11023,13 +11022,15 @@ var shell = (function () {
         DEBUG               : undefined
     },
 
-    jqueryMap = {},
-    setJqueryMap,
+    jqueryMap = {}, setJqueryMap,
+    dom = {}, setDomMap,
 
-    urlParse,
+    actions,
+
     loadClips, display_clips,
     onTapSidebar, onSwipeSidebar,
     swipeData,
+    utils = util.utils,
     PubSub = util.PubSub;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
@@ -11047,6 +11048,7 @@ var shell = (function () {
             $player_container           : $outerDiv.find('.shellac-app-container .shellac-app-player-container'),
             $sidebar_container          : $outerDiv.find('.shellac-app-container .shellac-app-sidebar-container'),
             $clip_content_container     : $outerDiv.find('.shellac-app-container .shellac-app-clip-container'),
+
             $modal_container            : $outerDiv.find('#get_absolute_urlModal'),
             $modal_header               : $outerDiv.find('#get_absolute_urlModal .modal-dialog .modal-content .modal-header'),
             $modal_body                 : $outerDiv.find('#get_absolute_urlModal .modal-dialog .modal-content .modal-body'),
@@ -11056,40 +11058,78 @@ var shell = (function () {
 
 
     /**
-     * method urlParse: extract the various aspects of the url from a HyperlinkedRelatedField
-     * precondition: requires a HyperlinkedRelatedField of the form protocol:host/api/object/pk/
-     * @param url url of the resource
-     * @return URLobj - an object literal with fields protocol, host, api, object, and pk
+     * setDomMap record the DOM elements of the page
      */
-    urlParse = function(url){
-        var URL = {},
-            u = url || '',
-            parts;
+    setDomMap = function(){
+        var outerDiv = stateMap.$container.get(0);
+        dom = {
+            outerDiv                : outerDiv,
+            app_container           : utils.dom.get(outerDiv, '.shellac-app-container'),
+            sidebar_container       : utils.dom.get(outerDiv, '.shellac-app-container .shellac-app-sidebar-container'),
+            player_container        : utils.dom.get(outerDiv, '.shellac-app-container .shellac-app-player-container'),
+            clip_content_container  : utils.dom.get(outerDiv, '.shellac-app-container .shellac-app-clip-container'),
 
-        parts = u.split('/');
+            modal_container         : utils.dom.get(outerDiv, '#get_absolute_urlModal'),
+            modal_header            : utils.dom.get(outerDiv, '#get_absolute_urlModal .modal-dialog .modal-content .modal-header'),
+            modal_body              : utils.dom.get(outerDiv, '#get_absolute_urlModal .modal-dialog .modal-content .modal-body'),
+            modal_footer            : utils.dom.get(outerDiv, '#get_absolute_urlModal .modal-dialog .modal-content .modal-footer'),
+        };
+    };
 
-        try{
-            URL.protocol = parts[0];
-            URL.host = parts[2].split(':')[0];
-            URL.object = parts[4];
-            URL.pk = parts[5];
+    /**
+     * actions ui action-related event handlers
+     */
+    actions = {
 
-        } catch (e) {
-            throw "Improper url format entered";
+        modal: function(target) {
+
+            var url;
+
+            //guard against IE9
+            url = target.dataset.url || target.hasAttibute('data-url') ? target.getAttribute('data-url') : '';
+
+            if (url)
+            {
+                util.fetchUrl(url, 'permalink');
+
+                //register listener for result -- using jquery here to save headaches -- bootstrap too
+                util.PubSub.on("fetchUrlComplete", function(tag, result){
+                    if( tag === 'permalink')
+                    {
+                        jqueryMap.$modal_body.html($(result).find('.permalink'));
+                        jqueryMap.$modal_container.modal('show');
+                    }
+                });
+
+            }
+
+        },
+
+        /**
+         * enqueue pass the corresponding to a clip to the player playlist
+         * @param target ElementNode for the clip to enqueue
+         */
+        enqueue : function(target) {
+
+            var url, title, owner,
+                clip = {
+                    url: target.dataset.url || target.hasAttribute('data-url') ? target.getAttribute('data-url') : '',
+                    title: target.dataset.title || target.hasAttribute('data-title') ? target.getAttribute('data-title') : '',
+                    owner: target.dataset.owner || target.hasAttribute('data-owner') ? target.getAttribute('data-owner') : '',
+                    label: target.dataset.label || target.hasAttribute('data-label') ? target.getAttribute('data-label') : ''
+                };
+
+            if (clip.url && clip.title && clip.owner)
+            {
+                //notify bar we wish to add/delete this from the playlist
+                bar.enqueue(clip, 0);
+            }
+
         }
-        return URL;
     };
 
 
-    swipeData = function(event, direction, distance, duration, fingerCount, fingerData) {
-        console.log($(this));
-        console.log("event: %s", event);
-        console.log("direction: %s", direction);
-        console.log("distance: %s", distance);
-        console.log("duration: %s", duration);
-        console.log("fingerCount: %s", fingerCount);
-        console.log("fingerData: %s", fingerData);
-    };
+
 
     //--------------------- END MODULE SCOPE METHODS --------------------
 
@@ -11101,12 +11141,15 @@ var shell = (function () {
      * @param $container jquery object that will contain the clips html
      */
     display_clips = function(clipList, $container){
+
+        //clear out any existing html nodes and listeners
         $container.html("");
+        utils.events.remove(dom.clip_content_container, 'click', handleClick);
 
         if(stateMap.clips.length === 0)
         {
             var message = String() +
-                '<div class="col-xs-12 clip no-content">' +
+                '<div class="col-xs-12 shellac-grid-element no-content">' +
                     '<h3>Nothing to hear here...</h3>' +
                 '</div>';
             $container.html(message);
@@ -11114,62 +11157,131 @@ var shell = (function () {
         }
         clipList.forEach(function(object){
 
-            var cats = object.categories.length > 0 ? object.categories
-                .map(function(c){
-                    return c.split('/')[5].toUpperCase();
-                })
-                .slice(0,3)
-                .join(" | ")
-                .toString() : "&nbsp;";
+            var clip,
+                created = object.created.startOf('minute').fromNow(true),
+                queued = stateMap.queued.indexOf(object.audio_file_url) > -1 ? ' queued' : '',
+                categories = object.categories.length > 0 ? object.categories.map(function(c){ return c.split('/')[5].toUpperCase(); })
+                    .slice(0,3)
+                    .join(" | ")
+                    .toString() : "&nbsp;";
 
-            var clip = String()  +
-                '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 media clip">' +
-
-                    '<div class="media-panel">' +
-                        '<span class="media-url" data-clip-url="' + object.audio_file_url + '">' +
-                            '<span class="shellac-media-check glyphicon glyphicon-ok' + (stateMap.queued.indexOf(object.audio_file_url) > -1 ? ' queued' : '') + '"></span>' +
-                            '<img class="media-img" src="' + object.brand_thumb_url  + '" alt="' + object.title + '" />' +
-                            '<dl class="media-description dl-horizontal" data-permalink="' + object.permalink + '">' +
-                                '<span class="media-description-content posted" data-content="' + object.created.startOf('minute').fromNow(true) + '">' + object.created.startOf('minute').fromNow(true) + '</span>' +
-                                '<dd class="media-description-content title" data-content="' + object.title + '">' + util.truncate(object.title, configMap.truncatemax) + '</dd>' +
-                                '<dd class="media-description-content description" data-content="' + object.description + '">' + util.truncate(object.description, configMap.truncatemax) + '</dd>' +
-                                '<dd class="media-description-content owner" data-content="' + object.owner + '">' + util.truncate(object.owner, configMap.truncatemax) + '</dd>' +
-                                '<dd class="media-description-content categories" data-content="' + cats + '">' + util.truncate(cats, configMap.truncatemax) + '</dd>' +
-                            '</dl>' +
-                        '</span>'  +
+            clip = String() +
+                '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 shellac-grid-element">' +
+                    '<div class ="shellac-grid-element-panel">' +
+                        '<div class ="shellac-img-panel">' +
+                            '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
+                                '<img class="shellac-grid-img" src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
+                            '</a>' +
+                        '</div>' +
+                        '<div class ="shellac-caption-panel">' +
+                            '<a href="#modal" data-url="' + object.permalink + '">' +
+                                '<div class ="shellac-description-container">' +
+                                    '<div class="shellac-description-content created">' + created + '</div>' +
+                                    '<div class="shellac-description-content title" data-content="' + object.title + '">' + util.truncate(object.title, configMap.truncatemax) + '</div>' +
+                                    '<div class="shellac-description-content owner" data-content="' + object.owner + '">' + object.owner + '</div>' +
+                                    '<div class="shellac-description-content description-short">' + util.truncate(object.description , configMap.truncatemax) + '</div>' +
+                                    '<div class="shellac-description-content plays" data-content="' + object.plays + '">' + object.plays + '</div>' +
+                                '</div>' +
+                            '</a>' +
+                        '</div>' +
                     '</div>' +
                 '</div>';
 
             $container.append(clip);
         });
+        ////info for user in truncating text dynamically
+//        var panel = utils.dom.get(dom.clip_content_container, '.shellac-caption-panel');
+//        var panelW = panel.scrollWidth + 'px';
+//        console.log(panelW);
 
-        //Listener should notify bar that it wishes to add a clip to its 'queue'
-        $('.media.clip .media-img').on('click', function(event){
-
-            var hasQueued, urlQueueIndex, url;
-
-            url = $(this).parent().attr('data-clip-url');
-            hasQueued = $(this).siblings('.shellac-media-check').hasClass('queued');
-            urlQueueIndex = stateMap.queued.indexOf(url);
-
-            if(urlQueueIndex > -1)
-            {
-                stateMap.queued.splice(urlQueueIndex, 1);
-            }
-            else
-            {
-                stateMap.queued.push(url);
-            }
-
-            $(this).siblings('.shellac-media-check').toggleClass('queued');
-            bar_api.handleClipSelect(event);
-        });
-
-        $('.media.clip .media-description').on('click', function(e){
-            var permalink = $(this).attr('data-permalink');
-            util.fetchUrl(permalink, 'get_absolute_url');
-        });
+        // (re-)register click events on <a> of the entire ui
+        utils.events.add(dom.clip_content_container, 'click', handleClick);
     };
+
+    //--------------------- END DOM METHODS ----------------------
+
+    //------------------- BEGIN EVENT HANDLERS -------------------
+
+    /**
+     * handleClick Callback for a click event on the entire UI
+     * Actions: processes the clicking an anchor element.
+     * @param e event object
+     */
+    function handleClick(e) {
+
+        var evt,
+            target,
+            offset,
+            targetNodeName,
+            methodName,
+            href,
+            handled;
+
+        evt = (e || window.event);
+
+        target = evt.target || evt.srcElement;
+
+        if (target && target.nodeName) {
+
+            targetNodeName = target.nodeName.toLowerCase();
+
+            if (targetNodeName !== 'a') {
+
+                // old IE (IE 8) might return nested elements inside the <a>, eg.,
+                // <b> etc. Try to find the parent <a>.
+
+                if (target.parentNode) {
+
+                    do {
+                        target = target.parentNode;
+                        targetNodeName = target.nodeName.toLowerCase();
+                    } while (targetNodeName !== 'a' && target.parentNode);
+
+                    if (!target) {
+                        // something went wrong. bail.
+                        return false;
+                    }
+
+                }
+
+            }
+
+            if (targetNodeName === 'a') {
+
+                // yep, it's a link.
+                href = target.href;
+
+                //excluded
+                if (utils.css.has(target, 'shellac-exclude')) {
+
+                    //do nothing
+
+                } else {
+
+                    // is this one of permalink, toggleq, ...
+                    offset = target.href.lastIndexOf('#');
+
+                    if (offset !== -1) {
+                        methodName = target.href.substr(offset + 1);
+                        if (methodName && actions[methodName]) {
+                            handled = true;
+                            actions[methodName](target);
+                        }
+                    }
+
+                    // fall-through case
+                    if (handled) {
+                        // prevent browser fall-through
+                        return utils.events.preventDefault(evt);
+                    }
+
+                }
+
+            }// end if (targetNodeName === 'a')
+
+        }//end if (target && target.nodeName)
+    }
+    // --- END handleClick ---
 
     onTapSidebar = function(event, direction, distance, duration, fingerCount){
         event.preventDefault();
@@ -11180,10 +11292,6 @@ var shell = (function () {
         event.preventDefault();
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
-
-    //--------------------- END DOM METHODS ----------------------
-
-    //------------------- BEGIN EVENT HANDLERS -------------------
     //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
@@ -11207,6 +11315,8 @@ var shell = (function () {
         $container.append( configMap.modal_html );
         $container.append( configMap.modal_button_html );
         setJqueryMap();
+        setDomMap();
+
 
         //register pub-sub methods
         util.PubSub.on("fetchUrlComplete", function(tag, result){
@@ -11220,10 +11330,6 @@ var shell = (function () {
 
                     //initialize the sidebar module
                     sidebar.initModule( jqueryMap.$sidebar_container, stateMap.clip_db );
-                    break;
-                case 'get_absolute_url':
-                    jqueryMap.$modal_body.html($(result).find('.permalink'));
-                    jqueryMap.$modal_container.modal('show');
                     break;
                 default:
             }
@@ -11245,7 +11351,7 @@ var shell = (function () {
             threshold: 75
         });
 
-        bar_api = bar.initModule( jqueryMap.$player_container );
+        bar.initModule( jqueryMap.$player_container.get(0    ) );
         //jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
@@ -11255,7 +11361,7 @@ var shell = (function () {
 module.exports = shell;
 
 
-},{"../players/bar.js":8,"../util.js":9,"./sidebar.js":6,"taffydb":3}],6:[function(require,module,exports){
+},{"../players/bar-ui.js":7,"../util.js":8,"./sidebar.js":6,"taffydb":3}],6:[function(require,module,exports){
 /*
 * sidebar.js
 * Sidebar module
@@ -11595,7 +11701,7 @@ var sidebar = (function () {
 module.exports = sidebar;
 
 
-},{"../util.js":9,"taffydb":3}],7:[function(require,module,exports){
+},{"../util.js":8,"taffydb":3}],7:[function(require,module,exports){
 /**
  * SoundManager 2: "Bar UI" player
  * http://www.schillmania.com/projects/soundmanager2/
@@ -11610,490 +11716,142 @@ var bar_ui = (function() {
         Player,
         players = [],
         playerSelector = '.sm2-bar-ui',
-        utils,
-        soundManager = require('../../lib/soundmanager2/script/soundmanager2.js').soundManager;
+        util = require('../util.js'),
+        soundManager = require('../../lib/soundmanager2/script/soundmanager2.js').soundManager,
+        utils = util.utils,
+
+        enqueue,
+
+        configMap = {
+
+            bar_html: String() +
+                '<div class="sm2-bar-ui full-width fixed">' +
+
+                    '<div class="bd sm2-main-controls">' +
+
+                        '<div class="sm2-inline-texture"></div>' +
+                        '<div class="sm2-inline-gradient"></div>' +
+
+                        '<div class="sm2-inline-element sm2-button-element">' +
+                            '<div class="sm2-button-bd">' +
+                                '<a href="#play" class="sm2-inline-button play-pause">Play / pause</a>' +
+                            '</div>' +
+                        '</div>' +
+
+                        '<div class="sm2-inline-element sm2-inline-status">' +
+
+                            '<div class="sm2-playlist">' +
+                                '<div class="sm2-playlist-target">' +
+                                    '<!-- playlist <ul> + <li> markup will be injected here -->' +
+                                    '<!-- if you want default / non-JS content, you can put that here. -->' +
+                                    '<noscript><p>JavaScript is required.</p></noscript>' +
+                                '</div>' +
+                            '</div>' +
+
+                            '<div class="sm2-progress">' +
+                                '<div class="sm2-row">' +
+                                    '<div class="sm2-inline-time">0:00</div>' +
+                                        '<div class="sm2-progress-bd">' +
+                                            '<div class="sm2-progress-track">' +
+                                                '<div class="sm2-progress-bar"></div>' +
+                                                '<div class="sm2-progress-ball"><div class="icon-overlay"></div></div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                        '<div class="sm2-inline-duration">0:00</div>' +
+                                    '</div>' +
+                                '</div>' +
+
+                            '</div>' +
+
+                            '<div class="sm2-inline-element sm2-button-element sm2-volume">' +
+                                '<div class="sm2-button-bd">' +
+                                    '<span class="sm2-inline-button sm2-volume-control volume-shade"></span>' +
+                                    '<a href="#volume" class="sm2-inline-button sm2-volume-control">volume</a>' +
+                                '</div>' +
+                            '</div>' +
+
+                            '<div class="sm2-inline-element sm2-button-element">' +
+                                '<div class="sm2-button-bd">' +
+                                    '<a href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a>' +
+                                '</div>' +
+                            '</div>' +
+
+                            '<div class="sm2-inline-element sm2-button-element">' +
+                                '<div class="sm2-button-bd">' +
+                                    '<a href="#next" title="Next" class="sm2-inline-button next">&gt; next</a>' +
+                                '</div>' +
+                            '</div>' +
+
+                            '<div class="sm2-inline-element sm2-button-element sm2-menu">' +
+                                '<div class="sm2-button-bd">' +
+                                    '<a href="#menu" class="sm2-inline-button menu">menu</a>' +
+                                '</div>' +
+                            '</div>' +
+
+                        '</div>' +
+
+                        '<div class="bd sm2-playlist-drawer sm2-element">' +
+
+                            '<div class="sm2-inline-texture">' +
+                                '<div class="sm2-box-shadow"></div>' +
+                            '</div>' +
+
+                            '<!-- playlist content is mirrored here -->' +
+
+                            '<div class="sm2-playlist-wrapper">' +
+                                '<ul class="sm2-playlist-bd">' +
+                                  '<li><a href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3"><b>SonReal</b>- Let Me<span class="label">Explicit</span></a></li>' +
+                                '</ul>' +
+                            '</div>' +
+
+                            '<div class="sm2-extra-controls">' +
+
+                                '<div class="bd">' +
+
+                                    '<div class="sm2-inline-element sm2-button-element">' +
+                                        '<a href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a>' +
+                                    '</div>' +
+
+                                    '<div class="sm2-inline-element sm2-button-element">' +
+                                        '<a href="#next" title="Next" class="sm2-inline-button next">&gt; next</a>' +
+                                    '</div>' +
+
+                                    '<!-- unimplemented -->' +
+                                    '<!--' +
+                                    '<div class="sm2-inline-element sm2-button-element disabled">' +
+                                    '<a href="#repeat" title="Repeat playlist" class="sm2-inline-button repeat">&infin; repeat</a>' +
+                                    '</div>' +
 
+                                    '<div class="sm2-inline-element sm2-button-element disabled">' +
+                                    '<a href="#shuffle" title="Shuffle" class="sm2-inline-button shuffle">shuffle</a>' +
+                                    '</div>' +
+                                    '-->' +
 
-    soundManager.setup({
-        // trade-off: higher UI responsiveness (play/progress bar), but may use more CPU.
-        html5PollingInterval: 50,
-        flashVersion: 9
-    });
+                                '</div>' +
 
-    soundManager.onready(function() {
+                            '</div>' +
 
-        var nodes,
-            i, j;
+                    '</div>' +
 
-        nodes = utils.dom.getAll(playerSelector);
+                '</div>'
+        },
 
-        if (nodes && nodes.length) {
-            for (i=0, j=nodes.length; i<j; i++) {
-                players.push(new Player(nodes[i]));
-            }
-        }
+        stateMap = {
+            $container          : undefined,
+            DEBUG               : undefined
+        };
 
-    });
-
-    utils = {
-
-        array: (function() {
-
-            function compare(property) {
-
-                var result;
-
-                return function(a, b) {
-
-                    if (a[property] < b[property]) {
-                        result = -1;
-                    } else if (a[property] > b[property]) {
-                        result = 1;
-                    } else {
-                        result = 0;
-                    }
-                    return result;
-                };
-
-            }
-
-            function shuffle(array) {
-
-                // Fisher-Yates shuffle algo
-
-                var i, j, temp;
-
-                for (i = array.length - 1; i > 0; i--) {
-                    j = Math.floor(Math.random() * (i+1));
-                    temp = array[i];
-                    array[i] = array[j];
-                    array[j] = temp;
-                }
-
-                return array;
-
-            }
-
-            return {
-                compare: compare,
-                shuffle: shuffle
-            };
-
-        }()),
-
-        css: (function() {
-            //css methods manipulate the result of className --> string representation of class attribute
-            //alternative is elm.classList {0="cString1", ...}
-
-            function hasClass(o, cStr) {
-
-                // regex allows 1) whitespace or start; 2) whitespace or end
-                // test() method tests for a match in a string.
-                return (o.className !== undefined ? new RegExp('(^|\\s)' + cStr + '(\\s|$)').test(o.className) : false);
-
-            }
-
-            function addClass(o, cStr) {
-
-                if (!o || !cStr || hasClass(o, cStr)) {
-                    return false; // safety net
-                }
-
-                //append to list with space (o.className + ' ') OR start a new string
-                o.className = (o.className ? o.className + ' ' : '') + cStr;
-
-            }
-
-            function removeClass(o, cStr) {
-
-                if (!o || !cStr || !hasClass(o, cStr)) {
-                    return false;
-                }
-                //check for list ['( ' + cStr + ')] OR single class then erplace with ''
-                o.className = o.className.replace(new RegExp('( ' + cStr + ')|(' + cStr + ')', 'g'), '');
-
-            }
-
-            function swapClass(o, cStr1, cStr2) {
-
-                var tmpClass = {
-                    className: o.className
-                };
-
-                removeClass(tmpClass, cStr1);
-                addClass(tmpClass, cStr2);
-
-                o.className = tmpClass.className;
-
-            }
-
-            function toggleClass(o, cStr) {
-
-                var found, method;
-
-                found = hasClass(o, cStr);
-
-                method = (found ? removeClass : addClass);
-
-                method(o, cStr);
-
-                // indicate the new state...
-                return !found;
-
-            }
-
-            return {
-                has: hasClass,
-                add: addClass,
-                remove: removeClass,
-                swap: swapClass,
-                toggle: toggleClass
-            };
-
-        }()),
-
-        dom: (function() {
-
-            /**
-             * getAll find and return the NodeList for the the given node, selector pair
-             * @param node Node object to search from
-             * @param selector (optional) string to select on
-             * @return NodeList of results from node.querySelectorAll(selector)
-             */
-            function getAll(/* parentNode, selector */) {
-
-                var node,
-                    selector,
-                    results;
-
-                if (arguments.length === 1) {
-
-                    // .selector case
-                    node = document.documentElement; //<HTML> element
-                    selector = arguments[0];
-
-                } else {
-
-                    // node, .selector
-                    node = arguments[0];
-                    selector = arguments[1];
-
-                }
-
-                // sorry, IE 7 users; IE 8+ required.
-                if (node && node.querySelectorAll) {
-
-                    results = node.querySelectorAll(selector);
-
-                }
-
-                //type NodeList (not Array)
-                return results;
-
-            }
-
-            /**
-             * get find and return the last element of the call to getAll
-             * @param arguments consisting of node Node object to search from and
-             * an optional string selector
-             */
-            function get(/* parentNode, selector */) {
-
-                var results = getAll.apply({}, arguments);
-
-                // hackish: if more than one match and no third argument, return the last.
-                if (results && results.length) {
-                    results = results[results.length-1];
-                }
-
-                return results;
-
-            }
-
-            return {
-                get: get,
-                getAll: getAll
-            };
-
-        }()),
-
-        position: (function() {
-
-            //HTMLElement.offsetParent read-only property returns a reference to the object which
-            // is the closest (nearest in the containment hierarchy) positioned containing element.
-
-            // HTMLElement.offsetLeft read-only method returns the number of pixels that the upper
-            // left corner of the current element is offset to the left within the HTMLElement.offsetParent node.
-
-            //HTMLElement.offsetTop read-only property returns the distance of the current element
-            // relative to the top of the offsetParent node.
-
-
-            /**
-             * getOffX crawl up the hierarchy and get the left offset from the page left
-             */
-            function getOffX(o) {
-
-                // http://www.xs4all.nl/~ppk/js/findpos.html
-                var curleft = 0;
-
-                if (o.offsetParent) {
-
-                    while (o.offsetParent) {
-
-                        curleft += o.offsetLeft;
-
-                        o = o.offsetParent;
-
-                    }
-
-                } else if (o.x) {
-
-                    curleft += o.x;
-
-                }
-
-                return curleft;
-
-            }
-
-            /**
-             * getOffY crawl up the hierarchy and get the top offset from the page top
-             */
-            function getOffY(o) {
-
-                // http://www.xs4all.nl/~ppk/js/findpos.html
-                var curtop = 0;
-
-                if (o.offsetParent) {
-
-                    while (o.offsetParent) {
-
-                        curtop += o.offsetTop;
-
-                        o = o.offsetParent;
-
-                    }
-
-                } else if (o.y) {
-
-                    curtop += o.y;
-
-                }
-
-                return curtop;
-
-            }
-
-            return {
-                getOffX: getOffX,
-                getOffY: getOffY
-            };
-
-        }()),
-
-        style: (function() {
-
-            function get(node, styleProp) {
-
-                // http://www.quirksmode.org/dom/getstyles.html
-                var value;
-
-                if (node.currentStyle) {
-
-                    value = node.currentStyle[styleProp];
-
-                } else if (window.getComputedStyle) {
-
-                    value = document.defaultView.getComputedStyle(node, null).getPropertyValue(styleProp);
-
-                }
-
-                return value;
-
-            }
-
-            return {
-                get: get
-            };
-
-        }()),
-
-        events: (function() {
-
-            var add, remove, preventDefault;
-
-            add = function(o, evtName, evtHandler) {
-                // return an object with a convenient detach method.
-                var eventObject = {
-                    detach: function() {
-                        return remove(o, evtName, evtHandler);
-                    }
-                };
-                if (window.addEventListener)
-                {
-                    o.addEventListener(evtName, evtHandler, false);
-                }
-                else
-                {
-                    //explorer -- <11 deprecated
-                    o.attachEvent('on' + evtName, evtHandler);
-                }
-                return eventObject;
-            };
-
-            remove = (window.removeEventListener !== undefined ? function(o, evtName, evtHandler) {
-
-                //If a listener was registered twice, one with capture and one without, each must be removed
-                // separately. Removal of a capturing listener does not affect a non-capturing version of
-                // the same listener, and vice versa.
-                return o.removeEventListener(evtName, evtHandler, false);
-            } : function(o, evtName, evtHandler) {
-                return o.detachEvent('on' + evtName, evtHandler);
-            });
-
-            preventDefault = function(e) {
-                if (e.preventDefault)
-                {
-                    e.preventDefault();
-                }
-                else
-                {
-                    e.returnValue = false;
-                    e.cancelBubble = true;
-                }
-                return false;
-            };
-
-            return {
-                add: add,
-                preventDefault: preventDefault,
-                remove: remove
-            };
-
-        }()),
-
-        features: (function() {
-
-            var getAnimationFrame,
-                localAnimationFrame,
-                localFeatures,
-                prop,
-                styles,
-                testDiv,
-                transform;
-
-            testDiv = document.createElement('div');
-
-            /**
-             * hat tip: paul irish
-             * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-             * https://gist.github.com/838785
-             */
-
-            localAnimationFrame = (window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                window.oRequestAnimationFrame ||
-                window.msRequestAnimationFrame || null);
-
-            // apply to window, avoid "illegal invocation" errors in Chrome
-            getAnimationFrame = localAnimationFrame ? function() {
-                return localAnimationFrame.apply(window, arguments);
-            } : null;
-
-            function has(prop) {
-
-                // test for feature support
-                var result = testDiv.style[prop];
-
-                return (result !== undefined ? prop : null);
-
-            }
-
-            // note local scope.
-            localFeatures = {
-
-                transform: {
-                    ie: has('-ms-transform'),
-                    moz: has('MozTransform'),
-                    opera: has('OTransform'),
-                    webkit: has('webkitTransform'),
-                    w3: has('transform'),
-                    prop: null // the normalized property value
-                },
-
-                rotate: {
-                    has3D: false,
-                    prop: null
-                },
-
-                getAnimationFrame: getAnimationFrame
-
-            };
-
-            localFeatures.transform.prop = (
-                localFeatures.transform.w3 ||
-                localFeatures.transform.moz ||
-                localFeatures.transform.webkit ||
-                localFeatures.transform.ie ||
-                localFeatures.transform.opera
-                );
-
-            function attempt(style) {
-
-                try
-                {
-                    testDiv.style[transform] = style;
-                }
-                catch(e)
-                {
-                    // that *definitely* didn't work.
-                    return false;
-                }
-                // if we can read back the style, it should be cool.
-                return !!testDiv.style[transform];
-
-            }
-
-            if (localFeatures.transform.prop) {
-
-                // try to derive the rotate/3D support.
-                transform = localFeatures.transform.prop;
-                styles = {
-                    css_2d: 'rotate(0deg)',
-                    css_3d: 'rotate3d(0,0,0,0deg)'
-                };
-
-                if (attempt(styles.css_3d))
-                {
-                    localFeatures.rotate.has3D = true;
-                    prop = 'rotate3d';
-                }
-                else if (attempt(styles.css_2d))
-                {
-                    prop = 'rotate';
-                }
-
-                localFeatures.rotate.prop = prop;
-            }
-
-            testDiv = null;
-
-            return localFeatures;
-
-        }())
-
-    };
 
     /**
      * Player bits
      */
-        // --- BEGIN Player ---
+    // --- BEGIN Player ---
     Player = function(playerNode) {
 
         var css, dom, extras,
-            playlistController, soundObject, actions, actionData, defaultItem;
+            playlistController,
+            soundObject, actions, actionData, defaultItem,
+            enqueue;
 
         css = {
             disabled: 'disabled',
@@ -12150,9 +11908,58 @@ var bar_ui = (function() {
 
             }
 
+
+            /**
+             * addToPlaylist add the <li> element to the playlist
+             * Checks for insane input
+             * @param item the <li> item to append to the list
+             * @return true if appended
+             */
+            function addToPlaylist( item ) {
+
+                if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE)
+                {
+                    return false;
+                }
+
+                if( item.nodeName.toLowerCase() === 'li' )
+                {
+                    dom.playlist.appendChild(item);
+                    refreshDOM();
+                    return true;
+                }
+
+                return false;
+
+            }
+
+            /**
+             * deleteFromPlaylist remove the <li> element from the playlist
+             * Checks for insane input
+             * @param item the <li> item to append to the list
+             * @return true if appended
+             */
+            function deleteFromPlaylist( item ) {
+
+                if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE)
+                {
+                    return false;
+                }
+
+                if( item.nodeName.toLowerCase() === 'li' )
+                {
+                    utils.dom.remove(item);
+                    refreshDOM();
+                    return true;
+                }
+
+                return false;
+
+            }
+
             /**
              * getItem the current selection (or an offset), return the current item.
-             * Checks for out-of-bounds
+             * Checks for out-of-bounds.
              * @param offset the integer index to retrieve in the playList
              * @return item HTMLCollection element aka playlist item (li)
              */
@@ -12198,7 +12005,60 @@ var bar_ui = (function() {
                 if (list) {
 
                     for (i=0, j=list.length; i<j; i++) {
+
+                        //this test for equality is same Node object
                         if (list[i] === item) {
+                            offset = i;
+                            break;
+                        }
+                    }
+
+                }
+
+                return offset;
+
+            }
+
+            /**
+             * findOffsetFromUrl given an url item, find it in the playlist array and
+             * return the index.
+             * @param url String url in href attribute
+             * @return offset index of item in playlist HTMLCollection, -1 otherwise
+             */
+            function findOffsetFromUrl(url) {
+
+                var list,
+                    target, targetNodeName,
+                    i,
+                    j,
+                    offset;
+
+                offset = -1;
+
+                list = getPlaylist();
+
+                if (list && url) {
+
+                    for (i=0, j=list.length; i<j; i++) {
+
+                        var children, href, pathname;
+
+                        target = list[i];
+                        //go down tree to find the anchor in the first child
+                        do {
+                            target = target.firstChild;
+                            targetNodeName = target.nodeName.toLowerCase();
+                        } while (targetNodeName !== 'a' && target.childnodes);
+
+                        //this test for equality is same url attribute
+                        if(targetNodeName !== 'a' || !target.getAttribute('href'))
+                        {
+                            throw "Invalid playlist elements";
+                        }
+
+                        pathname = util.urlParse(target.href).pathname;
+                        if (pathname && pathname === url)
+                        {
                             offset = i;
                             break;
                         }
@@ -12356,13 +12216,17 @@ var bar_ui = (function() {
             init();
 
             return {
-                data: data,
-                refresh: refreshDOM,
-                getNext: getNext,
-                getPrevious: getPrevious,
-                getItem: getItem,
-                getURL: getURL,
-                select: select
+                data                : data,
+                refresh             : refreshDOM,
+                getNext             : getNext,
+                getPrevious         : getPrevious,
+                getItem             : getItem,
+                getURL              : getURL,
+                select              : select,
+                getPlaylist         : getPlaylist,
+                addToPlaylist       : addToPlaylist,
+                deleteFromPlaylist  : deleteFromPlaylist,
+                findOffsetFromUrl   : findOffsetFromUrl
             };
 
         }
@@ -12722,7 +12586,6 @@ var bar_ui = (function() {
                         if (!utils.css.has(target, 'sm2-exclude')) {
 
                             // find this in the playlist
-
                             playLink(target);
 
                             handled = true;
@@ -12847,9 +12710,9 @@ var bar_ui = (function() {
 
             //get li in the data.playList[0] HTMLCollection
             defaultItem = playlistController.getItem(0);
+
             playlistController.select(defaultItem);
             setTitle(defaultItem);
-
 
             // Handling mousedown events on <a> of the
             // entire bar-ui (currently .sm2-volume-control)
@@ -13028,200 +12891,378 @@ var bar_ui = (function() {
                 utils.events.remove(document, 'mousemove', actions.adjustVolume);
                 utils.events.remove(document, 'mouseup', actions.releaseVolume);
 
-            }/*,
-
-             volume: function(e) {
-
-             if (e.type === 'mousedown') {
-
-             utils.events.add(document, 'mousemove', actions.adjustVolume);
-
-             return utils.events.preventDefault(e);
-
-             } else if (e.type === 'mouseup') {
-
-             utils.events.remove(document, 'mousemove', actions.adjustVolume);
-
-             }
-
-             }*/
-
+            }
         };
 
         init();
+
+
+
+        /**
+         * createTrack Given a track url, create an playlist element
+         * @param clip object with properties 'title', 'url', 'owner' and 'label'
+         */
+        function createTrack(clip)
+        {
+
+            //bail if this url doesn't even make sense
+            if(!clip.hasOwnProperty('url') ||
+               !clip.hasOwnProperty('title') ||
+               !clip.hasOwnProperty('owner') ||
+               !clip.hasOwnProperty('label'))
+            {
+                return null;
+            }
+
+            var liNode, template;
+
+            template = [
+                '<a href="', clip.url,'">',
+                    '<b>', clip.owner, '</b>', clip.title,
+                    '<span class="label">', clip.label, '</span>',
+                '</a>'
+            ].join('');
+
+            liNode = document.createElement('li');
+            liNode.innerHTML = template;
+
+            return liNode;
+
+        }
+
+
+        //--------------------- BEGIN PUBLIC METHODS --------------------
+        /**
+         * enqueue Given a track url, update the playlist to either insert or remove
+         * Actions: Inserts or removes from the DOM playlist (.sm2-playlist-bd). Calls
+         * to playlistcontroller instance to update its relavant DOM attributes
+         * @param clip the track object to enqueue or dequeue
+         */
+        this.enqueue = function(clip) {
+
+            var item, offset, existing, isRemoved;
+
+            //construct the li item from the url
+            item = createTrack(clip);
+
+            //attempt to find matching item in player playlist
+            if( !clip.hasOwnProperty('url') )
+            {
+                throw "Attempting to enqueue invalid clip object";
+            }
+            offset = playlistController.findOffsetFromUrl(clip.url);
+
+            if(offset === -1)
+            {
+                playlistController.addToPlaylist(item);
+            }
+            else
+            {
+                existing = playlistController.getItem(offset);
+                if(existing)
+                {
+                    playlistController.deleteFromPlaylist(existing);
+                }
+
+            }
+
+        };
+        // --- END enqueue ---
+
+
+
+
+        //--------------------- END PUBLIC METHODS --------------------
+
 
     };
     // --- END Player ---
 
     // expose to global
-    //window.sm2BarPlayers = players;
-    //window.SM2BarPlayer = Player;
+//    window.sm2BarPlayers = players;
+//    window.SM2BarPlayer = Player;
 
+
+    //------------------- BEGIN PUBLIC METHODS -------------------
     /**
-     * initModule Configures and initializes feature modules.
-     * @param window
-     * @param
+     * initModule Populates $container with the shell of the UI
+     * and then configures and initializes feature modules.
+     * The Shell is also responsible for browser-wide issues
+     * Directs this app to offer its capability to the user
+     * @param $container a single DOM Element
      */
-    initModule = function(){
-        console.log(window);
+    initModule = function( container ){
+
+        //ensure this is HTMLNode
+        if(container.nodeType === 1){
+
+            container.innerHTML = configMap.bar_html;
+
+            soundManager.setup({
+                // trade-off: higher UI responsiveness (play/progress bar), but may use more CPU.
+                html5PollingInterval: 50,
+                flashVersion: 9
+            });
+
+            soundManager.onready(function() {
+
+                var nodes,
+                    i, j;
+
+                nodes = utils.dom.getAll(playerSelector);
+
+                if (nodes && nodes.length) {
+                    for (i=0, j=nodes.length; i<j; i++) {
+                        players.push(new Player(nodes[i]));
+                    }
+                }
+
+            });
+        }
+        else
+        {
+            console.warn('initModule failed -- invalid container');
+        }
     };
 
-    return { initModule: initModule };
+    /**
+     * enqueue Toggle in or out the given url as a track in the player
+     * @param url the track url to enqueue or dequeue
+     * @param offset the play in the list of players
+     */
+    enqueue = function(clip, offset){
+
+        //bail if this url doesn't even make sense
+        if(!clip.hasOwnProperty('url') ||
+           !clip.hasOwnProperty('title') ||
+           !clip.hasOwnProperty('owner') ||
+           !clip.hasOwnProperty('label') ||
+           players.length === 0)
+        {
+            return;
+        }
+
+        //enqueue if the player is in range
+        if(offset !== undefined && offset > -1 && offset < players.length)
+        {
+            players[offset].enqueue(clip);
+        }
+
+        //default to the first player
+        else
+        {
+            players[0].enqueue(clip);
+        }
+    };
+
+    return {
+        initModule  : initModule,
+        enqueue     : enqueue
+    };
 
 }());
 
 module.exports = bar_ui;
-},{"../../lib/soundmanager2/script/soundmanager2.js":1}],8:[function(require,module,exports){
+},{"../../lib/soundmanager2/script/soundmanager2.js":1,"../util.js":8}],8:[function(require,module,exports){
 /*
- * bar.js
- * Root module for the sm2 player bar UI
- */
-/* global $, window, DEBUG, document */
+ * util.js
+ * Utilities for the Audio app
+*/
+/* global document, window, $*/
 'use strict';
 
-var bar = (function () {
+var util = (function () {
+    var moment = require('moment');
+
+    var fetchUrl, PubSub, truncate, getCookie, sameOrigin, urlParse,
+        swipeData, csrfSafeMethod, parseClipData, utils;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
-    var
-        util = require('../util.js'),
-        bar_ui,
-        api = {};
-
+    moment.locale('en', {
+        relativeTime : {
+            future: "in %s",
+            past:   "%s ago",
+            s:  "s",
+            m:  "1min",
+            mm: "%dmin",
+            h:  "1h",
+            hh: "%dh",
+            d:  "1d",
+            dd: "%dd",
+            M:  "1mon",
+            MM: "%dmon",
+            y:  "1yr",
+            yy: "%dyrs"
+        }
+    });
     //---------------- END MODULE DEPENDENCIES --------------
 
-    //---------------- BEGIN MODULE SCOPE VARIABLES --------------
-    var
-        initModule,
 
-        configMap = {
-            bar_html: String() +
-                '<div class="sm2-bar-ui full-width fixed">' +
+    //------------------- BEGIN PUBLIC METHODS -------------------
+    /**
+     * parseClipData: transform any Clip fields to javascript-compatible
+     * @param raw a string describing an array of valid JSON
+     * @return jsonArray - a list of valid JSON objects
+     */
+    parseClipData = function(raw){
+        var jsonArray;
+        jsonArray = raw.results.map(function(jsonObj){
 
-                    '<div class="bd sm2-main-controls">' +
+            try{
+                jsonObj.created = moment(jsonObj.created);
 
-                        '<div class="sm2-inline-texture"></div>' +
-                        '<div class="sm2-inline-gradient"></div>' +
+                //sub-in dummy image
+                if(jsonObj.brand === "")
+                {
+                    jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
+                }
+                return jsonObj;
+            }catch(err){
+                console.log(err);
+            }
+        });
+        //console.log(jsonArray);
+        return jsonArray;
+    };
 
-                        '<div class="sm2-inline-element sm2-button-element">' +
-                            '<div class="sm2-button-bd">' +
-                                '<a href="#play" class="sm2-inline-button play-pause">Play / pause</a>' +
-                            '</div>' +
-                        '</div>' +
+    /**
+     * fetchUrl make a call to the given url and emit a Pubsub on complete
+     * @param url
+     * @param tag string tag to identify results
+     * @return Pubsub event that notifies the url and resulting json
+     */
+    fetchUrl = function(url, tag){
+        $.ajax({
+            url: url
+        })
+            .done(function(results){
+                PubSub.emit("fetchUrlComplete", tag, results);
+            })
+            .fail(function(){
+                console.error("Failed to load data");
+            })
+            .always(function(){});
+    };
 
-                        '<div class="sm2-inline-element sm2-inline-status">' +
+    /**
+     * method urlParse: extract the various aspects of the url from a HyperlinkedRelatedField
+     * precondition: requires a HyperlinkedRelatedField of the form protocol:host/api/object/pk/
+     * @param url url of the resource
+     * @return URLobj - an object literal with fields protocol, host, api, object, and pk
+     */
+    urlParse = function(url){
+        var URL = {},
+            u = url || '',
+            parts;
 
-                            '<div class="sm2-playlist">' +
-                                '<div class="sm2-playlist-target">' +
-                                    '<!-- playlist <ul> + <li> markup will be injected here -->' +
-                                    '<!-- if you want default / non-JS content, you can put that here. -->' +
-                                    '<noscript><p>JavaScript is required.</p></noscript>' +
-                                '</div>' +
-                            '</div>' +
+        try{
+            var parser = document.createElement('a');
+            parser.href = url;
+            URL.protocol = parser.protocol;
+            URL.hostname = parser.hostname;
+            URL.port = parser.port;
+            URL.pathname = parser.pathname;
+            URL.search = parser.search;
+            URL.hash = parser.hash;
+            URL.host = parser.host;
 
-                            '<div class="sm2-progress">' +
-                                '<div class="sm2-row">' +
-                                    '<div class="sm2-inline-time">0:00</div>' +
-                                    '<div class="sm2-progress-bd">' +
-                                        '<div class="sm2-progress-track">' +
-                                            '<div class="sm2-progress-bar"></div>' +
-                                            '<div class="sm2-progress-ball"><div class="icon-overlay"></div></div>' +
-                                        '</div>' +
-                                    '</div>' +
-                                    '<div class="sm2-inline-duration">0:00</div>' +
-                                '</div>' +
-                            '</div>' +
-
-                        '</div>' +
-
-                        '<div class="sm2-inline-element sm2-button-element sm2-volume">' +
-                            '<div class="sm2-button-bd">' +
-                                '<span class="sm2-inline-button sm2-volume-control volume-shade"></span>' +
-                                '<a href="#volume" class="sm2-inline-button sm2-volume-control">volume</a>' +
-                            '</div>' +
-                        '</div>' +
-
-                        '<div class="sm2-inline-element sm2-button-element">' +
-                            '<div class="sm2-button-bd">' +
-                                '<a href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a>' +
-                            '</div>' +
-                        '</div>' +
-
-                        '<div class="sm2-inline-element sm2-button-element">' +
-                            '<div class="sm2-button-bd">' +
-                                '<a href="#next" title="Next" class="sm2-inline-button next">&gt; next</a>' +
-                            '</div>' +
-                        '</div>' +
-
-                        '<div class="sm2-inline-element sm2-button-element sm2-menu">' +
-                            '<div class="sm2-button-bd">' +
-                                '<a href="#menu" class="sm2-inline-button menu">menu</a>' +
-                            '</div>' +
-                        '</div>' +
-
-                    '</div>' +
-
-                    '<div class="bd sm2-playlist-drawer sm2-element">' +
-
-                        '<div class="sm2-inline-texture">' +
-                            '<div class="sm2-box-shadow"></div>' +
-                        '</div>' +
-
-                        '<!-- playlist content is mirrored here -->' +
-
-                        '<div class="sm2-playlist-wrapper">' +
-                            '<ul class="sm2-playlist-bd">' +
-                                '<li data-url=""><a href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3"><b>SonReal</b>- Let Me<span class="label">Explicit</span></a></li>' +
-                            '</ul>' +
-                        '</div>' +
-
-                        '<div class="sm2-extra-controls">' +
-
-                            '<div class="bd">' +
-
-                                '<div class="sm2-inline-element sm2-button-element">' +
-                                    '<a href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a>' +
-                                '</div>' +
-
-                                '<div class="sm2-inline-element sm2-button-element">' +
-                                    '<a href="#next" title="Next" class="sm2-inline-button next">&gt; next</a>' +
-                                '</div>' +
-
-                                '<!-- unimplemented -->' +
-                                '<!--' +
-                                '<div class="sm2-inline-element sm2-button-element disabled">' +
-                                 '<a href="#repeat" title="Repeat playlist" class="sm2-inline-button repeat">&infin; repeat</a>' +
-                                '</div>' +
-
-                                '<div class="sm2-inline-element sm2-button-element disabled">' +
-                                 '<a href="#shuffle" title="Shuffle" class="sm2-inline-button shuffle">shuffle</a>' +
-                                '</div>' +
-                                '-->' +
-
-                            '</div>' +
-
-                        '</div>' +
-
-                    '</div>' +
-
-                '</div>'
+        } catch (e) {
+            throw "Improper url format entered";
+        }
+        return URL;
+    };
 
 
+    // Begin Public method /PubSub/
+    // Example   : PubSub.on('bark', getDog ); PubSub.emit('bark');
+    // Purpose   :
+    //   Subscribe and publish events
+    // Arguments :
+    // Action    : The user can subscribe to events with on('<event name>', callback)
+    // and listen to events published with emit('<event name>')
+    // Returns   : none
+    // Throws    : none
+    PubSub = {
+        handlers: {},
+
+        on : function(eventType, handler) {
+            if (!(eventType in this.handlers)) {
+                this.handlers[eventType] = [];
+            }
+            //push handler into array -- "eventType": [handler]
+            this.handlers[eventType].push(handler);
+            return this;
         },
 
-        stateMap = {
-            $container          : undefined,
-            DEBUG               : undefined
-        },
+        emit : function(eventType) {
+            var handlerArgs = Array.prototype.slice.call(arguments, 1);
+            for (var i = 0; i < this.handlers[eventType].length; i++) {
+                this.handlers[eventType][i].apply(this, handlerArgs);
+            }
+            return this;
+        }
 
-        dom, setDomMap,
+    };
 
-        handleClipSelect,
+    // Begin Public method /truncate/
+    // Example   : truncate(string, maxchar)
+    // Purpose   :
+    //   Truncate a string and append "..." to the remaining
+    // Arguments :
+    //  * string - the original string
+    //  * maxchar - the max number of chars to show
+    // Returns   : the truncated string
+    // Throws    : none
+    truncate = function(string, maxchar){
+        var str = string || '';
+        var truncated = str.slice(0, maxchar);
+        if(str.length > maxchar){
+            truncated += "...";
+        }
+        return truncated;
+    };
 
-        adjustDrawer,
 
-        PubSub = util.PubSub,
+    // using jQuery
+    getCookie = function(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = $.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    };
 
-        utils = {
+    csrfSafeMethod = function(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    };
+
+    sameOrigin = function(url) {
+        // test that a given url is a same-origin URL
+        // url could be relative or scheme relative or absolute
+        var host = document.location.host; // host + port
+        var protocol = document.location.protocol;
+        var sr_origin = '//' + host;
+        var origin = protocol + sr_origin;
+        // Allow absolute or scheme relative URLs to same origin
+        return (url === origin || url.slice(0, origin.length + 1) === origin + '/') ||
+            (url === sr_origin || url.slice(0, sr_origin.length + 1) === sr_origin + '/') ||
+            // or any other URL that isn't scheme relative or absolute i.e relative.
+            !(/^(\/\/|http:|https:).*/.test(url));
+    };
+
+    /**
+     * utils collection of DOM utilities to free you from jquery
+     */
+    utils = {
 
         noop: function(){},
 
@@ -13398,9 +13439,32 @@ var bar = (function () {
 
             }
 
+            /**
+             * remove the given HTMLElement node
+             * @param target the node to remove
+             * @return true if the node was removed
+             */
+            function remove(target) {
+
+                var parent;
+
+                if( target.parentNode )
+                {
+                    parent = target.parentNode;
+                    parent.removeChild(target);
+
+                    if(!parent.contains(target))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
             return {
                 get: get,
-                getAll: getAll
+                getAll: getAll,
+                remove: remove
             };
 
         }()),
@@ -13670,343 +13734,39 @@ var bar = (function () {
 
             return localFeatures;
 
-        }())
+        }()),
 
-    };
-
-    //---------------- END MODULE SCOPE VARIABLES --------------
-
-    //--------------------- BEGIN MODULE SCOPE METHODS --------------------
-
-    /**
-     *  setDomMap
-     * @return true for a valid dom map initialization
-     */
-    setDomMap = function(){
-        var outerDiv = stateMap.$container.get(0);
-        dom = {
-            outerDiv: outerDiv,
-            o: utils.dom.get(outerDiv, '.sm2-bar-ui'),
-            playlist: utils.dom.get(outerDiv, '.sm2-playlist-bd'),
-            playlistContainer: utils.dom.get(outerDiv, '.sm2-playlist-drawer')
-        };
-
-        if (dom.playlist.length === 0) {
-            console.warn('init(): No playlist element?');
-            return false;
-        }
-
-        return true;
-    };
-    //--------------------- END MODULE SCOPE METHODS --------------------
-
-
-    //--------------------- BEGIN DOM METHODS --------------------
-    function isRightClick(e) {
-        // only pay attention to left clicks. old IE differs where there's no e.which, but e.button is 1 on left click.
-        if (e && ((e.which && e.which === 2) || (e.which === undefined && e.button !== 1))) {
-            // http://www.quirksmode.org/js/events_properties.html#button
-            return true;
-        }
-    }
-    // --- END isRightClick ---
-
-
-    adjustDrawer = function(){
-        var isOpen;
-
-        isOpen = utils.css.has(dom.o, 'playlist-open');
-        dom.playlistContainer.style.height = (isOpen ? dom.playlistContainer.scrollHeight : 0) + 'px';
-    };
-
-    //--------------------- END DOM METHODS ----------------------
-
-    //------------------- BEGIN EVENT HANDLERS -------------------
-    //-------------------- END EVENT HANDLERS --------------------
-
-    //------------------- BEGIN PUBLIC METHODS -------------------
-    /**
-     * handleClipSelect Listener for the click event
-     * Will remove audio clip if present and add otherwise
-     * @param event jQuery event object
-     */
-    handleClipSelect = function(event){
-        var imgs,
-            target;
-
-        target = event.target || event.srcElement;
-
-        if (isRightClick(event)) {
-            return true;
-        }
-
-        if (target.nodeName.toLowerCase() !== 'img')
-        {
-            imgs = target.getElementsByTagName('img');
-            if (imgs && imgs.length) {
-                target = target.getElementsByTagName('img')[0];
-            }
-        }
-
-        //make sure this is our media-img image
-        if (utils.css.has(target, 'media-img')) {
-
-            //retrieve the url from the parent element (span)
-            var parent, parents, url, title, owner, items, i, j, owner_elt, title_elt, newClip;
-
-            parent = target.parentNode;
-            if (parent.nodeName.toLowerCase() !== 'span')
-            {
-                parents = target.getElementsByTagName('span');
-                if (parents && parents.length) {
-                    parent = parent.getElementsByTagName('span')[0];
-                }
-            }
-
-            url = parent.getAttribute('data-clip-url');
-            if (url === undefined || url === ''){ return; }
-
-            title = utils.dom.get(parent, '.media-description-content.title').dataset.content || 'Untitled';
-            owner = utils.dom.get(parent, '.media-description-content.owner').dataset.content || 'Orphan';
-
-            //test for the presence of the clip (toggle)
-            items = utils.dom.getAll(dom.playlist, 'li');
-
-            if (items && items.length > 0){
-                for (i=0, j=items.length; i<j; i++) {
-                    if(items[i].dataset.url === url)
-                    {
-                        items[i].remove();
-                        adjustDrawer();
-                        return;
-                    }
-                }
-            }
-
-            newClip = document.createElement("li");
-            newClip.dataset.url = url;
-            newClip.innerHTML = ['<a href="', url, '"><b>', owner,'</b> - ', title, '</a>'].join('');
-
-            dom.playlist.appendChild(newClip);
-            adjustDrawer();
+        nodeTypes: {
+            ELEMENT_NODE                                : 1,
+            ATTRIBUTE_NODE                              : 2,
+            TEXT_NODE                                   : 3,
+            CDATA_SECTION_NODE                          : 4,
+            ENTITY_REFERENCE_NODE                       : 5,
+            ENTITY_NODE                                 : 6,
+            PROCESSING_INSTRUCTION_NODE                 : 7,
+            COMMENT_NODE                                : 8,
+            DOCUMENT_NODE                               : 9,
+            DOCUMENT_TYPE_NODE                          : 10,
+            DOCUMENT_FRAGMENT_NODE                      : 11,
+            NOTATION_NODE                               : 12,
+            DOCUMENT_POSITION_DISCONNECTED              : 1,
+            DOCUMENT_POSITION_PRECEDING                 : 2,
+            DOCUMENT_POSITION_FOLLOWING                 : 4,
+            DOCUMENT_POSITION_CONTAINS                  : 8,
+            DOCUMENT_POSITION_CONTAINED_BY              : 16,
+            DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC   : 32
         }
 
     };
 
-
-
-    /**
-     * initModule Populates $container with the shell of the UI
-     * and then configures and initializes feature modules.
-     * The Shell is also responsible for browser-wide issues
-     * Directs this app to offer its capability to the user
-     * @param $container A jQuery collection that should represent a single DOM container
-     * @param DEBUG for debug purposes (root url)
-     */
-    initModule = function( $container, DEBUG){
-        var valid;
-
-        // load HTML and map jQuery collections
-        stateMap.$container = $container;
-        stateMap.DEBUG = DEBUG;
-
-        $container.append( configMap.bar_html );
-        valid = setDomMap();
-
-        if(!valid)
-        {
-            console.warn('failed to initialize');
-            return api = {
-                handleClipSelect: utils.noop
-            };
-        }
-
-        bar_ui = require('./bar-ui.js');
-        return api = {
-            handleClipSelect: handleClipSelect
-        };
-
-
-    };
-
-
-    return {
-        initModule: initModule
-    };
-}());
-
-module.exports = bar;
-
-
-
-
-
-
-},{"../util.js":9,"./bar-ui.js":7}],9:[function(require,module,exports){
-/*
- * util.js
- * Utilities for the Audio app
-*/
-/* global document, $*/
-'use strict';
-
-var util = (function () {
-    var moment = require('moment');
-
-    var fetchUrl, PubSub, truncate, getCookie, sameOrigin, csrfSafeMethod, parseClipData;
-
-    //---------------- BEGIN MODULE DEPENDENCIES --------------
-    moment.locale('en', {
-        relativeTime : {
-            future: "in %s",
-            past:   "%s ago",
-            s:  "s",
-            m:  "1min",
-            mm: "%dmin",
-            h:  "1h",
-            hh: "%dh",
-            d:  "1d",
-            dd: "%dd",
-            M:  "1mon",
-            MM: "%dmon",
-            y:  "1yr",
-            yy: "%dyrs"
-        }
-    });
-    //---------------- END MODULE DEPENDENCIES --------------
-
-
-    //------------------- BEGIN PUBLIC METHODS -------------------
-    /**
-     * parseClipData: transform any Clip fields to javascript-compatible
-     * @param raw a string describing an array of valid JSON
-     * @return jsonArray - a list of valid JSON objects
-     */
-    parseClipData = function(raw){
-        var jsonArray;
-        jsonArray = raw.results.map(function(jsonObj){
-
-            try{
-                jsonObj.created = moment(jsonObj.created);
-
-                //sub-in dummy image
-                if(jsonObj.brand === "")
-                {
-                    jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
-                }
-                return jsonObj;
-            }catch(err){
-                console.log(err);
-            }
-        });
-        //console.log(jsonArray);
-        return jsonArray;
-    };
-
-    /**
-     * fetchUrl make a call to the given url and emit a Pubsub on complete
-     * @param url
-     * @param tag string tag to identify results
-     * @return Pubsub event that notifies the url and resulting json
-     */
-    fetchUrl = function(url, tag){
-        $.ajax({
-            url: url
-        })
-            .done(function(results){
-                PubSub.emit("fetchUrlComplete", tag, results);
-            })
-            .fail(function(){
-                console.error("Failed to load data");
-            })
-            .always(function(){});
-    };
-
-
-    // Begin Public method /PubSub/
-    // Example   : PubSub.on('bark', getDog ); PubSub.emit('bark');
-    // Purpose   :
-    //   Subscribe and publish events
-    // Arguments :
-    // Action    : The user can subscribe to events with on('<event name>', callback)
-    // and listen to events published with emit('<event name>')
-    // Returns   : none
-    // Throws    : none
-    PubSub = {
-        handlers: {},
-
-        on : function(eventType, handler) {
-            if (!(eventType in this.handlers)) {
-                this.handlers[eventType] = [];
-            }
-            //push handler into array -- "eventType": [handler]
-            this.handlers[eventType].push(handler);
-            return this;
-        },
-
-        emit : function(eventType) {
-            var handlerArgs = Array.prototype.slice.call(arguments, 1);
-            for (var i = 0; i < this.handlers[eventType].length; i++) {
-                this.handlers[eventType][i].apply(this, handlerArgs);
-            }
-            return this;
-        }
-
-    };
-
-    // Begin Public method /truncate/
-    // Example   : truncate(string, maxchar)
-    // Purpose   :
-    //   Truncate a string and append "..." to the remaining
-    // Arguments :
-    //  * string - the original string
-    //  * maxchar - the max number of chars to show
-    // Returns   : the truncated string
-    // Throws    : none
-    truncate = function(string, maxchar){
-        var str = string || '';
-        var truncated = str.slice(0, maxchar);
-        if(str.length > maxchar){
-            truncated += "...";
-        }
-        return truncated;
-    };
-
-
-    // using jQuery
-    getCookie = function(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = $.trim(cookies[i]);
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    };
-
-    csrfSafeMethod = function(method) {
-        // these HTTP methods do not require CSRF protection
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    };
-
-    sameOrigin = function(url) {
-        // test that a given url is a same-origin URL
-        // url could be relative or scheme relative or absolute
-        var host = document.location.host; // host + port
-        var protocol = document.location.protocol;
-        var sr_origin = '//' + host;
-        var origin = protocol + sr_origin;
-        // Allow absolute or scheme relative URLs to same origin
-        return (url === origin || url.slice(0, origin.length + 1) === origin + '/') ||
-            (url === sr_origin || url.slice(0, sr_origin.length + 1) === sr_origin + '/') ||
-            // or any other URL that isn't scheme relative or absolute i.e relative.
-            !(/^(\/\/|http:|https:).*/.test(url));
+    swipeData = function(event, direction, distance, duration, fingerCount, fingerData) {
+        console.log($(this));
+        console.log("event: %s", event);
+        console.log("direction: %s", direction);
+        console.log("distance: %s", distance);
+        console.log("duration: %s", duration);
+        console.log("fingerCount: %s", fingerCount);
+        console.log("fingerData: %s", fingerData);
     };
 
     return {
@@ -14016,7 +13776,10 @@ var util = (function () {
         getCookie       : getCookie,
         csrfSafeMethod  : csrfSafeMethod,
         sameOrigin      : sameOrigin,
-        parseClipData   : parseClipData
+        parseClipData   : parseClipData,
+        swipeData       : swipeData,
+        utils           : utils,
+        urlParse        : urlParse
     };
 }());
 

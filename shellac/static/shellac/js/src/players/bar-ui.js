@@ -12,490 +12,142 @@ var bar_ui = (function() {
         Player,
         players = [],
         playerSelector = '.sm2-bar-ui',
-        utils,
-        soundManager = require('../../lib/soundmanager2/script/soundmanager2.js').soundManager;
+        util = require('../util.js'),
+        soundManager = require('../../lib/soundmanager2/script/soundmanager2.js').soundManager,
+        utils = util.utils,
+
+        enqueue,
+
+        configMap = {
+
+            bar_html: String() +
+                '<div class="sm2-bar-ui full-width fixed">' +
+
+                    '<div class="bd sm2-main-controls">' +
+
+                        '<div class="sm2-inline-texture"></div>' +
+                        '<div class="sm2-inline-gradient"></div>' +
+
+                        '<div class="sm2-inline-element sm2-button-element">' +
+                            '<div class="sm2-button-bd">' +
+                                '<a href="#play" class="sm2-inline-button play-pause">Play / pause</a>' +
+                            '</div>' +
+                        '</div>' +
+
+                        '<div class="sm2-inline-element sm2-inline-status">' +
+
+                            '<div class="sm2-playlist">' +
+                                '<div class="sm2-playlist-target">' +
+                                    '<!-- playlist <ul> + <li> markup will be injected here -->' +
+                                    '<!-- if you want default / non-JS content, you can put that here. -->' +
+                                    '<noscript><p>JavaScript is required.</p></noscript>' +
+                                '</div>' +
+                            '</div>' +
+
+                            '<div class="sm2-progress">' +
+                                '<div class="sm2-row">' +
+                                    '<div class="sm2-inline-time">0:00</div>' +
+                                        '<div class="sm2-progress-bd">' +
+                                            '<div class="sm2-progress-track">' +
+                                                '<div class="sm2-progress-bar"></div>' +
+                                                '<div class="sm2-progress-ball"><div class="icon-overlay"></div></div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                        '<div class="sm2-inline-duration">0:00</div>' +
+                                    '</div>' +
+                                '</div>' +
+
+                            '</div>' +
+
+                            '<div class="sm2-inline-element sm2-button-element sm2-volume">' +
+                                '<div class="sm2-button-bd">' +
+                                    '<span class="sm2-inline-button sm2-volume-control volume-shade"></span>' +
+                                    '<a href="#volume" class="sm2-inline-button sm2-volume-control">volume</a>' +
+                                '</div>' +
+                            '</div>' +
+
+                            '<div class="sm2-inline-element sm2-button-element">' +
+                                '<div class="sm2-button-bd">' +
+                                    '<a href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a>' +
+                                '</div>' +
+                            '</div>' +
+
+                            '<div class="sm2-inline-element sm2-button-element">' +
+                                '<div class="sm2-button-bd">' +
+                                    '<a href="#next" title="Next" class="sm2-inline-button next">&gt; next</a>' +
+                                '</div>' +
+                            '</div>' +
+
+                            '<div class="sm2-inline-element sm2-button-element sm2-menu">' +
+                                '<div class="sm2-button-bd">' +
+                                    '<a href="#menu" class="sm2-inline-button menu">menu</a>' +
+                                '</div>' +
+                            '</div>' +
+
+                        '</div>' +
+
+                        '<div class="bd sm2-playlist-drawer sm2-element">' +
+
+                            '<div class="sm2-inline-texture">' +
+                                '<div class="sm2-box-shadow"></div>' +
+                            '</div>' +
+
+                            '<!-- playlist content is mirrored here -->' +
+
+                            '<div class="sm2-playlist-wrapper">' +
+                                '<ul class="sm2-playlist-bd">' +
+                                  '<li><a href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3"><b>SonReal</b>- Let Me<span class="label">Explicit</span></a></li>' +
+                                '</ul>' +
+                            '</div>' +
+
+                            '<div class="sm2-extra-controls">' +
+
+                                '<div class="bd">' +
+
+                                    '<div class="sm2-inline-element sm2-button-element">' +
+                                        '<a href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a>' +
+                                    '</div>' +
+
+                                    '<div class="sm2-inline-element sm2-button-element">' +
+                                        '<a href="#next" title="Next" class="sm2-inline-button next">&gt; next</a>' +
+                                    '</div>' +
+
+                                    '<!-- unimplemented -->' +
+                                    '<!--' +
+                                    '<div class="sm2-inline-element sm2-button-element disabled">' +
+                                    '<a href="#repeat" title="Repeat playlist" class="sm2-inline-button repeat">&infin; repeat</a>' +
+                                    '</div>' +
 
+                                    '<div class="sm2-inline-element sm2-button-element disabled">' +
+                                    '<a href="#shuffle" title="Shuffle" class="sm2-inline-button shuffle">shuffle</a>' +
+                                    '</div>' +
+                                    '-->' +
 
-    soundManager.setup({
-        // trade-off: higher UI responsiveness (play/progress bar), but may use more CPU.
-        html5PollingInterval: 50,
-        flashVersion: 9
-    });
+                                '</div>' +
 
-    soundManager.onready(function() {
+                            '</div>' +
 
-        var nodes,
-            i, j;
+                    '</div>' +
 
-        nodes = utils.dom.getAll(playerSelector);
+                '</div>'
+        },
 
-        if (nodes && nodes.length) {
-            for (i=0, j=nodes.length; i<j; i++) {
-                players.push(new Player(nodes[i]));
-            }
-        }
+        stateMap = {
+            $container          : undefined,
+            DEBUG               : undefined
+        };
 
-    });
-
-    utils = {
-
-        array: (function() {
-
-            function compare(property) {
-
-                var result;
-
-                return function(a, b) {
-
-                    if (a[property] < b[property]) {
-                        result = -1;
-                    } else if (a[property] > b[property]) {
-                        result = 1;
-                    } else {
-                        result = 0;
-                    }
-                    return result;
-                };
-
-            }
-
-            function shuffle(array) {
-
-                // Fisher-Yates shuffle algo
-
-                var i, j, temp;
-
-                for (i = array.length - 1; i > 0; i--) {
-                    j = Math.floor(Math.random() * (i+1));
-                    temp = array[i];
-                    array[i] = array[j];
-                    array[j] = temp;
-                }
-
-                return array;
-
-            }
-
-            return {
-                compare: compare,
-                shuffle: shuffle
-            };
-
-        }()),
-
-        css: (function() {
-            //css methods manipulate the result of className --> string representation of class attribute
-            //alternative is elm.classList {0="cString1", ...}
-
-            function hasClass(o, cStr) {
-
-                // regex allows 1) whitespace or start; 2) whitespace or end
-                // test() method tests for a match in a string.
-                return (o.className !== undefined ? new RegExp('(^|\\s)' + cStr + '(\\s|$)').test(o.className) : false);
-
-            }
-
-            function addClass(o, cStr) {
-
-                if (!o || !cStr || hasClass(o, cStr)) {
-                    return false; // safety net
-                }
-
-                //append to list with space (o.className + ' ') OR start a new string
-                o.className = (o.className ? o.className + ' ' : '') + cStr;
-
-            }
-
-            function removeClass(o, cStr) {
-
-                if (!o || !cStr || !hasClass(o, cStr)) {
-                    return false;
-                }
-                //check for list ['( ' + cStr + ')] OR single class then erplace with ''
-                o.className = o.className.replace(new RegExp('( ' + cStr + ')|(' + cStr + ')', 'g'), '');
-
-            }
-
-            function swapClass(o, cStr1, cStr2) {
-
-                var tmpClass = {
-                    className: o.className
-                };
-
-                removeClass(tmpClass, cStr1);
-                addClass(tmpClass, cStr2);
-
-                o.className = tmpClass.className;
-
-            }
-
-            function toggleClass(o, cStr) {
-
-                var found, method;
-
-                found = hasClass(o, cStr);
-
-                method = (found ? removeClass : addClass);
-
-                method(o, cStr);
-
-                // indicate the new state...
-                return !found;
-
-            }
-
-            return {
-                has: hasClass,
-                add: addClass,
-                remove: removeClass,
-                swap: swapClass,
-                toggle: toggleClass
-            };
-
-        }()),
-
-        dom: (function() {
-
-            /**
-             * getAll find and return the NodeList for the the given node, selector pair
-             * @param node Node object to search from
-             * @param selector (optional) string to select on
-             * @return NodeList of results from node.querySelectorAll(selector)
-             */
-            function getAll(/* parentNode, selector */) {
-
-                var node,
-                    selector,
-                    results;
-
-                if (arguments.length === 1) {
-
-                    // .selector case
-                    node = document.documentElement; //<HTML> element
-                    selector = arguments[0];
-
-                } else {
-
-                    // node, .selector
-                    node = arguments[0];
-                    selector = arguments[1];
-
-                }
-
-                // sorry, IE 7 users; IE 8+ required.
-                if (node && node.querySelectorAll) {
-
-                    results = node.querySelectorAll(selector);
-
-                }
-
-                //type NodeList (not Array)
-                return results;
-
-            }
-
-            /**
-             * get find and return the last element of the call to getAll
-             * @param arguments consisting of node Node object to search from and
-             * an optional string selector
-             */
-            function get(/* parentNode, selector */) {
-
-                var results = getAll.apply({}, arguments);
-
-                // hackish: if more than one match and no third argument, return the last.
-                if (results && results.length) {
-                    results = results[results.length-1];
-                }
-
-                return results;
-
-            }
-
-            return {
-                get: get,
-                getAll: getAll
-            };
-
-        }()),
-
-        position: (function() {
-
-            //HTMLElement.offsetParent read-only property returns a reference to the object which
-            // is the closest (nearest in the containment hierarchy) positioned containing element.
-
-            // HTMLElement.offsetLeft read-only method returns the number of pixels that the upper
-            // left corner of the current element is offset to the left within the HTMLElement.offsetParent node.
-
-            //HTMLElement.offsetTop read-only property returns the distance of the current element
-            // relative to the top of the offsetParent node.
-
-
-            /**
-             * getOffX crawl up the hierarchy and get the left offset from the page left
-             */
-            function getOffX(o) {
-
-                // http://www.xs4all.nl/~ppk/js/findpos.html
-                var curleft = 0;
-
-                if (o.offsetParent) {
-
-                    while (o.offsetParent) {
-
-                        curleft += o.offsetLeft;
-
-                        o = o.offsetParent;
-
-                    }
-
-                } else if (o.x) {
-
-                    curleft += o.x;
-
-                }
-
-                return curleft;
-
-            }
-
-            /**
-             * getOffY crawl up the hierarchy and get the top offset from the page top
-             */
-            function getOffY(o) {
-
-                // http://www.xs4all.nl/~ppk/js/findpos.html
-                var curtop = 0;
-
-                if (o.offsetParent) {
-
-                    while (o.offsetParent) {
-
-                        curtop += o.offsetTop;
-
-                        o = o.offsetParent;
-
-                    }
-
-                } else if (o.y) {
-
-                    curtop += o.y;
-
-                }
-
-                return curtop;
-
-            }
-
-            return {
-                getOffX: getOffX,
-                getOffY: getOffY
-            };
-
-        }()),
-
-        style: (function() {
-
-            function get(node, styleProp) {
-
-                // http://www.quirksmode.org/dom/getstyles.html
-                var value;
-
-                if (node.currentStyle) {
-
-                    value = node.currentStyle[styleProp];
-
-                } else if (window.getComputedStyle) {
-
-                    value = document.defaultView.getComputedStyle(node, null).getPropertyValue(styleProp);
-
-                }
-
-                return value;
-
-            }
-
-            return {
-                get: get
-            };
-
-        }()),
-
-        events: (function() {
-
-            var add, remove, preventDefault;
-
-            add = function(o, evtName, evtHandler) {
-                // return an object with a convenient detach method.
-                var eventObject = {
-                    detach: function() {
-                        return remove(o, evtName, evtHandler);
-                    }
-                };
-                if (window.addEventListener)
-                {
-                    o.addEventListener(evtName, evtHandler, false);
-                }
-                else
-                {
-                    //explorer -- <11 deprecated
-                    o.attachEvent('on' + evtName, evtHandler);
-                }
-                return eventObject;
-            };
-
-            remove = (window.removeEventListener !== undefined ? function(o, evtName, evtHandler) {
-
-                //If a listener was registered twice, one with capture and one without, each must be removed
-                // separately. Removal of a capturing listener does not affect a non-capturing version of
-                // the same listener, and vice versa.
-                return o.removeEventListener(evtName, evtHandler, false);
-            } : function(o, evtName, evtHandler) {
-                return o.detachEvent('on' + evtName, evtHandler);
-            });
-
-            preventDefault = function(e) {
-                if (e.preventDefault)
-                {
-                    e.preventDefault();
-                }
-                else
-                {
-                    e.returnValue = false;
-                    e.cancelBubble = true;
-                }
-                return false;
-            };
-
-            return {
-                add: add,
-                preventDefault: preventDefault,
-                remove: remove
-            };
-
-        }()),
-
-        features: (function() {
-
-            var getAnimationFrame,
-                localAnimationFrame,
-                localFeatures,
-                prop,
-                styles,
-                testDiv,
-                transform;
-
-            testDiv = document.createElement('div');
-
-            /**
-             * hat tip: paul irish
-             * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-             * https://gist.github.com/838785
-             */
-
-            localAnimationFrame = (window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                window.oRequestAnimationFrame ||
-                window.msRequestAnimationFrame || null);
-
-            // apply to window, avoid "illegal invocation" errors in Chrome
-            getAnimationFrame = localAnimationFrame ? function() {
-                return localAnimationFrame.apply(window, arguments);
-            } : null;
-
-            function has(prop) {
-
-                // test for feature support
-                var result = testDiv.style[prop];
-
-                return (result !== undefined ? prop : null);
-
-            }
-
-            // note local scope.
-            localFeatures = {
-
-                transform: {
-                    ie: has('-ms-transform'),
-                    moz: has('MozTransform'),
-                    opera: has('OTransform'),
-                    webkit: has('webkitTransform'),
-                    w3: has('transform'),
-                    prop: null // the normalized property value
-                },
-
-                rotate: {
-                    has3D: false,
-                    prop: null
-                },
-
-                getAnimationFrame: getAnimationFrame
-
-            };
-
-            localFeatures.transform.prop = (
-                localFeatures.transform.w3 ||
-                localFeatures.transform.moz ||
-                localFeatures.transform.webkit ||
-                localFeatures.transform.ie ||
-                localFeatures.transform.opera
-                );
-
-            function attempt(style) {
-
-                try
-                {
-                    testDiv.style[transform] = style;
-                }
-                catch(e)
-                {
-                    // that *definitely* didn't work.
-                    return false;
-                }
-                // if we can read back the style, it should be cool.
-                return !!testDiv.style[transform];
-
-            }
-
-            if (localFeatures.transform.prop) {
-
-                // try to derive the rotate/3D support.
-                transform = localFeatures.transform.prop;
-                styles = {
-                    css_2d: 'rotate(0deg)',
-                    css_3d: 'rotate3d(0,0,0,0deg)'
-                };
-
-                if (attempt(styles.css_3d))
-                {
-                    localFeatures.rotate.has3D = true;
-                    prop = 'rotate3d';
-                }
-                else if (attempt(styles.css_2d))
-                {
-                    prop = 'rotate';
-                }
-
-                localFeatures.rotate.prop = prop;
-            }
-
-            testDiv = null;
-
-            return localFeatures;
-
-        }())
-
-    };
 
     /**
      * Player bits
      */
-        // --- BEGIN Player ---
+    // --- BEGIN Player ---
     Player = function(playerNode) {
 
         var css, dom, extras,
-            playlistController, soundObject, actions, actionData, defaultItem;
+            playlistController,
+            soundObject, actions, actionData, defaultItem,
+            enqueue;
 
         css = {
             disabled: 'disabled',
@@ -552,9 +204,58 @@ var bar_ui = (function() {
 
             }
 
+
+            /**
+             * addToPlaylist add the <li> element to the playlist
+             * Checks for insane input
+             * @param item the <li> item to append to the list
+             * @return true if appended
+             */
+            function addToPlaylist( item ) {
+
+                if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE)
+                {
+                    return false;
+                }
+
+                if( item.nodeName.toLowerCase() === 'li' )
+                {
+                    dom.playlist.appendChild(item);
+                    refreshDOM();
+                    return true;
+                }
+
+                return false;
+
+            }
+
+            /**
+             * deleteFromPlaylist remove the <li> element from the playlist
+             * Checks for insane input
+             * @param item the <li> item to append to the list
+             * @return true if appended
+             */
+            function deleteFromPlaylist( item ) {
+
+                if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE)
+                {
+                    return false;
+                }
+
+                if( item.nodeName.toLowerCase() === 'li' )
+                {
+                    utils.dom.remove(item);
+                    refreshDOM();
+                    return true;
+                }
+
+                return false;
+
+            }
+
             /**
              * getItem the current selection (or an offset), return the current item.
-             * Checks for out-of-bounds
+             * Checks for out-of-bounds.
              * @param offset the integer index to retrieve in the playList
              * @return item HTMLCollection element aka playlist item (li)
              */
@@ -600,7 +301,60 @@ var bar_ui = (function() {
                 if (list) {
 
                     for (i=0, j=list.length; i<j; i++) {
+
+                        //this test for equality is same Node object
                         if (list[i] === item) {
+                            offset = i;
+                            break;
+                        }
+                    }
+
+                }
+
+                return offset;
+
+            }
+
+            /**
+             * findOffsetFromUrl given an url item, find it in the playlist array and
+             * return the index.
+             * @param url String url in href attribute
+             * @return offset index of item in playlist HTMLCollection, -1 otherwise
+             */
+            function findOffsetFromUrl(url) {
+
+                var list,
+                    target, targetNodeName,
+                    i,
+                    j,
+                    offset;
+
+                offset = -1;
+
+                list = getPlaylist();
+
+                if (list && url) {
+
+                    for (i=0, j=list.length; i<j; i++) {
+
+                        var children, href, pathname;
+
+                        target = list[i];
+                        //go down tree to find the anchor in the first child
+                        do {
+                            target = target.firstChild;
+                            targetNodeName = target.nodeName.toLowerCase();
+                        } while (targetNodeName !== 'a' && target.childnodes);
+
+                        //this test for equality is same url attribute
+                        if(targetNodeName !== 'a' || !target.getAttribute('href'))
+                        {
+                            throw "Invalid playlist elements";
+                        }
+
+                        pathname = util.urlParse(target.href).pathname;
+                        if (pathname && pathname === url)
+                        {
                             offset = i;
                             break;
                         }
@@ -758,13 +512,17 @@ var bar_ui = (function() {
             init();
 
             return {
-                data: data,
-                refresh: refreshDOM,
-                getNext: getNext,
-                getPrevious: getPrevious,
-                getItem: getItem,
-                getURL: getURL,
-                select: select
+                data                : data,
+                refresh             : refreshDOM,
+                getNext             : getNext,
+                getPrevious         : getPrevious,
+                getItem             : getItem,
+                getURL              : getURL,
+                select              : select,
+                getPlaylist         : getPlaylist,
+                addToPlaylist       : addToPlaylist,
+                deleteFromPlaylist  : deleteFromPlaylist,
+                findOffsetFromUrl   : findOffsetFromUrl
             };
 
         }
@@ -1124,7 +882,6 @@ var bar_ui = (function() {
                         if (!utils.css.has(target, 'sm2-exclude')) {
 
                             // find this in the playlist
-
                             playLink(target);
 
                             handled = true;
@@ -1249,9 +1006,9 @@ var bar_ui = (function() {
 
             //get li in the data.playList[0] HTMLCollection
             defaultItem = playlistController.getItem(0);
+
             playlistController.select(defaultItem);
             setTitle(defaultItem);
-
 
             // Handling mousedown events on <a> of the
             // entire bar-ui (currently .sm2-volume-control)
@@ -1430,45 +1187,174 @@ var bar_ui = (function() {
                 utils.events.remove(document, 'mousemove', actions.adjustVolume);
                 utils.events.remove(document, 'mouseup', actions.releaseVolume);
 
-            }/*,
-
-             volume: function(e) {
-
-             if (e.type === 'mousedown') {
-
-             utils.events.add(document, 'mousemove', actions.adjustVolume);
-
-             return utils.events.preventDefault(e);
-
-             } else if (e.type === 'mouseup') {
-
-             utils.events.remove(document, 'mousemove', actions.adjustVolume);
-
-             }
-
-             }*/
-
+            }
         };
 
         init();
+
+
+
+        /**
+         * createTrack Given a track url, create an playlist element
+         * @param clip object with properties 'title', 'url', 'owner' and 'label'
+         */
+        function createTrack(clip)
+        {
+
+            //bail if this url doesn't even make sense
+            if(!clip.hasOwnProperty('url') ||
+               !clip.hasOwnProperty('title') ||
+               !clip.hasOwnProperty('owner') ||
+               !clip.hasOwnProperty('label'))
+            {
+                return null;
+            }
+
+            var liNode, template;
+
+            template = [
+                '<a href="', clip.url,'">',
+                    '<b>', clip.owner, '</b>', clip.title,
+                    '<span class="label">', clip.label, '</span>',
+                '</a>'
+            ].join('');
+
+            liNode = document.createElement('li');
+            liNode.innerHTML = template;
+
+            return liNode;
+
+        }
+
+
+        //--------------------- BEGIN PUBLIC METHODS --------------------
+        /**
+         * enqueue Given a track url, update the playlist to either insert or remove
+         * Actions: Inserts or removes from the DOM playlist (.sm2-playlist-bd). Calls
+         * to playlistcontroller instance to update its relavant DOM attributes
+         * @param clip the track object to enqueue or dequeue
+         */
+        this.enqueue = function(clip) {
+
+            var item, offset, existing, isRemoved;
+
+            //construct the li item from the url
+            item = createTrack(clip);
+
+            //attempt to find matching item in player playlist
+            if( !clip.hasOwnProperty('url') )
+            {
+                throw "Attempting to enqueue invalid clip object";
+            }
+            offset = playlistController.findOffsetFromUrl(clip.url);
+
+            if(offset === -1)
+            {
+                playlistController.addToPlaylist(item);
+            }
+            else
+            {
+                existing = playlistController.getItem(offset);
+                if(existing)
+                {
+                    playlistController.deleteFromPlaylist(existing);
+                }
+
+            }
+
+        };
+        // --- END enqueue ---
+
+
+
+
+        //--------------------- END PUBLIC METHODS --------------------
+
 
     };
     // --- END Player ---
 
     // expose to global
-    //window.sm2BarPlayers = players;
-    //window.SM2BarPlayer = Player;
+//    window.sm2BarPlayers = players;
+//    window.SM2BarPlayer = Player;
 
+
+    //------------------- BEGIN PUBLIC METHODS -------------------
     /**
-     * initModule Configures and initializes feature modules.
-     * @param window
-     * @param
+     * initModule Populates $container with the shell of the UI
+     * and then configures and initializes feature modules.
+     * The Shell is also responsible for browser-wide issues
+     * Directs this app to offer its capability to the user
+     * @param $container a single DOM Element
      */
-    initModule = function(){
-        console.log(window);
+    initModule = function( container ){
+
+        //ensure this is HTMLNode
+        if(container.nodeType === 1){
+
+            container.innerHTML = configMap.bar_html;
+
+            soundManager.setup({
+                // trade-off: higher UI responsiveness (play/progress bar), but may use more CPU.
+                html5PollingInterval: 50,
+                flashVersion: 9
+            });
+
+            soundManager.onready(function() {
+
+                var nodes,
+                    i, j;
+
+                nodes = utils.dom.getAll(playerSelector);
+
+                if (nodes && nodes.length) {
+                    for (i=0, j=nodes.length; i<j; i++) {
+                        players.push(new Player(nodes[i]));
+                    }
+                }
+
+            });
+        }
+        else
+        {
+            console.warn('initModule failed -- invalid container');
+        }
     };
 
-    return { initModule: initModule };
+    /**
+     * enqueue Toggle in or out the given url as a track in the player
+     * @param url the track url to enqueue or dequeue
+     * @param offset the play in the list of players
+     */
+    enqueue = function(clip, offset){
+
+        //bail if this url doesn't even make sense
+        if(!clip.hasOwnProperty('url') ||
+           !clip.hasOwnProperty('title') ||
+           !clip.hasOwnProperty('owner') ||
+           !clip.hasOwnProperty('label') ||
+           players.length === 0)
+        {
+            return;
+        }
+
+        //enqueue if the player is in range
+        if(offset !== undefined && offset > -1 && offset < players.length)
+        {
+            players[offset].enqueue(clip);
+        }
+
+        //default to the first player
+        else
+        {
+            players[0].enqueue(clip);
+        }
+    };
+
+    return {
+        initModule  : initModule,
+        enqueue     : enqueue
+    };
 
 }());
 
