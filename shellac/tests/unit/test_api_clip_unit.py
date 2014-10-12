@@ -369,6 +369,31 @@ class ClipDetailViewSet(APITestCase):
 
         cleanClips()
 
+
+    def test_ClipDetailViewSet_PATCH_own_updates_existing_object(self):
+        #add users and clips
+        user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1.description = "clip1 description"
+        setFileAttributefromLocal(clip1.audio_file, audio_path, "song.mp3")
+        self.assertEqual(User.objects.all().count(), 1)
+        self.assertEqual(Clip.objects.all().count(), 1)
+
+        # open a file and attach it to the request payload
+        f = open(audio_path, "rb")
+
+        self.client.login(username='andrea', password='a')
+        response = self.client.patch('/api/clips/1/',
+                                     data={'title': 'updated clip1 title', 'plays': 100})
+
+        resp = response.data
+        #print(resp)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp['title'], 'updated clip1 title')
+        self.assertEqual(resp['plays'], 100)
+
+        cleanClips()
+
     def test_ClipDetail_PUT_by_nonowner_is_rejected(self):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')

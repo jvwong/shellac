@@ -121,6 +121,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
 
     def restore_object(self, attrs, instance=None):
         if instance is not None:
+            #print(attrs)
             # Update existing instance
             instance.title = attrs.get('title', instance.title)
             instance.description = attrs.get('description', instance.description)
@@ -130,7 +131,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
             instance.status = attrs.get('status', instance.status)
             instance.slug = slugify(attrs.get('title', instance.title))
             instance.audio_file = attrs.get('audio_file', instance.audio_file)
-            instance.categories = attrs.get('categories', instance.categories)
+            instance.categories = attrs.get('categories', instance.categories.all())
             return instance
 
         # Create new instance

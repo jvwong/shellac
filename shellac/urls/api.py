@@ -36,6 +36,7 @@ clip_list = ClipListViewSet.as_view({
 clip_detail = ClipDetailViewSet.as_view({
     'get': 'get',
     'put': 'put',
+    'patch': 'patch',
     'delete': 'delete'
 })
 

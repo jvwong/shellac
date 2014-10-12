@@ -220,8 +220,8 @@ class Clip(models.Model):
     brand_thumb = ThumbnailImageField(upload_to='brands/%Y/%m/%d', blank=True, editable=False)
 
     ### Default
-    plays = models.PositiveSmallIntegerField(default=0, editable=False)
-    rating = models.PositiveSmallIntegerField(default=0, editable=False)
+    plays = models.PositiveSmallIntegerField(default=0, blank=True)
+    rating = models.PositiveSmallIntegerField(default=0, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=PUBLIC_STATUS)
 
     ### Auto
