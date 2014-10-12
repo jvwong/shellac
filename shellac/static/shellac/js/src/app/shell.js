@@ -223,10 +223,6 @@ var shell = (function () {
 
             $container.append(clip);
         });
-        ////info for user in truncating text dynamically
-//        var panel = utils.dom.get(dom.clip_content_container, '.shellac-caption-panel');
-//        var panelW = panel.scrollWidth + 'px';
-//        console.log(panelW);
 
         // (re-)register click events on <a> of the entire ui
         utils.events.add(dom.clip_content_container, 'click', handleClick);
