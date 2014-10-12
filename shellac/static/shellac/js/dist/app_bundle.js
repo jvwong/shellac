@@ -11926,6 +11926,8 @@ var bar_ui = (function() {
                 {
                     dom.playlist.appendChild(item);
                     refreshDOM();
+                    adjustDrawer();
+
                     return true;
                 }
 
@@ -11950,6 +11952,7 @@ var bar_ui = (function() {
                 {
                     utils.dom.remove(item);
                     refreshDOM();
+                    adjustDrawer();
                     return true;
                 }
 
@@ -12231,6 +12234,16 @@ var bar_ui = (function() {
 
         }
         // --- END PlaylistController ---
+
+
+        function adjustDrawer(){
+            var isOpen, children;
+            isOpen = utils.css.has(dom.o, 'playlist-open');
+
+            dom.playlistContainer.style.height = (isOpen ? dom.playlist.parentNode.scrollHeight : 0) + 'px';
+        }
+        // --- END adjustDrawer ---
+
 
 
         function getTime(msec, useString) {
