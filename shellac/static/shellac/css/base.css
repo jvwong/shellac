@@ -407,21 +407,23 @@ select#id_categories.form-control {
   border-style: solid;
   border-width: 2px;
   border-color: #000000;
-  padding: 2px;
+  padding: 10px;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel {
-  position: relative;
-}
-.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .enqueue-icon {
+.shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
   position: absolute;
   top: 0;
   right: 0;
+  margin: 5px;
   font-size: 2.5em;
   visibility: hidden;
   color: #2288cc;
+  z-index: 50;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .enqueued.enqueue-icon {
+.shellac-grid-element .shellac-grid-element-panel .enqueued.enqueue-icon {
   visibility: visible;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel {
+  position: relative;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .shellac-grid-img {
   width: 100%;
@@ -450,13 +452,12 @@ select#id_categories.form-control {
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content.meta {
   position: absolute;
-  top: 0;
-  margin-top: 5px;
+  bottom: 5px;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .rating {
   left: 50%;
-  width: 4em;
-  margin-left: -2em;
+  width: 5em;
+  margin-left: -1em;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .created {
   right: 0;
@@ -1350,21 +1351,23 @@ body {
   border-style: solid;
   border-width: 2px;
   border-color: #000000;
-  padding: 2px;
+  padding: 10px;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel {
-  position: relative;
-}
-.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .enqueue-icon {
+.shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
   position: absolute;
   top: 0;
   right: 0;
+  margin: 5px;
   font-size: 2.5em;
   visibility: hidden;
   color: #2288cc;
+  z-index: 50;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .enqueued.enqueue-icon {
+.shellac-grid-element .shellac-grid-element-panel .enqueued.enqueue-icon {
   visibility: visible;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel {
+  position: relative;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .shellac-grid-img {
   width: 100%;
@@ -1393,13 +1396,12 @@ body {
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content.meta {
   position: absolute;
-  top: 0;
-  margin-top: 5px;
+  bottom: 5px;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .rating {
   left: 50%;
-  width: 4em;
-  margin-left: -2em;
+  width: 5em;
+  margin-left: -1em;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .created {
   right: 0;

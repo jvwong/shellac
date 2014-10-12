@@ -201,8 +201,8 @@ var shell = (function () {
             clip = String() +
                 '<div class="col-xs-6 col-sm-4 col-md-4 col-lg-3 shellac-grid-element">' +
                     '<div class ="shellac-grid-element-panel">' +
+                        '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
                         '<div class ="shellac-img-panel">' +
-                            '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
                             '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
                                 '<img class="shellac-grid-img" src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
                             '</a>' +
@@ -210,14 +210,14 @@ var shell = (function () {
                         '<div class ="shellac-caption-panel">' +
                             '<a href="#modal" data-url="' + object.permalink + '">' +
                                 '<div class ="shellac-description-container">' +
-                                    '<div class="meta-data">' +
-                                        '<div class="shellac-description-content plays" data-content="' + object.plays + '">Plays: ' + object.plays + '</div>' +
-                                        '<div class="shellac-description-content meta rating" data-content="' + object.rating + '">Rating: ' + object.rating + '</div>' +
+                                    '<div class="shellac-description-content title" data-content="' + object.title + '">' + util.truncate(object.title, configMap.truncatemax) + '</div>' +
+                                    '<div class="shellac-description-content owner" data-content="' + object.owner + '">' + object.owner + '</div>' +
+                                    '<div class="shellac-description-content description-short">' + util.truncate(object.description , configMap.truncatemax) + '</div>' +
+                                        '<div class="meta-data">' +
+                                        '<div class="shellac-description-content plays" data-content="' + object.plays + '">' + object.plays + ' plays</div>' +
+                                        '<div class="shellac-description-content meta rating" data-content="' + object.rating + '">' + object.rating + ' stars</div>' +
                                         '<div class="shellac-description-content meta created">' + created + '</div>' +
                                     '</div>' +
-                                    '<div class="shellac-description-content owner" data-content="' + object.owner + '">' + object.owner + '</div>' +
-                                    '<div class="shellac-description-content title" data-content="' + object.title + '">' + util.truncate(object.title, configMap.truncatemax) + '</div>' +
-                                    '<div class="shellac-description-content description-short">' + util.truncate(object.description , configMap.truncatemax) + '</div>' +
                                 '</div>' +
                             '</a>' +
                         '</div>' +
@@ -326,17 +326,23 @@ var shell = (function () {
             parent, enqueue,
             i, j;
 
-
         anchor = utils.dom.get(item, 'a');
 
         if(anchor)
         {
             pathname = util.urlParse(anchor.href).pathname;
 
+            //make sure the stateMap last clicked is this one
             if(stateMap.selected && stateMap.selected.dataset.url === pathname)
             {
-                parent = stateMap.selected.parentNode;
-                enqueue = utils.dom.get(parent, '.enqueue-icon');
+                parent = stateMap.selected;
+
+                //should crawl up the dom to find this
+                do {
+                    parent = parent.parentNode;
+                    enqueue = utils.dom.get(parent, '.enqueue-icon');
+                } while( enqueue.length === 0 && parent.parentNode);
+
 
                 if(isAdded)
                 {
@@ -346,6 +352,10 @@ var shell = (function () {
                 {
                     utils.css.remove(enqueue, 'enqueued');
                 }
+            }
+            else
+            {
+                //need to crawl around the dom search for this
             }
         }
     };

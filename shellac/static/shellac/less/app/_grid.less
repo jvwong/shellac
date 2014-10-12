@@ -5,18 +5,15 @@
 @import "../_elements";
 @import "../_colors";
 
-@media_margin: 5px;
+@grid_margin: 5px;
+@grid_padding: 10px;
 @grid_border_width: 2px;
 @grid_border_color: #000000;
 
+@grid_enqueue_margin: 5px;
+
 @caption_opacity: 0.8;
 @caption_padding: 5px;
-@media_background_queued: #428BCA;
-@progress_opacity: 1.0;
-
-@media_desc_padding: 0.5em;
-@media_dim_small: 175px;
-@media_dim_medium: 250px;
 
 @grid_img_dim: 100%;
 @grid_checksz: 1.5em;
@@ -33,26 +30,28 @@
     border-style: solid;
     border-width: @grid_border_width;
     border-color: @grid_border_color;
-    padding: 2px;
+    padding: @grid_padding;
+
+    .enqueue-icon
+    {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: @grid_enqueue_margin;
+      font-size:  2.5em;
+      visibility: hidden;
+      color: @boostrap-blue;
+      z-index: 50;
+    }
+
+    .enqueued.enqueue-icon
+    {
+      visibility: visible;
+    }
 
     .shellac-img-panel
     {
       position: relative;
-
-      .enqueue-icon
-      {
-        position: absolute;
-        top: 0;
-        right: 0;
-        font-size:  2.5em;
-        visibility: hidden;
-        color: @boostrap-blue;
-      }
-
-      .enqueued.enqueue-icon
-      {
-        visibility: visible;
-      }
 
       .shellac-grid-img
       {
@@ -60,6 +59,7 @@
       }
 
     }
+
 
     .shellac-description-container {
       position:absolute; /* absolute position (so we can position it where we want)*/
@@ -82,8 +82,7 @@
       .shellac-description-content.meta
       {
         position: absolute;
-        top: 0;
-        margin-top: @media_margin;
+        bottom: @grid_margin;
       }
       .plays
       {
@@ -91,13 +90,13 @@
       .rating
       {
         left: 50%;
-        width: 4em;
-        margin-left: -2em;
+        width: 5em;
+        margin-left: -1em;
       }
       .created
       {
         right: 0;
-        margin-right: @media_margin;
+        margin-right: @grid_margin;
       }
 
     }
