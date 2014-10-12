@@ -416,7 +416,7 @@ select#id_categories.form-control {
   position: absolute;
   top: 0;
   right: 0;
-  font-size: 1.5em;
+  font-size: 2.5em;
   visibility: hidden;
   color: #2288cc;
 }
@@ -1345,7 +1345,7 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  font-size: 1.5em;
+  font-size: 2.5em;
   visibility: hidden;
   color: #2288cc;
 }

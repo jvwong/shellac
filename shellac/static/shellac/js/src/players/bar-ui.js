@@ -1219,8 +1219,8 @@ var bar_ui = (function() {
 
             template = [
                 '<a href="', clip.url,'">',
-                    '<b>', clip.owner, '</b>', clip.title,
-                    '<span class="label">', clip.label, '</span>',
+                    '<b>', clip.owner, '</b> - ', clip.title,
+                    '<span class="label"> ', clip.label, ' </span>',
                 '</a>'
             ].join('');
 
