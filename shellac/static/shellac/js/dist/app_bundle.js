@@ -11166,7 +11166,7 @@ var shell = (function () {
                     .toString() : "&nbsp;";
 
             clip = String() +
-                '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 shellac-grid-element">' +
+                '<div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 shellac-grid-element">' +
                     '<div class ="shellac-grid-element-panel">' +
                         '<div class ="shellac-img-panel">' +
                             '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
