@@ -11019,6 +11019,8 @@ var shell = (function () {
         clips               : undefined,
         clip_db             : TAFFY(),
         queued              : [],
+
+        selected            : undefined,
         DEBUG               : undefined
     },
 
@@ -11026,10 +11028,8 @@ var shell = (function () {
     dom = {}, setDomMap,
 
     actions,
-
-    loadClips, display_clips,
-    onTapSidebar, onSwipeSidebar,
-    swipeData,
+    display_clips, handlePlaylistChange,
+    onTouchSidebar,
     utils = util.utils,
     PubSub = util.PubSub;
 
@@ -11121,10 +11121,9 @@ var shell = (function () {
 
             if (clip.url && clip.title && clip.owner)
             {
-                //notify bar we wish to add/delete this from the playlist
+                stateMap.selected = target;
                 bar.enqueue(clip, 0);
             }
-
         }
     };
 
@@ -11166,9 +11165,10 @@ var shell = (function () {
                     .toString() : "&nbsp;";
 
             clip = String() +
-                '<div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 shellac-grid-element">' +
+                '<div class="col-xs-6 col-sm-4 col-md-4 col-lg-3 shellac-grid-element">' +
                     '<div class ="shellac-grid-element-panel">' +
                         '<div class ="shellac-img-panel">' +
+                            '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
                             '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
                                 '<img class="shellac-grid-img" src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
                             '</a>' +
@@ -11189,15 +11189,10 @@ var shell = (function () {
 
             $container.append(clip);
         });
-        ////info for user in truncating text dynamically
-//        var panel = utils.dom.get(dom.clip_content_container, '.shellac-caption-panel');
-//        var panelW = panel.scrollWidth + 'px';
-//        console.log(panelW);
 
         // (re-)register click events on <a> of the entire ui
         utils.events.add(dom.clip_content_container, 'click', handleClick);
     };
-
     //--------------------- END DOM METHODS ----------------------
 
     //------------------- BEGIN EVENT HANDLERS -------------------
@@ -11283,15 +11278,46 @@ var shell = (function () {
     }
     // --- END handleClick ---
 
-    onTapSidebar = function(event, direction, distance, duration, fingerCount){
+    /**
+     * handlePlaylistChange Handler for change in Player playlist
+     * Toggles the display value of check mark
+     * @param item HTMLElement added / removed from playlist
+     * @param isAdded true if element was added
+     */
+    handlePlaylistChange = function( item, isAdded ){
+        var anchor, pathname,
+            parent, enqueue,
+            i, j;
+
+
+        anchor = utils.dom.get(item, 'a');
+
+        if(anchor)
+        {
+            pathname = util.urlParse(anchor.href).pathname;
+
+            if(stateMap.selected && stateMap.selected.dataset.url === pathname)
+            {
+                parent = stateMap.selected.parentNode;
+                enqueue = utils.dom.get(parent, '.enqueue-icon');
+
+                if(isAdded)
+                {
+                    utils.css.add(enqueue, 'enqueued');
+                }
+                else
+                {
+                    utils.css.remove(enqueue, 'enqueued');
+                }
+            }
+        }
+    };
+
+    onTouchSidebar = function(event, direction, distance, duration, fingerCount){
         event.preventDefault();
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
-    onSwipeSidebar = function(event, direction, distance, duration, fingerCount){
-        event.preventDefault();
-        jqueryMap.$app_container.toggleClass('nav-expanded');
-    };
     //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
@@ -11334,8 +11360,7 @@ var shell = (function () {
                 default:
             }
         });
-
-        //register pub-sub methods
+        util.PubSub.on('playlist-change', handlePlaylistChange);
         util.PubSub.on("shellac-app-clip-change", function(clips){
             display_clips(clips, jqueryMap.$clip_content_container);
         });
@@ -11346,13 +11371,11 @@ var shell = (function () {
 
         //Navigation Menu Slider
         jqueryMap.$sidebar_container.swipe({
-            tap: onTapSidebar,
-            swipeLeft: onSwipeSidebar,
+            tap: onTouchSidebar,
+            swipeLeft: onTouchSidebar,
             threshold: 75
         });
-
-        bar.initModule( jqueryMap.$player_container.get(0    ) );
-        //jqueryMap.$app_container.toggleClass('nav-expanded');
+        bar.initModule( jqueryMap.$player_container.get(0) );
     };
 
     return { initModule: initModule };
@@ -11911,8 +11934,8 @@ var bar_ui = (function() {
 
             /**
              * addToPlaylist add the <li> element to the playlist
-             * Checks for insane input
-             * @param item the <li> item to append to the list
+             * Checks for insane input. Emits 'playlist-change' on success
+             * @param item the <li> item to append to the list.
              * @return true if appended
              */
             function addToPlaylist( item ) {
@@ -11925,6 +11948,7 @@ var bar_ui = (function() {
                 if( item.nodeName.toLowerCase() === 'li' )
                 {
                     dom.playlist.appendChild(item);
+                    util.PubSub.emit('playlist-change', item, true);
                     refreshDOM();
                     adjustDrawer();
 
@@ -11937,7 +11961,7 @@ var bar_ui = (function() {
 
             /**
              * deleteFromPlaylist remove the <li> element from the playlist
-             * Checks for insane input
+             * Checks for insane input. Emits 'playlist-change' on success.
              * @param item the <li> item to append to the list
              * @return true if appended
              */
@@ -11951,6 +11975,7 @@ var bar_ui = (function() {
                 if( item.nodeName.toLowerCase() === 'li' )
                 {
                     utils.dom.remove(item);
+                    util.PubSub.emit('playlist-change', item, false);
                     refreshDOM();
                     adjustDrawer();
                     return true;
@@ -12031,7 +12056,7 @@ var bar_ui = (function() {
             function findOffsetFromUrl(url) {
 
                 var list,
-                    target, targetNodeName,
+                    anchor,
                     i,
                     j,
                     offset;
@@ -12044,22 +12069,16 @@ var bar_ui = (function() {
 
                     for (i=0, j=list.length; i<j; i++) {
 
-                        var children, href, pathname;
+                        var pathname;
 
-                        target = list[i];
-                        //go down tree to find the anchor in the first child
-                        do {
-                            target = target.firstChild;
-                            targetNodeName = target.nodeName.toLowerCase();
-                        } while (targetNodeName !== 'a' && target.childnodes);
+                        anchor = utils.dom.get(list[i], 'a');
 
-                        //this test for equality is same url attribute
-                        if(targetNodeName !== 'a' || !target.getAttribute('href'))
+                        if(!anchor)
                         {
-                            throw "Invalid playlist elements";
+                            break;
                         }
 
-                        pathname = util.urlParse(target.href).pathname;
+                        pathname = util.urlParse(anchor.href).pathname;
                         if (pathname && pathname === url)
                         {
                             offset = i;
@@ -12572,10 +12591,7 @@ var bar_ui = (function() {
 
                     if (target.parentNode) {
 
-                        do {
-                            target = target.parentNode;
-                            targetNodeName = target.nodeName.toLowerCase();
-                        } while (targetNodeName !== 'a' && target.parentNode);
+                        target = utils.dom.getParentAnchor(target);
 
                         if (!target) {
                             // something went wrong. bail.
@@ -12915,8 +12931,7 @@ var bar_ui = (function() {
          * createTrack Given a track url, create an playlist element
          * @param clip object with properties 'title', 'url', 'owner' and 'label'
          */
-        function createTrack(clip)
-        {
+        function createTrack(clip){
 
             //bail if this url doesn't even make sense
             if(!clip.hasOwnProperty('url') ||
@@ -12978,7 +12993,6 @@ var bar_ui = (function() {
                 }
 
             }
-
         };
         // --- END enqueue ---
 
@@ -12990,11 +13004,6 @@ var bar_ui = (function() {
 
     };
     // --- END Player ---
-
-    // expose to global
-//    window.sm2BarPlayers = players;
-//    window.SM2BarPlayer = Player;
-
 
     //------------------- BEGIN PUBLIC METHODS -------------------
     /**
@@ -13474,10 +13483,36 @@ var util = (function () {
                 return false;
             }
 
+            /**
+             * getParentAnchor return the first anchor HTMLelement in the
+             * ancestor tree
+             * @param  item the root node to search
+             * @return the anchor HTMLElement; null otherwise
+             */
+            function getParentAnchor(item)
+            {
+                var target, targetNodeName;
+
+                target = item;
+                //go up tree to find the anchor
+                do {
+                    target = target.parentNode;
+                    targetNodeName = target.nodeName.toLowerCase();
+                } while (targetNodeName !== 'a' && target.parentNode);
+
+                if(targetNodeName === 'a' && target.getAttribute('href'))
+                {
+                    return target;
+                }
+
+                return null;
+            }
+
             return {
-                get: get,
-                getAll: getAll,
-                remove: remove
+                get                     : get,
+                getAll                  : getAll,
+                remove                  : remove,
+                getParentAnchor         : getParentAnchor
             };
 
         }()),

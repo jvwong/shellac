@@ -53,6 +53,8 @@ var shell = (function () {
         clips               : undefined,
         clip_db             : TAFFY(),
         queued              : [],
+
+        selected            : undefined,
         DEBUG               : undefined
     },
 
@@ -60,10 +62,8 @@ var shell = (function () {
     dom = {}, setDomMap,
 
     actions,
-
-    loadClips, display_clips,
-    onTapSidebar, onSwipeSidebar,
-    swipeData,
+    display_clips, handlePlaylistChange,
+    onTouchSidebar,
     utils = util.utils,
     PubSub = util.PubSub;
 
@@ -155,10 +155,9 @@ var shell = (function () {
 
             if (clip.url && clip.title && clip.owner)
             {
-                //notify bar we wish to add/delete this from the playlist
+                stateMap.selected = target;
                 bar.enqueue(clip, 0);
             }
-
         }
     };
 
@@ -203,6 +202,7 @@ var shell = (function () {
                 '<div class="col-xs-6 col-sm-4 col-md-4 col-lg-3 shellac-grid-element">' +
                     '<div class ="shellac-grid-element-panel">' +
                         '<div class ="shellac-img-panel">' +
+                            '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
                             '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
                                 '<img class="shellac-grid-img" src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
                             '</a>' +
@@ -227,7 +227,6 @@ var shell = (function () {
         // (re-)register click events on <a> of the entire ui
         utils.events.add(dom.clip_content_container, 'click', handleClick);
     };
-
     //--------------------- END DOM METHODS ----------------------
 
     //------------------- BEGIN EVENT HANDLERS -------------------
@@ -313,15 +312,46 @@ var shell = (function () {
     }
     // --- END handleClick ---
 
-    onTapSidebar = function(event, direction, distance, duration, fingerCount){
+    /**
+     * handlePlaylistChange Handler for change in Player playlist
+     * Toggles the display value of check mark
+     * @param item HTMLElement added / removed from playlist
+     * @param isAdded true if element was added
+     */
+    handlePlaylistChange = function( item, isAdded ){
+        var anchor, pathname,
+            parent, enqueue,
+            i, j;
+
+
+        anchor = utils.dom.get(item, 'a');
+
+        if(anchor)
+        {
+            pathname = util.urlParse(anchor.href).pathname;
+
+            if(stateMap.selected && stateMap.selected.dataset.url === pathname)
+            {
+                parent = stateMap.selected.parentNode;
+                enqueue = utils.dom.get(parent, '.enqueue-icon');
+
+                if(isAdded)
+                {
+                    utils.css.add(enqueue, 'enqueued');
+                }
+                else
+                {
+                    utils.css.remove(enqueue, 'enqueued');
+                }
+            }
+        }
+    };
+
+    onTouchSidebar = function(event, direction, distance, duration, fingerCount){
         event.preventDefault();
         jqueryMap.$app_container.toggleClass('nav-expanded');
     };
 
-    onSwipeSidebar = function(event, direction, distance, duration, fingerCount){
-        event.preventDefault();
-        jqueryMap.$app_container.toggleClass('nav-expanded');
-    };
     //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
@@ -364,8 +394,7 @@ var shell = (function () {
                 default:
             }
         });
-
-        //register pub-sub methods
+        util.PubSub.on('playlist-change', handlePlaylistChange);
         util.PubSub.on("shellac-app-clip-change", function(clips){
             display_clips(clips, jqueryMap.$clip_content_container);
         });
@@ -376,13 +405,11 @@ var shell = (function () {
 
         //Navigation Menu Slider
         jqueryMap.$sidebar_container.swipe({
-            tap: onTapSidebar,
-            swipeLeft: onSwipeSidebar,
+            tap: onTouchSidebar,
+            swipeLeft: onTouchSidebar,
             threshold: 75
         });
-
-        bar.initModule( jqueryMap.$player_container.get(0    ) );
-        //jqueryMap.$app_container.toggleClass('nav-expanded');
+        bar.initModule( jqueryMap.$player_container.get(0) );
     };
 
     return { initModule: initModule };

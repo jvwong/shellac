@@ -395,10 +395,36 @@ var util = (function () {
                 return false;
             }
 
+            /**
+             * getParentAnchor return the first anchor HTMLelement in the
+             * ancestor tree
+             * @param  item the root node to search
+             * @return the anchor HTMLElement; null otherwise
+             */
+            function getParentAnchor(item)
+            {
+                var target, targetNodeName;
+
+                target = item;
+                //go up tree to find the anchor
+                do {
+                    target = target.parentNode;
+                    targetNodeName = target.nodeName.toLowerCase();
+                } while (targetNodeName !== 'a' && target.parentNode);
+
+                if(targetNodeName === 'a' && target.getAttribute('href'))
+                {
+                    return target;
+                }
+
+                return null;
+            }
+
             return {
-                get: get,
-                getAll: getAll,
-                remove: remove
+                get                     : get,
+                getAll                  : getAll,
+                remove                  : remove,
+                getParentAnchor         : getParentAnchor
             };
 
         }()),

@@ -409,6 +409,20 @@ select#id_categories.form-control {
   border-color: #000000;
   padding: 2px;
 }
+.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel {
+  position: relative;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .enqueue-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.5em;
+  visibility: hidden;
+  color: #2288cc;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .enqueued.enqueue-icon {
+  visibility: visible;
+}
 .shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .shellac-grid-img {
   width: 100%;
 }
@@ -434,14 +448,6 @@ select#id_categories.form-control {
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
   font-size: larger;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-media-check.queued {
-  visibility: visible;
-}
-.shellac-grid-element .shellac-grid-element-panel .shellac-media-check {
-  visibility: hidden;
-  color: green;
-  font-size: 1.5em;
-}
 .shellac-grid-element.no-content {
   position: relative;
   top: 5em;
@@ -449,12 +455,7 @@ select#id_categories.form-control {
 }
 @media (max-width: 768px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-    font-size: medium;
-  }
-}
-@media (max-width: 640px) {
-  .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-    font-size: medium;
+    font-size: smaller;
   }
 }
 @media (max-width: 480px) {
@@ -1337,6 +1338,20 @@ body {
   border-color: #000000;
   padding: 2px;
 }
+.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel {
+  position: relative;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .enqueue-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.5em;
+  visibility: hidden;
+  color: #2288cc;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .enqueued.enqueue-icon {
+  visibility: visible;
+}
 .shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .shellac-grid-img {
   width: 100%;
 }
@@ -1362,14 +1377,6 @@ body {
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
   font-size: larger;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-media-check.queued {
-  visibility: visible;
-}
-.shellac-grid-element .shellac-grid-element-panel .shellac-media-check {
-  visibility: hidden;
-  color: green;
-  font-size: 1.5em;
-}
 .shellac-grid-element.no-content {
   position: relative;
   top: 5em;
@@ -1377,12 +1384,7 @@ body {
 }
 @media (max-width: 768px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-    font-size: medium;
-  }
-}
-@media (max-width: 640px) {
-  .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-    font-size: medium;
+    font-size: smaller;
   }
 }
 @media (max-width: 480px) {

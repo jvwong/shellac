@@ -207,8 +207,8 @@ var bar_ui = (function() {
 
             /**
              * addToPlaylist add the <li> element to the playlist
-             * Checks for insane input
-             * @param item the <li> item to append to the list
+             * Checks for insane input. Emits 'playlist-change' on success
+             * @param item the <li> item to append to the list.
              * @return true if appended
              */
             function addToPlaylist( item ) {
@@ -221,6 +221,7 @@ var bar_ui = (function() {
                 if( item.nodeName.toLowerCase() === 'li' )
                 {
                     dom.playlist.appendChild(item);
+                    util.PubSub.emit('playlist-change', item, true);
                     refreshDOM();
                     adjustDrawer();
 
@@ -233,7 +234,7 @@ var bar_ui = (function() {
 
             /**
              * deleteFromPlaylist remove the <li> element from the playlist
-             * Checks for insane input
+             * Checks for insane input. Emits 'playlist-change' on success.
              * @param item the <li> item to append to the list
              * @return true if appended
              */
@@ -247,6 +248,7 @@ var bar_ui = (function() {
                 if( item.nodeName.toLowerCase() === 'li' )
                 {
                     utils.dom.remove(item);
+                    util.PubSub.emit('playlist-change', item, false);
                     refreshDOM();
                     adjustDrawer();
                     return true;
@@ -327,7 +329,7 @@ var bar_ui = (function() {
             function findOffsetFromUrl(url) {
 
                 var list,
-                    target, targetNodeName,
+                    anchor,
                     i,
                     j,
                     offset;
@@ -340,22 +342,16 @@ var bar_ui = (function() {
 
                     for (i=0, j=list.length; i<j; i++) {
 
-                        var children, href, pathname;
+                        var pathname;
 
-                        target = list[i];
-                        //go down tree to find the anchor in the first child
-                        do {
-                            target = target.firstChild;
-                            targetNodeName = target.nodeName.toLowerCase();
-                        } while (targetNodeName !== 'a' && target.childnodes);
+                        anchor = utils.dom.get(list[i], 'a');
 
-                        //this test for equality is same url attribute
-                        if(targetNodeName !== 'a' || !target.getAttribute('href'))
+                        if(!anchor)
                         {
-                            throw "Invalid playlist elements";
+                            break;
                         }
 
-                        pathname = util.urlParse(target.href).pathname;
+                        pathname = util.urlParse(anchor.href).pathname;
                         if (pathname && pathname === url)
                         {
                             offset = i;
@@ -868,10 +864,7 @@ var bar_ui = (function() {
 
                     if (target.parentNode) {
 
-                        do {
-                            target = target.parentNode;
-                            targetNodeName = target.nodeName.toLowerCase();
-                        } while (targetNodeName !== 'a' && target.parentNode);
+                        target = utils.dom.getParentAnchor(target);
 
                         if (!target) {
                             // something went wrong. bail.
@@ -1211,8 +1204,7 @@ var bar_ui = (function() {
          * createTrack Given a track url, create an playlist element
          * @param clip object with properties 'title', 'url', 'owner' and 'label'
          */
-        function createTrack(clip)
-        {
+        function createTrack(clip){
 
             //bail if this url doesn't even make sense
             if(!clip.hasOwnProperty('url') ||
@@ -1274,7 +1266,6 @@ var bar_ui = (function() {
                 }
 
             }
-
         };
         // --- END enqueue ---
 
@@ -1286,11 +1277,6 @@ var bar_ui = (function() {
 
     };
     // --- END Player ---
-
-    // expose to global
-//    window.sm2BarPlayers = players;
-//    window.SM2BarPlayer = Player;
-
 
     //------------------- BEGIN PUBLIC METHODS -------------------
     /**

@@ -3,6 +3,7 @@
  */
 
 @import "../_elements";
+@import "../_colors";
 
 @media_margin: 0px;
 @media_clip_margin: 0px;
@@ -23,6 +24,7 @@
 @grid_img_dim: 100%;
 @grid_checksz: 1.5em;
 
+
 .shellac-grid-element {
 
   padding-left: 0px;
@@ -38,6 +40,23 @@
 
     .shellac-img-panel
     {
+      position: relative;
+
+      .enqueue-icon
+      {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 1.5em;
+        visibility: hidden;
+        color: @boostrap-blue;
+      }
+
+      .enqueued.enqueue-icon
+      {
+        visibility: visible;
+      }
+
       .shellac-grid-img
       {
         width: @grid_img_dim;
@@ -63,17 +82,6 @@
         font-size: larger;
       }
     }
-
-    .shellac-media-check.queued{
-      visibility: visible;
-    }
-
-    .shellac-media-check{
-      visibility: hidden;
-      color: green;
-      font-size: 1.5em;
-    }
-
 
   }
 
@@ -106,40 +114,6 @@
         }
       }
 
-      .shellac-media-check.queued
-      {}
-
-      .shellac-media-check
-      {}
-    }
-  }
-}
-
-@media (max-width: 640px)
-{
-  .shellac-grid-element {
-
-    .shellac-grid-element-panel
-    {
-      .shellac-img-panel
-      {
-        .shellac-grid-img
-        {}
-      }
-
-      .shellac-description-container
-      {
-        .shellac-description-content
-        {
-          font-size: smaller;
-        }
-      }
-
-      .shellac-media-check.queued
-      {}
-
-      .shellac-media-check
-      {}
     }
   }
 }
@@ -163,12 +137,6 @@
           font-size: x-small;
         }
       }
-
-      .shellac-media-check.queued
-      {}
-
-      .shellac-media-check
-      {}
     }
   }
 }
