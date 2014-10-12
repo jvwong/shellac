@@ -210,11 +210,14 @@ var shell = (function () {
                         '<div class ="shellac-caption-panel">' +
                             '<a href="#modal" data-url="' + object.permalink + '">' +
                                 '<div class ="shellac-description-container">' +
-                                    '<div class="shellac-description-content created">' + created + '</div>' +
-                                    '<div class="shellac-description-content title" data-content="' + object.title + '">' + util.truncate(object.title, configMap.truncatemax) + '</div>' +
+                                    '<div class="meta-data">' +
+                                        '<div class="shellac-description-content plays" data-content="' + object.plays + '">Plays: ' + object.plays + '</div>' +
+                                        '<div class="shellac-description-content meta rating" data-content="' + object.rating + '">Rating: ' + object.rating + '</div>' +
+                                        '<div class="shellac-description-content meta created">' + created + '</div>' +
+                                    '</div>' +
                                     '<div class="shellac-description-content owner" data-content="' + object.owner + '">' + object.owner + '</div>' +
+                                    '<div class="shellac-description-content title" data-content="' + object.title + '">' + util.truncate(object.title, configMap.truncatemax) + '</div>' +
                                     '<div class="shellac-description-content description-short">' + util.truncate(object.description , configMap.truncatemax) + '</div>' +
-                                    '<div class="shellac-description-content plays" data-content="' + object.plays + '">' + object.plays + '</div>' +
                                 '</div>' +
                             '</a>' +
                         '</div>' +

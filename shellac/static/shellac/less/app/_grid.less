@@ -5,15 +5,12 @@
 @import "../_elements";
 @import "../_colors";
 
-@media_margin: 0px;
-@media_clip_margin: 0px;
-@media_clip_padding: 1px;
+@media_margin: 5px;
 @grid_border_width: 2px;
 @grid_border_color: #000000;
 
 @caption_opacity: 0.8;
-@caption_opacity_mobile: 0.70;
-@caption_opacity_queued: 0.85;
+@caption_padding: 5px;
 @media_background_queued: #428BCA;
 @progress_opacity: 1.0;
 
@@ -69,7 +66,7 @@
       bottom:0px; /* position will be on bottom */
       left:0px;
       width:100%;
-      padding: 2px;
+      padding: @caption_padding;
 
       /* styling bellow */
       background: black;
@@ -79,8 +76,30 @@
 
       .shellac-description-content
       {
-        font-size: larger;
+        font-size: medium;
       }
+
+      .shellac-description-content.meta
+      {
+        position: absolute;
+        top: 0;
+        margin-top: @media_margin;
+      }
+      .plays
+      {
+      }
+      .rating
+      {
+        left: 50%;
+        width: 4em;
+        margin-left: -2em;
+      }
+      .created
+      {
+        right: 0;
+        margin-right: @media_margin;
+      }
+
     }
 
   }
