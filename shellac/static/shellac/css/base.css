@@ -452,6 +452,11 @@ select#id_categories.form-control {
     font-size: large;
   }
 }
+@media (max-width: 640px) {
+  .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
+    font-size: medium;
+  }
+}
 @media (max-width: 480px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
     font-size: x-small;
@@ -1373,6 +1378,11 @@ body {
 @media (max-width: 768px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
     font-size: large;
+  }
+}
+@media (max-width: 640px) {
+  .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
+    font-size: medium;
   }
 }
 @media (max-width: 480px) {
