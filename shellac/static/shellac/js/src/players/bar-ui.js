@@ -16,7 +16,7 @@ var bar_ui = (function() {
         soundManager = require('../../lib/soundmanager2/script/soundmanager2.js').soundManager,
         utils = util.utils,
 
-        enqueue,
+        playerEnqueue,
 
         configMap = {
 
@@ -618,10 +618,12 @@ var bar_ui = (function() {
 
                 onplay: function() {
                     utils.css.swap(dom.o, 'paused', 'playing');
+                    util.PubSub.emit('on-play', this);
                 },
 
                 onpause: function() {
                     utils.css.swap(dom.o, 'playing', 'paused');
+                    util.PubSub.emit('on-pause', this);
                 },
 
                 onresume: function() {
@@ -692,6 +694,7 @@ var bar_ui = (function() {
                 onstop: function() {
 
                     utils.css.remove(dom.o, 'playing');
+                    //console.log('stopped');
 
                 },
 
@@ -726,6 +729,8 @@ var bar_ui = (function() {
                      // this.stop();
 
                      }*/
+
+                    //console.log('finished');
 
                 }
 
@@ -1038,6 +1043,8 @@ var bar_ui = (function() {
 
             });
 
+            console.log(playlistController.getPlaylist());
+
         }
         // --- END init ---
 
@@ -1321,11 +1328,11 @@ var bar_ui = (function() {
     };
 
     /**
-     * enqueue Toggle in or out the given url as a track in the player
+     * playerEnqueue Toggle in or out the given url as a track in the player
      * @param url the track url to enqueue or dequeue
      * @param offset the play in the list of players
      */
-    enqueue = function(clip, offset){
+    playerEnqueue = function(clip, offset){
 
         //bail if this url doesn't even make sense
         if(!clip.hasOwnProperty('url') ||
@@ -1351,8 +1358,8 @@ var bar_ui = (function() {
     };
 
     return {
-        initModule  : initModule,
-        enqueue     : enqueue
+        initModule      : initModule,
+        playerEnqueue   : playerEnqueue
     };
 
 }());

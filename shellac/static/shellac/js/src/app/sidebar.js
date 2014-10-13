@@ -63,7 +63,7 @@ var sidebar = (function () {
         $container: undefined,
         categories: undefined,
         category_db: TAFFY(),
-        clip_db: undefined,
+        latest_clips_db: undefined,
     },
 
     initModule, setJqueryMap,
@@ -130,15 +130,15 @@ var sidebar = (function () {
      * display_categories append the html for the category sidebar accordion section
      * @param category_list list containing formatted category objects
      * @param $container jquery container
-     * @param clip_db the TAFFY db containing relevant clip objects
+     * @param latest_clips_db the TAFFY db containing relevant clip objects
      */
-    display_categories = function($container, category_db, clip_db){
+    display_categories = function($container, category_db, latest_clips_db){
         var all_anchor = String(),
             items = String(),
-            count = clip_db().count();
+            count = latest_clips_db().count();
 
         (category_db().get()).forEach(function(category){
-            var clip_array = clip_db({categories: {has: category.url}});
+            var clip_array = latest_clips_db({categories: {has: category.url}});
             items +=
                 '<a class="list-group-item nav-sidebar-category" href="#">' + '<span class="badge">' + clip_array.count() + '</span>' +
                     '<h5 class="list-group-item-heading" id="' + category.slug + '">' + category.title + '</h5>' +
@@ -156,7 +156,7 @@ var sidebar = (function () {
         $('.list-group-item.nav-sidebar-category').on('click',
             {
                 category_db: category_db,
-                clip_db: clip_db
+                latest_clips_db: latest_clips_db
             },
             onClickCategory
         );
@@ -166,18 +166,18 @@ var sidebar = (function () {
      * display_authors append the html for the currently displayed clips
      * @param category_list list containing formatted category objects
      * @param $container jquery container
-     * @param clip_db the TAFFY db containing relevant clip objects
+     * @param latest_clips_db the TAFFY db containing relevant clip objects
      */
-    display_authors = function($container, clip_db){
+    display_authors = function($container, latest_clips_db){
 
         var all_anchor = String(),
             items = String(),
-            owner_list = clip_db().distinct("owner");
+            owner_list = latest_clips_db().distinct("owner");
 
 
 
         owner_list.forEach(function(owner){
-            var clip_array = clip_db({owner: {has: owner}});
+            var clip_array = latest_clips_db({owner: {has: owner}});
 
             items +=
                 '<a class="list-group-item nav-sidebar-authors" href="#">' + '<span class="badge">' + clip_array.count() + '</span>' +
@@ -187,7 +187,7 @@ var sidebar = (function () {
 
         all_anchor +=
             '<a class="list-group-item nav-sidebar-authors active" href="#">' +
-            '<span class="badge">' + clip_db().count() + '</span>' +
+            '<span class="badge">' + latest_clips_db().count() + '</span>' +
             '<h5 class="list-group-item-heading" id="all">ALL</h5>' +
             '</a>';
         $container.append(all_anchor, items);
@@ -195,7 +195,7 @@ var sidebar = (function () {
         //register listeners on <h5> element
         $('.list-group-item.nav-sidebar-authors').on('click',
             {
-                clip_db: clip_db
+                latest_clips_db: latest_clips_db
             },
             onClickAuthor
         );
@@ -211,7 +211,7 @@ var sidebar = (function () {
      */
     onClickCategory = function(event){
 
-        var clip_db = event.data.clip_db,
+        var latest_clips_db = event.data.latest_clips_db,
             category_db = event.data.category_db,
             clips = [],
             category, $a, id;
@@ -226,11 +226,11 @@ var sidebar = (function () {
 
         //refill the empty the clip array
         if(id === "all"){
-            clips = clip_db().get();
+            clips = latest_clips_db().get();
 
         } else {
             category = category_db({slug: id}).first();
-            clips = clip_db({categories: {has: category.url}}).get();
+            clips = latest_clips_db({categories: {has: category.url}}).get();
         }
 
         util.PubSub.emit( "shellac-app-clip-change", clips);
@@ -245,7 +245,7 @@ var sidebar = (function () {
      */
     onClickAuthor = function(event){
 
-        var clip_db = event.data.clip_db,
+        var latest_clips_db = event.data.latest_clips_db,
             clips = [],
             owner, $a, id;
 
@@ -259,10 +259,10 @@ var sidebar = (function () {
 
         //refill the empty the clip array
         if(id === "all"){
-            clips = clip_db().get();
+            clips = latest_clips_db().get();
 
         } else {
-            clips = clip_db({owner: {has: id}}).get();
+            clips = latest_clips_db({owner: {has: id}}).get();
         }
 
         util.PubSub.emit( "shellac-app-clip-change", clips);
@@ -288,13 +288,13 @@ var sidebar = (function () {
      * initModule Populates the $container with the sidebar of the UI
      * and then configures and initializes feature modules.
      * @param $container A jQuery collection that should represent a single DOM container
-     * @param clip_db the TAFFY db of clip objects
+     * @param latest_clips_db the TAFFY db of clip objects
      */
-    initModule = function( $container, clip_db ){
+    initModule = function( $container, latest_clips_db ){
 
         // load HTML and map jQuery collections
         stateMap.$container = $container;
-        stateMap.clip_db = clip_db;
+        stateMap.latest_clips_db = latest_clips_db;
 
         $container.append( configMap.main_html );
         setJqueryMap();
@@ -309,7 +309,7 @@ var sidebar = (function () {
                     display_categories(
                         jqueryMap.$sidebar_category_listGroup,
                         stateMap.category_db,
-                        stateMap.clip_db
+                        stateMap.latest_clips_db
                     );
                     break;
                 case 'api_clips_search':
@@ -327,7 +327,7 @@ var sidebar = (function () {
             });
 
         //Inject Category, People data
-        display_authors(jqueryMap.$sidebar_authors_listGroup, stateMap.clip_db);
+        display_authors(jqueryMap.$sidebar_authors_listGroup, stateMap.latest_clips_db);
         util.fetchUrl('/api/categories/', 'api_categories');
 
     };

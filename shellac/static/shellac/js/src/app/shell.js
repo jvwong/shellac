@@ -50,8 +50,8 @@ var shell = (function () {
         target_username     : undefined,
         status              : undefined,
 
-        clips               : undefined,
-        clip_db             : TAFFY(),
+        latest_clips        : undefined,
+        latest_clips_db     : TAFFY(),
         queued              : [],
 
         selected            : undefined,
@@ -62,7 +62,8 @@ var shell = (function () {
     dom = {}, setDomMap,
 
     actions,
-    display_clips, handlePlaylistChange,
+    display_clips,
+    handlePlaylistChange, handleUrlFetch,
     onTouchSidebar,
     utils = util.utils,
     PubSub = util.PubSub;
@@ -141,6 +142,7 @@ var shell = (function () {
 
         /**
          * enqueue pass the corresponding to a clip to the player playlist
+         * NB: we should save out some state here...
          * @param target ElementNode for the clip to enqueue
          */
         enqueue : function(target) {
@@ -156,7 +158,7 @@ var shell = (function () {
             if (clip.url && clip.title && clip.owner)
             {
                 stateMap.selected = target;
-                bar.enqueue(clip, 0);
+                bar.playerEnqueue(clip, 0);
             }
         }
     };
@@ -179,7 +181,7 @@ var shell = (function () {
         $container.html("");
         utils.events.remove(dom.clip_content_container, 'click', handleClick);
 
-        if(stateMap.clips.length === 0)
+        if(stateMap.latest_clips.length === 0)
         {
             var message = String() +
                 '<div class="col-xs-12 shellac-grid-element no-content">' +
@@ -233,6 +235,28 @@ var shell = (function () {
     //--------------------- END DOM METHODS ----------------------
 
     //------------------- BEGIN EVENT HANDLERS -------------------
+
+    /**
+     * handleUrlFetch Callback for a ajax call
+     * Actions: processes the returning data based on the tag
+     * @param e event object
+     */
+    handleUrlFetch = function(tag, result){
+        switch (tag)
+        {
+            case 'api_clips_status_person':
+                var formatted = util.parseClipData(result);
+                stateMap.latest_clips_db.insert(formatted);
+                stateMap.latest_clips = stateMap.latest_clips_db().order("id desc").get();
+                display_clips(stateMap.latest_clips, jqueryMap.$clip_content_container);
+
+                //initialize the sidebar module
+                sidebar.initModule( jqueryMap.$sidebar_container, stateMap.latest_clips_db );
+                break;
+            default:
+        }
+    };
+    // --- END handleUrlFetch ---
 
     /**
      * handleClick Callback for a click event on the entire UI
@@ -328,6 +352,8 @@ var shell = (function () {
 
         anchor = utils.dom.get(item, 'a');
 
+        console.log(anchor);
+
         if(anchor)
         {
             pathname = util.urlParse(anchor.href).pathname;
@@ -392,24 +418,18 @@ var shell = (function () {
 
 
         //register pub-sub methods
-        util.PubSub.on("fetchUrlComplete", function(tag, result){
-            switch (tag)
-            {
-                case 'api_clips_status_person':
-                    var formatted = util.parseClipData(result);
-                    stateMap.clip_db.insert(formatted);
-                    stateMap.clips = stateMap.clip_db().order("id desc").get();
-                    display_clips(stateMap.clips, jqueryMap.$clip_content_container);
-
-                    //initialize the sidebar module
-                    sidebar.initModule( jqueryMap.$sidebar_container, stateMap.clip_db );
-                    break;
-                default:
-            }
-        });
+        util.PubSub.on("fetchUrlComplete", handleUrlFetch);
         util.PubSub.on('playlist-change', handlePlaylistChange);
         util.PubSub.on("shellac-app-clip-change", function(clips){
             display_clips(clips, jqueryMap.$clip_content_container);
+        });
+        util.PubSub.on('on-play', function(p){
+            console.log("'on-play' called");
+            console.log(p);
+        });
+        util.PubSub.on('on-pause', function(p){
+            console.log("'on-pause' called");
+            console.log(p.position);
         });
 
         //load data into in-browser database
