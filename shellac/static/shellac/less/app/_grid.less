@@ -15,6 +15,10 @@
 @caption_opacity: 0.8;
 @caption_padding: 5px;
 
+@font_size_large: 1.0em;
+@font_size_medium: 0.95em;
+@font_size_small: 0.85em;
+
 @grid_img_dim: 100%;
 @grid_checksz: 1.5em;
 
@@ -76,7 +80,7 @@
 
       .shellac-description-content
       {
-        font-size: medium;
+        font-size: @font_size_large;
       }
 
       .shellac-description-content.meta
@@ -128,7 +132,7 @@
       {
         .shellac-description-content
         {
-          font-size: smaller;
+          font-size: @font_size_medium;
         }
       }
 
@@ -152,7 +156,7 @@
       {
         .shellac-description-content
         {
-          font-size: x-small;
+          font-size: @font_size_small;
         }
       }
     }

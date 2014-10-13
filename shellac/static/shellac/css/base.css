@@ -448,7 +448,7 @@ select#id_categories.form-control {
   margin-bottom: 0px;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-  font-size: medium;
+  font-size: 1em;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content.meta {
   position: absolute;
@@ -470,12 +470,12 @@ select#id_categories.form-control {
 }
 @media (max-width: 768px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-    font-size: smaller;
+    font-size: 0.95em;
   }
 }
 @media (max-width: 480px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-    font-size: x-small;
+    font-size: 0.85em;
   }
 }
 /*
@@ -1392,7 +1392,7 @@ body {
   margin-bottom: 0px;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-  font-size: medium;
+  font-size: 1em;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content.meta {
   position: absolute;
@@ -1414,12 +1414,12 @@ body {
 }
 @media (max-width: 768px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-    font-size: smaller;
+    font-size: 0.95em;
   }
 }
 @media (max-width: 480px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-    font-size: x-small;
+    font-size: 0.85em;
   }
 }
 

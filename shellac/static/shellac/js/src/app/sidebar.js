@@ -297,9 +297,8 @@ var sidebar = (function () {
      */
     initModule = function( container, latest_clips_db ){
 
-        console.log(utils);
-
         if(container.nodeType !== utils.nodeTypes.ELEMENT_NODE){
+            console.warn('Invalid container for sidebar ui');
             return;
         }
         // load HTML and map jQuery collections

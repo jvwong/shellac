@@ -10985,7 +10985,12 @@ var shell = (function () {
 
     //---------------- BEGIN MODULE SCOPE VARIABLES --------------
     var
-    initModule,
+
+    utils = util.utils,
+    PubSub = util.PubSub,
+
+    initModule, initUI,
+    setPreferences,
 
     configMap = {
         main_html: String() +
@@ -11014,14 +11019,20 @@ var shell = (function () {
     },
 
     stateMap = {
-        container          : undefined,
+        container           : undefined,
         target_username     : undefined,
         status              : undefined,
-
         latest_clips_db     : TAFFY(),
-
         selected            : undefined,
         DEBUG               : undefined
+    },
+
+    preferences = {
+        playlist: [],
+        selected: {
+            selectedIndex: undefined,
+            position: 0
+        }
     },
 
     jqueryMap = {}, setJqueryMap,
@@ -11029,10 +11040,8 @@ var shell = (function () {
 
     actions,
     render_clips,
-    handlePlaylistChange, handleUrlFetch, handleClick,
-
-    utils = util.utils,
-    PubSub = util.PubSub;
+    handleUrlFetch, handleClick,
+    handlePlayerStateChange, handlePlaylistChange;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -11051,7 +11060,6 @@ var shell = (function () {
         };
     };
 
-
     /**
      * setDomMap record the DOM elements of the page
      */
@@ -11069,6 +11077,15 @@ var shell = (function () {
             modal_body              : utils.dom.get(outerDiv, '#get_absolute_urlModal .modal-dialog .modal-content .modal-body'),
             modal_footer            : utils.dom.get(outerDiv, '#get_absolute_urlModal .modal-dialog .modal-content .modal-footer'),
         };
+    };
+
+    /**
+     * setPreferences initialize the preferences objects in stateMap for the
+     * initialization of the sm2 player
+     * @param
+     */
+    setPreferences = function(){
+        console.log("setPreferences called");
     };
 
     /**
@@ -11102,25 +11119,53 @@ var shell = (function () {
 
         /**
          * enqueue pass the corresponding to a clip to the player playlist
-         * NB: we should save out some state here...
+         * Action Add any clips database that are enqueued. These could be search results
+         * that were not added to the database on init
          * @param target ElementNode for the clip to enqueue
          */
         enqueue : function(target) {
 
-            var url, title, owner,
-                clip = {
-                    url: target.dataset.url || target.hasAttribute('data-url') ? target.getAttribute('data-url') : '',
-                    title: target.dataset.title || target.hasAttribute('data-title') ? target.getAttribute('data-title') : '',
-                    owner: target.dataset.owner || target.hasAttribute('data-owner') ? target.getAttribute('data-owner') : '',
-                    label: target.dataset.label || target.hasAttribute('data-label') ? target.getAttribute('data-label') : ''
-                };
+            console.log(target);
+            var clip, query;
 
-            if (clip.url && clip.title && clip.owner)
+            if(!target.dataset.id)
             {
-                stateMap.selected = target;
-                bar.playerEnqueue(clip, 0);
+                return;
             }
+
+            query = stateMap.latest_clips_db({id: parseInt(target.dataset.id)}).first();
+            console.log(query);
+            if(!query)
+            {
+                //fetch this info via ajax request???
+
+            }
+
+            stateMap.selected = target;
+            bar.playerEnqueue([query], 0);
         }
+    };
+
+    /**
+     * populates the shell UI
+     * @param relationship to return clips
+     * @param username the name of the user to load
+     */
+    initUI = function(status, username){
+        //load data into in-browser database
+        var clipsUrl = ['/api/clips', status, username, ""].join('/');
+        util.PubSub.on("fetchUrlComplete", function(tag, result){
+            if(tag === 'api_clips_status_person')
+            {
+                var formatted = util.parseClipData(result);
+                stateMap.latest_clips_db.insert(formatted);
+                render_clips(stateMap.latest_clips_db().order("id desc").get(), dom.clip_content_container );
+
+                //initialize the sidebar module
+                sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
+            }
+        });
+        util.fetchUrl(clipsUrl, 'api_clips_status_person');
     };
 
     //--------------------- END MODULE SCOPE METHODS --------------------
@@ -11164,7 +11209,7 @@ var shell = (function () {
                     '<div class ="shellac-grid-element-panel">' +
                         '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
                         '<div class ="shellac-img-panel">' +
-                            '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
+                            '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-id="' + object.id + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
                                 '<img class="shellac-grid-img" src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
                             '</a>' +
                         '</div>' +
@@ -11194,28 +11239,6 @@ var shell = (function () {
     //--------------------- END DOM METHODS ----------------------
 
     //------------------- BEGIN EVENT HANDLERS -------------------
-
-    /**
-     * handleUrlFetch Callback for a ajax call
-     * Actions: processes the returning data based on the tag
-     * @param tag unique string for the fetch call
-     * @param reult data returned by Ajax call
-     */
-    handleUrlFetch = function(tag, result){
-        switch (tag)
-        {
-            case 'api_clips_status_person':
-                var formatted = util.parseClipData(result);
-                stateMap.latest_clips_db.insert(formatted);
-                render_clips(stateMap.latest_clips_db().order("id desc").get(), dom.clip_content_container );
-
-                //initialize the sidebar module
-                sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
-                break;
-            default:
-        }
-    };
-    // --- END handleUrlFetch ---
 
     /**
      * handleClick Callback for a click event on the entire UI
@@ -11311,8 +11334,6 @@ var shell = (function () {
 
         anchor = utils.dom.get(item, 'a');
 
-        console.log(anchor);
-
         if(anchor)
         {
             pathname = util.urlParse(anchor.href).pathname;
@@ -11344,6 +11365,29 @@ var shell = (function () {
             }
         }
     };
+
+    /**
+     * handlePlayerStateChange Handler for change in player state
+     * @param state string identifier indicating the type of state change
+     * @param sm2Object the relevant soundManager sound object
+     */
+    handlePlayerStateChange = function(state, sm2Object){
+        console.log("%s called", state);
+        console.log(sm2Object);
+
+        switch (state)
+        {
+            case 'onplay':
+                //get the clip id
+
+                //need the number of plays. Fetch the clip?
+
+                //'patch' api to increment 'plays' attribute
+                break;
+            default:
+        }
+    };
+
      //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
@@ -11366,28 +11410,19 @@ var shell = (function () {
         utils.dom.append(container, configMap.main_html);
         utils.dom.append(container, configMap.modal_html);
         utils.dom.append(container, configMap.modal_button_html);
+
         setDomMap();
         setJqueryMap();
+        setPreferences();
 
-        //register pub-sub methods
-        util.PubSub.on("fetchUrlComplete", handleUrlFetch);
+        //register events
         util.PubSub.on('playlist-change', handlePlaylistChange);
+        util.PubSub.on('player-change', handlePlayerStateChange);
         util.PubSub.on("shellac-app-clip-change", function(clips){
             render_clips(clips, dom.clip_content_container);
         });
-        util.PubSub.on('on-play', function(p){
-            console.log("'on-play' called");
-            console.log(p);
-        });
-        util.PubSub.on('on-pause', function(p){
-            console.log("'on-pause' called");
-            console.log(p.position);
-        });
 
-        //load data into in-browser database
-        var clipsUrl = ['/api/clips', stateMap.status, target_username, ""].join('/');
-        util.fetchUrl(clipsUrl, 'api_clips_status_person');
-
+        initUI(stateMap.status, target_username);
         bar.initModule( dom.player_container );
     };
 
@@ -11697,9 +11732,8 @@ var sidebar = (function () {
      */
     initModule = function( container, latest_clips_db ){
 
-        console.log(utils);
-
         if(container.nodeType !== utils.nodeTypes.ELEMENT_NODE){
+            console.warn('Invalid container for sidebar ui');
             return;
         }
         // load HTML and map jQuery collections
@@ -11853,7 +11887,7 @@ var bar_ui = (function() {
 
                             '<div class="sm2-playlist-wrapper">' +
                                 '<ul class="sm2-playlist-bd">' +
-                                  '<li><a href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3"><b>SonReal</b>- Let Me<span class="label">Explicit</span></a></li>' +
+                                  '<li><a data-id="10000" href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3"><b>SonReal</b>- Let Me<span class="label">Explicit</span></a></li>' +
                                 '</ul>' +
                             '</div>' +
 
@@ -12078,28 +12112,28 @@ var bar_ui = (function() {
             }
 
             /**
-             * findOffsetFromUrl given an url item, find it in the playlist array and
+             * findOffsetFromId given an id, find it in the playlist array and
              * return the index.
-             * @param url String url in href attribute
+             * @param queryId Number for the clip pk -- careful the clip has a numberical id and the anchor a string
+             * based attribute
              * @return offset index of item in playlist HTMLCollection, -1 otherwise
              */
-            function findOffsetFromUrl(url) {
+            function findOffsetFromId(queryId) {
 
                 var list,
                     anchor,
                     i,
                     j,
-                    offset;
+                    offset,
+                    id = queryId.toString();
 
                 offset = -1;
 
                 list = getPlaylist();
 
-                if (list && url) {
+                if (list && id) {
 
                     for (i=0, j=list.length; i<j; i++) {
-
-                        var pathname;
 
                         anchor = utils.dom.get(list[i], 'a');
 
@@ -12108,8 +12142,7 @@ var bar_ui = (function() {
                             break;
                         }
 
-                        pathname = util.urlParse(anchor.href).pathname;
-                        if (pathname && pathname === url)
+                        if (anchor.dataset.id && anchor.dataset.id === id)
                         {
                             offset = i;
                             break;
@@ -12278,7 +12311,7 @@ var bar_ui = (function() {
                 getPlaylist         : getPlaylist,
                 addToPlaylist       : addToPlaylist,
                 deleteFromPlaylist  : deleteFromPlaylist,
-                findOffsetFromUrl   : findOffsetFromUrl
+                findOffsetFromId    : findOffsetFromId
             };
 
         }
@@ -12375,12 +12408,12 @@ var bar_ui = (function() {
 
                 onplay: function() {
                     utils.css.swap(dom.o, 'paused', 'playing');
-                    util.PubSub.emit('on-play', this);
+                    util.PubSub.emit('player-change', 'onplay', this);
                 },
 
                 onpause: function() {
                     utils.css.swap(dom.o, 'playing', 'paused');
-                    util.PubSub.emit('on-pause', this);
+                    util.PubSub.emit('player-change', 'onpause', this);
                 },
 
                 onresume: function() {
@@ -12971,20 +13004,22 @@ var bar_ui = (function() {
         function createTrack(clip){
 
             //bail if this url doesn't even make sense
-            if(!clip.hasOwnProperty('url') ||
+            if(!clip.hasOwnProperty('audio_file_url') ||
                !clip.hasOwnProperty('title') ||
                !clip.hasOwnProperty('owner') ||
-               !clip.hasOwnProperty('label'))
+               !clip.hasOwnProperty('id'))
             {
+                console.warn('Invalid clip -- missing required attributes');
                 return null;
             }
 
-            var liNode, template;
+            var liNode, template,
+                label = clip.label || '';
 
             template = [
-                '<a href="', clip.url,'">',
+                '<a data-id="' + clip.id + '"href="', clip.audio_file_url,'">',
                     '<b>', clip.owner, '</b> - ', clip.title,
-                    '<span class="label"> ', clip.label, ' </span>',
+                    '<span class="label"> ', label, ' </span>',
                 '</a>'
             ].join('');
 
@@ -13011,11 +13046,14 @@ var bar_ui = (function() {
             item = createTrack(clip);
 
             //attempt to find matching item in player playlist
-            if( !clip.hasOwnProperty('url') )
+            if( item === null || !clip.hasOwnProperty('id') )
             {
-                throw "Attempting to enqueue invalid clip object";
+                console.warn("Attempting to enqueue invalid clip object");
+                return;
             }
-            offset = playlistController.findOffsetFromUrl(clip.url);
+
+            //this should be done by 'id'
+            offset = playlistController.findOffsetFromId(clip.id);
 
             if(offset === -1)
             {
@@ -13086,32 +13124,31 @@ var bar_ui = (function() {
 
     /**
      * playerEnqueue Toggle in or out the given url as a track in the player
-     * @param url the track url to enqueue or dequeue
+     * @param clips objects possessing Clip-like attributes
      * @param offset the play in the list of players
      */
-    playerEnqueue = function(clip, offset){
+    playerEnqueue = function(clips, offset){
 
-        //bail if this url doesn't even make sense
-        if(!clip.hasOwnProperty('url') ||
-           !clip.hasOwnProperty('title') ||
-           !clip.hasOwnProperty('owner') ||
-           !clip.hasOwnProperty('label') ||
-           players.length === 0)
-        {
-            return;
-        }
+        var collection = clips || [],
+            index = offset || 0;
 
-        //enqueue if the player is in range
-        if(offset !== undefined && offset > -1 && offset < players.length)
-        {
-            players[offset].enqueue(clip);
-        }
+        collection.forEach(function(element){
 
-        //default to the first player
-        else
-        {
-            players[0].enqueue(clip);
-        }
+            var clip = element || {};
+
+            //enqueue if the player is in range
+            if(index > -1 && index < players.length)
+            {
+                players[index].enqueue(clip);
+            }
+
+            //default to the first player
+            else
+            {
+                players[0].enqueue(clip);
+            }
+        });
+
     };
 
     return {

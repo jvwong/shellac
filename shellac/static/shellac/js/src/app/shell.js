@@ -17,7 +17,12 @@ var shell = (function () {
 
     //---------------- BEGIN MODULE SCOPE VARIABLES --------------
     var
-    initModule,
+
+    utils = util.utils,
+    PubSub = util.PubSub,
+
+    initModule, initUI,
+    setPreferences,
 
     configMap = {
         main_html: String() +
@@ -46,14 +51,20 @@ var shell = (function () {
     },
 
     stateMap = {
-        container          : undefined,
+        container           : undefined,
         target_username     : undefined,
         status              : undefined,
-
         latest_clips_db     : TAFFY(),
-
         selected            : undefined,
         DEBUG               : undefined
+    },
+
+    preferences = {
+        playlist: [],
+        selected: {
+            selectedIndex: undefined,
+            position: 0
+        }
     },
 
     jqueryMap = {}, setJqueryMap,
@@ -61,10 +72,8 @@ var shell = (function () {
 
     actions,
     render_clips,
-    handlePlaylistChange, handleUrlFetch, handleClick,
-
-    utils = util.utils,
-    PubSub = util.PubSub;
+    handleUrlFetch, handleClick,
+    handlePlayerStateChange, handlePlaylistChange;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -83,7 +92,6 @@ var shell = (function () {
         };
     };
 
-
     /**
      * setDomMap record the DOM elements of the page
      */
@@ -101,6 +109,15 @@ var shell = (function () {
             modal_body              : utils.dom.get(outerDiv, '#get_absolute_urlModal .modal-dialog .modal-content .modal-body'),
             modal_footer            : utils.dom.get(outerDiv, '#get_absolute_urlModal .modal-dialog .modal-content .modal-footer'),
         };
+    };
+
+    /**
+     * setPreferences initialize the preferences objects in stateMap for the
+     * initialization of the sm2 player
+     * @param
+     */
+    setPreferences = function(){
+        console.log("setPreferences called");
     };
 
     /**
@@ -134,25 +151,53 @@ var shell = (function () {
 
         /**
          * enqueue pass the corresponding to a clip to the player playlist
-         * NB: we should save out some state here...
+         * Action Add any clips database that are enqueued. These could be search results
+         * that were not added to the database on init
          * @param target ElementNode for the clip to enqueue
          */
         enqueue : function(target) {
 
-            var url, title, owner,
-                clip = {
-                    url: target.dataset.url || target.hasAttribute('data-url') ? target.getAttribute('data-url') : '',
-                    title: target.dataset.title || target.hasAttribute('data-title') ? target.getAttribute('data-title') : '',
-                    owner: target.dataset.owner || target.hasAttribute('data-owner') ? target.getAttribute('data-owner') : '',
-                    label: target.dataset.label || target.hasAttribute('data-label') ? target.getAttribute('data-label') : ''
-                };
+            console.log(target);
+            var clip, query;
 
-            if (clip.url && clip.title && clip.owner)
+            if(!target.dataset.id)
             {
-                stateMap.selected = target;
-                bar.playerEnqueue(clip, 0);
+                return;
             }
+
+            query = stateMap.latest_clips_db({id: parseInt(target.dataset.id)}).first();
+            console.log(query);
+            if(!query)
+            {
+                //fetch this info via ajax request???
+
+            }
+
+            stateMap.selected = target;
+            bar.playerEnqueue([query], 0);
         }
+    };
+
+    /**
+     * populates the shell UI
+     * @param relationship to return clips
+     * @param username the name of the user to load
+     */
+    initUI = function(status, username){
+        //load data into in-browser database
+        var clipsUrl = ['/api/clips', status, username, ""].join('/');
+        util.PubSub.on("fetchUrlComplete", function(tag, result){
+            if(tag === 'api_clips_status_person')
+            {
+                var formatted = util.parseClipData(result);
+                stateMap.latest_clips_db.insert(formatted);
+                render_clips(stateMap.latest_clips_db().order("id desc").get(), dom.clip_content_container );
+
+                //initialize the sidebar module
+                sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
+            }
+        });
+        util.fetchUrl(clipsUrl, 'api_clips_status_person');
     };
 
     //--------------------- END MODULE SCOPE METHODS --------------------
@@ -196,7 +241,7 @@ var shell = (function () {
                     '<div class ="shellac-grid-element-panel">' +
                         '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
                         '<div class ="shellac-img-panel">' +
-                            '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
+                            '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-id="' + object.id + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
                                 '<img class="shellac-grid-img" src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
                             '</a>' +
                         '</div>' +
@@ -226,28 +271,6 @@ var shell = (function () {
     //--------------------- END DOM METHODS ----------------------
 
     //------------------- BEGIN EVENT HANDLERS -------------------
-
-    /**
-     * handleUrlFetch Callback for a ajax call
-     * Actions: processes the returning data based on the tag
-     * @param tag unique string for the fetch call
-     * @param reult data returned by Ajax call
-     */
-    handleUrlFetch = function(tag, result){
-        switch (tag)
-        {
-            case 'api_clips_status_person':
-                var formatted = util.parseClipData(result);
-                stateMap.latest_clips_db.insert(formatted);
-                render_clips(stateMap.latest_clips_db().order("id desc").get(), dom.clip_content_container );
-
-                //initialize the sidebar module
-                sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
-                break;
-            default:
-        }
-    };
-    // --- END handleUrlFetch ---
 
     /**
      * handleClick Callback for a click event on the entire UI
@@ -343,8 +366,6 @@ var shell = (function () {
 
         anchor = utils.dom.get(item, 'a');
 
-        console.log(anchor);
-
         if(anchor)
         {
             pathname = util.urlParse(anchor.href).pathname;
@@ -376,6 +397,29 @@ var shell = (function () {
             }
         }
     };
+
+    /**
+     * handlePlayerStateChange Handler for change in player state
+     * @param state string identifier indicating the type of state change
+     * @param sm2Object the relevant soundManager sound object
+     */
+    handlePlayerStateChange = function(state, sm2Object){
+        console.log("%s called", state);
+        console.log(sm2Object);
+
+        switch (state)
+        {
+            case 'onplay':
+                //get the clip id
+
+                //need the number of plays. Fetch the clip?
+
+                //'patch' api to increment 'plays' attribute
+                break;
+            default:
+        }
+    };
+
      //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
@@ -398,28 +442,19 @@ var shell = (function () {
         utils.dom.append(container, configMap.main_html);
         utils.dom.append(container, configMap.modal_html);
         utils.dom.append(container, configMap.modal_button_html);
+
         setDomMap();
         setJqueryMap();
+        setPreferences();
 
-        //register pub-sub methods
-        util.PubSub.on("fetchUrlComplete", handleUrlFetch);
+        //register events
         util.PubSub.on('playlist-change', handlePlaylistChange);
+        util.PubSub.on('player-change', handlePlayerStateChange);
         util.PubSub.on("shellac-app-clip-change", function(clips){
             render_clips(clips, dom.clip_content_container);
         });
-        util.PubSub.on('on-play', function(p){
-            console.log("'on-play' called");
-            console.log(p);
-        });
-        util.PubSub.on('on-pause', function(p){
-            console.log("'on-pause' called");
-            console.log(p.position);
-        });
 
-        //load data into in-browser database
-        var clipsUrl = ['/api/clips', stateMap.status, target_username, ""].join('/');
-        util.fetchUrl(clipsUrl, 'api_clips_status_person');
-
+        initUI(stateMap.status, target_username);
         bar.initModule( dom.player_container );
     };
 

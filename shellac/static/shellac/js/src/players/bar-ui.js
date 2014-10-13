@@ -96,7 +96,7 @@ var bar_ui = (function() {
 
                             '<div class="sm2-playlist-wrapper">' +
                                 '<ul class="sm2-playlist-bd">' +
-                                  '<li><a href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3"><b>SonReal</b>- Let Me<span class="label">Explicit</span></a></li>' +
+                                  '<li><a data-id="10000" href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3"><b>SonReal</b>- Let Me<span class="label">Explicit</span></a></li>' +
                                 '</ul>' +
                             '</div>' +
 
@@ -321,28 +321,28 @@ var bar_ui = (function() {
             }
 
             /**
-             * findOffsetFromUrl given an url item, find it in the playlist array and
+             * findOffsetFromId given an id, find it in the playlist array and
              * return the index.
-             * @param url String url in href attribute
+             * @param queryId Number for the clip pk -- careful the clip has a numberical id and the anchor a string
+             * based attribute
              * @return offset index of item in playlist HTMLCollection, -1 otherwise
              */
-            function findOffsetFromUrl(url) {
+            function findOffsetFromId(queryId) {
 
                 var list,
                     anchor,
                     i,
                     j,
-                    offset;
+                    offset,
+                    id = queryId.toString();
 
                 offset = -1;
 
                 list = getPlaylist();
 
-                if (list && url) {
+                if (list && id) {
 
                     for (i=0, j=list.length; i<j; i++) {
-
-                        var pathname;
 
                         anchor = utils.dom.get(list[i], 'a');
 
@@ -351,8 +351,7 @@ var bar_ui = (function() {
                             break;
                         }
 
-                        pathname = util.urlParse(anchor.href).pathname;
-                        if (pathname && pathname === url)
+                        if (anchor.dataset.id && anchor.dataset.id === id)
                         {
                             offset = i;
                             break;
@@ -521,7 +520,7 @@ var bar_ui = (function() {
                 getPlaylist         : getPlaylist,
                 addToPlaylist       : addToPlaylist,
                 deleteFromPlaylist  : deleteFromPlaylist,
-                findOffsetFromUrl   : findOffsetFromUrl
+                findOffsetFromId    : findOffsetFromId
             };
 
         }
@@ -618,12 +617,12 @@ var bar_ui = (function() {
 
                 onplay: function() {
                     utils.css.swap(dom.o, 'paused', 'playing');
-                    util.PubSub.emit('on-play', this);
+                    util.PubSub.emit('player-change', 'onplay', this);
                 },
 
                 onpause: function() {
                     utils.css.swap(dom.o, 'playing', 'paused');
-                    util.PubSub.emit('on-pause', this);
+                    util.PubSub.emit('player-change', 'onpause', this);
                 },
 
                 onresume: function() {
@@ -1214,20 +1213,22 @@ var bar_ui = (function() {
         function createTrack(clip){
 
             //bail if this url doesn't even make sense
-            if(!clip.hasOwnProperty('url') ||
+            if(!clip.hasOwnProperty('audio_file_url') ||
                !clip.hasOwnProperty('title') ||
                !clip.hasOwnProperty('owner') ||
-               !clip.hasOwnProperty('label'))
+               !clip.hasOwnProperty('id'))
             {
+                console.warn('Invalid clip -- missing required attributes');
                 return null;
             }
 
-            var liNode, template;
+            var liNode, template,
+                label = clip.label || '';
 
             template = [
-                '<a href="', clip.url,'">',
+                '<a data-id="' + clip.id + '"href="', clip.audio_file_url,'">',
                     '<b>', clip.owner, '</b> - ', clip.title,
-                    '<span class="label"> ', clip.label, ' </span>',
+                    '<span class="label"> ', label, ' </span>',
                 '</a>'
             ].join('');
 
@@ -1254,11 +1255,14 @@ var bar_ui = (function() {
             item = createTrack(clip);
 
             //attempt to find matching item in player playlist
-            if( !clip.hasOwnProperty('url') )
+            if( item === null || !clip.hasOwnProperty('id') )
             {
-                throw "Attempting to enqueue invalid clip object";
+                console.warn("Attempting to enqueue invalid clip object");
+                return;
             }
-            offset = playlistController.findOffsetFromUrl(clip.url);
+
+            //this should be done by 'id'
+            offset = playlistController.findOffsetFromId(clip.id);
 
             if(offset === -1)
             {
@@ -1329,32 +1333,31 @@ var bar_ui = (function() {
 
     /**
      * playerEnqueue Toggle in or out the given url as a track in the player
-     * @param url the track url to enqueue or dequeue
+     * @param clips objects possessing Clip-like attributes
      * @param offset the play in the list of players
      */
-    playerEnqueue = function(clip, offset){
+    playerEnqueue = function(clips, offset){
 
-        //bail if this url doesn't even make sense
-        if(!clip.hasOwnProperty('url') ||
-           !clip.hasOwnProperty('title') ||
-           !clip.hasOwnProperty('owner') ||
-           !clip.hasOwnProperty('label') ||
-           players.length === 0)
-        {
-            return;
-        }
+        var collection = clips || [],
+            index = offset || 0;
 
-        //enqueue if the player is in range
-        if(offset !== undefined && offset > -1 && offset < players.length)
-        {
-            players[offset].enqueue(clip);
-        }
+        collection.forEach(function(element){
 
-        //default to the first player
-        else
-        {
-            players[0].enqueue(clip);
-        }
+            var clip = element || {};
+
+            //enqueue if the player is in range
+            if(index > -1 && index < players.length)
+            {
+                players[index].enqueue(clip);
+            }
+
+            //default to the first player
+            else
+            {
+                players[0].enqueue(clip);
+            }
+        });
+
     };
 
     return {
