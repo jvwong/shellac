@@ -318,6 +318,67 @@ var util = (function () {
         dom: (function() {
 
             /**
+             * append to the parent, append the given HTML (string, HTMLElement node)
+             * @param parentNode (optional) Node object to append to; document otherwise
+             * @param valid HTML string or HTMLElement node
+             */
+            function append(/* parentNode, html */) {
+
+                var node,
+                    html,
+                    tmp, children, i, j;
+
+
+                //case 1: simply append the html child to the node
+                if (arguments.length === 2 &&
+                    arguments[0] === utils.nodeTypes.ELEMENT_NODE &&
+                    arguments[1] === utils.nodeTypes.ELEMENT_NODE)
+                {
+                    node = arguments[0];
+                    html = arguments[1];
+                    node.appendChild(html);
+                    return node;
+                }
+
+                //case 2: The child is a string representation of html, no parent declared
+                if (arguments.length === 1 && typeof (arguments[0]) === "string") {
+
+                    // html only
+                    node = document.documentElement; //<HTML> element
+                    html = arguments[0];
+
+                }
+
+                //case 3: The child is a string representation of html
+                else if (arguments.length === 2 &&
+                    arguments[0].nodeType === utils.nodeTypes.ELEMENT_NODE &&
+                    typeof (arguments[1]) === "string")
+                {
+
+                    // node, html
+                    node = arguments[0];
+                    html = arguments[1];
+
+                }
+
+                //assume we got some string html
+                tmp = document.createElement('div');
+                tmp.innerHTML = html;
+                children = tmp.childNodes;
+
+                for( i = 0, j = children.length; i < j; i ++ )
+                {
+                    if(children[i].nodeType === utils.nodeTypes.ELEMENT_NODE )
+                    {
+                        node.appendChild(children[i]);
+                    }
+                }
+
+                //type NodeList (not Array)
+                return node;
+            }
+
+            /**
              * getAll find and return the NodeList for the the given node, selector pair
              * @param node Node object to search from
              * @param selector (optional) string to select on
@@ -424,7 +485,8 @@ var util = (function () {
                 get                     : get,
                 getAll                  : getAll,
                 remove                  : remove,
-                getParentAnchor         : getParentAnchor
+                getParentAnchor         : getParentAnchor,
+                append                  : append
             };
 
         }()),

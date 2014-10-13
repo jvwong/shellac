@@ -9,7 +9,8 @@ var sidebar = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var TAFFY = require('taffydb').taffy,
-        util = require('../util.js');
+        util = require('../util.js'),
+        utils = util.utils;
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -68,11 +69,11 @@ var sidebar = (function () {
 
     initModule, setJqueryMap,
 
-    onSubmitSearch,
+    onSubmitSearch, onTouchSidebar,
 
     init_sidebar, fetchUrl,
     parseCategoryData,
-    onTapClose, onSwipeClose,
+
 
     onClickCategory, display_categories,
     onClickAuthor, display_authors,
@@ -276,8 +277,12 @@ var sidebar = (function () {
     onSubmitSearch = function(event){
         var q = jqueryMap.$sidebar_search_input.val(),
             endpoint = ['/api/clips/?q=', q].join('');
-//        console.log(encodeURI(endpoint));
         util.fetchUrl(endpoint, 'api_clips_search');
+    };
+
+    onTouchSidebar = function(event, direction, distance, duration, fingerCount){
+        event.preventDefault();
+        jqueryMap.$outerDiv.toggleClass('nav-expanded');
     };
 
 
@@ -287,16 +292,21 @@ var sidebar = (function () {
     /**
      * initModule Populates the $container with the sidebar of the UI
      * and then configures and initializes feature modules.
-     * @param $container A jQuery collection that should represent a single DOM container
+     * @param container A single DOM HTMLElement
      * @param latest_clips_db the TAFFY db of clip objects
      */
-    initModule = function( $container, latest_clips_db ){
+    initModule = function( container, latest_clips_db ){
 
+        console.log(utils);
+
+        if(container.nodeType !== utils.nodeTypes.ELEMENT_NODE){
+            return;
+        }
         // load HTML and map jQuery collections
-        stateMap.$container = $container;
+        stateMap.$container = $(container);
         stateMap.latest_clips_db = latest_clips_db;
 
-        $container.append( configMap.main_html );
+        stateMap.$container.append( configMap.main_html );
         setJqueryMap();
 
         //register pub-sub methods
@@ -329,6 +339,13 @@ var sidebar = (function () {
         //Inject Category, People data
         display_authors(jqueryMap.$sidebar_authors_listGroup, stateMap.latest_clips_db);
         util.fetchUrl('/api/categories/', 'api_categories');
+
+        //Navigation Menu Slider
+        stateMap.$container.swipe({
+            tap: onTouchSidebar,
+            swipeLeft: onTouchSidebar,
+            threshold: 75
+        });
 
     };
     return { initModule: initModule };

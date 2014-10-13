@@ -10957,13 +10957,15 @@ if ( typeof(exports) === 'object' ){
 /* global $, document, target_username, status, DEBUG */
 'use strict';
 $( document ).ready(function() {
-    var shell = require('./shell.js');
+    var shell = require('./shell.js'),
+        util = require('../util.js'),
+        utils = util.utils;
 
-    shell.initModule($("#shellac-app"), target_username, status, DEBUG);
+    shell.initModule( utils.dom.get("#shellac-app"), target_username, status, DEBUG );
 });
 
 
-},{"./shell.js":5}],5:[function(require,module,exports){
+},{"../util.js":8,"./shell.js":5}],5:[function(require,module,exports){
 /*
  * shell.js
  * Root namespace module
@@ -11012,13 +11014,11 @@ var shell = (function () {
     },
 
     stateMap = {
-        $container          : undefined,
+        container          : undefined,
         target_username     : undefined,
         status              : undefined,
 
-        latest_clips        : undefined,
         latest_clips_db     : TAFFY(),
-        queued              : [],
 
         selected            : undefined,
         DEBUG               : undefined
@@ -11028,9 +11028,9 @@ var shell = (function () {
     dom = {}, setDomMap,
 
     actions,
-    display_clips,
-    handlePlaylistChange, handleUrlFetch,
-    onTouchSidebar,
+    render_clips,
+    handlePlaylistChange, handleUrlFetch, handleClick,
+
     utils = util.utils,
     PubSub = util.PubSub;
 
@@ -11042,14 +11042,8 @@ var shell = (function () {
      * setJqueryMap record the jQuery elements of the page
      */
     setJqueryMap = function(){
-        var $outerDiv = stateMap.$container;
+        var $outerDiv = $(stateMap.container);
         jqueryMap = {
-            $outerDiv                   : $outerDiv,
-            $app_container              : $outerDiv.find('.shellac-app-container'),
-            $player_container           : $outerDiv.find('.shellac-app-container .shellac-app-player-container'),
-            $sidebar_container          : $outerDiv.find('.shellac-app-container .shellac-app-sidebar-container'),
-            $clip_content_container     : $outerDiv.find('.shellac-app-container .shellac-app-clip-container'),
-
             $modal_container            : $outerDiv.find('#get_absolute_urlModal'),
             $modal_header               : $outerDiv.find('#get_absolute_urlModal .modal-dialog .modal-content .modal-header'),
             $modal_body                 : $outerDiv.find('#get_absolute_urlModal .modal-dialog .modal-content .modal-body'),
@@ -11062,7 +11056,7 @@ var shell = (function () {
      * setDomMap record the DOM elements of the page
      */
     setDomMap = function(){
-        var outerDiv = stateMap.$container.get(0);
+        var outerDiv = stateMap.container;
         dom = {
             outerDiv                : outerDiv,
             app_container           : utils.dom.get(outerDiv, '.shellac-app-container'),
@@ -11129,44 +11123,43 @@ var shell = (function () {
         }
     };
 
-
-
-
     //--------------------- END MODULE SCOPE METHODS --------------------
 
 
     //--------------------- BEGIN DOM METHODS --------------------
     /**
-     * display_clips append the html for the clips to the main body of the page
+     * render_clips append the html for the clips to the main body of the page
      * @param clipList the list of clip objects
-     * @param $container jquery object that will contain the clips html
+     * @param container DOM object that will contain the clips html
      */
-    display_clips = function(clipList, $container){
+    render_clips = function(clipList, container){
 
+        var clipString = String();
         //clear out any existing html nodes and listeners
-        $container.html("");
-        utils.events.remove(dom.clip_content_container, 'click', handleClick);
+        container.innerHTML = "";
+        utils.events.remove(container, 'click', handleClick);
 
-        if(stateMap.latest_clips.length === 0)
+        if(stateMap.latest_clips_db().count() === 0)
         {
             var message = String() +
                 '<div class="col-xs-12 shellac-grid-element no-content">' +
                     '<h3>Nothing to hear here...</h3>' +
                 '</div>';
-            $container.html(message);
+            container.innerHTML  = message;
             return;
         }
+
+
         clipList.forEach(function(object){
 
             var clip,
                 created = object.created.startOf('minute').fromNow(true),
-                queued = stateMap.queued.indexOf(object.audio_file_url) > -1 ? ' queued' : '',
                 categories = object.categories.length > 0 ? object.categories.map(function(c){ return c.split('/')[5].toUpperCase(); })
                     .slice(0,3)
                     .join(" | ")
                     .toString() : "&nbsp;";
 
-            clip = String() +
+            clipString +=
                 '<div class="col-xs-6 col-sm-4 col-md-4 col-lg-3 shellac-grid-element">' +
                     '<div class ="shellac-grid-element-panel">' +
                         '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
@@ -11191,12 +11184,12 @@ var shell = (function () {
                         '</div>' +
                     '</div>' +
                 '</div>';
-
-            $container.append(clip);
         });
 
+        container.innerHTML = clipString;
+
         // (re-)register click events on <a> of the entire ui
-        utils.events.add(dom.clip_content_container, 'click', handleClick);
+        utils.events.add(container, 'click', handleClick);
     };
     //--------------------- END DOM METHODS ----------------------
 
@@ -11205,7 +11198,8 @@ var shell = (function () {
     /**
      * handleUrlFetch Callback for a ajax call
      * Actions: processes the returning data based on the tag
-     * @param e event object
+     * @param tag unique string for the fetch call
+     * @param reult data returned by Ajax call
      */
     handleUrlFetch = function(tag, result){
         switch (tag)
@@ -11213,11 +11207,10 @@ var shell = (function () {
             case 'api_clips_status_person':
                 var formatted = util.parseClipData(result);
                 stateMap.latest_clips_db.insert(formatted);
-                stateMap.latest_clips = stateMap.latest_clips_db().order("id desc").get();
-                display_clips(stateMap.latest_clips, jqueryMap.$clip_content_container);
+                render_clips(stateMap.latest_clips_db().order("id desc").get(), dom.clip_content_container );
 
                 //initialize the sidebar module
-                sidebar.initModule( jqueryMap.$sidebar_container, stateMap.latest_clips_db );
+                sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
                 break;
             default:
         }
@@ -11229,7 +11222,7 @@ var shell = (function () {
      * Actions: processes the clicking an anchor element.
      * @param e event object
      */
-    function handleClick(e) {
+    handleClick = function(e) {
 
         var evt,
             target,
@@ -11302,7 +11295,7 @@ var shell = (function () {
             }// end if (targetNodeName === 'a')
 
         }//end if (target && target.nodeName)
-    }
+    };
     // --- END handleClick ---
 
     /**
@@ -11351,43 +11344,36 @@ var shell = (function () {
             }
         }
     };
-
-    onTouchSidebar = function(event, direction, distance, duration, fingerCount){
-        event.preventDefault();
-        jqueryMap.$app_container.toggleClass('nav-expanded');
-    };
-
-    //-------------------- END EVENT HANDLERS --------------------
+     //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
     /**
-     * initModule Populates $container with the shell of the UI
+     * initModule Populates container with the shell of the UI
      * and then configures and initializes feature modules.
      * The Shell is also responsible for browser-wide issues
      * Directs this app to offer its capability to the user
-     * @param $container A jQuery collection that should represent a single DOM container
+     * @param container A DOM HTMLElement that should represent a single DOM container
      * @param target_username account holder username for retrieving clips
      * @param DEBUG for debug purposes (root url)
      */
-    initModule = function( $container, target_username, status, DEBUG){
+    initModule = function( container, target_username, status, DEBUG){
         // load HTML and map jQuery collections
-        stateMap.$container = $container;
+        stateMap.container = container;
         stateMap.target_username = target_username;
         stateMap.status = status;
         stateMap.DEBUG = DEBUG;
 
-        $container.append( configMap.main_html );
-        $container.append( configMap.modal_html );
-        $container.append( configMap.modal_button_html );
-        setJqueryMap();
+        utils.dom.append(container, configMap.main_html);
+        utils.dom.append(container, configMap.modal_html);
+        utils.dom.append(container, configMap.modal_button_html);
         setDomMap();
-
+        setJqueryMap();
 
         //register pub-sub methods
         util.PubSub.on("fetchUrlComplete", handleUrlFetch);
         util.PubSub.on('playlist-change', handlePlaylistChange);
         util.PubSub.on("shellac-app-clip-change", function(clips){
-            display_clips(clips, jqueryMap.$clip_content_container);
+            render_clips(clips, dom.clip_content_container);
         });
         util.PubSub.on('on-play', function(p){
             console.log("'on-play' called");
@@ -11402,13 +11388,7 @@ var shell = (function () {
         var clipsUrl = ['/api/clips', stateMap.status, target_username, ""].join('/');
         util.fetchUrl(clipsUrl, 'api_clips_status_person');
 
-        //Navigation Menu Slider
-        jqueryMap.$sidebar_container.swipe({
-            tap: onTouchSidebar,
-            swipeLeft: onTouchSidebar,
-            threshold: 75
-        });
-        bar.initModule( jqueryMap.$player_container.get(0) );
+        bar.initModule( dom.player_container );
     };
 
     return { initModule: initModule };
@@ -11429,7 +11409,8 @@ var sidebar = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var TAFFY = require('taffydb').taffy,
-        util = require('../util.js');
+        util = require('../util.js'),
+        utils = util.utils;
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -11488,11 +11469,11 @@ var sidebar = (function () {
 
     initModule, setJqueryMap,
 
-    onSubmitSearch,
+    onSubmitSearch, onTouchSidebar,
 
     init_sidebar, fetchUrl,
     parseCategoryData,
-    onTapClose, onSwipeClose,
+
 
     onClickCategory, display_categories,
     onClickAuthor, display_authors,
@@ -11696,8 +11677,12 @@ var sidebar = (function () {
     onSubmitSearch = function(event){
         var q = jqueryMap.$sidebar_search_input.val(),
             endpoint = ['/api/clips/?q=', q].join('');
-//        console.log(encodeURI(endpoint));
         util.fetchUrl(endpoint, 'api_clips_search');
+    };
+
+    onTouchSidebar = function(event, direction, distance, duration, fingerCount){
+        event.preventDefault();
+        jqueryMap.$outerDiv.toggleClass('nav-expanded');
     };
 
 
@@ -11707,16 +11692,21 @@ var sidebar = (function () {
     /**
      * initModule Populates the $container with the sidebar of the UI
      * and then configures and initializes feature modules.
-     * @param $container A jQuery collection that should represent a single DOM container
+     * @param container A single DOM HTMLElement
      * @param latest_clips_db the TAFFY db of clip objects
      */
-    initModule = function( $container, latest_clips_db ){
+    initModule = function( container, latest_clips_db ){
 
+        console.log(utils);
+
+        if(container.nodeType !== utils.nodeTypes.ELEMENT_NODE){
+            return;
+        }
         // load HTML and map jQuery collections
-        stateMap.$container = $container;
+        stateMap.$container = $(container);
         stateMap.latest_clips_db = latest_clips_db;
 
-        $container.append( configMap.main_html );
+        stateMap.$container.append( configMap.main_html );
         setJqueryMap();
 
         //register pub-sub methods
@@ -11749,6 +11739,13 @@ var sidebar = (function () {
         //Inject Category, People data
         display_authors(jqueryMap.$sidebar_authors_listGroup, stateMap.latest_clips_db);
         util.fetchUrl('/api/categories/', 'api_categories');
+
+        //Navigation Menu Slider
+        stateMap.$container.swipe({
+            tap: onTouchSidebar,
+            swipeLeft: onTouchSidebar,
+            threshold: 75
+        });
 
     };
     return { initModule: initModule };
@@ -13446,6 +13443,67 @@ var util = (function () {
         dom: (function() {
 
             /**
+             * append to the parent, append the given HTML (string, HTMLElement node)
+             * @param parentNode (optional) Node object to append to; document otherwise
+             * @param valid HTML string or HTMLElement node
+             */
+            function append(/* parentNode, html */) {
+
+                var node,
+                    html,
+                    tmp, children, i, j;
+
+
+                //case 1: simply append the html child to the node
+                if (arguments.length === 2 &&
+                    arguments[0] === utils.nodeTypes.ELEMENT_NODE &&
+                    arguments[1] === utils.nodeTypes.ELEMENT_NODE)
+                {
+                    node = arguments[0];
+                    html = arguments[1];
+                    node.appendChild(html);
+                    return node;
+                }
+
+                //case 2: The child is a string representation of html, no parent declared
+                if (arguments.length === 1 && typeof (arguments[0]) === "string") {
+
+                    // html only
+                    node = document.documentElement; //<HTML> element
+                    html = arguments[0];
+
+                }
+
+                //case 3: The child is a string representation of html
+                else if (arguments.length === 2 &&
+                    arguments[0].nodeType === utils.nodeTypes.ELEMENT_NODE &&
+                    typeof (arguments[1]) === "string")
+                {
+
+                    // node, html
+                    node = arguments[0];
+                    html = arguments[1];
+
+                }
+
+                //assume we got some string html
+                tmp = document.createElement('div');
+                tmp.innerHTML = html;
+                children = tmp.childNodes;
+
+                for( i = 0, j = children.length; i < j; i ++ )
+                {
+                    if(children[i].nodeType === utils.nodeTypes.ELEMENT_NODE )
+                    {
+                        node.appendChild(children[i]);
+                    }
+                }
+
+                //type NodeList (not Array)
+                return node;
+            }
+
+            /**
              * getAll find and return the NodeList for the the given node, selector pair
              * @param node Node object to search from
              * @param selector (optional) string to select on
@@ -13552,7 +13610,8 @@ var util = (function () {
                 get                     : get,
                 getAll                  : getAll,
                 remove                  : remove,
-                getParentAnchor         : getParentAnchor
+                getParentAnchor         : getParentAnchor,
+                append                  : append
             };
 
         }()),
