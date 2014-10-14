@@ -11089,7 +11089,7 @@ var shell = (function () {
      * @param
      */
     setPreferences = function(){
-        console.log("setPreferences called");
+//        console.log("setPreferences called");
     };
 
     /**
@@ -11209,7 +11209,6 @@ var shell = (function () {
                 }
             });
 
-            console.log('fetchUrl called in getClip');
             util.fetchUrl('/api/clips/' + id + '/', 'getClip_fetch');
         }
         else
@@ -11426,7 +11425,6 @@ var shell = (function () {
         switch (state) {
             case 'onplay':
 
-                console.log('onplay called in handlePlayerStateChange');
                 var id_components, id,
                     clip, plays,
                     payload = {
@@ -11446,9 +11444,11 @@ var shell = (function () {
 
                     plays = clip.plays;
                     payload.plays = plays + 1;
+
+                    util.PubSub.on("updateUrlComplete", utils.noop);
                     util.updateUrl('/api/clips/' + id + '/', 'onplay_plays_increment',
                         'PATCH', JSON.stringify(payload),
-                        stateMap.csrftoken, stateMap.authtoken);
+                        stateMap.csrftoken);
                 });
                 break;
             default:
@@ -11491,32 +11491,42 @@ var shell = (function () {
         stateMap.status = status;
         stateMap.DEBUG = DEBUG;
 
-        util.PubSub.on('updateUrlComplete', function(tag, result){
-            if( tag === 'token-request' && result.hasOwnProperty('token'))
-            {
-                stateMap.authtoken = "Token " + result.token;
+//        util.PubSub.on('updateUrlComplete', function(tag, result){
+//            if( tag === 'token-request' && result.hasOwnProperty('token'))
+//            {
+//                stateMap.authtoken = "Token " + result.token;
+//
+//                //Cookie and Authentication token or no-go
+//                if(stateMap.csrftoken && stateMap.authtoken) {
+//                    initDom( container );
+//                    registerPubSub( container );
+//                    initUI(stateMap.status, target_username, container);
+//                }
+//                else
+//                {
+//                    console.warn('initModule failed - credentials missing');
+//                }
+//            }
+//        });
+//        if(stateMap.user)
+//        {
+//            util.updateUrl('/api-token-auth/', 'token-request',
+//                'POST', '{"username": "' + stateMap.user + '" , "password": "b"}',
+//                stateMap.csrftoken, stateMap.authtoken);
+//        }
+//        else
+//        {
+//            console.warn('initModule failed: no user');
+//        }
 
-                //Cookie and Authentication token or no-go
-                if(stateMap.csrftoken && stateMap.authtoken) {
-                    initDom( container );
-                    registerPubSub( container );
-                    initUI(stateMap.status, target_username, container);
-                }
-                else
-                {
-                    console.warn('initModule failed - credentials missing');
-                }
-            }
-        });
-        if(stateMap.user)
-        {
-            util.updateUrl('/api-token-auth/', 'token-request',
-                'POST', '{"username": "' + stateMap.user + '" , "password": "b"}',
-                stateMap.csrftoken, stateMap.authtoken);
+        if(stateMap.csrftoken) {
+            initDom( container );
+            registerPubSub( container );
+            initUI(stateMap.status, target_username, container);
         }
         else
         {
-            console.warn('initModule failed: no user');
+            console.warn('initModule failed - credentials missing');
         }
     };
 
@@ -13376,7 +13386,7 @@ var util = (function () {
                     // Send the token only if the method warrants CSRF protection
                     // Using the CSRFToken value acquired earlier
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    xhr.setRequestHeader("HTTP_AUTHORIZATION", authtoken);
+                    //xhr.setRequestHeader("HTTP_AUTHORIZATION", authtoken);
                 }
             }
         })

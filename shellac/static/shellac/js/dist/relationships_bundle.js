@@ -5287,7 +5287,7 @@ var util = (function () {
                     // Send the token only if the method warrants CSRF protection
                     // Using the CSRFToken value acquired earlier
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    xhr.setRequestHeader("HTTP_AUTHORIZATION", authtoken);
+                    //xhr.setRequestHeader("HTTP_AUTHORIZATION", authtoken);
                 }
             }
         })
