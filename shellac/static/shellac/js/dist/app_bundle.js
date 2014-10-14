@@ -11425,9 +11425,6 @@ var shell = (function () {
         switch (state) {
             case 'onplay':
 
-                console.log('onplay called with object');
-                console.log(sm2Object);
-
                 var id_components, id,
                     clip, plays,
                     payload = {
@@ -12581,29 +12578,6 @@ var bar_ui = (function() {
                     dom.progress.style.left = '0%';
 
                     actions.next();
-
-//                    lastIndex = playlistController.data.selectedIndex;
-//
-//                    next track?
-//                    item = playlistController.getNext();
-//
-//                    // don't play the same item over and over again, if at end of playlist etc.
-//                    if (item && playlistController.data.selectedIndex !== lastIndex) {
-//
-//                        playlistController.select(item);
-//
-//                        setTitle(item);
-//
-//                        this.play({
-//                            url: playlistController.getURL()
-//                        });
-//
-//                    }/* else {
-//
-//                     // explicitly stop?
-//                     // this.stop();
-//
-//                     }*/
                 }
 
             });
