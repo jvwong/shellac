@@ -96,7 +96,7 @@ var bar_ui = (function() {
 
                             '<div class="sm2-playlist-wrapper">' +
                                 '<ul class="sm2-playlist-bd">' +
-                                  '<li><a data-id="10000" href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3"><b>SonReal</b>- Let Me<span class="label">Explicit</span></a></li>' +
+                                  '<li><a data-id="10000" href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3">SonReal - Let Me</a></li>' +
                                 '</ul>' +
                             '</div>' +
 
@@ -581,11 +581,13 @@ var bar_ui = (function() {
         }
         // --- END setTitle ---
 
-        function makeSound(url) {
+        function makeSound(url, id) {
 
             var sound = soundManager.createSound({
 
                 url: url,
+
+                id: "id_" + id,
 
                 whileplaying: function() {
                     var progressMaxLeft = 100,
@@ -809,29 +811,33 @@ var bar_ui = (function() {
         }
         // --- END handleMouseDown ---
 
+
+        /**
+         * playLink Handler for direct drawer clicks
+         * @param link the anchor HTMLElement node with clip data attributes
+         */
         function playLink(link) {
 
+            var href, id, parent;
+
             // if a link is OK, play it.
+            href = link.href;
+            id = link.dataset.id;
+            parent = link.parentNode;
 
-            if (soundManager.canPlayURL(link.href)) {
+            if (id && soundManager.canPlayURL(href) && parent) {
 
-                if (!soundObject) {
-                    soundObject = makeSound(link.href);
+                if(soundObject){
+                    soundObject.stop();
+                    delete soundObject;
                 }
 
-                // required to reset pause/play state on iOS so whileplaying() works? odd.
-                soundObject.stop();
-
-                playlistController.select(link.parentNode);
+                soundObject = makeSound(href, id);
+                playlistController.select(parent);
 
                 // TODO: ancestor('li')
-                setTitle(link.parentNode);
-
-                soundObject.play({
-                    url: link.href,
-                    position: 0
-                });
-
+                setTitle(parent);
+                soundObject.play();
             }
 
         }
@@ -893,7 +899,6 @@ var bar_ui = (function() {
 
                             // find this in the playlist
                             playLink(target);
-
                             handled = true;
 
                         }
@@ -916,7 +921,6 @@ var bar_ui = (function() {
                     // fall-through case
 
                     if (handled) {
-                        // prevent browser fall-through
                         return utils.events.preventDefault(evt);
                     }
 
@@ -1042,7 +1046,7 @@ var bar_ui = (function() {
 
             });
 
-            console.log(playlistController.getPlaylist());
+//            console.log(playlistController.getPlaylist());
 
         }
         // --- END init ---
@@ -1065,23 +1069,29 @@ var bar_ui = (function() {
 
             play: function(e) {
 
-                var target,
-                    href;
+                var target, anchor_current,
+                    href,
+                    url, id;
 
                 target = e.target || e.srcElement;
-
                 href = target.href;
 
                 // haaaack - if '#' due to play/pause link, get first link from playlist
-                if (href.indexOf('#') !== -1) {
-                    href = dom.playlist.getElementsByTagName('a')[0].href;
+                if (href.indexOf('#') !== -1 && !soundObject) {
+                    anchor_current = utils.dom.get(playlistController.getItem(), 'a');
+                    url = anchor_current.href;
+                    id = anchor_current.dataset.id;
+                    soundObject = makeSound(url, id);
                 }
 
-                if (!soundObject) {
-                    soundObject = makeSound(href);
+                if(soundObject)
+                {
+                    soundObject.togglePause();
                 }
-
-                soundObject.togglePause();
+                else
+                {
+                    console.warn('Cannot play: Missing soundObject.');
+                }
 
             },
 
@@ -1099,7 +1109,7 @@ var bar_ui = (function() {
 
                 item = playlistController.getNext(true);
 
-                // don't play the same item again
+//                // don't play the same item again
                 if (item && playlistController.data.selectedIndex !== lastIndex) {
                     playLink(item.getElementsByTagName('a')[0]);
                 }
@@ -1225,10 +1235,10 @@ var bar_ui = (function() {
             var liNode, template,
                 label = clip.label || '';
 
+            //buggy behaviour -- preventdefault() does not apply to child tags within anchor
             template = [
                 '<a data-id="' + clip.id + '"href="', clip.audio_file_url,'">',
-                    '<b>', clip.owner, '</b> - ', clip.title,
-                    '<span class="label"> ', label, ' </span>',
+                    clip.owner, ' - ', clip.title,
                 '</a>'
             ].join('');
 

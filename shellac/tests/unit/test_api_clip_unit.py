@@ -369,7 +369,6 @@ class ClipDetailViewSet(APITestCase):
 
         cleanClips()
 
-
     def test_ClipDetailViewSet_PATCH_own_updates_existing_object(self):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')

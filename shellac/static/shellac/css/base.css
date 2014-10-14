@@ -475,7 +475,7 @@ select#id_categories.form-control {
 }
 @media (max-width: 480px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-    font-size: 0.85em;
+    font-size: 0.7em;
   }
 }
 /*
@@ -1419,7 +1419,7 @@ body {
 }
 @media (max-width: 480px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
-    font-size: 0.85em;
+    font-size: 0.7em;
   }
 }
 

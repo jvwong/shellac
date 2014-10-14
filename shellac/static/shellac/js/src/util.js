@@ -8,7 +8,10 @@
 var util = (function () {
     var moment = require('moment');
 
-    var fetchUrl, PubSub, truncate, getCookie, sameOrigin, urlParse,
+    var fetchUrl, updateUrl,
+        PubSub,
+        truncate,
+        getCookie, sameOrigin, urlParse,
         swipeData, csrfSafeMethod, parseClipData, utils;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
@@ -67,10 +70,45 @@ var util = (function () {
      */
     fetchUrl = function(url, tag){
         $.ajax({
-            url: url
+            url: url,
+            type: 'GET',
+            contentType: 'application/json'
         })
             .done(function(results){
                 PubSub.emit("fetchUrlComplete", tag, results);
+            })
+            .fail(function(){
+                console.error("Failed to load data");
+            })
+            .always(function(){});
+    };
+
+    /**
+     * updateUrl make a PATCH call to the given url and emit a Pubsub on complete
+     * @param url
+     * @param tag string tag to identify results
+     * @param data the object data to update
+     * @return Pubsub event updateUrlComplete that notifies the url and resulting json
+     */
+    updateUrl = function(url, tag, method, data, csrftoken, authtoken) {
+
+        $.ajax({
+            url: url,
+            data: data,
+            type: method,
+            contentType: 'application/json',
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                    // Send the token to same-origin, relative URLs only.
+                    // Send the token only if the method warrants CSRF protection
+                    // Using the CSRFToken value acquired earlier
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    xhr.setRequestHeader("HTTP_AUTHORIZATION", authtoken);
+                }
+            }
+        })
+            .done(function(results){
+                PubSub.emit("updateUrlComplete", tag, results);
             })
             .fail(function(){
                 console.error("Failed to load data");
@@ -793,6 +831,7 @@ var util = (function () {
 
     return {
         fetchUrl        : fetchUrl,
+        updateUrl       : updateUrl,
         PubSub          : PubSub,
         truncate        : truncate,
         getCookie       : getCookie,

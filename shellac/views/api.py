@@ -197,6 +197,11 @@ class ClipDetailViewSet(DetailViewSet):
         return self.update(request, *args, **kwargs)
 
     def patch(self, request, *args, **kwargs):
+        #Should restrict this to certain fields
+        keys = request.DATA.keys()
+        for key in keys:
+            if key not in Clip.PATCHABLE:
+                return Response({'error': 'Invalid PATCH model field'}, status=status.HTTP_400_BAD_REQUEST)
         return self.partial_update(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):

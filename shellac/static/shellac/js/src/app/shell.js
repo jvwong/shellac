@@ -21,7 +21,8 @@ var shell = (function () {
     utils = util.utils,
     PubSub = util.PubSub,
 
-    initModule, initUI,
+    initModule, initUI, initDom,
+    registerPubSub,
     setPreferences,
 
     configMap = {
@@ -52,11 +53,14 @@ var shell = (function () {
 
     stateMap = {
         container           : undefined,
+        user                : undefined,
         target_username     : undefined,
         status              : undefined,
         latest_clips_db     : TAFFY(),
         selected            : undefined,
-        DEBUG               : undefined
+        DEBUG               : undefined,
+        csrftoken           : undefined,
+        authtoken           : undefined
     },
 
     preferences = {
@@ -71,7 +75,7 @@ var shell = (function () {
     dom = {}, setDomMap,
 
     actions,
-    render_clips,
+    render_clips, getClip,
     handleUrlFetch, handleClick,
     handlePlayerStateChange, handlePlaylistChange;
 
@@ -157,33 +161,26 @@ var shell = (function () {
          */
         enqueue : function(target) {
 
-            console.log(target);
-            var clip, query;
+            var clip;
 
             if(!target.dataset.id)
             {
                 return;
             }
 
-            query = stateMap.latest_clips_db({id: parseInt(target.dataset.id)}).first();
-            console.log(query);
-            if(!query)
-            {
-                //fetch this info via ajax request???
-
-            }
-
-            stateMap.selected = target;
-            bar.playerEnqueue([query], 0);
+            getClip(target.dataset.id, stateMap.latest_clips_db, function(clip){
+                stateMap.selected = target;
+                bar.playerEnqueue([clip], 0);
+            });
         }
     };
 
     /**
-     * populates the shell UI
+     * initializes the shell UI
      * @param relationship to return clips
      * @param username the name of the user to load
      */
-    initUI = function(status, username){
+    initUI = function(status, username, container ){
         //load data into in-browser database
         var clipsUrl = ['/api/clips', status, username, ""].join('/');
         util.PubSub.on("fetchUrlComplete", function(tag, result){
@@ -194,10 +191,63 @@ var shell = (function () {
                 render_clips(stateMap.latest_clips_db().order("id desc").get(), dom.clip_content_container );
 
                 //initialize the sidebar module
+
                 sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
+                bar.initModule( dom.player_container );
             }
         });
         util.fetchUrl(clipsUrl, 'api_clips_status_person');
+    };
+
+    /**
+     * populates the shell UI with HTML
+     */
+    initDom = function( container ){
+        utils.dom.append(container, configMap.main_html);
+        utils.dom.append(container, configMap.modal_html);
+        utils.dom.append(container, configMap.modal_button_html);
+        setDomMap();
+        setJqueryMap();
+        setPreferences();
+    };
+
+    /**
+     * retrieveClip use the primary key to retrieve the Clip object
+     * Action fetch the clip from the latest clips db or makes an ajax request
+     * for it otherwise. Add to the db in the latter case?
+     * @param id a Number representing the Clip primary key
+     * @param db the TAFFY db to look in or cache the result
+     * @param callback the callback function upon request
+     */
+    getClip = function(id, db, callback){
+
+        var clip,
+            database = db || stateMap.latest_clips_db;
+
+        //Try to retrieve the clip from the TAFFY database
+        clip = database({id: parseInt(id)}).first();
+
+        if(clip && callback)
+        {
+            callback(clip);
+        }
+        else if(callback)
+        {
+            util.PubSub.on('fetchUrlComplete', function (tag, result) {
+                if (tag === 'getClip_fetch') {
+                    //NB: This data comes back as a single object
+                    database.insert(result);
+                    callback(result);
+                }
+            });
+
+            console.log('fetchUrl called in getClip');
+            util.fetchUrl('/api/clips/' + id + '/', 'getClip_fetch');
+        }
+        else
+        {
+            console.warn('getClip error -- No callback');
+        }
     };
 
     //--------------------- END MODULE SCOPE METHODS --------------------
@@ -234,7 +284,8 @@ var shell = (function () {
                 categories = object.categories.length > 0 ? object.categories.map(function(c){ return c.split('/')[5].toUpperCase(); })
                     .slice(0,3)
                     .join(" | ")
-                    .toString() : "&nbsp;";
+                    .toString() : "&nbsp;",
+                rating = '<span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>';
 
             clipString +=
                 '<div class="col-xs-6 col-sm-4 col-md-4 col-lg-3 shellac-grid-element">' +
@@ -248,12 +299,12 @@ var shell = (function () {
                         '<div class ="shellac-caption-panel">' +
                             '<a href="#modal" data-url="' + object.permalink + '">' +
                                 '<div class ="shellac-description-container">' +
-                                    '<div class="shellac-description-content title" data-content="' + object.title + '">' + util.truncate(object.title, configMap.truncatemax) + '</div>' +
-                                    '<div class="shellac-description-content owner" data-content="' + object.owner + '">' + object.owner + '</div>' +
+                                    '<div class="shellac-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</div>' +
+                                    '<div class="shellac-description-content owner">' + object.owner + '</div>' +
                                     '<div class="shellac-description-content description-short">' + util.truncate(object.description , configMap.truncatemax) + '</div>' +
                                         '<div class="meta-data">' +
-                                        '<div class="shellac-description-content plays" data-content="' + object.plays + '">' + object.plays + ' plays</div>' +
-                                        '<div class="shellac-description-content meta rating" data-content="' + object.rating + '">' + object.rating + ' stars</div>' +
+                                        '<div class="shellac-description-content plays">' + object.plays + ' plays</div>' +
+//                                        '<div class="shellac-description-content meta rating">' + rating + '</div>' +
                                         '<div class="shellac-description-content meta created">' + created + '</div>' +
                                     '</div>' +
                                 '</div>' +
@@ -404,23 +455,53 @@ var shell = (function () {
      * @param sm2Object the relevant soundManager sound object
      */
     handlePlayerStateChange = function(state, sm2Object){
-        console.log("%s called", state);
-        console.log(sm2Object);
-
-        switch (state)
-        {
+        switch (state) {
             case 'onplay':
-                //get the clip id
 
-                //need the number of plays. Fetch the clip?
+                console.log('onplay called in handlePlayerStateChange');
+                var id_components, id,
+                    clip, plays,
+                    payload = {
+                        plays: undefined
+                    };
 
-                //'patch' api to increment 'plays' attribute
+                //retrieve the id; bail if this doesn't exist
+                id_components = sm2Object.id.split("_");
+                if (id_components.length !== 2) {
+                    console.warn('onplay error: No Clip id attribute');
+                    return;
+                }
+
+                id = parseInt(id_components[1]);
+                getClip(id, stateMap.latest_clips_db, function(clip){
+                    var plays;
+
+                    plays = clip.plays;
+                    payload.plays = plays + 1;
+                    util.updateUrl('/api/clips/' + id + '/', 'onplay_plays_increment',
+                        'PATCH', JSON.stringify(payload),
+                        stateMap.csrftoken, stateMap.authtoken);
+                });
                 break;
             default:
         }
     };
 
-     //-------------------- END EVENT HANDLERS --------------------
+
+
+    /**
+     * registerPubSub Registration function for the various PubSub events
+     * @param container the DOM HTMLElement app container
+     */
+    registerPubSub = function( container ) {
+        //register events
+        util.PubSub.on('playlist-change', handlePlaylistChange);
+        util.PubSub.on('player-change', handlePlayerStateChange);
+        util.PubSub.on("shellac-app-clip-change", function(clips){
+            render_clips(clips, utils.dom.get(container, '.shellac-app-container .shellac-app-clip-container'));
+        });
+    };
+    //-------------------- END EVENT HANDLERS --------------------
 
     //------------------- BEGIN PUBLIC METHODS -------------------
     /**
@@ -432,30 +513,43 @@ var shell = (function () {
      * @param target_username account holder username for retrieving clips
      * @param DEBUG for debug purposes (root url)
      */
-    initModule = function( container, target_username, status, DEBUG){
+    initModule = function( container, user, target_username, status, DEBUG){
+
         // load HTML and map jQuery collections
+        stateMap.csrftoken = util.getCookie('csrftoken');
         stateMap.container = container;
         stateMap.target_username = target_username;
+        stateMap.user = user;
         stateMap.status = status;
         stateMap.DEBUG = DEBUG;
 
-        utils.dom.append(container, configMap.main_html);
-        utils.dom.append(container, configMap.modal_html);
-        utils.dom.append(container, configMap.modal_button_html);
+        util.PubSub.on('updateUrlComplete', function(tag, result){
+            if( tag === 'token-request' && result.hasOwnProperty('token'))
+            {
+                stateMap.authtoken = "Token " + result.token;
 
-        setDomMap();
-        setJqueryMap();
-        setPreferences();
-
-        //register events
-        util.PubSub.on('playlist-change', handlePlaylistChange);
-        util.PubSub.on('player-change', handlePlayerStateChange);
-        util.PubSub.on("shellac-app-clip-change", function(clips){
-            render_clips(clips, dom.clip_content_container);
+                //Cookie and Authentication token or no-go
+                if(stateMap.csrftoken && stateMap.authtoken) {
+                    initDom( container );
+                    registerPubSub( container );
+                    initUI(stateMap.status, target_username, container);
+                }
+                else
+                {
+                    console.warn('initModule failed - credentials missing');
+                }
+            }
         });
-
-        initUI(stateMap.status, target_username);
-        bar.initModule( dom.player_container );
+        if(stateMap.user)
+        {
+            util.updateUrl('/api-token-auth/', 'token-request',
+                'POST', '{"username": "' + stateMap.user + '" , "password": "b"}',
+                stateMap.csrftoken, stateMap.authtoken);
+        }
+        else
+        {
+            console.warn('initModule failed: no user');
+        }
     };
 
     return { initModule: initModule };

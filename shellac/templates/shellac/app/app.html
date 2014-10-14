@@ -5,7 +5,8 @@
     {% block title %}App{% endblock title %}
     {% block head %}
         <script type="text/javascript">
-            var target_username = "{{ person.username }}",
+            var user = "{{ user.username }}",
+                target_username = "{{ person.username }}",
                 status = "{{ status }}",
                 DEBUG = "{{ debug }}";
         </script>
@@ -19,7 +20,6 @@
 
 
 <!-- Footer -->
-    {% block footer %}
-    {% endblock footer %}
+
 
 

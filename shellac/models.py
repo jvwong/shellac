@@ -199,6 +199,16 @@ class ClipManager(models.Manager):
 
 
 class Clip(models.Model):
+    PATCHABLE = ('title',
+                 'categories',
+                 'tags',
+                 'description',
+                 'brand',
+                 'plays',
+                 'rating',
+                 'status',
+                 'audio_file')
+
     PUBLIC_STATUS = 1
     PRIVATE_STATUS = 2
 
