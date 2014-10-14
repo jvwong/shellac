@@ -12703,46 +12703,33 @@ var bar_ui = (function() {
          */
         function playLink(link) {
 
-            var href, id, parent;
+            var href, id, sid, parent, current;
 
             // if a link is OK, play it.
             href = link.href;
             id = link.dataset.id;
+            sid = "id_" + id;
             parent = link.parentNode;
 
             if (id && soundManager.canPlayURL(href) && parent) {
 
-                console.log("PLAYLINK()");
-                console.log(href);
-                console.log(id);
-                console.log(parent);
-
                 if(soundObject){
-                    soundObject.stop();
-                    soundObject = null;
+                    soundObject.pause();
                 }
 
-//                if (!soundObject) {
-                    soundObject = makeSound(href, id);
-//                }
-
-                // required to reset pause/play state on iOS so whileplaying() works? odd.
-//                soundObject.stop();
+                soundObject = soundManager.getSoundById(sid);
 
                 playlistController.select(parent);
-
-                // TODO: ancestor('li')
                 setTitle(parent);
-                soundObject.play();
-
-//                soundObject.play({
-//                    url: href,
-//                    id: "id_" + id,
-//                    position: 0
-//                });
-
-                console.log(soundObject);
-
+                if(soundObject)
+                {
+                    soundManager.resume(sid);
+                }
+                else
+                {
+                    soundObject = makeSound(href, id);
+                    soundObject.play();
+                }
             }
 
         }

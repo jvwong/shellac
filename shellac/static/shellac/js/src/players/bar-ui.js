@@ -818,26 +818,33 @@ var bar_ui = (function() {
          */
         function playLink(link) {
 
-            var href, id, parent;
+            var href, id, sid, parent, current;
 
             // if a link is OK, play it.
             href = link.href;
             id = link.dataset.id;
+            sid = "id_" + id;
             parent = link.parentNode;
 
             if (id && soundManager.canPlayURL(href) && parent) {
 
                 if(soundObject){
-                    soundObject.stop();
-                    delete soundObject;
+                    soundObject.pause();
                 }
 
-                soundObject = makeSound(href, id);
-                playlistController.select(parent);
+                soundObject = soundManager.getSoundById(sid);
 
-                // TODO: ancestor('li')
+                playlistController.select(parent);
                 setTitle(parent);
-                soundObject.play();
+                if(soundObject)
+                {
+                    soundManager.resume(sid);
+                }
+                else
+                {
+                    soundObject = makeSound(href, id);
+                    soundObject.play();
+                }
             }
 
         }
