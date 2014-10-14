@@ -11491,34 +11491,6 @@ var shell = (function () {
         stateMap.status = status;
         stateMap.DEBUG = DEBUG;
 
-//        util.PubSub.on('updateUrlComplete', function(tag, result){
-//            if( tag === 'token-request' && result.hasOwnProperty('token'))
-//            {
-//                stateMap.authtoken = "Token " + result.token;
-//
-//                //Cookie and Authentication token or no-go
-//                if(stateMap.csrftoken && stateMap.authtoken) {
-//                    initDom( container );
-//                    registerPubSub( container );
-//                    initUI(stateMap.status, target_username, container);
-//                }
-//                else
-//                {
-//                    console.warn('initModule failed - credentials missing');
-//                }
-//            }
-//        });
-//        if(stateMap.user)
-//        {
-//            util.updateUrl('/api-token-auth/', 'token-request',
-//                'POST', '{"username": "' + stateMap.user + '" , "password": "b"}',
-//                stateMap.csrftoken, stateMap.authtoken);
-//        }
-//        else
-//        {
-//            console.warn('initModule failed: no user');
-//        }
-
         if(stateMap.csrftoken) {
             initDom( container );
             registerPubSub( container );
