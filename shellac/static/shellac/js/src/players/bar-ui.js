@@ -12,6 +12,7 @@ var bar_ui = (function() {
         Player,
         players = [],
         playerSelector = '.sm2-bar-ui',
+        TAFFY   = require('taffydb').taffy,
         util = require('../util.js'),
         soundManager = require('../../lib/soundmanager2/script/soundmanager2.js').soundManager,
         utils = util.utils,
@@ -194,7 +195,9 @@ var bar_ui = (function() {
 
                 loopMode: false,
 
-                timer: null
+                timer: null,
+
+                playlist_db: TAFFY()
 
             };
 
@@ -707,32 +710,30 @@ var bar_ui = (function() {
 
                     dom.progress.style.left = '0%';
 
-                    lastIndex = playlistController.data.selectedIndex;
+                    actions.next();
 
-                    // next track?
-                    item = playlistController.getNext();
-
-                    // don't play the same item over and over again, if at end of playlist etc.
-                    if (item && playlistController.data.selectedIndex !== lastIndex) {
-
-                        playlistController.select(item);
-
-                        setTitle(item);
-
-                        // play next
-                        this.play({
-                            url: playlistController.getURL()
-                        });
-
-                    }/* else {
-
-                     // explicitly stop?
-                     // this.stop();
-
-                     }*/
-
-                    //console.log('finished');
-
+//                    lastIndex = playlistController.data.selectedIndex;
+//
+//                    next track?
+//                    item = playlistController.getNext();
+//
+//                    // don't play the same item over and over again, if at end of playlist etc.
+//                    if (item && playlistController.data.selectedIndex !== lastIndex) {
+//
+//                        playlistController.select(item);
+//
+//                        setTitle(item);
+//
+//                        this.play({
+//                            url: playlistController.getURL()
+//                        });
+//
+//                    }/* else {
+//
+//                     // explicitly stop?
+//                     // this.stop();
+//
+//                     }*/
                 }
 
             });
@@ -828,23 +829,15 @@ var bar_ui = (function() {
 
             if (id && soundManager.canPlayURL(href) && parent) {
 
-                if(soundObject){
-                    soundObject.pause();
-                }
-
-                soundObject = soundManager.getSoundById(sid);
-
                 playlistController.select(parent);
                 setTitle(parent);
-                if(soundObject)
-                {
-                    soundManager.resume(sid);
+
+                if(soundObject){
+                    soundObject.stop();
                 }
-                else
-                {
-                    soundObject = makeSound(href, id);
-                    soundObject.play();
-                }
+
+                soundObject = makeSound(href, id);
+                soundObject.play();
             }
 
         }
@@ -1114,7 +1107,11 @@ var bar_ui = (function() {
 
                 lastIndex = playlistController.data.selectedIndex;
 
+                console.log("next() -- lastIndex: %s", lastIndex );
+
                 item = playlistController.getNext(true);
+
+                console.log(item);
 
 //                // don't play the same item again
                 if (item && playlistController.data.selectedIndex !== lastIndex) {
@@ -1131,7 +1128,7 @@ var bar_ui = (function() {
 
                 item = playlistController.getPrevious();
 
-                // don't play the same item again
+                // don't play the same item again -- why?
                 if (item && playlistController.data.selectedIndex !== lastIndex) {
                     playLink(item.getElementsByTagName('a')[0]);
                 }

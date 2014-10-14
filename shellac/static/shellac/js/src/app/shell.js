@@ -457,6 +457,9 @@ var shell = (function () {
         switch (state) {
             case 'onplay':
 
+                console.log('onplay called with object');
+                console.log(sm2Object);
+
                 var id_components, id,
                     clip, plays,
                     payload = {
