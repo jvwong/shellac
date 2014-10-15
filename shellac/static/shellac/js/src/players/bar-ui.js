@@ -197,7 +197,9 @@ var bar_ui = (function() {
 
                 timer: null,
 
-                playlist_db: {}
+                positionsMap: {},
+
+                playlist_db: TAFFY()
 
             };
 
@@ -587,140 +589,151 @@ var bar_ui = (function() {
         function makeSound(url, id) {
 
             var sid = "id_" + id,
+                query = playlistController.data.playlist_db({id: sid}).first(),
                 sound;
 
-            sound = soundManager.createSound({
 
-                url: url,
+            if(query)
+            {
+                sound = query;
+            }
+            else
+            {
+                sound = soundManager.createSound({
 
-                id: sid,
+                    url: url,
 
-                whileplaying: function () {
-                    var progressMaxLeft = 100,
-                        left,
-                        width;
+                    id: sid,
 
-                    left = Math.min(progressMaxLeft, Math.max(0, (progressMaxLeft * (this.position / this.durationEstimate)))) + '%';
-                    width = Math.min(100, Math.max(0, (100 * this.position / this.durationEstimate))) + '%';
+                    whileplaying: function () {
+                        var progressMaxLeft = 100,
+                            left,
+                            width;
 
-                    if (this.duration) {
+                        left = Math.min(progressMaxLeft, Math.max(0, (progressMaxLeft * (this.position / this.durationEstimate)))) + '%';
+                        width = Math.min(100, Math.max(0, (100 * this.position / this.durationEstimate))) + '%';
 
-                        dom.progress.style.left = left;
-                        dom.progressBar.style.width = width;
+                        if (this.duration) {
 
-                        // TODO: only write changes
-                        dom.time.innerHTML = getTime(this.position, true);
+                            dom.progress.style.left = left;
+                            dom.progressBar.style.width = width;
 
-                    }
+                            // TODO: only write changes
+                            dom.time.innerHTML = getTime(this.position, true);
 
-                },
+                        }
 
-                onbufferchange: function (isBuffering) {
-                    if (isBuffering) {
-                        utils.css.add(dom.o, 'buffering');
-                    } else {
-                        utils.css.remove(dom.o, 'buffering');
-                    }
-                },
+                    },
 
-                onplay: function () {
-                    utils.css.swap(dom.o, 'paused', 'playing');
-                    util.PubSub.emit('player-change', 'onplay', this);
-                },
+                    onbufferchange: function (isBuffering) {
+                        if (isBuffering) {
+                            utils.css.add(dom.o, 'buffering');
+                        } else {
+                            utils.css.remove(dom.o, 'buffering');
+                        }
+                    },
 
-                onpause: function () {
-                    utils.css.swap(dom.o, 'playing', 'paused');
-                    util.PubSub.emit('player-change', 'onpause', this);
-                },
+                    onplay: function () {
+                        utils.css.swap(dom.o, 'paused', 'playing');
+                        util.PubSub.emit('player-change', 'onplay', this);
+                    },
 
-                onresume: function () {
-                    utils.css.swap(dom.o, 'paused', 'playing');
-                },
+                    onpause: function () {
+                        utils.css.swap(dom.o, 'playing', 'paused');
+                        util.PubSub.emit('player-change', 'onpause', this);
+                    },
 
-                whileloading: function () {
+                    onresume: function () {
+                        utils.css.swap(dom.o, 'paused', 'playing');
+                    },
 
-                    if (!this.isHTML5) {
-                        dom.duration.innerHTML = getTime(this.durationEstimate, true);
-                    }
+                    whileloading: function () {
 
-                },
+                        if (!this.isHTML5) {
+                            dom.duration.innerHTML = getTime(this.durationEstimate, true);
+                        }
 
-                onload: function (ok) {
+                    },
 
-                    if (ok) {
+                    onload: function (ok) {
 
-                        dom.duration.innerHTML = getTime(this.duration, true);
+                        if (ok) {
 
-                    } else if (this._iO && this._iO.onerror) {
+                            dom.duration.innerHTML = getTime(this.duration, true);
 
-                        this._iO.onerror();
+                        } else if (this._iO && this._iO.onerror) {
 
-                    }
+                            this._iO.onerror();
 
-                },
+                        }
 
-                onerror: function () {
+                    },
 
-                    // sound failed to load.
-                    var item, element, html;
+                    onerror: function () {
 
-                    item = playlistController.getItem();
+                        // sound failed to load.
+                        var item, element, html;
 
-                    if (item) {
+                        item = playlistController.getItem();
 
-                        // note error, delay 2 seconds and advance?
-                        // playlistTarget.innerHTML = '<ul class="sm2-playlist-bd"><li>' + item.innerHTML + '</li></ul>';
+                        if (item) {
 
-                        if (extras.loadFailedCharacter) {
-                            dom.playlistTarget.innerHTML = dom.playlistTarget.innerHTML.replace('<li>', '<li>' + extras.loadFailedCharacter + ' ');
-                            if (playlistController.data.playlist && playlistController.data.playlist[playlistController.data.selectedIndex]) {
-                                element = playlistController.data.playlist[playlistController.data.selectedIndex].getElementsByTagName('a')[0];
-                                html = element.innerHTML;
-                                if (html.indexOf(extras.loadFailedCharacter) === -1) {
-                                    element.innerHTML = extras.loadFailedCharacter + ' ' + html;
+                            // note error, delay 2 seconds and advance?
+                            // playlistTarget.innerHTML = '<ul class="sm2-playlist-bd"><li>' + item.innerHTML + '</li></ul>';
+
+                            if (extras.loadFailedCharacter) {
+                                dom.playlistTarget.innerHTML = dom.playlistTarget.innerHTML.replace('<li>', '<li>' + extras.loadFailedCharacter + ' ');
+                                if (playlistController.data.playlist && playlistController.data.playlist[playlistController.data.selectedIndex]) {
+                                    element = playlistController.data.playlist[playlistController.data.selectedIndex].getElementsByTagName('a')[0];
+                                    html = element.innerHTML;
+                                    if (html.indexOf(extras.loadFailedCharacter) === -1) {
+                                        element.innerHTML = extras.loadFailedCharacter + ' ' + html;
+                                    }
                                 }
                             }
+
                         }
 
-                    }
+                        // load next, possibly with delay.
 
-                    // load next, possibly with delay.
+                        if (navigator.userAgent.match(/mobile/i)) {
+                            // mobile will likely block the next play() call if there is a setTimeout() - so don't use one here.
+                            actions.next();
+                        } else {
+                            if (playlistController.data.timer) {
+                                window.clearTimeout(playlistController.data.timer);
+                            }
+                            playlistController.data.timer = window.setTimeout(actions.next, 1000);
+                        }
 
-                    if (navigator.userAgent.match(/mobile/i)) {
-                        // mobile will likely block the next play() call if there is a setTimeout() - so don't use one here.
+                    },
+
+                    onstop: function () {
+
+                        utils.css.remove(dom.o, 'playing');
+                        //console.log('stopped');
+
+                    },
+
+                    onfinish: function () {
+
+                        var lastIndex, item;
+
+                        utils.css.remove(dom.o, 'playing');
+
+                        dom.progress.style.left = '0%';
+
                         actions.next();
-                    } else {
-                        if (playlistController.data.timer) {
-                            window.clearTimeout(playlistController.data.timer);
-                        }
-                        playlistController.data.timer = window.setTimeout(actions.next, 1000);
                     }
 
-                },
+                });
 
-                onstop: function () {
-
-                    utils.css.remove(dom.o, 'playing');
-                    //console.log('stopped');
-
-                },
-
-                onfinish: function () {
-
-                    var lastIndex, item;
-
-                    utils.css.remove(dom.o, 'playing');
-
-                    dom.progress.style.left = '0%';
-
-                    actions.next();
-                }
-
-            });
-
-            if( !playlistController.data.playlist_db.hasOwnProperty(sid) )
+                //cache the object
+                playlistController.data.playlist_db.insert(sound);
+            }
+            if( !playlistController.data.positionsMap.hasOwnProperty(sid) )
             {
-                playlistController.data.playlist_db[sid] = 0;
+                playlistController.data.positionsMap[sid] = 0;
             }
 
             return sound;
@@ -823,17 +836,18 @@ var bar_ui = (function() {
                         soundObject.pause();
                     }
 
-                    //cache the new position in the playlist_db
-                    playlistController.data.playlist_db[soundObject.id] = Math.round(soundObject.position);
+                    //cache the new position in the positionsMap
+                    playlistController.data.positionsMap[soundObject.id] = Math.round(soundObject.position);
                 }
 
                 soundObject = makeSound(href, id);
-                position = playlistController.data.playlist_db[sid];
+                position = playlistController.data.positionsMap[sid];
 
                 soundObject.play();
                 soundObject.setPosition(position);
 
-                console.log(playlistController.data.playlist_db);
+                console.log(playlistController.data.positionsMap);
+                console.log(playlistController.data.playlist_db().get());
             }
 
         }
