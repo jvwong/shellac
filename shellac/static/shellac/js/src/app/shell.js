@@ -506,7 +506,7 @@ var shell = (function () {
         util.PubSub.on('shellac-app-clip-change', function(clips){
             render_clips(clips, utils.dom.get(container, '.shellac-app-container .shellac-app-clip-container'));
         });
-        util.PubSub.on('player-pause', handlePlayerPause);
+        util.PubSub.on('player-save', handlePlayerPause);
     };
     //-------------------- END EVENT HANDLERS --------------------
 

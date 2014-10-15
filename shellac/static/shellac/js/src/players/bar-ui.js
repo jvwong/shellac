@@ -328,8 +328,7 @@ var bar_ui = (function() {
             /**
              * findOffsetFromId given an id, find it in the playlist array and
              * return the index.
-             * @param queryId Number for the clip pk -- careful the clip has a numberical id and the anchor a string
-             * based attribute
+             * @param queryId the string 'id_x' formatter id
              * @return offset index of item in playlist HTMLCollection, -1 otherwise
              */
             function findOffsetFromId(queryId) {
@@ -339,7 +338,7 @@ var bar_ui = (function() {
                     i,
                     j,
                     offset,
-                    id = queryId.toString();
+                    id = queryId.split('_').length === 2 ? queryId : ('id_' + queryId);
 
                 offset = -1;
 
@@ -586,12 +585,18 @@ var bar_ui = (function() {
         }
         // --- END setTitle ---
 
+        /**
+         * makeSound Create a SM2 sound object
+         * @param url the url of the sound
+         * @param id the Number that uniquely identifies this sound;, Will be
+         * stored internally as a string of the form 'id_x' where x is the
+         * original numeric id.
+         * @return SoundManager2 object
+         */
         function makeSound(url, id) {
 
-            var sid = "id_" + id,
-                query = playlistController.data.playlist_db({id: sid}).first(),
+            var query = playlistController.data.playlist_db({id: id}).first(),
                 sound;
-
 
             if(query)
             {
@@ -603,7 +608,7 @@ var bar_ui = (function() {
 
                     url: url,
 
-                    id: sid,
+                    id: id,
 
                     whileplaying: function () {
                         var progressMaxLeft = 100,
@@ -643,8 +648,8 @@ var bar_ui = (function() {
                         util.PubSub.emit('player-change', 'onpause', this);
                         playlistController.data.positionsMap[this.id] = Math.round(this.position);
 
-                        //dump to the database and inflate on login
-                        util.PubSub.emit('player-pause', playlistController.data.positionsMap);
+                        //dump to the shell
+                        util.PubSub.emit('player-save', playlistController.data.positionsMap);
                     },
 
                     onresume: function () {
@@ -735,9 +740,9 @@ var bar_ui = (function() {
                 //cache the object
                 playlistController.data.playlist_db.insert(sound);
             }
-            if( !playlistController.data.positionsMap.hasOwnProperty(sid) )
+            if( !playlistController.data.positionsMap.hasOwnProperty(id) )
             {
-                playlistController.data.positionsMap[sid] = 0;
+                playlistController.data.positionsMap[id] = 0;
             }
 
             return sound;
@@ -820,12 +825,11 @@ var bar_ui = (function() {
          */
         function playLink(link) {
 
-            var href, id, sid, parent, position;
+            var href, id, parent, position;
 
             // if a link is OK, play it.
             href = link.href;
             id = link.dataset.id;
-            sid = "id_" + id;
             parent = link.parentNode;
 
             if (id && soundManager.canPlayURL(href) && parent) {
@@ -845,7 +849,7 @@ var bar_ui = (function() {
                 }
 
                 soundObject = makeSound(href, id);
-                position = playlistController.data.positionsMap[sid];
+                position = playlistController.data.positionsMap[id];
 
                 soundObject.togglePause();
                 soundObject.setPosition(position);
@@ -1249,7 +1253,7 @@ var bar_ui = (function() {
 
             //buggy behaviour -- preventdefault() does not apply to child tags within anchor
             template = [
-                '<a data-id="' + clip.id + '"href="', clip.audio_file_url,'">',
+                '<a data-id="id_' + clip.id + '"href="', clip.audio_file_url,'">',
                     clip.owner, ' - ', clip.title,
                 '</a>'
             ].join('');
@@ -1271,7 +1275,7 @@ var bar_ui = (function() {
          */
         this.enqueue = function(clip) {
 
-            var item, offset, existing, isRemoved;
+            var item, sid, offset, existing, isRemoved;
 
             //construct the li item from the url
             item = createTrack(clip);
@@ -1284,7 +1288,8 @@ var bar_ui = (function() {
             }
 
             //this should be done by 'id'
-            offset = playlistController.findOffsetFromId(clip.id);
+            sid = 'id_' + clip.id;
+            offset = playlistController.findOffsetFromId(sid);
 
             if(offset === -1)
             {
