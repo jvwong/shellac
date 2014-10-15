@@ -77,7 +77,8 @@ var shell = (function () {
     actions,
     render_clips, getClip,
     handleUrlFetch, handleClick,
-    handlePlayerStateChange, handlePlaylistChange, handlePlayerPause;
+    handlePlayerStateChange, handlePlaylistChange,
+    handlePlayerSave;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -487,8 +488,8 @@ var shell = (function () {
         }
     };
 
-    handlePlayerPause = function(positionsMap){
-        console.log('handlePlayerPause');
+    handlePlayerSave = function(positionsMap){
+        console.log('handlePlayerSave');
         console.log(positionsMap);
         //ToDo
         //PATCH or POST to API as Person attribute.
@@ -506,7 +507,7 @@ var shell = (function () {
         util.PubSub.on('shellac-app-clip-change', function(clips){
             render_clips(clips, utils.dom.get(container, '.shellac-app-container .shellac-app-clip-container'));
         });
-        util.PubSub.on('player-save', handlePlayerPause);
+        util.PubSub.on('player-save', handlePlayerSave);
     };
     //-------------------- END EVENT HANDLERS --------------------
 

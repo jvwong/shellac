@@ -11045,7 +11045,8 @@ var shell = (function () {
     actions,
     render_clips, getClip,
     handleUrlFetch, handleClick,
-    handlePlayerStateChange, handlePlaylistChange, handlePlayerPause;
+    handlePlayerStateChange, handlePlaylistChange,
+    handlePlayerSave;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -11455,8 +11456,8 @@ var shell = (function () {
         }
     };
 
-    handlePlayerPause = function(positionsMap){
-        console.log('handlePlayerPause');
+    handlePlayerSave = function(positionsMap){
+        console.log('handlePlayerSave');
         console.log(positionsMap);
         //ToDo
         //PATCH or POST to API as Person attribute.
@@ -11474,7 +11475,7 @@ var shell = (function () {
         util.PubSub.on('shellac-app-clip-change', function(clips){
             render_clips(clips, utils.dom.get(container, '.shellac-app-container .shellac-app-clip-container'));
         });
-        util.PubSub.on('player-save', handlePlayerPause);
+        util.PubSub.on('player-save', handlePlayerSave);
     };
     //-------------------- END EVENT HANDLERS --------------------
 
@@ -12077,12 +12078,88 @@ var bar_ui = (function() {
 
             };
 
+            /**
+             * importPositionsMap format the data.positionsMap natively
+             * Action changes keys to strings with id_x format and removes
+             * any spurious entries (not a pure digit format for key or value);
+             * @param map object liteeral with numeric key and position values
+             * @return object literal with 'id_x' keys and positions values
+             */
+            function importPositionsMap(map){
+                var keys,
+                    importMap = {};
+
+                Object.keys(map).forEach(function(key){
+                    var sid;
+                    if(validatedNumericID(key))
+                    {
+                        sid = 'id_' + key;
+                        importMap[sid] = map[key];
+                    }
+                });
+                return importMap;
+            }
+
+            /**
+             * validatedNumericID test for corrent formatting (numeric key)
+             * that is served by API
+             * @param id a string to test
+             * @return true if the string conforms; false otherwise
+             */
+            function validatedNumericID (id){
+                var isValid,
+                    numericRE = /[0-9]+/;
+
+                if (typeof (id) !== 'string')
+                {
+                    return false;
+                }
+                return numericRE.test(id);
+            }
+
+            /**
+             * exportPositionsMap format the data.positionsMap
+             * Action changes keys to strings with digits only and
+             * ignores any spurious entries (no id_x format);
+             * @return object literal with primary keys and positions
+             */
+            function exportPositionsMap(){
+                var keys,
+                    exportMap = {};
+
+                Object.keys(data.positionsMap).forEach(function(key){
+
+                    if(validatedStringID(key))
+                    {
+                        exportMap[key.split('_')[1]] = data.positionsMap[key];
+                    }
+                });
+                return exportMap;
+            }
+
+            /**
+             * validatedStringID test for corrent formatting (id_x) that is stored by soundManager object
+             * @param id a string to test
+             * @return true if the string conforms; false otherwise
+             */
+            function validatedStringID (id){
+                var isValid,
+                    numericRE = /[0-9]+/;
+
+                if (typeof (id) !== 'string')
+                {
+                    return false;
+                }
+                return id.split('_').length === 2 &&
+                    id.split('_')[0] === 'id' &&
+                    numericRE.test(id.split('_')[1]);
+            }
+
             function getPlaylist() {
 
                 return data.playlist;
 
             }
-
 
             /**
              * addToPlaylist add the <li> element to the playlist
@@ -12398,7 +12475,11 @@ var bar_ui = (function() {
                 getPlaylist         : getPlaylist,
                 addToPlaylist       : addToPlaylist,
                 deleteFromPlaylist  : deleteFromPlaylist,
-                findOffsetFromId    : findOffsetFromId
+                findOffsetFromId    : findOffsetFromId,
+                exportPositionsMap  : exportPositionsMap,
+                validatedStringID   : validatedStringID,
+                importPositionsMap  : importPositionsMap,
+                validatedNumericID  : validatedNumericID
             };
 
         }
@@ -12523,7 +12604,7 @@ var bar_ui = (function() {
                         playlistController.data.positionsMap[this.id] = Math.round(this.position);
 
                         //dump to the shell
-                        util.PubSub.emit('player-save', playlistController.data.positionsMap);
+                        util.PubSub.emit('player-save', playlistController.exportPositionsMap());
                     },
 
                     onresume: function () {
@@ -12706,7 +12787,7 @@ var bar_ui = (function() {
             id = link.dataset.id;
             parent = link.parentNode;
 
-            if (id && soundManager.canPlayURL(href) && parent) {
+            if (playlistController.validatedStringID(id) && soundManager.canPlayURL(href) && parent) {
 
                 playlistController.select(parent);
                 setTitle(parent);
@@ -12729,6 +12810,7 @@ var bar_ui = (function() {
                 soundObject.setPosition(position);
             }
 
+            console.log(playlistController.data.positionsMap);
         }
         // --- END playLink ---
 
