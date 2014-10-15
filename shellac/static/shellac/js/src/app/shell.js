@@ -77,7 +77,7 @@ var shell = (function () {
     actions,
     render_clips, getClip,
     handleUrlFetch, handleClick,
-    handlePlayerStateChange, handlePlaylistChange;
+    handlePlayerStateChange, handlePlaylistChange, handlePlayerPause;
 
     //---------------- END MODULE SCOPE VARIABLES --------------
 
@@ -487,6 +487,12 @@ var shell = (function () {
         }
     };
 
+    handlePlayerPause = function(positionsMap){
+        console.log('handlePlayerPause');
+        console.log(positionsMap);
+        //ToDo
+        //PATCH or POST to API as Person attribute.
+    };
 
 
     /**
@@ -497,9 +503,10 @@ var shell = (function () {
         //register events
         util.PubSub.on('playlist-change', handlePlaylistChange);
         util.PubSub.on('player-change', handlePlayerStateChange);
-        util.PubSub.on("shellac-app-clip-change", function(clips){
+        util.PubSub.on('shellac-app-clip-change', function(clips){
             render_clips(clips, utils.dom.get(container, '.shellac-app-container .shellac-app-clip-container'));
         });
+        util.PubSub.on('player-pause', handlePlayerPause);
     };
     //-------------------- END EVENT HANDLERS --------------------
 

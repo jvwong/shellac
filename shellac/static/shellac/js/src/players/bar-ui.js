@@ -641,6 +641,10 @@ var bar_ui = (function() {
                     onpause: function () {
                         utils.css.swap(dom.o, 'playing', 'paused');
                         util.PubSub.emit('player-change', 'onpause', this);
+                        playlistController.data.positionsMap[this.id] = Math.round(this.position);
+
+                        //dump to the database and inflate on login
+                        util.PubSub.emit('player-pause', playlistController.data.positionsMap);
                     },
 
                     onresume: function () {
@@ -845,9 +849,6 @@ var bar_ui = (function() {
 
                 soundObject.togglePause();
                 soundObject.setPosition(position);
-
-                console.log(playlistController.data.positionsMap);
-                console.log(playlistController.data.playlist_db().get());
             }
 
         }
