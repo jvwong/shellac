@@ -12064,7 +12064,7 @@ var bar_ui = (function() {
 
                 timer: null,
 
-                playlist_db: TAFFY()
+                playlist_db: {}
 
             };
 
@@ -12454,149 +12454,142 @@ var bar_ui = (function() {
         function makeSound(url, id) {
 
             var sid = "id_" + id,
-                query = playlistController.data.playlist_db({id: sid}).first(),
                 sound;
 
-            if(query)
-            {
-                sound = query;
-            }
-            else
-            {
-                sound = soundManager.createSound({
+            sound = soundManager.createSound({
 
-                    url: url,
+                url: url,
 
-                    id: sid,
+                id: sid,
 
-                    whileplaying: function () {
-                        var progressMaxLeft = 100,
-                            left,
-                            width;
+                whileplaying: function () {
+                    var progressMaxLeft = 100,
+                        left,
+                        width;
 
-                        left = Math.min(progressMaxLeft, Math.max(0, (progressMaxLeft * (this.position / this.durationEstimate)))) + '%';
-                        width = Math.min(100, Math.max(0, (100 * this.position / this.durationEstimate))) + '%';
+                    left = Math.min(progressMaxLeft, Math.max(0, (progressMaxLeft * (this.position / this.durationEstimate)))) + '%';
+                    width = Math.min(100, Math.max(0, (100 * this.position / this.durationEstimate))) + '%';
 
-                        if (this.duration) {
+                    if (this.duration) {
 
-                            dom.progress.style.left = left;
-                            dom.progressBar.style.width = width;
+                        dom.progress.style.left = left;
+                        dom.progressBar.style.width = width;
 
-                            // TODO: only write changes
-                            dom.time.innerHTML = getTime(this.position, true);
+                        // TODO: only write changes
+                        dom.time.innerHTML = getTime(this.position, true);
 
-                        }
-
-                    },
-
-                    onbufferchange: function (isBuffering) {
-                        if (isBuffering) {
-                            utils.css.add(dom.o, 'buffering');
-                        } else {
-                            utils.css.remove(dom.o, 'buffering');
-                        }
-                    },
-
-                    onplay: function () {
-                        utils.css.swap(dom.o, 'paused', 'playing');
-                        util.PubSub.emit('player-change', 'onplay', this);
-                    },
-
-                    onpause: function () {
-                        utils.css.swap(dom.o, 'playing', 'paused');
-                        util.PubSub.emit('player-change', 'onpause', this);
-                    },
-
-                    onresume: function () {
-                        utils.css.swap(dom.o, 'paused', 'playing');
-                    },
-
-                    whileloading: function () {
-
-                        if (!this.isHTML5) {
-                            dom.duration.innerHTML = getTime(this.durationEstimate, true);
-                        }
-
-                    },
-
-                    onload: function (ok) {
-
-                        if (ok) {
-
-                            dom.duration.innerHTML = getTime(this.duration, true);
-
-                        } else if (this._iO && this._iO.onerror) {
-
-                            this._iO.onerror();
-
-                        }
-
-                    },
-
-                    onerror: function () {
-
-                        // sound failed to load.
-                        var item, element, html;
-
-                        item = playlistController.getItem();
-
-                        if (item) {
-
-                            // note error, delay 2 seconds and advance?
-                            // playlistTarget.innerHTML = '<ul class="sm2-playlist-bd"><li>' + item.innerHTML + '</li></ul>';
-
-                            if (extras.loadFailedCharacter) {
-                                dom.playlistTarget.innerHTML = dom.playlistTarget.innerHTML.replace('<li>', '<li>' + extras.loadFailedCharacter + ' ');
-                                if (playlistController.data.playlist && playlistController.data.playlist[playlistController.data.selectedIndex]) {
-                                    element = playlistController.data.playlist[playlistController.data.selectedIndex].getElementsByTagName('a')[0];
-                                    html = element.innerHTML;
-                                    if (html.indexOf(extras.loadFailedCharacter) === -1) {
-                                        element.innerHTML = extras.loadFailedCharacter + ' ' + html;
-                                    }
-                                }
-                            }
-
-                        }
-
-                        // load next, possibly with delay.
-
-                        if (navigator.userAgent.match(/mobile/i)) {
-                            // mobile will likely block the next play() call if there is a setTimeout() - so don't use one here.
-                            actions.next();
-                        } else {
-                            if (playlistController.data.timer) {
-                                window.clearTimeout(playlistController.data.timer);
-                            }
-                            playlistController.data.timer = window.setTimeout(actions.next, 1000);
-                        }
-
-                    },
-
-                    onstop: function () {
-
-                        utils.css.remove(dom.o, 'playing');
-                        //console.log('stopped');
-
-                    },
-
-                    onfinish: function () {
-
-                        var lastIndex, item;
-
-                        utils.css.remove(dom.o, 'playing');
-
-                        dom.progress.style.left = '0%';
-
-                        actions.next();
                     }
 
-                });
+                },
 
-                //cache the object
-                playlistController.data.playlist_db.insert(sound);
+                onbufferchange: function (isBuffering) {
+                    if (isBuffering) {
+                        utils.css.add(dom.o, 'buffering');
+                    } else {
+                        utils.css.remove(dom.o, 'buffering');
+                    }
+                },
+
+                onplay: function () {
+                    utils.css.swap(dom.o, 'paused', 'playing');
+                    util.PubSub.emit('player-change', 'onplay', this);
+                },
+
+                onpause: function () {
+                    utils.css.swap(dom.o, 'playing', 'paused');
+                    util.PubSub.emit('player-change', 'onpause', this);
+                },
+
+                onresume: function () {
+                    utils.css.swap(dom.o, 'paused', 'playing');
+                },
+
+                whileloading: function () {
+
+                    if (!this.isHTML5) {
+                        dom.duration.innerHTML = getTime(this.durationEstimate, true);
+                    }
+
+                },
+
+                onload: function (ok) {
+
+                    if (ok) {
+
+                        dom.duration.innerHTML = getTime(this.duration, true);
+
+                    } else if (this._iO && this._iO.onerror) {
+
+                        this._iO.onerror();
+
+                    }
+
+                },
+
+                onerror: function () {
+
+                    // sound failed to load.
+                    var item, element, html;
+
+                    item = playlistController.getItem();
+
+                    if (item) {
+
+                        // note error, delay 2 seconds and advance?
+                        // playlistTarget.innerHTML = '<ul class="sm2-playlist-bd"><li>' + item.innerHTML + '</li></ul>';
+
+                        if (extras.loadFailedCharacter) {
+                            dom.playlistTarget.innerHTML = dom.playlistTarget.innerHTML.replace('<li>', '<li>' + extras.loadFailedCharacter + ' ');
+                            if (playlistController.data.playlist && playlistController.data.playlist[playlistController.data.selectedIndex]) {
+                                element = playlistController.data.playlist[playlistController.data.selectedIndex].getElementsByTagName('a')[0];
+                                html = element.innerHTML;
+                                if (html.indexOf(extras.loadFailedCharacter) === -1) {
+                                    element.innerHTML = extras.loadFailedCharacter + ' ' + html;
+                                }
+                            }
+                        }
+
+                    }
+
+                    // load next, possibly with delay.
+
+                    if (navigator.userAgent.match(/mobile/i)) {
+                        // mobile will likely block the next play() call if there is a setTimeout() - so don't use one here.
+                        actions.next();
+                    } else {
+                        if (playlistController.data.timer) {
+                            window.clearTimeout(playlistController.data.timer);
+                        }
+                        playlistController.data.timer = window.setTimeout(actions.next, 1000);
+                    }
+
+                },
+
+                onstop: function () {
+
+                    utils.css.remove(dom.o, 'playing');
+                    //console.log('stopped');
+
+                },
+
+                onfinish: function () {
+
+                    var lastIndex, item;
+
+                    utils.css.remove(dom.o, 'playing');
+
+                    dom.progress.style.left = '0%';
+
+                    actions.next();
+                }
+
+            });
+
+            if( !playlistController.data.playlist_db.hasOwnProperty(sid) )
+            {
+                playlistController.data.playlist_db[sid] = 0;
             }
 
-            console.log(playlistController.data.playlist_db().get());
             return sound;
         }
         // --- END makeSound ---
@@ -12677,7 +12670,7 @@ var bar_ui = (function() {
          */
         function playLink(link) {
 
-            var href, id, sid, parent, query;
+            var href, id, sid, parent, position;
 
             // if a link is OK, play it.
             href = link.href;
@@ -12698,11 +12691,16 @@ var bar_ui = (function() {
                     }
 
                     //cache the new position in the playlist_db
-                    playlistController.data.playlist_db({id: soundObject.id}).update({"position": soundObject.position});
+                    playlistController.data.playlist_db[soundObject.id] = Math.round(soundObject.position);
                 }
 
                 soundObject = makeSound(href, id);
+                position = playlistController.data.playlist_db[sid];
+
                 soundObject.play();
+                soundObject.setPosition(position);
+
+                console.log(playlistController.data.playlist_db);
             }
 
         }
