@@ -843,7 +843,7 @@ var bar_ui = (function() {
                 soundObject = makeSound(href, id);
                 position = playlistController.data.positionsMap[sid];
 
-                soundObject.play();
+                soundObject.togglePause();
                 soundObject.setPosition(position);
 
                 console.log(playlistController.data.positionsMap);
