@@ -96,9 +96,7 @@ var bar_ui = (function() {
                             '<!-- playlist content is mirrored here -->' +
 
                             '<div class="sm2-playlist-wrapper">' +
-                                '<ul class="sm2-playlist-bd">' +
-                                  '<li><a data-id="10000" href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20Let%20Me%20%28Prod%202oolman%29.mp3">SonReal - Let Me</a></li>' +
-                                '</ul>' +
+                                '<ul class="sm2-playlist-bd"></ul>' +
                             '</div>' +
 
                             '<div class="sm2-extra-controls">' +
@@ -148,7 +146,8 @@ var bar_ui = (function() {
         var css, dom, extras,
             playlistController,
             soundObject, actions, actionData, defaultItem,
-            enqueue;
+            enqueue,
+            eps = 0.01;
 
         css = {
             disabled: 'disabled',
@@ -294,49 +293,88 @@ var bar_ui = (function() {
              */
             function addToPlaylist( item ) {
 
-                if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE)
+                var id = utils.dom.get(item, 'a').dataset.id;
+
+                if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE ||
+                    item.nodeName.toLowerCase() !== 'li' ||
+                    !validatedStringID(id))
                 {
+                    console.warn('Invalid item -- cannot add');
                     return false;
                 }
 
-                if( item.nodeName.toLowerCase() === 'li' )
-                {
-                    dom.playlist.appendChild(item);
-                    util.PubSub.emit('playlist-change', item, true);
-                    refreshDOM();
-                    adjustDrawer();
+                dom.playlist.appendChild(item);
+                refreshDOM();
+                adjustDrawer();
 
-                    return true;
+                //only add to positionMap if it is not already in the map
+                if( !data.positionsMap.hasOwnProperty(id) )
+                {
+                    playlistController.data.positionsMap[id] = 0;
                 }
 
-                return false;
-
+                util.PubSub.emit('playlist-change', item, true);
+                return true;
             }
 
             /**
              * deleteFromPlaylist remove the <li> element from the playlist
              * Checks for insane input. Emits 'playlist-change' on success.
-             * @param item the <li> item to append to the list
-             * @return true if appended
+             * @param item the <li> item to remove from the list
+             * @return true if removed successfully
              */
             function deleteFromPlaylist( item ) {
 
-                if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE)
+                var next,
+                    id = utils.dom.get(item, 'a').dataset.id;
+
+                if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE ||
+                    item.nodeName.toLowerCase() !== 'li' ||
+                    !validatedStringID(id))
                 {
+                    console.warn('Invalid item -- cannot delete');
                     return false;
                 }
 
-                if( item.nodeName.toLowerCase() === 'li' )
+                //Case 1: The track being removed is the current one. Here we will
+                //need to skip to the next track and update settings accordingly
+                if(soundObject && soundObject.id === id)
                 {
-                    utils.dom.remove(item);
-                    util.PubSub.emit('playlist-change', item, false);
-                    refreshDOM();
-                    adjustDrawer();
-                    return true;
+                    soundObject.stop();
+                    soundObject = null;
+
+                    //try to get the next track (if available)
+                    next = getNext();
+
+                    //if there is one, then update settings:
+                    // title, selected
+                    if(next && next !== item)
+                    {
+                        select(next);
+                        setTitle(next);
+                        data.selectedIndex--;
+                    }
+                    else
+                    {
+                        //set UI to null
+                        dom.playlistTarget.innerHTML = '<ul class="sm2-playlist-bd"></ul>';
+                    }
                 }
 
-                return false;
+                //Remove from the DOM
+                utils.dom.remove(item);
+                refreshDOM();
+                adjustDrawer();
 
+
+                //Remove from the positionsMap
+                if(data.positionsMap.hasOwnProperty(id))
+                {
+                    delete data.positionsMap[id];
+                }
+
+                util.PubSub.emit('playlist-change', item, false);
+                return true;
             }
 
             /**
@@ -414,13 +452,13 @@ var bar_ui = (function() {
                     i,
                     j,
                     offset,
-                    id = queryId.split('_').length === 2 ? queryId : ('id_' + queryId);
+                    id = queryId;
 
                 offset = -1;
 
                 list = getPlaylist();
 
-                if (list && id) {
+                if ( list && id ) {
 
                     for (i=0, j=list.length; i<j; i++) {
 
@@ -474,7 +512,7 @@ var bar_ui = (function() {
 
                 } else {
 
-                    data.selectedIndex = null;
+                    data.selectedIndex = 0;
 
                 }
 
@@ -646,7 +684,9 @@ var bar_ui = (function() {
         function setTitle(item) {
 
             // if this is an <li> with an inner link, grab and use the text from that.
-            var links = item.getElementsByTagName('a');
+            var links;
+
+            links = item.getElementsByTagName('a');
 
             if (links.length) {
                 item = links[0];
@@ -664,6 +704,7 @@ var bar_ui = (function() {
 
         }
         // --- END setTitle ---
+
 
         /**
          * makeSound Create a SM2 sound object
@@ -820,11 +861,6 @@ var bar_ui = (function() {
                 //cache the object
                 playlistController.data.playlist_db.insert(sound);
             }
-            if( !playlistController.data.positionsMap.hasOwnProperty(id) )
-            {
-                playlistController.data.positionsMap[id] = 0;
-            }
-
             return sound;
         }
         // --- END makeSound ---
@@ -912,8 +948,7 @@ var bar_ui = (function() {
             id = link.dataset.id;
             parent = link.parentNode;
 
-            if (playlistController.validatedStringID(id) && soundManager.canPlayURL(href) && parent) {
-
+            if (id && soundManager.canPlayURL(href) && parent) {
                 playlistController.select(parent);
                 setTitle(parent);
 
@@ -926,16 +961,31 @@ var bar_ui = (function() {
 
                     //cache the new position in the positionsMap
                     playlistController.data.positionsMap[soundObject.id] = Math.round(soundObject.position);
+                    //soundObject = null;
                 }
+
 
                 soundObject = makeSound(href, id);
                 position = playlistController.data.positionsMap[id];
 
-                soundObject.togglePause();
-                soundObject.setPosition(position);
-            }
+                console.log("position: %s", position);
+//                if(position > 0)
+//                {
+//                    soundObject.load({
+//                        onload: function() {
+//                            this.onPosition(0, function(eventPosition) {
+//                                console.log('the sound ' + this.id + ' is now at position ' + this.position + ' (event position: ' + eventPosition + ')');
+//                                this.pause();
+//                                this.setPosition(position);
+//                                this.resume();
+//                            });
+//                        }
+//                    });
+//                }
 
-            console.log(playlistController.data.positionsMap);
+
+                soundObject.setPosition(position).togglePause(id);
+            }
         }
         // --- END playLink ---
 
@@ -1111,14 +1161,6 @@ var bar_ui = (function() {
             dom.time = utils.dom.get(dom.o, '.sm2-inline-time');
 
             playlistController = new PlaylistController();
-            //init() within PlaylistController populates playlist from DOM
-            //using 'sm2-playlist-bd' ul
-
-            //get li in the data.playList[0] HTMLCollection
-            defaultItem = playlistController.getItem(0);
-
-            playlistController.select(defaultItem);
-            setTitle(defaultItem);
 
             // Handling mousedown events on <a> of the
             // entire bar-ui (currently .sm2-volume-control)
@@ -1141,9 +1183,6 @@ var bar_ui = (function() {
                 return handleMouse(e);
 
             });
-
-//            console.log(playlistController.getPlaylist());
-
         }
         // --- END init ---
 
@@ -1165,23 +1204,36 @@ var bar_ui = (function() {
 
             play: function(e) {
 
-                var target, anchor_current,
+                var target,
+                    anchor_current, item_current,
                     href,
                     url, id;
 
                 target = e.target || e.srcElement;
                 href = target.href;
+                item_current = playlistController.getItem();
 
                 // haaaack - if '#' due to play/pause link, get first link from playlist
                 if (href.indexOf('#') !== -1 && !soundObject) {
-                    anchor_current = utils.dom.get(playlistController.getItem(), 'a');
-                    url = anchor_current.href;
-                    id = anchor_current.dataset.id;
-                    soundObject = makeSound(url, id);
+
+                    //this might be an emptylist
+                    anchor_current = utils.dom.get(item_current, 'a');
+                    if(anchor_current)
+                    {
+                        url = anchor_current.href;
+                        id = anchor_current.dataset.id;
+                        soundObject = makeSound(url, id);
+                    }
+                    else
+                    {
+                        //there ain't nothing here.
+                        return;
+                    }
                 }
 
                 if(soundObject)
                 {
+                    setTitle(item_current);
                     soundObject.togglePause();
                 }
                 else
@@ -1202,12 +1254,11 @@ var bar_ui = (function() {
                 }
 
                 lastIndex = playlistController.data.selectedIndex;
-
-                item = playlistController.getNext(true);
-
-
+                item = playlistController.getNext();
                 // don't play the same item again
-                if (item && playlistController.data.selectedIndex !== lastIndex) {
+                // Ignore if the getNext() call is the offset
+                if (item &&
+                    playlistController.data.selectedIndex !== lastIndex) {
                     playLink(item.getElementsByTagName('a')[0]);
                 }
 
