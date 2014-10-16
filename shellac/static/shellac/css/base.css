@@ -6,6 +6,7 @@
     More info at: http://lesselements.com
   ---------------------------------------------------*/
 
+
 /*
  * Footer
  */
@@ -31,11 +32,23 @@
 /*
 * <main> styling
 */
-main .container-fluid {
-  margin-top: 10px;
-  max-width: 1200px;
-  min-width: 375px;
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+@media (min-width: 768px) {
+  main {
+    width: 800px;
+    margin: 0 auto;
+  }
 }
+/* xs (phones) */
+@media (max-width: 768px) {
+  main {
+    width: 100%;
+  }
+}
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 
 /*
 * Permalink
@@ -147,11 +160,20 @@ main .container-fluid {
   border: none;
   margin-left: 1em;
 }
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
 @media (max-width: 768px) {
   .partial-relationships {
     width: 100%;
   }
+  .partial-relationships .partial-relationships-detail {
+    font-size: 0.9em;
+  }
 }
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 
 /*
  * user
@@ -254,11 +276,23 @@ select#id_categories.form-control {
 /*
 * <main> styling
 */
-main .container-fluid {
-  margin-top: 10px;
-  max-width: 1200px;
-  min-width: 375px;
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+@media (min-width: 768px) {
+  main {
+    width: 800px;
+    margin: 0 auto;
+  }
 }
+/* xs (phones) */
+@media (max-width: 768px) {
+  main {
+    width: 100%;
+  }
+}
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 .btn-file {
   position: relative;
   overflow: hidden;
@@ -403,11 +437,20 @@ select#id_categories.form-control {
   border: none;
   margin-left: 1em;
 }
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
 @media (max-width: 768px) {
   .partial-relationships {
     width: 100%;
   }
+  .partial-relationships .partial-relationships-detail {
+    font-size: 0.9em;
+  }
 }
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 /*
  * user
  */
@@ -445,7 +488,11 @@ select#id_categories.form-control {
 .shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .shellac-grid-img {
   width: 100%;
 }
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel {
+  max-height: 100%;
+}
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
+  white-space: nowrap;
   position: absolute;
   /* absolute position (so we can position it where we want)*/
   bottom: 0px;
@@ -463,14 +510,15 @@ select#id_categories.form-control {
   filter: alpha(opacity=80);
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-  font-size: 1em;
+  font-size: 0.9em;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.meta {
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .meta-data {
+  position: relative;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .meta-data .shellac-description-content.created {
   position: absolute;
-  bottom: 5px;
-}
-.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .created {
-  right: 0;
+  top: 0em;
+  right: 0em;
   margin-right: 5px;
 }
 .shellac-grid-element.no-content {
@@ -478,20 +526,23 @@ select#id_categories.form-control {
   top: 5em;
   text-align: center;
 }
-@media (max-width: 768px) {
-  .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
-    font-size: 2.2em;
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .shellac-grid-element {
+    padding: 2px;
   }
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-    font-size: 0.95em;
+    font-size: 0.9em;
   }
 }
-@media (max-width: 480px) {
-  .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
-    font-size: 2.0em;
-  }
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
+@media (max-width: 384px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-    font-size: 0.7em;
+    font-size: 0.75em;
   }
 }
 /*
@@ -1384,7 +1435,11 @@ body {
 .shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .shellac-grid-img {
   width: 100%;
 }
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel {
+  max-height: 100%;
+}
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
+  white-space: nowrap;
   position: absolute;
   /* absolute position (so we can position it where we want)*/
   bottom: 0px;
@@ -1402,14 +1457,15 @@ body {
   filter: alpha(opacity=80);
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-  font-size: 1em;
+  font-size: 0.9em;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.meta {
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .meta-data {
+  position: relative;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .meta-data .shellac-description-content.created {
   position: absolute;
-  bottom: 5px;
-}
-.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .created {
-  right: 0;
+  top: 0em;
+  right: 0em;
   margin-right: 5px;
 }
 .shellac-grid-element.no-content {
@@ -1417,20 +1473,23 @@ body {
   top: 5em;
   text-align: center;
 }
-@media (max-width: 768px) {
-  .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
-    font-size: 2.2em;
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .shellac-grid-element {
+    padding: 2px;
   }
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-    font-size: 0.95em;
+    font-size: 0.9em;
   }
 }
-@media (max-width: 480px) {
-  .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
-    font-size: 2.0em;
-  }
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
+@media (max-width: 384px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-    font-size: 0.7em;
+    font-size: 0.75em;
   }
 }
 

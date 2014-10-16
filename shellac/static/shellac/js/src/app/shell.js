@@ -48,7 +48,7 @@ var shell = (function () {
                 '</div>' +
             '</div>',
 
-        truncatemax: 30
+        truncatemax: 28
     },
 
     stateMap = {
@@ -291,7 +291,7 @@ var shell = (function () {
                 rating = '<span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>';
 
             clipString +=
-                '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 shellac-grid-element">' +
+                '<div class="col-xs-6 col-sm-4 shellac-grid-element">' +
                     '<div class ="shellac-grid-element-panel">' +
 
                         '<span class="glyphicon enqueue-icon glyphicon-ok-circle ' + enqueued + '"></span>' +
@@ -308,9 +308,9 @@ var shell = (function () {
                                     '<div class="shellac-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</div>' +
                                     '<div class="shellac-description-content owner">' + object.owner + '</div>' +
                                     '<div class="shellac-description-content description-short">' + util.truncate(object.description , configMap.truncatemax) + '</div>' +
-                                        '<div class="meta-data">' +
+                                    '<div class="meta-data">' +
                                         '<div class="shellac-description-content plays">' + object.plays + ' plays</div>' +
-                                        '<div class="shellac-description-content meta created">' + created + '</div>' +
+                                        '<div class="shellac-description-content created">' + created + '</div>' +
                                     '</div>' +
                                 '</div>' +
                             '</a>' +

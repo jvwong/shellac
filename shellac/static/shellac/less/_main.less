@@ -2,21 +2,44 @@
 * <main> styling
 */
 
-main .container-fluid
+
+/* lg (large desktops, 1200px and up) */
+@media (min-width: 1200px)
 {
-  margin-top: 10px;
-  max-width: 1200px;
-  min-width: 375px
 }
 
+/* md (desktops, 992px and up) */
+@media (min-width: 992px)
+{
+}
+
+/* sm (tablets, 768px and up) */
 @media (min-width: 768px)
 {
-
+  main
+  {
+    width: 800px;
+    margin: 0 auto;
+  }
 }
 
+/* xs (phones) */
 @media (max-width: 768px)
+{
+  main
+  {
+    width: 100%;
+  }
+}
+
+/* xs Nexus4 portrait*/
+@media (max-width: 640px)
 {
 }
 
+/* xs Nexus4 portrait*/
+@media (max-width: 384px)
+{
+}
 
 

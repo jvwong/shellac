@@ -2,6 +2,7 @@
  * partials/relationship
  */
 @import "_elements";
+@import "_fonts";
 
 @relationships_margin: 1em;
 @relationships_caption_opacity: 1.0;
@@ -13,14 +14,17 @@
 
 @border_debug: none; //solid thin #c2ccd1; //none;
 @border: solid thin #c2ccd1;
-.partial-relationships {
+
+.partial-relationships
+{
   border: @border_debug;
 
   width: @relationships_width;
   margin-top: @relationships_margin;
   padding: 0px;
 
-  .partial-relationships-avatar{
+  .partial-relationships-avatar
+  {
     border: @border_debug;
     img
     {
@@ -33,10 +37,12 @@
   }
   .partial-relationships-detail
   {
+//    white-space: nowrap;
     border: @border;
     height: @relationships_avatar_dim;
 
-    .partial-relationships-description{
+    .partial-relationships-description
+    {
       border: @border_debug;
 
       position: relative;
@@ -57,25 +63,55 @@
   }
 }
 
+/* lg (large desktops, 1200px and up) */
+@media (min-width: 1200px)
+{
+}
+
+/* md (desktops, 992px and up) */
+@media (min-width: 992px)
+{
+}
+
+/* sm (tablets, 768px and up) */
+@media (min-width: 768px)
+{
+}
+
+/* xs (phones) */
 @media (max-width: 768px)
 {
-  .partial-relationships {
+  .partial-relationships
+  {
     width: 100%;
-
-    .partial-relationships-avatar{
+    .partial-relationships-avatar
+    {
       img
-      {
-      }
+      {}
     }
-
-    .partial-relationships-detail {
-      .partial-relationships-description {
-        .partial-relationships-description-content {
-        }
+    .partial-relationships-detail
+    {
+      font-size: @font_size_sm;
+      .partial-relationships-description
+      {
+        .partial-relationships-description-content.status.label
+        {}
       }
-
-      .partial-relationships-action {
+      .partial-relationships-action
+      {
       }
     }
   }
 }
+
+/* xs Nexus4 portrait*/
+@media (max-width: 640px)
+{
+}
+
+/* xs Nexus4 portrait*/
+@media (max-width: 384px)
+{
+}
+
+
