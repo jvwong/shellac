@@ -3,7 +3,8 @@
  */
 
 /* Hide for mobile, show later */
-.nav-expanded.shellac-app-sidebar-container {
+.nav-expanded.shellac-app-sidebar-container
+{
   left: 0em;
 
   transition: right 0.3s ease-in-out 0s;
@@ -12,13 +13,14 @@
   -o-transition: left 0.3s ease-in-out 0s;
 }
 
-.shellac-app-sidebar-container {
+.shellac-app-sidebar-container
+{
 
   position: fixed;
   height: 100%;
   width: 18em;
   left: -17em;
-  top: 51px;
+  top: 0px;
   bottom: 0;
 
   opacity: 0.9;
@@ -36,16 +38,31 @@
   -moz-transition: left 0.3s ease-in-out 0s;
   -o-transition: left 0.3s ease-in-out 0s;
 
-  .panel-group{
+  .panel-group
+  {
      //leave enough room for swipe to close
     margin-top: 2em;
   }
 }
 
+/* lg (large desktops, 1200px and up) */
+@media (min-width: 1200px)
+{
+}
 
+/* md (desktops, 992px and up) */
+@media (min-width: 992px)
+{
+}
 
+/* sm (tablets, 768px and up) */
+@media (min-width: 768px)
+{
+}
 
-@media (max-width: 768px) {
+/* xs (phones) */
+@media (max-width: 768px)
+{
   .shellac-app-sidebar-container{
     font-size: 1.0em;
     width: 17em;
@@ -55,4 +72,14 @@
       font-size: 0.9em;
     }
   }
+}
+
+/* xs Nexus4 portrait*/
+@media (max-width: 640px)
+{
+}
+
+/* xs Nexus4 portrait*/
+@media (max-width: 384px)
+{
 }

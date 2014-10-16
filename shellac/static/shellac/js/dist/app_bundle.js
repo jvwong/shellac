@@ -11156,12 +11156,16 @@ var shell = (function () {
         util.PubSub.on("fetchUrlComplete", function(tag, result){
             if(tag === 'api_clips_status_person')
             {
-                var formatted = util.parseClipData( result );
+                var sidebar_toggle,
+                    formatted = util.parseClipData( result );
                 stateMap.latest_clips_db.insert( formatted );
                 render_clips( stateMap.latest_clips_db().order("id desc").get() );
 
                 //initialize the sidebar module
                 sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
+                sidebar_toggle = utils.dom.get('.btn.btn-default.navbar-btn.sidebar-toggle');
+                utils.events.add(sidebar_toggle, 'click', function(e){ utils.css.toggle(dom.sidebar_container, 'nav-expanded'); });
+
                 bar.initModule( dom.player_container );
             }
         });

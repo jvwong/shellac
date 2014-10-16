@@ -120,6 +120,19 @@
 }
 
 /*
+* /relations/ styling
+*/
+div.content-relationships div#accordion.panel-group div.panel div.panel-body {
+  padding: 1px;
+}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
+
+/*
  * partials/relationship
  */
 /*---------------------------------------------------
@@ -463,6 +476,12 @@ select#id_categories.form-control {
 /*
  * Grid styling
  */
+.btn.btn-default.navbar-btn.sidebar-toggle {
+  border: #ffffff;
+  background-color: #333333;
+  color: #777777;
+  float: left;
+}
 .shellac-grid-element {
   padding: 2px;
 }
@@ -584,7 +603,7 @@ select#id_categories.form-control {
   height: 100%;
   width: 18em;
   left: -17em;
-  top: 51px;
+  top: 0px;
   bottom: 0;
   opacity: 0.9;
   background: #222222;
@@ -601,6 +620,10 @@ select#id_categories.form-control {
 .shellac-app-sidebar-container .panel-group {
   margin-top: 2em;
 }
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
 @media (max-width: 768px) {
   .shellac-app-sidebar-container {
     font-size: 1.0em;
@@ -612,6 +635,8 @@ select#id_categories.form-control {
     font-size: 0.9em;
   }
 }
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 .sm2-bar-ui {
   position: relative;
   display: inline-block;
@@ -1410,6 +1435,12 @@ body {
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
+.btn.btn-default.navbar-btn.sidebar-toggle {
+  border: #ffffff;
+  background-color: #333333;
+  color: #777777;
+  float: left;
+}
 .shellac-grid-element {
   padding: 2px;
 }
@@ -1534,7 +1565,7 @@ body {
   height: 100%;
   width: 18em;
   left: -17em;
-  top: 51px;
+  top: 0px;
   bottom: 0;
   opacity: 0.9;
   background: #222222;
@@ -1551,6 +1582,10 @@ body {
 .shellac-app-sidebar-container .panel-group {
   margin-top: 2em;
 }
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
 @media (max-width: 768px) {
   .shellac-app-sidebar-container {
     font-size: 1.0em;
@@ -1562,6 +1597,8 @@ body {
     font-size: 0.9em;
   }
 }
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 
 .sm2-bar-ui {
   position: relative;

@@ -13,6 +13,18 @@
         <script type="text/javascript" src="{% static 'shellac/js/dist/app_bundle.js' %}"></script>
     {% endblock head %}
 
+
+<!-- Navbar -->
+    {% block navbar-header %}
+
+        <button type="button" class="btn btn-default navbar-btn sidebar-toggle">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+        {{ block.super }}
+    {% endblock navbar-header %}
+
+
+
 <!-- Main -->
     {% block main %}
         <div id="shellac-app"></div>
