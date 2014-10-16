@@ -195,7 +195,7 @@ var shell = (function () {
 
                 //initialize the sidebar module
                 sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
-                sidebar_toggle = utils.dom.get('.btn.btn-default.navbar-btn.sidebar-toggle');
+                sidebar_toggle = utils.dom.get('.sidebar-toggle');
                 utils.events.add(sidebar_toggle, 'click', function(e){ utils.css.toggle(dom.sidebar_container, 'nav-expanded'); });
 
                 bar.initModule( dom.player_container );
