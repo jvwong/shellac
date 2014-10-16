@@ -152,6 +152,9 @@ main .container-fluid {
   font-size: 0.9em;
 }
 @media (max-width: 768px) {
+  .panel-body {
+    padding: 0px;
+  }
   .partial-relationships {
     width: 100%;
   }
@@ -392,6 +395,9 @@ select#id_categories.form-control {
   font-size: 0.9em;
 }
 @media (max-width: 768px) {
+  .panel-body {
+    padding: 0px;
+  }
   .partial-relationships {
     width: 100%;
   }
