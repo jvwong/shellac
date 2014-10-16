@@ -131,7 +131,6 @@ main .container-fluid {
   padding: 0.64em;
   padding-left: 1.6em;
   color: #343434;
-  background-color: #fff6f0;
 }
 .partial-relationships .partial-relationships-description .partial-relationships-description-content {
   font-size: 0.9em;
@@ -368,7 +367,6 @@ select#id_categories.form-control {
   padding: 0.64em;
   padding-left: 1.6em;
   color: #343434;
-  background-color: #fff6f0;
 }
 .partial-relationships .partial-relationships-description .partial-relationships-description-content {
   font-size: 0.9em;
