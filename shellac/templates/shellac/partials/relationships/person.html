@@ -1,6 +1,6 @@
 {% load staticfiles %}
 
-<div class="partial-relationships person col-xs-12 col-sm-6" data-person="{{ person.username}}">
+<div class="partial-relationships person col-xs-12 col-md-offset-2 col-md-10" data-person="{{ person.username}}">
     <a class="partial-relationships-url" href="{{ person.get_absolute_url}}">
         <img class="partial-relationships-avatar person img-responsive img-thumbnail"
              src="{% if person.avatar %}
@@ -15,8 +15,7 @@
         </a>
         <span class="partial-relationships-description-content joined">{{ person.joined|date:"m/Y" }}</span><br />
         <span class="partial-relationships-description-content status">{% if person in user.person.get_friends %}friend{% else %}{% if person in user.person.get_following %}following{% elif person in user.person.get_followers %}follower{% elif person in user.person.get_blocked %}blocked{% endif %}{% endif %}</span>
-        <div class="btn-group partial-relationships-action"
-             data-status="{% if person in user.person.get_friends %}friend{% else %}{% if person in user.person.get_following %}following{% elif person in user.person.get_followers %}follower{% elif person in user.person.get_blocked %}blocked{% endif %}{% endif %}"></div>
+        <div class="btn-group partial-relationships-action" data-status="{% if person in user.person.get_friends %}friend{% else %}{% if person in user.person.get_following %}following{% elif person in user.person.get_followers %}follower{% elif person in user.person.get_blocked %}blocked{% endif %}{% endif %}"></div>
         <!-- <button> placeholder-->
     </div>
 </div>

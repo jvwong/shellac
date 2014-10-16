@@ -13,12 +13,13 @@
 .partial-relationships {
 
     margin-top: @relationships_margin_top;
+    width: 600px;
 
     img.partial-relationships-avatar{
-        left: 2em;
-        width: @relationships_avatar_max_dim;
-        height: @relationships_avatar_max_dim;
-        float: left;
+      left: 2em;
+      width: @relationships_avatar_max_dim;
+      height: @relationships_avatar_max_dim;
+      float: left;
     }
 
     .partial-relationships-description{
@@ -29,15 +30,13 @@
         margin-left: @relationships_avatar_max_dim;
         padding: @relationships_desc_padding  * 0.8;
         padding-left: 2*@relationships_desc_padding;
+        color: #343434;
+        border: 0.5px solid #998899;
 
-        /* styling below */
-        background-color: black;
-        background: black;
-        color: white;
         .opacity(@relationships_caption_opacity);
 
-        .partial-relationships-description-content.joined{
-            font-size: 1em;
+        .partial-relationships-description-content{
+            font-size: 0.9em;
         }
 
         .btn-group.partial-relationships-action{
@@ -53,4 +52,22 @@
 }
 
 @media (max-width: 768px) {
+  .partial-relationships {
+
+    width: 100%;
+
+    .partial-relationships-avatar{
+    }
+
+    .partial-relationships-description{
+
+      .partial-relationships-description-content.joined{
+      }
+
+      .btn-group.partial-relationships-action{
+        button{
+        }
+      }
+    }
+  }
 }
