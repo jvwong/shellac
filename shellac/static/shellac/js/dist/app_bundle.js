@@ -12839,22 +12839,10 @@ var bar_ui = (function() {
                     //soundObject = null;
                 }
 
-
                 soundObject = makeSound(href, id);
                 position = playlistController.data.positionsMap[id];
-
-                if(position > 0)
-                {
-                    soundObject.load({
-                        onload: function() {
-                            this.onPosition(0, function(eventPosition) {
-                                this.setPosition(position);
-                            });
-                        }
-                    });
-                }
-
                 soundObject.play();
+                soundObject.setPosition(position);
             }
         }
         // --- END playLink ---
