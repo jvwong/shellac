@@ -57,6 +57,11 @@ main .container-fluid {
 .permalink .permalink-panel .permalink-description dd {
   font-size: 1.1em;
 }
+@media (max-width: 767px) {
+  .permalink .permalink-panel .permalink-img {
+    margin-bottom: 1em;
+  }
+}
 @media (max-width: 480px) {
   .permalink .permalink-panel .permalink-img {
     margin-bottom: 1em;
@@ -304,6 +309,11 @@ select#id_categories.form-control {
 .permalink .permalink-panel .permalink-description dd {
   font-size: 1.1em;
 }
+@media (max-width: 767px) {
+  .permalink .permalink-panel .permalink-img {
+    margin-bottom: 1em;
+  }
+}
 @media (max-width: 480px) {
   .permalink .permalink-panel .permalink-img {
     margin-bottom: 1em;
@@ -538,7 +548,6 @@ select#id_categories.form-control {
 }
 @media (max-width: 768px) {
   .shellac-app-sidebar-container {
-    width: 15em;
     font-size: 1.0em;
   }
   .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
@@ -1491,7 +1500,6 @@ body {
 }
 @media (max-width: 768px) {
   .shellac-app-sidebar-container {
-    width: 15em;
     font-size: 1.0em;
   }
   .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
