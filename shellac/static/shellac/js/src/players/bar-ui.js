@@ -968,23 +968,18 @@ var bar_ui = (function() {
                 soundObject = makeSound(href, id);
                 position = playlistController.data.positionsMap[id];
 
-                console.log("position: %s", position);
-//                if(position > 0)
-//                {
-//                    soundObject.load({
-//                        onload: function() {
-//                            this.onPosition(0, function(eventPosition) {
-//                                console.log('the sound ' + this.id + ' is now at position ' + this.position + ' (event position: ' + eventPosition + ')');
-//                                this.pause();
-//                                this.setPosition(position);
-//                                this.resume();
-//                            });
-//                        }
-//                    });
-//                }
+                if(position > 0)
+                {
+                    soundObject.load({
+                        onload: function() {
+                            this.onPosition(0, function(eventPosition) {
+                                this.setPosition(position);
+                            });
+                        }
+                    });
+                }
 
                 soundObject.play();
-                soundObject.setPosition(position);
             }
         }
         // --- END playLink ---
