@@ -510,7 +510,7 @@ select#id_categories.form-control {
   filter: alpha(opacity=80);
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-  font-size: 0.9em;
+  font-size: 1em;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .meta-data {
   position: relative;
@@ -1457,7 +1457,7 @@ body {
   filter: alpha(opacity=80);
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-  font-size: 0.9em;
+  font-size: 1em;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .meta-data {
   position: relative;

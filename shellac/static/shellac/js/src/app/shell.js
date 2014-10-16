@@ -48,7 +48,7 @@ var shell = (function () {
                 '</div>' +
             '</div>',
 
-        truncatemax: 28
+        truncatemax: 30
     },
 
     stateMap = {
