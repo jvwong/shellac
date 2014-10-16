@@ -983,8 +983,8 @@ var bar_ui = (function() {
 //                    });
 //                }
 
-
-                soundObject.setPosition(position).togglePause(id);
+                soundObject.play();
+                soundObject.setPosition(position);
             }
         }
         // --- END playLink ---
