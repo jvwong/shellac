@@ -19,10 +19,10 @@ var shell = (function () {
     initModule,
 
     configMap = {
-        follow_button_html: String() + '<button type="button" class="btn btn-primary relationships follow">Follow</button>',
-        unfollow_button_html: String() + '<button type="button" class="btn btn-warning relationships unfollow">Unfollow</button>',
-        block_button_html: String() + '<button type="button" class="btn btn-danger relationships block">Block</button>',
-        unblock_button_html: String() + '<button type="button" class="btn btn-success relationships unblock">Unblock</button>'
+        follow_button_html: String() + '<button type="button" class="btn btn-default relationships follow">Follow</button>',
+        unfollow_button_html: String() + '<button type="button" class="btn btn-default relationships unfollow">Unfollow</button>',
+        block_button_html: String() + '<button type="button" class="btn btn-default relationships block">Block</button>',
+        unblock_button_html: String() + '<button type="button" class="btn btn-default relationships unblock">Unblock</button>'
     },
 
     stateMap = {
@@ -86,7 +86,6 @@ var shell = (function () {
     setActionButtons = function($person_list){
 
         $person_list.each(function(index){
-//            console.log($(this));
             var $button_container, username_span, status;
             $button_container = $( this ).find('.partial-relationships-action');
             status = $button_container.attr('data-status').trim();
@@ -142,10 +141,6 @@ var shell = (function () {
         from_person = stateMap.endpoint + "people/" + stateMap.username + "/";
         to_person = stateMap.endpoint + "people/" + username + "/";
 
-//        console.log("from_person: %s", from_person);
-//        console.log("to_person: %s", to_person);
-//        console.log("username: %s", username);
-
         if($button.html() === 'Follow' & $div_btn_group.attr('data-status') === '')
         {
             //No Relationship exists --- POST
@@ -167,8 +162,6 @@ var shell = (function () {
         else
         {
             var relationship = stateMap.relationships_db({from_person: from_person, to_person: to_person}).first() || {};
-//            console.log(stateMap.relationships_db({from_person: from_person, to_person: to_person}).get());
-
 
             if($button.html() === 'Unfollow' & $div_btn_group.attr('data-status') === 'following')
             {

@@ -116,40 +116,35 @@ main .container-fluid {
     More info at: http://lesselements.com
   ---------------------------------------------------*/
 .partial-relationships {
-  margin-top: 1em;
+  border: none;
   width: 600px;
+  margin-top: 1em;
   padding: 0px;
 }
-.partial-relationships img.partial-relationships-avatar {
-  left: 2em;
-  width: 6em;
-  height: 6em;
+.partial-relationships .partial-relationships-avatar {
+  border: none;
   float: left;
 }
-.partial-relationships .partial-relationships-description {
-  position: relative;
-  height: 6em;
-  margin-left: 6em;
+.partial-relationships .partial-relationships-avatar img {
+  left: 2em;
+  width: 120px;
   padding: 0.64em;
-  padding-left: 1.6em;
-  color: #343434;
 }
-.partial-relationships .partial-relationships-description .partial-relationships-description-content {
-  font-size: 0.9em;
+.partial-relationships .partial-relationships-detail {
+  border: solid thin #c2ccd1;
+  height: 120px;
 }
-.partial-relationships .partial-relationships-description .btn-group.partial-relationships-action {
-  position: absolute;
-  top: 25%;
-  right: 0em;
+.partial-relationships .partial-relationships-detail .partial-relationships-description {
+  border: none;
+  position: relative;
+  margin-left: 120px;
+  padding: 0.8em;
 }
-.partial-relationships .partial-relationships-description .btn-group.partial-relationships-action button {
-  color: #000000;
-  font-size: 0.9em;
+.partial-relationships .partial-relationships-detail .partial-relationships-action {
+  border: none;
+  margin-left: 1em;
 }
 @media (max-width: 768px) {
-  .panel-body {
-    padding: 0px;
-  }
   .partial-relationships {
     width: 100%;
   }
@@ -214,6 +209,18 @@ select#id_categories.form-control {
 .upload-file-text {
   margin-top: 5px;
   margin-left: 5px;
+}
+.label {
+  position: relative;
+  display: inline-block;
+  font-size: 0.85em;
+  margin-left: 0.25em;
+  vertical-align: top;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  padding: 0px 3px;
+  box-sizing: padding-box;
+  color: #000000;
 }
 
 /*---------------------------------------------------
@@ -295,6 +302,18 @@ select#id_categories.form-control {
   margin-top: 5px;
   margin-left: 5px;
 }
+.label {
+  position: relative;
+  display: inline-block;
+  font-size: 0.85em;
+  margin-left: 0.25em;
+  vertical-align: top;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  padding: 0px 3px;
+  box-sizing: padding-box;
+  color: #000000;
+}
 /*
 * Permalink
 */
@@ -354,40 +373,35 @@ select#id_categories.form-control {
  * partials/relationship
  */
 .partial-relationships {
-  margin-top: 1em;
+  border: none;
   width: 600px;
+  margin-top: 1em;
   padding: 0px;
 }
-.partial-relationships img.partial-relationships-avatar {
-  left: 2em;
-  width: 6em;
-  height: 6em;
+.partial-relationships .partial-relationships-avatar {
+  border: none;
   float: left;
 }
-.partial-relationships .partial-relationships-description {
-  position: relative;
-  height: 6em;
-  margin-left: 6em;
+.partial-relationships .partial-relationships-avatar img {
+  left: 2em;
+  width: 120px;
   padding: 0.64em;
-  padding-left: 1.6em;
-  color: #343434;
 }
-.partial-relationships .partial-relationships-description .partial-relationships-description-content {
-  font-size: 0.9em;
+.partial-relationships .partial-relationships-detail {
+  border: solid thin #c2ccd1;
+  height: 120px;
 }
-.partial-relationships .partial-relationships-description .btn-group.partial-relationships-action {
-  position: absolute;
-  top: 25%;
-  right: 0em;
+.partial-relationships .partial-relationships-detail .partial-relationships-description {
+  border: none;
+  position: relative;
+  margin-left: 120px;
+  padding: 0.8em;
 }
-.partial-relationships .partial-relationships-description .btn-group.partial-relationships-action button {
-  color: #000000;
-  font-size: 0.9em;
+.partial-relationships .partial-relationships-detail .partial-relationships-action {
+  border: none;
+  margin-left: 1em;
 }
 @media (max-width: 768px) {
-  .panel-body {
-    padding: 0px;
-  }
   .partial-relationships {
     width: 100%;
   }
@@ -549,6 +563,8 @@ select#id_categories.form-control {
 @media (max-width: 768px) {
   .shellac-app-sidebar-container {
     font-size: 1.0em;
+    width: 17em;
+    left: -16em;
   }
   .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
   .shellac-app-sidebar-container .badge {
@@ -1501,6 +1517,8 @@ body {
 @media (max-width: 768px) {
   .shellac-app-sidebar-container {
     font-size: 1.0em;
+    width: 17em;
+    left: -16em;
   }
   .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
   .shellac-app-sidebar-container .badge {

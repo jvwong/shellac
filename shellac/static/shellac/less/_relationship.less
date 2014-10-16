@@ -3,74 +3,77 @@
  */
 @import "_elements";
 
-@relationships_margin_bottom: 1em;
-@relationships_margin_top: 1em;
-@relationships_margin_left: 12em;
+@relationships_margin: 1em;
 @relationships_caption_opacity: 1.0;
-@relationships_desc_padding: 0.8em;
-@relationships_avatar_max_dim: 6em;
+@relationships_padding: 0.8em;
 
+@relationships_width: 600px;
+@relationships_avatar_dim: 0.2 * @relationships_width;
+@relationships_desc_width: 0.8 * @relationships_width;
 
+@border_debug: none; //solid thin #c2ccd1; //none;
+@border: solid thin #c2ccd1;
 .partial-relationships {
+  border: @border_debug;
 
-    margin-top: @relationships_margin_top;
-    width: 600px;
-    padding: 0px;
+  width: @relationships_width;
+  margin-top: @relationships_margin;
+  padding: 0px;
 
-    img.partial-relationships-avatar{
+  .partial-relationships-avatar{
+    border: @border_debug;
+    img
+    {
       left: 2em;
-      width: @relationships_avatar_max_dim;
-      height: @relationships_avatar_max_dim;
-      float: left;
+      width: @relationships_avatar_dim;
+      padding: @relationships_padding * 0.8;
     }
+
+    float: left;
+  }
+  .partial-relationships-detail
+  {
+    border: @border;
+    height: @relationships_avatar_dim;
 
     .partial-relationships-description{
+      border: @border_debug;
 
-        position: relative;
+      position: relative;
+      margin-left: @relationships_avatar_dim;
+      padding: @relationships_padding;
 
-        height: @relationships_avatar_max_dim;
-        margin-left: @relationships_avatar_max_dim;
-        padding: @relationships_desc_padding  * 0.8;
-        padding-left: 2*@relationships_desc_padding;
-        color: #343434;
-
-        .partial-relationships-description-content{
-            font-size: 0.9em;
-        }
-
-        .btn-group.partial-relationships-action{
-            position: absolute;
-            top: 25%;
-            right: 0em;
-            button{
-                color: #000000;
-                font-size: 0.9em;
-            }
-        }
+      .partial-relationships-description-content
+      {
+      }
     }
+
+    .partial-relationships-action
+    {
+      border: @border_debug;
+      margin-left: @relationships_margin;
+    }
+  }
 }
 
-@media (max-width: 768px) {
-  .panel-body
-  {
-    padding: 0px;
-  }
-
+@media (max-width: 768px)
+{
   .partial-relationships {
-
     width: 100%;
 
     .partial-relationships-avatar{
+      img
+      {
+      }
     }
 
-    .partial-relationships-description{
-
-      .partial-relationships-description-content.joined{
+    .partial-relationships-detail {
+      .partial-relationships-description {
+        .partial-relationships-description-content {
+        }
       }
 
-      .btn-group.partial-relationships-action{
-        button{
-        }
+      .partial-relationships-action {
       }
     }
   }

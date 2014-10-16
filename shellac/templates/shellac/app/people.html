@@ -16,12 +16,12 @@
     </form>
     {% endblock navbar-right-form %}
 
-<!-- Content -->
-    {% block content %}
+<!-- Main -->
+    {% block main %}
         {% if query %}
             <p id="search-title" > Search results for "{{ query }}":</p>
         {% endif %}
-        <div id="shellac-people-relationships" class="content-relationships people clearfix">
+        <div class="content-relationships people clearfix">
             {% for person in page_obj.object_list %}
                 {% if person != user.person %}
                     {% include 'shellac/partials/relationships/person.html' %}
@@ -47,4 +47,4 @@
                 <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
             {% endif %}
         </ul>
-    {% endblock content %}
+    {% endblock main %}
