@@ -421,15 +421,10 @@ select#id_categories.form-control {
  * Grid styling
  */
 .shellac-grid-element {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding: 2px;
 }
 .shellac-grid-element .shellac-grid-element-panel {
   position: relative;
-  border-style: solid;
-  border-width: 2px;
-  border-color: #000000;
-  padding: 10px;
 }
 .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
   position: absolute;
@@ -450,7 +445,7 @@ select#id_categories.form-control {
 .shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .shellac-grid-img {
   width: 100%;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-description-container {
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
   position: absolute;
   /* absolute position (so we can position it where we want)*/
   bottom: 0px;
@@ -458,7 +453,6 @@ select#id_categories.form-control {
   left: 0px;
   width: 100%;
   padding: 5px;
-  /* styling bellow */
   background: black;
   color: white;
   -moz-opacity: 0.8;
@@ -467,21 +461,15 @@ select#id_categories.form-control {
   opacity: 0.8;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
   filter: alpha(opacity=80);
-  margin-bottom: 0px;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
   font-size: 1em;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content.meta {
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.meta {
   position: absolute;
   bottom: 5px;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-description-container .rating {
-  left: 50%;
-  width: 5em;
-  margin-left: -1em;
-}
-.shellac-grid-element .shellac-grid-element-panel .shellac-description-container .created {
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .created {
   right: 0;
   margin-right: 5px;
 }
@@ -494,7 +482,7 @@ select#id_categories.form-control {
   .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
     font-size: 2.2em;
   }
-  .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
     font-size: 0.95em;
   }
 }
@@ -502,7 +490,7 @@ select#id_categories.form-control {
   .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
     font-size: 2.0em;
   }
-  .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
     font-size: 0.7em;
   }
 }
@@ -1372,15 +1360,10 @@ body {
     More info at: http://lesselements.com
   ---------------------------------------------------*/
 .shellac-grid-element {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding: 2px;
 }
 .shellac-grid-element .shellac-grid-element-panel {
   position: relative;
-  border-style: solid;
-  border-width: 2px;
-  border-color: #000000;
-  padding: 10px;
 }
 .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
   position: absolute;
@@ -1401,7 +1384,7 @@ body {
 .shellac-grid-element .shellac-grid-element-panel .shellac-img-panel .shellac-grid-img {
   width: 100%;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-description-container {
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
   position: absolute;
   /* absolute position (so we can position it where we want)*/
   bottom: 0px;
@@ -1409,7 +1392,6 @@ body {
   left: 0px;
   width: 100%;
   padding: 5px;
-  /* styling bellow */
   background: black;
   color: white;
   -moz-opacity: 0.8;
@@ -1418,21 +1400,15 @@ body {
   opacity: 0.8;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
   filter: alpha(opacity=80);
-  margin-bottom: 0px;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
   font-size: 1em;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content.meta {
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.meta {
   position: absolute;
   bottom: 5px;
 }
-.shellac-grid-element .shellac-grid-element-panel .shellac-description-container .rating {
-  left: 50%;
-  width: 5em;
-  margin-left: -1em;
-}
-.shellac-grid-element .shellac-grid-element-panel .shellac-description-container .created {
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .created {
   right: 0;
   margin-right: 5px;
 }
@@ -1445,7 +1421,7 @@ body {
   .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
     font-size: 2.2em;
   }
-  .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
     font-size: 0.95em;
   }
 }
@@ -1453,7 +1429,7 @@ body {
   .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
     font-size: 2.0em;
   }
-  .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
     font-size: 0.7em;
   }
 }

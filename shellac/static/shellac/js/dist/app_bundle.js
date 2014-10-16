@@ -11261,12 +11261,15 @@ var shell = (function () {
             clipString +=
                 '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 shellac-grid-element">' +
                     '<div class ="shellac-grid-element-panel">' +
+
                         '<span class="glyphicon enqueue-icon glyphicon-ok-circle ' + enqueued + '"></span>' +
+
                         '<div class ="shellac-img-panel">' +
                             '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-id="' + object.id + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
-                                '<img class="shellac-grid-img" src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
+                                '<img class="img-thumbnail shellac-grid-img " src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
                             '</a>' +
                         '</div>' +
+
                         '<div class ="shellac-caption-panel">' +
                             '<a href="#modal" data-url="' + object.permalink + '">' +
                                 '<div class ="shellac-description-container">' +
@@ -11280,6 +11283,7 @@ var shell = (function () {
                                 '</div>' +
                             '</a>' +
                         '</div>' +
+
                     '</div>' +
                 '</div>';
         });

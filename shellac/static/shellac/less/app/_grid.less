@@ -6,7 +6,7 @@
 @import "../_colors";
 
 @grid_margin: 5px;
-@grid_padding: 10px;
+@grid_padding: 2px;
 @grid_border_width: 2px;
 @grid_border_color: #000000;
 
@@ -25,89 +25,65 @@
 
 .shellac-grid-element {
 
-  padding-left: 0px;
-  padding-right: 0px;
+  padding: @grid_padding;
 
-  .shellac-grid-element-panel
-  {
+  .shellac-grid-element-panel {
     position: relative;
-    border-style: solid;
-    border-width: @grid_border_width;
-    border-color: @grid_border_color;
-    padding: @grid_padding;
 
-    .enqueue-icon
-    {
+    .enqueue-icon {
       position: absolute;
       top: 0;
       right: 0;
       margin: @grid_enqueue_margin;
-      font-size:  2.5em;
+      font-size: 2.5em;
       visibility: hidden;
       color: @boostrap-blue;
       z-index: 50;
     }
 
-    .enqueued.enqueue-icon
-    {
+    .enqueued.enqueue-icon {
       visibility: visible;
     }
 
-    .shellac-img-panel
-    {
+    .shellac-img-panel {
       position: relative;
 
-      .shellac-grid-img
-      {
+      .shellac-grid-img {
         width: @grid_img_dim;
       }
 
     }
 
+    .shellac-caption-panel
+    {
 
-    .shellac-description-container {
-      position:absolute; /* absolute position (so we can position it where we want)*/
-      bottom:0px; /* position will be on bottom */
-      left:0px;
-      width:100%;
-      padding: @caption_padding;
+      .shellac-description-container
+      {
+        position: absolute; /* absolute position (so we can position it where we want)*/
+        bottom: 0px; /* position will be on bottom */
+        left: 0px;
+        width: 100%;
+        padding: @caption_padding;
 
-      /* styling bellow */
-      background: black;
-      color: white;
-      .opacity(@caption_opacity);
-      margin-bottom: 0px;
+        background: black;
+        color: white;
+        .opacity(@caption_opacity);
 
-      .shellac-description-content
-      {
-        font-size: @font_size_large;
-      }
+        .shellac-description-content {
+          font-size: @font_size_large;
+        }
 
-      .shellac-description-content.meta
-      {
-        position: absolute;
-        bottom: @grid_margin;
+        .shellac-description-content.meta {
+          position: absolute;
+          bottom: @grid_margin;
+        }
+        .created {
+          right: 0;
+          margin-right: @grid_margin;
+        }
       }
-      .plays
-      {
-      }
-      .rating
-      {
-        left: 50%;
-        width: 5em;
-        margin-left: -1em;
-      }
-      .created
-      {
-        right: 0;
-        margin-right: @grid_margin;
-      }
-
     }
-
   }
-
-
 }
 
 .shellac-grid-element.no-content{
@@ -118,38 +94,51 @@
 
 @media (max-width: 768px)
 {
-  .shellac-grid-element {
-
+  .shellac-grid-element
+  {
     .shellac-grid-element-panel
     {
-
       .enqueue-icon
       {
         font-size:  2.2em;
       }
 
+      .enqueued.enqueue-icon
+      {
+      }
+
       .shellac-img-panel
       {
         .shellac-grid-img
-        {}
-      }
-
-      .shellac-description-container
-      {
-        .shellac-description-content
         {
-          font-size: @font_size_medium;
         }
       }
 
+      .shellac-caption-panel
+      {
+        .shellac-description-container
+        {
+          .shellac-description-content
+          {
+            font-size: @font_size_medium;
+          }
+
+          .shellac-description-content.meta
+          {
+          }
+          .created
+          {
+          }
+        }
+      }
     }
   }
 }
 
 @media (max-width: 480px)
 {
-  .shellac-grid-element {
-
+  .shellac-grid-element
+  {
     .shellac-grid-element-panel
     {
       .enqueue-icon
@@ -157,17 +146,32 @@
         font-size:  2.0em;
       }
 
+      .enqueued.enqueue-icon
+      {
+      }
+
       .shellac-img-panel
       {
         .shellac-grid-img
-        {}
+        {
+        }
       }
 
-      .shellac-description-container
+      .shellac-caption-panel
       {
-        .shellac-description-content
+        .shellac-description-container
         {
-          font-size: @font_size_small;
+          .shellac-description-content
+          {
+            font-size: @font_size_small;
+          }
+
+          .shellac-description-content.meta
+          {
+          }
+          .created
+          {
+          }
         }
       }
     }
