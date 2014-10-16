@@ -602,7 +602,7 @@ select#id_categories.form-control {
   position: fixed;
   height: 100%;
   width: 18em;
-  left: -17em;
+  left: -18em;
   top: 0px;
   bottom: 0;
   opacity: 0.9;
@@ -628,7 +628,7 @@ select#id_categories.form-control {
   .shellac-app-sidebar-container {
     font-size: 1.0em;
     width: 17em;
-    left: -16em;
+    left: -17em;
   }
   .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
   .shellac-app-sidebar-container .badge {
@@ -1564,7 +1564,7 @@ body {
   position: fixed;
   height: 100%;
   width: 18em;
-  left: -17em;
+  left: -18em;
   top: 0px;
   bottom: 0;
   opacity: 0.9;
@@ -1590,7 +1590,7 @@ body {
   .shellac-app-sidebar-container {
     font-size: 1.0em;
     width: 17em;
-    left: -16em;
+    left: -17em;
   }
   .shellac-app-sidebar-container .shellac-app-sidebar-panel .panel .panel-collapse .panel-body .list-group h5,
   .shellac-app-sidebar-container .badge {
