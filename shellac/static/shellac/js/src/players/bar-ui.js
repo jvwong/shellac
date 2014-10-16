@@ -310,10 +310,10 @@ var bar_ui = (function() {
                 //only add to positionMap if it is not already in the map
                 if( !data.positionsMap.hasOwnProperty(id) )
                 {
-                    playlistController.data.positionsMap[id] = 0;
+                    data.positionsMap[id] = 0;
                 }
 
-                util.PubSub.emit('playlist-change', item, true);
+                util.PubSub.emit('playlist-change', item, true, exportPositionsMap());
                 return true;
             }
 
@@ -373,7 +373,7 @@ var bar_ui = (function() {
                     delete data.positionsMap[id];
                 }
 
-                util.PubSub.emit('playlist-change', item, false);
+                util.PubSub.emit('playlist-change', item, false, exportPositionsMap());
                 return true;
             }
 

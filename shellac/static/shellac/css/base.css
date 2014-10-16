@@ -46,22 +46,22 @@ main .container-fluid {
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
-.permalink .permalink-panel .permalink-description {
-  font-size: 0.90em;
+.permalink .permalink-panel .permalink-img img {
+  max-width: 150px;
 }
 .permalink .permalink-panel .permalink-description dt {
-  font-size: 1.1em;
-  margin-top: 1em;
+  font-size: 1.0em;
+  margin-top: 0em;
+  margin-right: 1em;
 }
 .permalink .permalink-panel .permalink-description dd {
   font-size: 1.1em;
-  margin-left: 0px;
-}
-.permalink .permalink-panel .permalink-img {
-  max-width: 150px;
 }
 @media (max-width: 480px) {
   .permalink .permalink-panel .permalink-img {
+    margin-bottom: 1em;
+  }
+  .permalink .permalink-panel .permalink-img img {
     max-width: 125px;
   }
 }
@@ -296,22 +296,22 @@ select#id_categories.form-control {
 /*
 * Permalink
 */
-.permalink .permalink-panel .permalink-description {
-  font-size: 0.90em;
+.permalink .permalink-panel .permalink-img img {
+  max-width: 150px;
 }
 .permalink .permalink-panel .permalink-description dt {
-  font-size: 1.1em;
-  margin-top: 1em;
+  font-size: 1.0em;
+  margin-top: 0em;
+  margin-right: 1em;
 }
 .permalink .permalink-panel .permalink-description dd {
   font-size: 1.1em;
-  margin-left: 0px;
-}
-.permalink .permalink-panel .permalink-img {
-  max-width: 150px;
 }
 @media (max-width: 480px) {
   .permalink .permalink-panel .permalink-img {
+    margin-bottom: 1em;
+  }
+  .permalink .permalink-panel .permalink-img img {
     max-width: 125px;
   }
 }
@@ -471,11 +471,17 @@ select#id_categories.form-control {
   text-align: center;
 }
 @media (max-width: 768px) {
+  .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
+    font-size: 2.2em;
+  }
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
     font-size: 0.95em;
   }
 }
 @media (max-width: 480px) {
+  .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
+    font-size: 2.0em;
+  }
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
     font-size: 0.7em;
   }
@@ -1415,11 +1421,17 @@ body {
   text-align: center;
 }
 @media (max-width: 768px) {
+  .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
+    font-size: 2.2em;
+  }
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
     font-size: 0.95em;
   }
 }
 @media (max-width: 480px) {
+  .shellac-grid-element .shellac-grid-element-panel .enqueue-icon {
+    font-size: 2.0em;
+  }
   .shellac-grid-element .shellac-grid-element-panel .shellac-description-container .shellac-description-content {
     font-size: 0.7em;
   }

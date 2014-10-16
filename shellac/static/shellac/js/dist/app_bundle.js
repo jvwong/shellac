@@ -11031,8 +11031,8 @@ var shell = (function () {
         authtoken           : undefined
     },
 
-    preferences = {
-        playlist: [],
+    preferencesMap = {
+        positionsMap: {},
         selected: {
             selectedIndex: undefined,
             position: 0
@@ -11054,6 +11054,7 @@ var shell = (function () {
 
     /**
      * setJqueryMap record the jQuery elements of the page
+     * Required to support the bootstrap modal activities
      */
     setJqueryMap = function(){
         var $outerDiv = $(stateMap.container);
@@ -11146,21 +11147,20 @@ var shell = (function () {
 
     /**
      * initializes the shell UI
-     * @param relationship to return clips
+     * @param status the type of relationship
      * @param username the name of the user to load
      */
-    initUI = function(status, username, container ){
+    initUI = function( status, username ){
         //load data into in-browser database
         var clipsUrl = ['/api/clips', status, username, ""].join('/');
         util.PubSub.on("fetchUrlComplete", function(tag, result){
             if(tag === 'api_clips_status_person')
             {
-                var formatted = util.parseClipData(result);
-                stateMap.latest_clips_db.insert(formatted);
-                render_clips(stateMap.latest_clips_db().order("id desc").get(), dom.clip_content_container );
+                var formatted = util.parseClipData( result );
+                stateMap.latest_clips_db.insert( formatted );
+                render_clips( stateMap.latest_clips_db().order("id desc").get() );
 
                 //initialize the sidebar module
-
                 sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
                 bar.initModule( dom.player_container );
             }
@@ -11224,12 +11224,15 @@ var shell = (function () {
     //--------------------- BEGIN DOM METHODS --------------------
     /**
      * render_clips append the html for the clips to the main body of the page
+     * Actions This should check for the presence of an 'enqueue' class on each
+     * 'span.enqueue-icon' element every time clips are inserted
      * @param clipList the list of clip objects
-     * @param container DOM object that will contain the clips html
      */
-    render_clips = function(clipList, container){
+    render_clips = function( clipList ){
 
-        var clipString = String();
+        var container = dom.clip_content_container,
+            clipString = String();
+
         //clear out any existing html nodes and listeners
         container.innerHTML = "";
         utils.events.remove(container, 'click', handleClick);
@@ -11244,7 +11247,6 @@ var shell = (function () {
             return;
         }
 
-
         clipList.forEach(function(object){
 
             var clip,
@@ -11253,12 +11255,13 @@ var shell = (function () {
                     .slice(0,3)
                     .join(" | ")
                     .toString() : "&nbsp;",
+                enqueued = Object.keys(preferencesMap.positionsMap).indexOf(object.id.toString()) === -1 ? '' : 'enqueued',
                 rating = '<span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>';
 
             clipString +=
-                '<div class="col-xs-6 col-sm-4 col-md-4 col-lg-3 shellac-grid-element">' +
+                '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 shellac-grid-element">' +
                     '<div class ="shellac-grid-element-panel">' +
-                        '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
+                        '<span class="glyphicon enqueue-icon glyphicon-ok-circle ' + enqueued + '"></span>' +
                         '<div class ="shellac-img-panel">' +
                             '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-id="' + object.id + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
                                 '<img class="shellac-grid-img" src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
@@ -11272,7 +11275,6 @@ var shell = (function () {
                                     '<div class="shellac-description-content description-short">' + util.truncate(object.description , configMap.truncatemax) + '</div>' +
                                         '<div class="meta-data">' +
                                         '<div class="shellac-description-content plays">' + object.plays + ' plays</div>' +
-//                                        '<div class="shellac-description-content meta rating">' + rating + '</div>' +
                                         '<div class="shellac-description-content meta created">' + created + '</div>' +
                                     '</div>' +
                                 '</div>' +
@@ -11377,14 +11379,18 @@ var shell = (function () {
      * Toggles the display value of check mark
      * @param item HTMLElement added / removed from playlist
      * @param isAdded true if element was added
+     * @param the updated map of clip id's in the playlist
      */
-    handlePlaylistChange = function( item, isAdded ){
+    handlePlaylistChange = function( item, isAdded, pMap ){
         var anchor, pathname,
             parent, enqueue,
             i, j;
 
-        anchor = utils.dom.get(item, 'a');
+        //update the positionMap
+        preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
 
+        //update the particular Clip in the UI
+        anchor = utils.dom.get(item, 'a');
         if(anchor)
         {
             pathname = util.urlParse(anchor.href).pathname;
@@ -11456,9 +11462,13 @@ var shell = (function () {
         }
     };
 
-    handlePlayerSave = function(positionsMap){
+    handlePlayerSave = function( pMap ){
         console.log('handlePlayerSave');
-        console.log(positionsMap);
+
+        //update the positionMap
+        preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
+
+        console.log(preferencesMap.positionsMap);
         //ToDo
         //PATCH or POST to API as Person attribute.
     };
@@ -11468,13 +11478,11 @@ var shell = (function () {
      * registerPubSub Registration function for the various PubSub events
      * @param container the DOM HTMLElement app container
      */
-    registerPubSub = function( container ) {
+    registerPubSub = function() {
         //register events
         util.PubSub.on('playlist-change', handlePlaylistChange);
         util.PubSub.on('player-change', handlePlayerStateChange);
-        util.PubSub.on('shellac-app-clip-change', function(clips){
-            render_clips(clips, utils.dom.get(container, '.shellac-app-container .shellac-app-clip-container'));
-        });
+        util.PubSub.on('shellac-app-clip-change', render_clips);
         util.PubSub.on('player-save', handlePlayerSave);
     };
     //-------------------- END EVENT HANDLERS --------------------
@@ -11501,8 +11509,8 @@ var shell = (function () {
 
         if(stateMap.csrftoken) {
             initDom( container );
-            registerPubSub( container );
-            initUI(stateMap.status, target_username, container);
+            registerPubSub();
+            initUI( stateMap.status, target_username );
         }
         else
         {
@@ -12185,10 +12193,10 @@ var bar_ui = (function() {
                 //only add to positionMap if it is not already in the map
                 if( !data.positionsMap.hasOwnProperty(id) )
                 {
-                    playlistController.data.positionsMap[id] = 0;
+                    data.positionsMap[id] = 0;
                 }
 
-                util.PubSub.emit('playlist-change', item, true);
+                util.PubSub.emit('playlist-change', item, true, exportPositionsMap());
                 return true;
             }
 
@@ -12248,7 +12256,7 @@ var bar_ui = (function() {
                     delete data.positionsMap[id];
                 }
 
-                util.PubSub.emit('playlist-change', item, false);
+                util.PubSub.emit('playlist-change', item, false, exportPositionsMap());
                 return true;
             }
 
