@@ -140,6 +140,9 @@ main .container-fluid {
   margin-left: 120px;
   padding: 0.8em;
 }
+.partial-relationships .partial-relationships-detail .partial-relationships-description .partial-relationships-description-content.status.label {
+  font-size: 0.7em;
+}
 .partial-relationships .partial-relationships-detail .partial-relationships-action {
   border: none;
   margin-left: 1em;
@@ -213,12 +216,10 @@ select#id_categories.form-control {
 .label {
   position: relative;
   display: inline-block;
-  font-size: 0.85em;
-  margin-left: 0.25em;
   vertical-align: top;
   background-color: rgba(0, 0, 0, 0.15);
   border-radius: 3px;
-  padding: 0px 3px;
+  padding: 1.5px;
   box-sizing: padding-box;
   color: #000000;
 }
@@ -305,12 +306,10 @@ select#id_categories.form-control {
 .label {
   position: relative;
   display: inline-block;
-  font-size: 0.85em;
-  margin-left: 0.25em;
   vertical-align: top;
   background-color: rgba(0, 0, 0, 0.15);
   border-radius: 3px;
-  padding: 0px 3px;
+  padding: 1.5px;
   box-sizing: padding-box;
   color: #000000;
 }
@@ -396,6 +395,9 @@ select#id_categories.form-control {
   position: relative;
   margin-left: 120px;
   padding: 0.8em;
+}
+.partial-relationships .partial-relationships-detail .partial-relationships-description .partial-relationships-description-content.status.label {
+  font-size: 0.7em;
 }
 .partial-relationships .partial-relationships-detail .partial-relationships-action {
   border: none;
