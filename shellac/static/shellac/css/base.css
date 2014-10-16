@@ -61,9 +61,6 @@ main .container-fluid {
   .permalink .permalink-panel .permalink-img {
     margin-bottom: 1em;
   }
-  .permalink .permalink-panel .permalink-img img {
-    max-width: 125px;
-  }
 }
 
 /*
@@ -311,9 +308,6 @@ select#id_categories.form-control {
   .permalink .permalink-panel .permalink-img {
     margin-bottom: 1em;
   }
-  .permalink .permalink-panel .permalink-img img {
-    max-width: 125px;
-  }
 }
 /*
  * partials/profile/person
@@ -523,8 +517,8 @@ select#id_categories.form-control {
 .shellac-app-sidebar-container {
   position: fixed;
   height: 100%;
-  width: 15em;
-  left: -14em;
+  width: 18em;
+  left: -17em;
   top: 51px;
   bottom: 0;
   opacity: 0.9;
@@ -1476,8 +1470,8 @@ body {
 .shellac-app-sidebar-container {
   position: fixed;
   height: 100%;
-  width: 15em;
-  left: -14em;
+  width: 18em;
+  left: -17em;
   top: 51px;
   bottom: 0;
   opacity: 0.9;
