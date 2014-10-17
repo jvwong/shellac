@@ -117,7 +117,7 @@ class PlaylistDetailViewSet(APITestCase):
         self.assertEqual(type(view.func).__name__, 'function')
 
     def test_PlaylistDetailViewSet_GET_returns_correct_playlist(self):
-        target_playlist = self.saved_playlists[0]
+        target_playlist = Playlist.objects.filter(person=self.person)[0]
         response = self.client.get('/api/playlists/' + str(target_playlist.id) + '/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         resp = json.loads(response.content.decode())
