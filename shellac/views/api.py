@@ -35,7 +35,8 @@ def api_root(request, format=None):
         'people': reverse('person-list', request=request, format=format),
         'categories': reverse('category-list', request=request, format=format),
         'clips': reverse('clip-list', request=request, format=format),
-        'playlists': reverse('playlist-list', request=request, format=format)
+        'playlists': reverse('playlist-list', request=request, format=format),
+        'tracks': reverse('track-list', request=request, format=format)
     })
 
 
