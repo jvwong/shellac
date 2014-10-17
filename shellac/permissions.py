@@ -13,6 +13,37 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
         # Write permissions are only allowed to the owner
         return obj.author == request.user.person
 
+class PlaylistIsUserOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission to only allow user to post their own Playlists
+    """
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        ##Ensure the username is the last match in the payload
+        if view.action == "post":
+            person = request.DATA.get('person', None)
+            return person and person.rfind(request.user.username) > -1
+        return False
+
+
+class PlaylistIsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission to only allow owners of Playlist object to edit it.
+    """
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if view.action == "put":
+            person = request.DATA.get('person', None)
+            return person and person.rfind(request.user.username) > -1
+
+        # Write permissions are only allowed to the owner
+        return obj.person == request.user.person
 
 class RelationshipIsOwnerOrAdminOrReadOnly(permissions.BasePermission):
     """

@@ -1,378 +1,216 @@
 [
 {
-    "model": "taggit.tag",
+    "fields": {
+        "slug": "krayt1",
+        "name": "krayt1"
+    },
     "pk": 1,
-    "fields": {
-        "slug": "clip3",
-        "name": "clip3"
-    }
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
+    "fields": {
+        "slug": "krayt2",
+        "name": "krayt2"
+    },
     "pk": 2,
-    "fields": {
-        "slug": "third",
-        "name": "third"
-    }
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
+    "fields": {
+        "slug": "jrayt2",
+        "name": "jrayt2"
+    },
     "pk": 3,
-    "fields": {
-        "slug": "first",
-        "name": "first"
-    }
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
+    "fields": {
+        "slug": "jrayt1",
+        "name": "jrayt1"
+    },
     "pk": 4,
-    "fields": {
-        "slug": "second",
-        "name": "second"
-    }
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
+    "fields": {
+        "slug": "jrayt2a",
+        "name": "jrayt2a"
+    },
     "pk": 5,
-    "fields": {
-        "slug": "j1c",
-        "name": "j1c"
-    }
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
+    "fields": {
+        "slug": "jrayt2b",
+        "name": "jrayt2b"
+    },
     "pk": 6,
-    "fields": {
-        "slug": "j1a",
-        "name": "j1a"
-    }
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
+    "fields": {
+        "slug": "at2",
+        "name": "at2"
+    },
     "pk": 7,
-    "fields": {
-        "slug": "j1b",
-        "name": "j1b"
-    }
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
+    "fields": {
+        "slug": "at1",
+        "name": "at1"
+    },
     "pk": 8,
-    "fields": {
-        "slug": "j2c",
-        "name": "j2c"
-    }
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
+    "fields": {
+        "slug": "aray2b",
+        "name": "aray2b"
+    },
     "pk": 9,
-    "fields": {
-        "slug": "j2b",
-        "name": "j2b"
-    }
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
+    "fields": {
+        "slug": "aray2a",
+        "name": "aray2a"
+    },
     "pk": 10,
-    "fields": {
-        "slug": "j2a",
-        "name": "j2a"
-    }
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
-    "pk": 11,
     "fields": {
         "slug": "a1a",
         "name": "a1a"
-    }
+    },
+    "pk": 11,
+    "model": "taggit.tag"
 },
 {
-    "model": "taggit.tag",
-    "pk": 12,
-    "fields": {
-        "slug": "a1b",
-        "name": "a1b"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 13,
-    "fields": {
-        "slug": "a1c",
-        "name": "a1c"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 14,
-    "fields": {
-        "slug": "a2c",
-        "name": "a2c"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 15,
-    "fields": {
-        "slug": "a2a",
-        "name": "a2a"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 16,
-    "fields": {
-        "slug": "a2b",
-        "name": "a2b"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 17,
-    "fields": {
-        "slug": "a12",
-        "name": "a12"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 18,
-    "fields": {
-        "slug": "jr2",
-        "name": "jr2"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 19,
-    "fields": {
-        "slug": "jr1",
-        "name": "jr1"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 20,
-    "fields": {
-        "slug": "kr3",
-        "name": "kr3"
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 20,
     "fields": {
         "content_type": 13,
-        "object_id": 24,
-        "tag": 5
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 21,
-    "fields": {
-        "content_type": 13,
-        "object_id": 24,
-        "tag": 6
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 22,
-    "fields": {
-        "content_type": 13,
-        "object_id": 24,
-        "tag": 7
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 23,
-    "fields": {
-        "content_type": 13,
-        "object_id": 25,
+        "object_id": 8,
         "tag": 8
-    }
+    },
+    "pk": 17,
+    "model": "taggit.taggeditem"
 },
 {
-    "model": "taggit.taggeditem",
-    "pk": 24,
     "fields": {
         "content_type": 13,
-        "object_id": 25,
-        "tag": 9
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 25,
-    "fields": {
-        "content_type": 13,
-        "object_id": 25,
-        "tag": 10
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 26,
-    "fields": {
-        "content_type": 13,
-        "object_id": 27,
-        "tag": 2
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 27,
-    "fields": {
-        "content_type": 13,
-        "object_id": 27,
-        "tag": 3
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 28,
-    "fields": {
-        "content_type": 13,
-        "object_id": 27,
-        "tag": 4
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 38,
-    "fields": {
-        "content_type": 13,
-        "object_id": 5,
-        "tag": 5
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 39,
-    "fields": {
-        "content_type": 13,
-        "object_id": 5,
-        "tag": 6
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 40,
-    "fields": {
-        "content_type": 13,
-        "object_id": 5,
+        "object_id": 8,
         "tag": 7
-    }
+    },
+    "pk": 18,
+    "model": "taggit.taggeditem"
 },
 {
-    "model": "taggit.taggeditem",
-    "pk": 44,
     "fields": {
         "content_type": 13,
-        "object_id": 7,
-        "tag": 17
-    }
+        "object_id": 9,
+        "tag": 9
+    },
+    "pk": 19,
+    "model": "taggit.taggeditem"
 },
 {
-    "model": "taggit.taggeditem",
-    "pk": 45,
     "fields": {
         "content_type": 13,
-        "object_id": 7,
-        "tag": 11
-    }
+        "object_id": 9,
+        "tag": 10
+    },
+    "pk": 20,
+    "model": "taggit.taggeditem"
 },
 {
-    "model": "taggit.taggeditem",
-    "pk": 46,
+    "fields": {
+        "content_type": 13,
+        "object_id": 6,
+        "tag": 3
+    },
+    "pk": 21,
+    "model": "taggit.taggeditem"
+},
+{
+    "fields": {
+        "content_type": 13,
+        "object_id": 6,
+        "tag": 4
+    },
+    "pk": 22,
+    "model": "taggit.taggeditem"
+},
+{
     "fields": {
         "content_type": 13,
         "object_id": 7,
         "tag": 5
-    }
+    },
+    "pk": 23,
+    "model": "taggit.taggeditem"
 },
 {
-    "model": "taggit.taggeditem",
-    "pk": 47,
     "fields": {
         "content_type": 13,
-        "object_id": 8,
-        "tag": 18
-    }
+        "object_id": 7,
+        "tag": 6
+    },
+    "pk": 24,
+    "model": "taggit.taggeditem"
 },
 {
-    "model": "taggit.taggeditem",
-    "pk": 48,
     "fields": {
         "content_type": 13,
-        "object_id": 8,
-        "tag": 19
-    }
+        "object_id": 4,
+        "tag": 1
+    },
+    "pk": 25,
+    "model": "taggit.taggeditem"
 },
 {
-    "model": "taggit.taggeditem",
-    "pk": 49,
     "fields": {
         "content_type": 13,
-        "object_id": 8,
-        "tag": 20
-    }
+        "object_id": 4,
+        "tag": 2
+    },
+    "pk": 26,
+    "model": "taggit.taggeditem"
 },
 {
-    "model": "taggit.taggeditem",
-    "pk": 56,
     "fields": {
         "content_type": 13,
+        "object_id": 5,
+        "tag": 1
+    },
+    "pk": 27,
+    "model": "taggit.taggeditem"
+},
+{
+    "fields": {
+        "content_type": 13,
+        "object_id": 5,
+        "tag": 2
+    },
+    "pk": 28,
+    "model": "taggit.taggeditem"
+},
+{
+    "fields": {
+        "content_type": 14,
+        "object_id": 1,
+        "tag": 11
+    },
+    "pk": 30,
+    "model": "taggit.taggeditem"
+},
+{
+    "fields": {
+        "content_type": 14,
         "object_id": 3,
         "tag": 11
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 57,
-    "fields": {
-        "content_type": 13,
-        "object_id": 3,
-        "tag": 12
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 58,
-    "fields": {
-        "content_type": 13,
-        "object_id": 3,
-        "tag": 13
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 59,
-    "fields": {
-        "content_type": 13,
-        "object_id": 4,
-        "tag": 16
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 60,
-    "fields": {
-        "content_type": 13,
-        "object_id": 4,
-        "tag": 14
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 61,
-    "fields": {
-        "content_type": 13,
-        "object_id": 4,
-        "tag": 15
-    }
+    },
+    "pk": 31,
+    "model": "taggit.taggeditem"
 }
 ]

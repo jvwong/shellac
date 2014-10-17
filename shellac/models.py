@@ -15,7 +15,11 @@ from audio.fields import AudioField
 
 from shellac import util
 
-## One-to-one model -- extend User to accomodate relationships
+
+
+##########################################################################################
+###                             BEGIN Class Person                                     ###
+##########################################################################################
 class PersonManager(models.Model):
     pass
 
@@ -130,6 +134,55 @@ def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs)
         p.save()
 
 
+##########################################################################################
+###                             BEGIN Class Playlist                                   ###
+##########################################################################################
+class PlaylistManager(models.Manager):
+    def create_playlist(self, person, title):
+        playlist = self.create(person=person, title=title)
+        return playlist
+
+
+def datetime_title_default():
+    now = datetime.datetime.now()
+    return now.strftime("%Y_%m_%d_%H%M%S")
+
+
+class Playlist(models.Model):
+
+    PATCHABLE = ('title',
+                 'description')
+
+    title = models.CharField(max_length=50, default=datetime_title_default, help_text="Limit 50 characters")
+    description = models.TextField(max_length=2000, blank=True, help_text="Limit 2000 characters")
+    person = models.ForeignKey(Person, related_name="playlists", related_query_name="playlist")
+
+    ### Auto
+    slug = models.SlugField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Playlist, self).save(*args, **kwargs)
+
+    class Meta:
+        unique_together = ('person', 'title')
+        verbose_name_plural = "playlists"
+        ordering = ['-updated']
+
+    def __unicode__(self):
+        return self.title
+
+    def __str__(self):
+        return self.title
+
+    objects = PlaylistManager()
+
+
+##########################################################################################
+###                             BEGIN Class Relationship                               ###
+##########################################################################################
 class Relationship(models.Model):
     #(A, B) where A is stored value; B is human-readable name
     RELATIONSHIP_FOLLOWING = 'following'
@@ -147,7 +200,9 @@ class Relationship(models.Model):
     private = models.BooleanField(default=False)
 
 
-##c = Category.objects.create_category(title, description)
+##########################################################################################
+###                             BEGIN Class Category                                   ###
+##########################################################################################
 class CategoryManager(models.Manager):
     def create_category(self, title, description):
         category = self.create(title=title, description=description)
@@ -192,6 +247,9 @@ class Category(models.Model):
     objects = CategoryManager()
 
 
+##########################################################################################
+###                             BEGIN Class Clip                                       ###
+##########################################################################################
 class ClipManager(models.Manager):
     def create_clip(self, title, author):
         clip = self.create(title=title, author=author)
@@ -217,7 +275,7 @@ class Clip(models.Model):
         (PRIVATE_STATUS, 'Private')
     )
 
-    title = models.CharField(max_length=100, help_text=("Limit 50 characters"))
+    title = models.CharField(max_length=50, help_text=("Limit 50 characters"))
     author = models.ForeignKey(Person, related_name="clips")
 
     ### Optional
@@ -302,3 +360,37 @@ def on_clip_delete(sender, instance, **kwargs):
             os.remove(instance.audio_file.url)
         # Pass false so ImageField doesn't save the model.
         instance.audio_file.delete(False)
+
+##########################################################################################
+###                             BEGIN Class Track                                      ###
+##########################################################################################
+class TrackManager(models.Manager):
+    def create_track(self, clip, playlist):
+        track = self.create(clip=clip, playlist=playlist)
+        return track
+
+class Track(models.Model):
+    PATCHABLE = ('position',
+                 'playlist')
+
+    clip = models.ForeignKey(Clip, related_name="tracks", related_query_name="track")
+    position = models.IntegerField(default=0)
+    playlist = models.ForeignKey(Playlist, related_name="tracks", related_query_name="track")
+
+    #Auto
+    added = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        super(Track, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = "tracks"
+        ordering = ['-added']
+
+    def __unicode__(self):
+        return self.clip.title
+
+    def __str__(self):
+        return self.clip.title
+
+    objects = TrackManager()

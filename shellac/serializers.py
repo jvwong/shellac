@@ -4,7 +4,19 @@ from django.utils.text import slugify
 from rest_framework import serializers
 from rest_framework import pagination
 
-from shellac.models import Category, Clip, Person, Relationship
+from shellac.models import Category, Clip, Person, Relationship, Playlist
+
+
+class PlaylistSerializer(serializers.HyperlinkedModelSerializer):
+    person = serializers.HyperlinkedRelatedField(many=False,
+                                                 lookup_field='username',
+                                                 view_name='person-detail')
+    class Meta:
+        lookup_field = 'pk'
+        model = Playlist
+        fields = ('url', 'id', 'title', 'description', 'person',
+                  'slug', 'created', 'updated')
+
 
 class RelationshipSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(

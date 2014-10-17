@@ -1,6 +1,6 @@
 import os.path
 from django.contrib import admin
-from shellac.models import Category, Clip, Person, Relationship
+from shellac.models import Category, Clip, Person, Relationship, Playlist, Track
 
 def custom_delete_selected(modeladmin, request, queryset):
     #custom delete code
@@ -20,6 +20,8 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ['title']}
 admin.site.register(Category, CategoryAdmin)
 
+
+
 class ClipInline(admin.StackedInline):
     model = Clip
     fk_name = 'author'
@@ -34,8 +36,6 @@ class ClipInline(admin.StackedInline):
                        'audio_file', 'created')
         }),
     )
-
-
 
 class RelationshipInline(admin.StackedInline):
     model = Relationship
@@ -59,3 +59,27 @@ class PersonAdmin(admin.ModelAdmin):
 
 # Re-register UserAdmin
 admin.site.register(Person, PersonAdmin)
+
+
+class TrackInline(admin.StackedInline):
+    model = Track
+    fk_name = 'playlist'
+    #raw_id_fields = ('playlist', 'clip')
+    extra = 1
+
+    fieldsets = (
+        ('Advanced options', {
+            'classes': ('collapse',),
+            'fields': ('clip', 'position', 'playlist')
+        }),
+    )
+
+class PlaylistAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    list_filter = ['person']
+    search_fields = ['person__username']
+    ordering = ['-updated']
+    readonly_fields = ['created']
+    prepopulated_fields = {'slug': ['title']}
+    inlines = (TrackInline,)
+admin.site.register(Playlist, PlaylistAdmin)

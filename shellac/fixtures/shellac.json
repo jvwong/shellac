@@ -1,68 +1,92 @@
 [
 {
     "pk": 1,
-    "model": "shellac.relationship",
+    "model": "shellac.playlist",
     "fields": {
-        "status": "following",
-        "from_person": 1,
-        "private": false,
-        "created": "2014-09-26T13:56:59.018",
-        "to_person": 2
+        "updated": "2014-10-16T20:58:22.780",
+        "title": "2014_10_16_205805",
+        "slug": "2014_10_16_205805",
+        "person": 1,
+        "description": "the first playlist",
+        "created": "2014-10-16T20:58:22.780"
+    }
+},
+{
+    "pk": 2,
+    "model": "shellac.playlist",
+    "fields": {
+        "updated": "2014-10-17T09:19:09.703",
+        "title": "2014_10_17_091832",
+        "slug": "2014_10_17_091832",
+        "person": 2,
+        "description": "aray's first",
+        "created": "2014-10-17T09:18:52.145"
     }
 },
 {
     "pk": 2,
     "model": "shellac.relationship",
     "fields": {
-        "status": "following",
         "from_person": 1,
+        "status": "following",
+        "to_person": 4,
         "private": false,
-        "created": "2014-09-26T13:56:59.018",
-        "to_person": 3
+        "created": "2014-10-08T16:54:34.030"
     }
 },
 {
     "pk": 3,
     "model": "shellac.relationship",
     "fields": {
-        "status": "following",
         "from_person": 1,
+        "status": "following",
+        "to_person": 2,
         "private": false,
-        "created": "2014-09-26T13:56:59.018",
-        "to_person": 4
+        "created": "2014-10-08T16:54:34.845"
     }
 },
 {
     "pk": 4,
     "model": "shellac.relationship",
     "fields": {
+        "from_person": 1,
         "status": "following",
-        "from_person": 2,
+        "to_person": 3,
         "private": false,
-        "created": "2014-09-26T13:57:06.772",
-        "to_person": 3
-    }
-},
-{
-    "pk": 5,
-    "model": "shellac.relationship",
-    "fields": {
-        "status": "following",
-        "from_person": 3,
-        "private": false,
-        "created": "2014-09-26T13:57:14.396",
-        "to_person": 1
+        "created": "2014-10-08T16:54:35.577"
     }
 },
 {
     "pk": 6,
     "model": "shellac.relationship",
     "fields": {
+        "from_person": 2,
         "status": "following",
-        "from_person": 3,
+        "to_person": 3,
         "private": false,
-        "created": "2014-09-26T13:57:14.397",
-        "to_person": 4
+        "created": "2014-10-08T16:59:02.041"
+    }
+},
+{
+    "pk": 7,
+    "model": "shellac.relationship",
+    "fields": {
+        "from_person": 3,
+        "status": "following",
+        "to_person": 1,
+        "private": false,
+        "created": "2014-10-08T16:59:15.247"
+    }
+},
+{
+    "pk": 8,
+    "model": "shellac.relationship",
+    "fields": {
+        "from_person": 3,
+        "status": "following",
+        "to_person": 4,
+        "private": false,
+        "created": "2014-10-08T16:59:15.248"
     }
 },
 {
@@ -210,178 +234,219 @@
     }
 },
 {
+    "pk": 1,
+    "model": "shellac.clip",
+    "fields": {
+        "audio_file": "sounds/2014/10/08/08_We_Are_The_Music_Makers_v8ZJhg0.mp3",
+        "plays": 0,
+        "brand": "",
+        "description": "wer",
+        "created": "2014-10-08T12:08:51",
+        "status": 1,
+        "author": 1,
+        "brand_thumb": "",
+        "title": "wer",
+        "slug": "wer",
+        "rating": 0,
+        "categories": []
+    }
+},
+{
+    "pk": 2,
+    "model": "shellac.clip",
+    "fields": {
+        "audio_file": "sounds/2014/10/08/08_We_Are_The_Music_Makers_qpII4X3.mp3",
+        "plays": 0,
+        "brand": "",
+        "description": "asdasd",
+        "created": "2014-10-08T12:09:40",
+        "status": 1,
+        "author": 1,
+        "brand_thumb": "",
+        "title": "2",
+        "slug": "2",
+        "rating": 0,
+        "categories": []
+    }
+},
+{
     "pk": 3,
     "model": "shellac.clip",
     "fields": {
-        "slug": "aray1",
-        "categories": [],
-        "description": "aray1",
-        "created": "2014-09-26",
-        "brand_thumb": "brands/2014/10/07/images_n9yeWAG_03yRX0t.jpg",
-        "brand": "brands/2014/10/06/images_n9yeWAG.jpg",
+        "audio_file": "sounds/2014/10/08/09_Schottkey_7th_Path_csU00Zk.mp3",
         "plays": 0,
-        "rating": 0,
-        "title": "aray1",
-        "author": 2,
+        "brand": "",
+        "description": "asd",
+        "created": "2014-10-08T15:07:36",
         "status": 1,
-        "audio_file": "sounds/2014/10/06/01_Xtal.mp3"
+        "author": 1,
+        "brand_thumb": "",
+        "title": "asd",
+        "slug": "asd",
+        "rating": 0,
+        "categories": []
     }
 },
 {
     "pk": 4,
     "model": "shellac.clip",
     "fields": {
-        "slug": "aray2",
-        "categories": [
-            12
-        ],
-        "description": "aray2",
-        "created": "2014-09-26",
-        "brand_thumb": "brands/2014/10/07/grantland_pop_culture_CFRKiIf_X18dxWf.jpg",
-        "brand": "brands/2014/10/06/grantland_pop_culture_CFRKiIf.jpg",
+        "audio_file": "sounds/2014/10/08/water.mp3",
         "plays": 0,
-        "rating": 0,
-        "title": "aray2",
-        "author": 2,
+        "brand": "",
+        "description": "kray1",
+        "created": "2014-10-08T16:59:17",
         "status": 1,
-        "audio_file": "sounds/2014/10/06/01_The_Mother_We_Share.mp3"
+        "author": 4,
+        "brand_thumb": "",
+        "title": "kray1",
+        "slug": "kray1",
+        "rating": 0,
+        "categories": [
+            1
+        ]
     }
 },
 {
     "pk": 5,
     "model": "shellac.clip",
     "fields": {
-        "slug": "jray1",
-        "categories": [
-            12
-        ],
-        "description": "jray1",
-        "created": "2014-09-26",
-        "brand_thumb": "brands/2014/10/07/black_3vVs6Uz.jpg",
-        "brand": "brands/2014/10/02/black_3vVs6Uz.jpg",
+        "audio_file": "sounds/2014/10/08/water_GCJdMld.mp3",
         "plays": 0,
-        "rating": 0,
-        "title": "jray1",
-        "author": 3,
+        "brand": "",
+        "description": "kray1",
+        "created": "2014-10-08T16:59:59",
         "status": 1,
-        "audio_file": "sounds/2014/10/02/water.mp3"
+        "author": 4,
+        "brand_thumb": "",
+        "title": "kray2",
+        "slug": "kray2",
+        "rating": 0,
+        "categories": [
+            2
+        ]
     }
 },
 {
     "pk": 6,
     "model": "shellac.clip",
     "fields": {
-        "slug": "jray2",
-        "categories": [
-            16
-        ],
-        "description": "jray2",
-        "created": "2014-09-26",
-        "brand_thumb": "brands/2014/10/07/black_kQUo8H5.jpg",
-        "brand": "brands/2014/10/02/black_kQUo8H5.jpg",
+        "audio_file": "sounds/2014/10/08/heart.mp3",
         "plays": 0,
-        "rating": 0,
-        "title": "jray2",
-        "author": 3,
+        "brand": "",
+        "description": "jray1",
+        "created": "2014-10-08T17:00:41",
         "status": 1,
-        "audio_file": "sounds/2014/10/02/water_MCaRWRA.mp3"
+        "author": 3,
+        "brand_thumb": "",
+        "title": "jray1",
+        "slug": "jray1",
+        "rating": 0,
+        "categories": [
+            16,
+            12
+        ]
     }
 },
 {
     "pk": 7,
     "model": "shellac.clip",
     "fields": {
-        "slug": "kray1",
-        "categories": [
-            16
-        ],
-        "description": "kray1",
-        "created": "2014-09-26",
-        "brand_thumb": "brands/2014/10/07/purple_obkkMp6_cE0GDGp.jpg",
-        "brand": "brands/2014/10/02/purple_obkkMp6.jpg",
+        "audio_file": "sounds/2014/10/08/water_NUoL75J.mp3",
         "plays": 0,
-        "rating": 0,
-        "title": "kray1",
-        "author": 4,
+        "brand": "",
+        "description": "jray2",
+        "created": "2014-10-08T17:01:06",
         "status": 1,
-        "audio_file": "sounds/2014/10/02/water_edIY5Vs.mp3"
+        "author": 3,
+        "brand_thumb": "",
+        "title": "jray2",
+        "slug": "jray2",
+        "rating": 0,
+        "categories": [
+            15
+        ]
     }
 },
 {
     "pk": 8,
     "model": "shellac.clip",
     "fields": {
-        "slug": "kray2",
+        "audio_file": "sounds/2014/10/08/water_IEDVXsx.mp3",
+        "plays": 0,
+        "brand": "",
+        "description": "aray1",
+        "created": "2014-10-08T17:01:30",
+        "status": 1,
+        "author": 2,
+        "brand_thumb": "",
+        "title": "aray1",
+        "slug": "aray1",
+        "rating": 0,
         "categories": [
+            12,
             13
-        ],
-        "description": "kray2",
-        "created": "2014-09-26",
-        "brand_thumb": "brands/2014/10/07/purple_o7PNTS1_yPIIKL3.jpg",
-        "brand": "brands/2014/10/02/purple_o7PNTS1.jpg",
-        "plays": 0,
-        "rating": 0,
-        "title": "kray2",
-        "author": 4,
-        "status": 1,
-        "audio_file": "sounds/2014/10/02/water_PB5MmRm.mp3"
+        ]
     }
 },
 {
-    "pk": 24,
+    "pk": 9,
     "model": "shellac.clip",
     "fields": {
-        "slug": "jvwong1",
-        "categories": [],
-        "description": "jvwong1",
-        "created": "2014-10-07",
-        "brand_thumb": "",
+        "audio_file": "sounds/2014/10/08/water_Gi4wFif.mp3",
+        "plays": 0,
         "brand": "",
-        "plays": 0,
-        "rating": 0,
-        "title": "jvwong1",
-        "author": 1,
+        "description": "aray2",
+        "created": "2014-10-08T17:01:30",
         "status": 1,
-        "audio_file": "sounds/2014/10/07/Various_Artists_-_Ferris_Buellers_Day_Off_-_04_-_Beat_City.mp3"
-    }
-},
-{
-    "pk": 25,
-    "model": "shellac.clip",
-    "fields": {
-        "slug": "jvwong2",
+        "author": 2,
+        "brand_thumb": "",
+        "title": "aray2",
+        "slug": "aray2",
+        "rating": 0,
         "categories": [
-            10,
-            12
-        ],
-        "description": "asdasdasd",
-        "created": "2014-10-07",
-        "brand_thumb": "",
-        "brand": "",
-        "plays": 0,
-        "rating": 0,
-        "title": "jvwong2",
-        "author": 1,
-        "status": 1,
-        "audio_file": "sounds/2014/10/07/Various_Artists_-_Ferris_Buellers_Day_Off_-_12_-_Taking_The_Day_Off.mp3"
+            15
+        ]
     }
 },
 {
-    "pk": 27,
-    "model": "shellac.clip",
+    "pk": 1,
+    "model": "shellac.track",
     "fields": {
-        "slug": "tagged-clip",
-        "categories": [],
-        "description": "tagged clip",
-        "created": "2014-10-07",
-        "brand_thumb": "",
-        "brand": "",
-        "plays": 0,
-        "rating": 0,
-        "title": "tagged clip",
-        "author": 1,
-        "status": 1,
-        "audio_file": "sounds/2014/10/07/01_Xtal.mp3"
+        "clip": 4,
+        "position": 0,
+        "added": "2014-10-16T20:58:22.786",
+        "playlist": 1
+    }
+},
+{
+    "pk": 2,
+    "model": "shellac.track",
+    "fields": {
+        "clip": 5,
+        "position": 0,
+        "added": "2014-10-16T20:58:22.787",
+        "playlist": 1
+    }
+},
+{
+    "pk": 3,
+    "model": "shellac.track",
+    "fields": {
+        "clip": 6,
+        "position": 0,
+        "added": "2014-10-17T09:18:52.147",
+        "playlist": 2
+    }
+},
+{
+    "pk": 4,
+    "model": "shellac.track",
+    "fields": {
+        "clip": 3,
+        "position": 0,
+        "added": "2014-10-17T09:19:09.705",
+        "playlist": 2
     }
 }
 ]

@@ -398,15 +398,22 @@ class RelationshipDetailViewSet(APITestCase):
         qstat = 'blocked'
         qprivate = True
 
+        #get the pk
+        jray = Person.objects.get(username='jray')
+        kray = Person.objects.get(username='kray')
+
+        rel = Relationship.objects.get(from_person=jray, to_person=kray)
+        # print(rel.id)
+
         payload = {'from_person': surlname,
                    'to_person': qurlname,
                    'status': qstat,
                    'private': qprivate}
 
-        response = self.client.put('/api/relationships/5/', data=payload)
+        response = self.client.put('/api/relationships/' + str(rel.id) + '/', data=payload)
         data = response.data
-        #print(data)
-        #print(response.status_code)
+        # print(data)
+        # print(response.status_code)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_RelationshipDetailViewSet_PUT_other_bystaff_OK(self):

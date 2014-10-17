@@ -13,13 +13,16 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.conf import settings
 
-from shellac.models import Clip, Category, Person, Relationship
+from shellac.models import Clip, Category, Person, Relationship, Playlist, Track
 from shellac.serializers import CategorySerializer, UserSerializer, \
     ClipSerializer, PaginatedClipSerializer, \
     PersonSerializer, PaginatedPersonSerializer, \
-    RelationshipSerializer
+    RelationshipSerializer, \
+    PlaylistSerializer
+
 from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, \
-    UserIsAdminOrPost, RelationshipIsOwnerOrAdminOrReadOnly
+    UserIsAdminOrPost, RelationshipIsOwnerOrAdminOrReadOnly, \
+    PlaylistIsUserOrReadOnly, PlaylistIsOwnerOrReadOnly
 from shellac.viewsets import DetailViewSet, ListViewSet
 
 
@@ -311,3 +314,51 @@ class PersonDetailView(generics.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+
+class PlaylistListViewSet(ListViewSet):
+    queryset = Playlist.objects.all()
+    serializer_class = PlaylistSerializer
+    permission_classes = (permissions.IsAuthenticated, PlaylistIsUserOrReadOnly)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class PlaylistDetailViewSet(DetailViewSet):
+    lookup_field = 'pk'
+    queryset = Playlist.objects.all()
+    serializer_class = PlaylistSerializer
+    permission_classes = (permissions.IsAuthenticated, PlaylistIsOwnerOrReadOnly)
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        #Should restrict this to certain fields
+        keys = request.DATA.keys()
+        for key in keys:
+            if key not in Playlist.PATCHABLE:
+                return Response({'error': 'Invalid PATCH model field'}, status=status.HTTP_400_BAD_REQUEST)
+        return self.partial_update(request, *args, **kwargs)
+
+
+# class TrackListViewSet(ListViewSet):
+#     queryset = Track.objects.all()
+#     serializer_class = TrackSerializer
+#     permission_classes = (UserIsAdminOrPost,)
+#
+#     def get(self, request, *args, **kwargs):
+#         return self.list(request, *args, **kwargs)
+#
+#     def post(self, request, *args, **kwargs):
+#         return self.create(request, *args, **kwargs)

@@ -4,7 +4,8 @@ from shellac.views.api import api_root, \
     CategoryViewSet, ClipListViewSet, ClipDetailViewSet, ClipListFollowingView, \
     UserListViewSet, UserDetailViewSet,\
     PersonListView, PersonDetailView, PersonListStatusView, \
-    RelationshipListViewSet, RelationshipDetailViewSet
+    RelationshipListViewSet, RelationshipDetailViewSet,\
+    PlaylistListViewSet, PlaylistDetailViewSet
 
 user_list = UserListViewSet.as_view({
     'get': 'get',
@@ -51,6 +52,17 @@ relationship_detail = RelationshipDetailViewSet.as_view({
     'delete': 'delete'
 })
 
+playlist_list = PlaylistListViewSet.as_view({
+    'get': 'get',
+    'post': 'post'
+})
+
+playlist_detail = PlaylistDetailViewSet.as_view({
+    'get': 'get',
+    'put': 'put',
+    'delete': 'delete'
+})
+
 
 urlpatterns = patterns('shellac.views.api',
     url(r'^$', api_root, name='api_root'),
@@ -70,7 +82,10 @@ urlpatterns = patterns('shellac.views.api',
     url(r'^people/(?P<username>[\w.@+-]+)/$', PersonDetailView.as_view(), name='person-detail'),
 
     url(r'^relationships/$', relationship_list, name='relationship-list'),
-    url(r'^relationships/(?P<pk>[0-9]+)/$', relationship_detail, name='relationship-detail')
+    url(r'^relationships/(?P<pk>[0-9]+)/$', relationship_detail, name='relationship-detail'),
+
+    url(r'^playlists/$', playlist_list, name='playlist-list'),
+    url(r'^playlists/(?P<pk>[0-9]+)/$', playlist_detail, name='playlist-detail')
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'html'])
