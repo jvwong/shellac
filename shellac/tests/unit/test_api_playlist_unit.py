@@ -108,11 +108,11 @@ class PlaylistDetailViewSet(APITestCase):
         self.numPlaylists = Playlist.objects.all().count()
 
     def test_PlaylistDetailViewSet_reverses_to_correct_url(self):
-        url = reverse('playlist-detail', kwargs={'pk': self.user.pk})
-        self.assertEqual(url, '/api/playlists/' + str(self.user.pk) + '/')
+        url = reverse('playlist-detail', kwargs={'pk': self.saved_playlists[0].pk})
+        self.assertEqual(url, '/api/playlists/' + str(self.saved_playlists[0].pk) + '/')
 
     def test_PlaylistDetailViewSet_resolves_to_correct_view(self):
-        view = resolve('/api/playlists/2/')
+        view = resolve('/api/playlists/' + str(self.saved_playlists[0].pk) + '/')
         #I don't know how to extract the name of the Class
         self.assertEqual(type(view.func).__name__, 'function')
 

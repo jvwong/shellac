@@ -4,18 +4,41 @@ from django.utils.text import slugify
 from rest_framework import serializers
 from rest_framework import pagination
 
-from shellac.models import Category, Clip, Person, Relationship, Playlist
+from shellac.models import Category, Clip, Person, Relationship, Playlist, Track
 
 
 class PlaylistSerializer(serializers.HyperlinkedModelSerializer):
     person = serializers.HyperlinkedRelatedField(many=False,
                                                  lookup_field='username',
                                                  view_name='person-detail')
+
+    tracks = serializers.HyperlinkedRelatedField(many=True,
+                                                 lookup_field='pk',
+                                                 view_name='track-detail')
+
     class Meta:
         lookup_field = 'pk'
         model = Playlist
-        fields = ('url', 'id', 'title', 'description', 'person',
+        fields = ('url', 'id', 'title', 'description', 'person', 'tracks',
                   'slug', 'created', 'updated')
+
+
+class TrackSerializer(serializers.HyperlinkedModelSerializer):
+    clip = serializers.HyperlinkedRelatedField(many=False,
+                                               lookup_field='pk',
+                                               view_name='clip-detail')
+    playlist = serializers.HyperlinkedRelatedField(many=False,
+                                                   lookup_field='pk',
+                                                   view_name='playlist-detail')
+
+    playlist_person = serializers.Field(source='playlist.person.username')
+    clip_author = serializers.Field(source='clip.author.username')
+
+    class Meta:
+        lookup_field = 'pk'
+        model = Track
+        fields = ('url', 'id', 'clip', 'position', 'playlist', 'added',
+                  'playlist_person', 'clip_author')
 
 
 class RelationshipSerializer(serializers.HyperlinkedModelSerializer):
@@ -28,6 +51,7 @@ class RelationshipSerializer(serializers.HyperlinkedModelSerializer):
         lookup_field = 'username'
         model = Relationship
         fields = ('url', 'id', 'from_person', 'to_person',  'created', 'status', 'private')
+
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     first_name = serializers.Field(source='user.first_name')
@@ -42,6 +66,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         model = Person
         fields = ('url', 'username', 'first_name', 'last_name', 'joined',
                   'clips', 'relationships')
+
 
 class PaginatedPersonSerializer(pagination.PaginationSerializer):
     """
@@ -82,6 +107,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
         # Create new instance
         attrs.pop('clips', None)
         return Category(**attrs)
+
 
 class ClipSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.Field(source='author.user.username')

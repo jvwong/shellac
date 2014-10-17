@@ -18,11 +18,12 @@ from shellac.serializers import CategorySerializer, UserSerializer, \
     ClipSerializer, PaginatedClipSerializer, \
     PersonSerializer, PaginatedPersonSerializer, \
     RelationshipSerializer, \
-    PlaylistSerializer
+    PlaylistSerializer, TrackSerializer
 
 from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, \
     UserIsAdminOrPost, RelationshipIsOwnerOrAdminOrReadOnly, \
-    PlaylistIsUserOrReadOnly, PlaylistIsOwnerOrReadOnly
+    PlaylistListViewPermissions, PlaylistDetailViewPermissions,\
+    TrackListViewPermissions, TrackDetailViewPermissions
 from shellac.viewsets import DetailViewSet, ListViewSet
 
 
@@ -33,7 +34,8 @@ def api_root(request, format=None):
         'relationships': reverse('relationship-list', request=request, format=format),
         'people': reverse('person-list', request=request, format=format),
         'categories': reverse('category-list', request=request, format=format),
-        'clips': reverse('clip-list', request=request, format=format)
+        'clips': reverse('clip-list', request=request, format=format),
+        'playlists': reverse('playlist-list', request=request, format=format)
     })
 
 
@@ -319,7 +321,7 @@ class PersonDetailView(generics.RetrieveAPIView):
 class PlaylistListViewSet(ListViewSet):
     queryset = Playlist.objects.all()
     serializer_class = PlaylistSerializer
-    permission_classes = (permissions.IsAuthenticated, PlaylistIsUserOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, PlaylistListViewPermissions)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -332,7 +334,7 @@ class PlaylistDetailViewSet(DetailViewSet):
     lookup_field = 'pk'
     queryset = Playlist.objects.all()
     serializer_class = PlaylistSerializer
-    permission_classes = (permissions.IsAuthenticated, PlaylistIsOwnerOrReadOnly)
+    permission_classes = (permissions.IsAuthenticated, PlaylistDetailViewPermissions)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -352,13 +354,37 @@ class PlaylistDetailViewSet(DetailViewSet):
         return self.partial_update(request, *args, **kwargs)
 
 
-# class TrackListViewSet(ListViewSet):
-#     queryset = Track.objects.all()
-#     serializer_class = TrackSerializer
-#     permission_classes = (UserIsAdminOrPost,)
-#
-#     def get(self, request, *args, **kwargs):
-#         return self.list(request, *args, **kwargs)
-#
-#     def post(self, request, *args, **kwargs):
-#         return self.create(request, *args, **kwargs)
+class TrackListViewSet(ListViewSet):
+    queryset = Track.objects.all()
+    serializer_class = TrackSerializer
+    permission_classes = (permissions.IsAuthenticated, TrackListViewPermissions)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class TrackDetailViewSet(DetailViewSet):
+    lookup_field = 'pk'
+    queryset = Track.objects.all()
+    serializer_class = TrackSerializer
+    permission_classes = (permissions.IsAuthenticated, TrackDetailViewPermissions)
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        #Should restrict this to certain fields
+        keys = request.DATA.keys()
+        for key in keys:
+            if key not in Track.PATCHABLE:
+                return Response({'error': 'Invalid PATCH model field'}, status=status.HTTP_400_BAD_REQUEST)
+        return self.partial_update(request, *args, **kwargs)
