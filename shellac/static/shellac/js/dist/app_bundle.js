@@ -11108,19 +11108,11 @@ var shell = (function () {
 
             if (url)
             {
-                util.fetchUrl(url, 'permalink');
-
-                //register listener for result -- using jquery here to save headaches -- bootstrap too
-                util.PubSub.on("fetchUrlComplete", function(tag, result){
-                    if( tag === 'permalink')
-                    {
-                        jqueryMap.$modal_body.html($(result).find('.permalink'));
-                        jqueryMap.$modal_container.modal('show');
-                    }
+                util.fetchUrl(url, function(results){
+                    jqueryMap.$modal_body.html($(results).find('.permalink'));
+                    jqueryMap.$modal_container.modal('show');
                 });
-
             }
-
         },
 
         /**
@@ -11153,23 +11145,19 @@ var shell = (function () {
     initUI = function( status, username ){
         //load data into in-browser database
         var clipsUrl = ['/api/clips', status, username, ""].join('/');
-        util.PubSub.on("fetchUrlComplete", function(tag, result){
-            if(tag === 'api_clips_status_person')
-            {
-                var sidebar_toggle,
-                    formatted = util.parseClipData( result );
-                stateMap.latest_clips_db.insert( formatted );
-                render_clips( stateMap.latest_clips_db().order("id desc").get() );
+        util.fetchUrl(clipsUrl, function( results ){
+            var sidebar_toggle,
+                formatted = util.parseClipData( results );
+            stateMap.latest_clips_db.insert( formatted );
+            render_clips( stateMap.latest_clips_db().order("id desc").get() );
 
-                //initialize the sidebar module
-                sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
-                sidebar_toggle = utils.dom.get('.sidebar-toggle');
-                utils.events.add(sidebar_toggle, 'click', function(e){ utils.css.toggle(dom.sidebar_container, 'nav-expanded'); });
+            //initialize the sidebar module
+            sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
+            sidebar_toggle = utils.dom.get('.sidebar-toggle');
+            utils.events.add(sidebar_toggle, 'click', function(e){ utils.css.toggle(dom.sidebar_container, 'nav-expanded'); });
 
-                bar.initModule( dom.player_container );
-            }
+            bar.initModule( dom.player_container );
         });
-        util.fetchUrl(clipsUrl, 'api_clips_status_person');
     };
 
     /**
@@ -11206,15 +11194,10 @@ var shell = (function () {
         }
         else if(callback)
         {
-            util.PubSub.on('fetchUrlComplete', function (tag, result) {
-                if (tag === 'getClip_fetch') {
-                    //NB: This data comes back as a single object
-                    database.insert(result);
-                    callback(result);
-                }
+            util.fetchUrl('/api/clips/' + id + '/', function( results ){
+                database.insert(results);
+                callback(results);
             });
-
-            util.fetchUrl('/api/clips/' + id + '/', 'getClip_fetch');
         }
         else
         {
@@ -11460,10 +11443,8 @@ var shell = (function () {
                     plays = clip.plays;
                     payload.plays = plays + 1;
 
-                    util.PubSub.on("updateUrlComplete", utils.noop);
-                    util.updateUrl('/api/clips/' + id + '/', 'onplay_plays_increment',
-                        'PATCH', JSON.stringify(payload),
-                        stateMap.csrftoken);
+                    util.updateUrl('/api/clips/' + id + '/', utils.noop,
+                        'PATCH', JSON.stringify(payload), stateMap.csrftoken);
                 });
                 break;
             default:
@@ -11477,8 +11458,11 @@ var shell = (function () {
         preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
 
         console.log(preferencesMap.positionsMap);
-        //ToDo
-        //PATCH or POST to API as Person attribute.
+        //Patch to 'default' playlist
+
+
+        //2) POST / DELETE / PATCH Track instances based on pMap
+
     };
 
 
@@ -11812,7 +11796,9 @@ var sidebar = (function () {
     onSubmitSearch = function(event){
         var q = jqueryMap.$sidebar_search_input.val(),
             endpoint = ['/api/clips/?q=', q].join('');
-        util.fetchUrl(endpoint, 'api_clips_search');
+        util.fetchUrl(endpoint, function(results){
+            util.PubSub.emit( "shellac-app-clip-change", util.parseClipData(results));
+        });
     };
 
     onTouchSidebar = function(event, direction, distance, duration, fingerCount){
@@ -11843,26 +11829,6 @@ var sidebar = (function () {
         stateMap.$container.append( configMap.main_html );
         setJqueryMap();
 
-        //register pub-sub methods
-        util.PubSub.on("fetchUrlComplete", function(url, result){
-            switch (url)
-            {
-                case 'api_categories':
-                    var formatted_categories = parseCategoryData(result);
-                    stateMap.category_db.insert(formatted_categories);
-                    display_categories(
-                        jqueryMap.$sidebar_category_listGroup,
-                        stateMap.category_db,
-                        stateMap.latest_clips_db
-                    );
-                    break;
-                case 'api_clips_search':
-                    util.PubSub.emit( "shellac-app-clip-change", util.parseClipData(result));
-                    break;
-                default:
-            }
-        });
-
         //register search listener
         jqueryMap.$sidebar_search_submit.on('click', onSubmitSearch);
         jqueryMap.$sidebar_search_input.keypress(function(e){
@@ -11872,7 +11838,15 @@ var sidebar = (function () {
 
         //Inject Category, People data
         display_authors(jqueryMap.$sidebar_authors_listGroup, stateMap.latest_clips_db);
-        util.fetchUrl('/api/categories/', 'api_categories');
+        util.fetchUrl('/api/categories/', function( results ){
+            var formatted_categories = parseCategoryData( results );
+            stateMap.category_db.insert(formatted_categories);
+            display_categories(
+                jqueryMap.$sidebar_category_listGroup,
+                stateMap.category_db,
+                stateMap.latest_clips_db
+            );
+        });
 
         //Navigation Menu Slider
         stateMap.$container.swipe({
@@ -13469,22 +13443,22 @@ var util = (function () {
     /**
      * fetchUrl make a call to the given url and emit a Pubsub on complete
      * @param url
-     * @param tag string tag to identify results
-     * @return Pubsub event that notifies the url and resulting json
+     * @param callback the callable to execute given Ajax data returned
      */
-    fetchUrl = function(url, tag){
+    fetchUrl = function(url, callback){
         $.ajax({
             url: url,
             type: 'GET',
             contentType: 'application/json'
         })
-            .done(function(results){
-                PubSub.emit("fetchUrlComplete", tag, results);
-            })
-            .fail(function(){
-                console.error("Failed to load data");
-            })
-            .always(function(){});
+        .done(function(results){
+            callback(results);
+        })
+        .fail(function(){
+            console.error("Failed to load data");
+        })
+        .always(function(){
+        });
     };
 
     /**
@@ -13494,7 +13468,7 @@ var util = (function () {
      * @param data the object data to update
      * @return Pubsub event updateUrlComplete that notifies the url and resulting json
      */
-    updateUrl = function(url, tag, method, data, csrftoken, authtoken) {
+    updateUrl = function(url, callback, method, data, csrftoken) {
 
         $.ajax({
             url: url,
@@ -13511,13 +13485,13 @@ var util = (function () {
                 }
             }
         })
-            .done(function(results){
-                PubSub.emit("updateUrlComplete", tag, results);
-            })
-            .fail(function(){
-                console.error("Failed to load data");
-            })
-            .always(function(){});
+        .done(function(results){
+            callback( results );
+        })
+        .fail(function(){
+            console.error("Failed to load data");
+        })
+        .always(function(){});
     };
 
     /**

@@ -65,22 +65,22 @@ var util = (function () {
     /**
      * fetchUrl make a call to the given url and emit a Pubsub on complete
      * @param url
-     * @param tag string tag to identify results
-     * @return Pubsub event that notifies the url and resulting json
+     * @param callback the callable to execute given Ajax data returned
      */
-    fetchUrl = function(url, tag){
+    fetchUrl = function(url, callback){
         $.ajax({
             url: url,
             type: 'GET',
             contentType: 'application/json'
         })
-            .done(function(results){
-                PubSub.emit("fetchUrlComplete", tag, results);
-            })
-            .fail(function(){
-                console.error("Failed to load data");
-            })
-            .always(function(){});
+        .done(function(results){
+            callback(results);
+        })
+        .fail(function(){
+            console.error("Failed to load data");
+        })
+        .always(function(){
+        });
     };
 
     /**
@@ -90,7 +90,7 @@ var util = (function () {
      * @param data the object data to update
      * @return Pubsub event updateUrlComplete that notifies the url and resulting json
      */
-    updateUrl = function(url, tag, method, data, csrftoken, authtoken) {
+    updateUrl = function(url, callback, method, data, csrftoken) {
 
         $.ajax({
             url: url,
@@ -107,13 +107,13 @@ var util = (function () {
                 }
             }
         })
-            .done(function(results){
-                PubSub.emit("updateUrlComplete", tag, results);
-            })
-            .fail(function(){
-                console.error("Failed to load data");
-            })
-            .always(function(){});
+        .done(function(results){
+            callback( results );
+        })
+        .fail(function(){
+            console.error("Failed to load data");
+        })
+        .always(function(){});
     };
 
     /**

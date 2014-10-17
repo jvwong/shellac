@@ -130,8 +130,12 @@ def on_user_delete(sender, instance, **kwargs):
 @receiver(post_save, sender=User)
 def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs):
     if(created):
+        #create a Person
         p = Person(user=instance)
         p.save()
+
+        #create a playlist
+        Playlist.objects.create_playlist(p, 'default')
 
 
 ##########################################################################################

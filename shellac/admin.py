@@ -75,7 +75,7 @@ class TrackInline(admin.StackedInline):
     )
 
 class PlaylistAdmin(admin.ModelAdmin):
-    list_display = ['title']
+    list_display = ['title', 'person']
     list_filter = ['person']
     search_fields = ['person__username']
     ordering = ['-updated']

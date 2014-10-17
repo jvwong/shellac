@@ -140,19 +140,11 @@ var shell = (function () {
 
             if (url)
             {
-                util.fetchUrl(url, 'permalink');
-
-                //register listener for result -- using jquery here to save headaches -- bootstrap too
-                util.PubSub.on("fetchUrlComplete", function(tag, result){
-                    if( tag === 'permalink')
-                    {
-                        jqueryMap.$modal_body.html($(result).find('.permalink'));
-                        jqueryMap.$modal_container.modal('show');
-                    }
+                util.fetchUrl(url, function(results){
+                    jqueryMap.$modal_body.html($(results).find('.permalink'));
+                    jqueryMap.$modal_container.modal('show');
                 });
-
             }
-
         },
 
         /**
@@ -185,23 +177,19 @@ var shell = (function () {
     initUI = function( status, username ){
         //load data into in-browser database
         var clipsUrl = ['/api/clips', status, username, ""].join('/');
-        util.PubSub.on("fetchUrlComplete", function(tag, result){
-            if(tag === 'api_clips_status_person')
-            {
-                var sidebar_toggle,
-                    formatted = util.parseClipData( result );
-                stateMap.latest_clips_db.insert( formatted );
-                render_clips( stateMap.latest_clips_db().order("id desc").get() );
+        util.fetchUrl(clipsUrl, function( results ){
+            var sidebar_toggle,
+                formatted = util.parseClipData( results );
+            stateMap.latest_clips_db.insert( formatted );
+            render_clips( stateMap.latest_clips_db().order("id desc").get() );
 
-                //initialize the sidebar module
-                sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
-                sidebar_toggle = utils.dom.get('.sidebar-toggle');
-                utils.events.add(sidebar_toggle, 'click', function(e){ utils.css.toggle(dom.sidebar_container, 'nav-expanded'); });
+            //initialize the sidebar module
+            sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
+            sidebar_toggle = utils.dom.get('.sidebar-toggle');
+            utils.events.add(sidebar_toggle, 'click', function(e){ utils.css.toggle(dom.sidebar_container, 'nav-expanded'); });
 
-                bar.initModule( dom.player_container );
-            }
+            bar.initModule( dom.player_container );
         });
-        util.fetchUrl(clipsUrl, 'api_clips_status_person');
     };
 
     /**
@@ -238,15 +226,10 @@ var shell = (function () {
         }
         else if(callback)
         {
-            util.PubSub.on('fetchUrlComplete', function (tag, result) {
-                if (tag === 'getClip_fetch') {
-                    //NB: This data comes back as a single object
-                    database.insert(result);
-                    callback(result);
-                }
+            util.fetchUrl('/api/clips/' + id + '/', function( results ){
+                database.insert(results);
+                callback(results);
             });
-
-            util.fetchUrl('/api/clips/' + id + '/', 'getClip_fetch');
         }
         else
         {
@@ -492,10 +475,8 @@ var shell = (function () {
                     plays = clip.plays;
                     payload.plays = plays + 1;
 
-                    util.PubSub.on("updateUrlComplete", utils.noop);
-                    util.updateUrl('/api/clips/' + id + '/', 'onplay_plays_increment',
-                        'PATCH', JSON.stringify(payload),
-                        stateMap.csrftoken);
+                    util.updateUrl('/api/clips/' + id + '/', utils.noop,
+                        'PATCH', JSON.stringify(payload), stateMap.csrftoken);
                 });
                 break;
             default:
@@ -509,8 +490,11 @@ var shell = (function () {
         preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
 
         console.log(preferencesMap.positionsMap);
-        //ToDo
-        //PATCH or POST to API as Person attribute.
+        //Patch to 'default' playlist
+
+
+        //2) POST / DELETE / PATCH Track instances based on pMap
+
     };
 
 

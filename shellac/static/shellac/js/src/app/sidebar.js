@@ -277,7 +277,9 @@ var sidebar = (function () {
     onSubmitSearch = function(event){
         var q = jqueryMap.$sidebar_search_input.val(),
             endpoint = ['/api/clips/?q=', q].join('');
-        util.fetchUrl(endpoint, 'api_clips_search');
+        util.fetchUrl(endpoint, function(results){
+            util.PubSub.emit( "shellac-app-clip-change", util.parseClipData(results));
+        });
     };
 
     onTouchSidebar = function(event, direction, distance, duration, fingerCount){
@@ -308,26 +310,6 @@ var sidebar = (function () {
         stateMap.$container.append( configMap.main_html );
         setJqueryMap();
 
-        //register pub-sub methods
-        util.PubSub.on("fetchUrlComplete", function(url, result){
-            switch (url)
-            {
-                case 'api_categories':
-                    var formatted_categories = parseCategoryData(result);
-                    stateMap.category_db.insert(formatted_categories);
-                    display_categories(
-                        jqueryMap.$sidebar_category_listGroup,
-                        stateMap.category_db,
-                        stateMap.latest_clips_db
-                    );
-                    break;
-                case 'api_clips_search':
-                    util.PubSub.emit( "shellac-app-clip-change", util.parseClipData(result));
-                    break;
-                default:
-            }
-        });
-
         //register search listener
         jqueryMap.$sidebar_search_submit.on('click', onSubmitSearch);
         jqueryMap.$sidebar_search_input.keypress(function(e){
@@ -337,7 +319,15 @@ var sidebar = (function () {
 
         //Inject Category, People data
         display_authors(jqueryMap.$sidebar_authors_listGroup, stateMap.latest_clips_db);
-        util.fetchUrl('/api/categories/', 'api_categories');
+        util.fetchUrl('/api/categories/', function( results ){
+            var formatted_categories = parseCategoryData( results );
+            stateMap.category_db.insert(formatted_categories);
+            display_categories(
+                jqueryMap.$sidebar_category_listGroup,
+                stateMap.category_db,
+                stateMap.latest_clips_db
+            );
+        });
 
         //Navigation Menu Slider
         stateMap.$container.swipe({
