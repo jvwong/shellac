@@ -79,6 +79,12 @@ var bar_ui = (function() {
                                 '</div>' +
                             '</div>' +
 
+                            '<div class="sm2-inline-element sm2-button-element">' +
+                                '<div class="sm2-button-bd">' +
+                                    '<a href="#save" title="Save" class="sm2-inline-button save">^ save</a>' +
+                                '</div>' +
+                            '</div>' +
+
                             '<div class="sm2-inline-element sm2-button-element sm2-menu">' +
                                 '<div class="sm2-button-bd">' +
                                     '<a href="#menu" class="sm2-inline-button menu">menu</a>' +
@@ -768,9 +774,6 @@ var bar_ui = (function() {
                         utils.css.swap(dom.o, 'playing', 'paused');
                         util.PubSub.emit('player-change', 'onpause', this);
                         playlistController.data.positionsMap[this.id] = Math.round(this.position);
-
-                        //dump to the shell
-                        util.PubSub.emit('player-save', playlistController.exportPositionsMap());
                     },
 
                     onresume: function () {
@@ -965,7 +968,9 @@ var bar_ui = (function() {
                 }
 
                 soundObject = makeSound(href, id);
+                console.log(playlistController.data.positionsMap);
                 position = playlistController.data.positionsMap[id];
+                console.log(position);
                 soundObject.play();
                 soundObject.setPosition(position);
             }
@@ -1279,6 +1284,13 @@ var bar_ui = (function() {
                 }
             },
 
+            save: function(/* e */) {
+                //PubSub event
+                console.log('save');
+                //dump to the shell
+                util.PubSub.emit('player-save', playlistController.exportPositionsMap());
+            },
+
             menu: function(/* e */) {
 
                 var isOpen;
@@ -1387,8 +1399,22 @@ var bar_ui = (function() {
          * Actions: Inserts or removes from the DOM playlist (.sm2-playlist-bd). Calls
          * to playlistcontroller instance to update its relavant DOM attributes
          * @param clip the track object to enqueue or dequeue
+         * @param positionsMap the positions map, if any
          */
-        this.enqueue = function(clip) {
+        this.enqueue = function(clip, positionsMap) {
+
+
+            ///###########hack init positionsMap
+            if(positionsMap)
+            {
+                var pMap = playlistController.importPositionsMap(positionsMap);
+                playlistController.data.positionsMap = JSON.parse(JSON.stringify(pMap));
+                console.log(pMap);
+                //so initialized. I think the sound should check this map for
+                // position information.
+            }
+
+
 
             var item, sid, offset, existing, isRemoved;
 
@@ -1438,8 +1464,9 @@ var bar_ui = (function() {
      * The Shell is also responsible for browser-wide issues
      * Directs this app to offer its capability to the user
      * @param $container a single DOM Element
+     * @clips clips list of Clip objects to populate the playlist
      */
-    initModule = function( container ){
+    initModule = function( container, clips, positionsMap ){
 
         //ensure this is HTMLNode
         if(container.nodeType === 1){
@@ -1466,6 +1493,8 @@ var bar_ui = (function() {
                 }
 
             });
+
+            playerEnqueue( clips, 0, positionsMap );
         }
         else
         {
@@ -1477,8 +1506,9 @@ var bar_ui = (function() {
      * playerEnqueue Toggle in or out the given url as a track in the player
      * @param clips objects possessing Clip-like attributes
      * @param offset the play in the list of players
+     * @param pMap the positions map corresponding to the clips
      */
-    playerEnqueue = function(clips, offset){
+    playerEnqueue = function(clips, offset, positionsMap){
 
         var collection = clips || [],
             index = offset || 0;
@@ -1490,13 +1520,13 @@ var bar_ui = (function() {
             //enqueue if the player is in range
             if(index > -1 && index < players.length)
             {
-                players[index].enqueue(clip);
+                players[index].enqueue(clip, positionsMap);
             }
 
             //default to the first player
             else
             {
-                players[0].enqueue(clip);
+                players[0].enqueue(clip, positionsMap);
             }
         });
 

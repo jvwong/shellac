@@ -12,7 +12,8 @@ var util = (function () {
         PubSub,
         truncate,
         getCookie, sameOrigin, urlParse,
-        swipeData, csrfSafeMethod, parseClipData, utils;
+        swipeData, csrfSafeMethod, parseClipData, utils,
+        getURLpk;
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     moment.locale('en', {
@@ -65,7 +66,8 @@ var util = (function () {
     /**
      * fetchUrl make a call to the given url and emit a Pubsub on complete
      * @param url
-     * @param callback the callable to execute given Ajax data returned
+     * @param callback the callback for the results
+     * @param the async callback
      */
     fetchUrl = function(url, callback){
         $.ajax({
@@ -829,6 +831,26 @@ var util = (function () {
         console.log("fingerData: %s", fingerData);
     };
 
+    /**
+     * getURLpk Extract the primary key from a track url
+     * @param URL url with format 'protocol://host/xxx/xxx/<pk>/
+     * @return pk string representation of the numeric pk
+     */
+    getURLpk = function(URL)
+    {
+        //get the pk for this track
+        var pk, match;
+        match = URL.match(/(?:\/)([0-9]+)(?:\/$)/);
+
+        if( match === null){ return null; }
+
+        pk = match[1];
+
+        if( isNaN(parseInt(pk)) ){ return null; }
+
+        return pk;
+    };
+
     return {
         fetchUrl        : fetchUrl,
         updateUrl       : updateUrl,
@@ -840,7 +862,8 @@ var util = (function () {
         parseClipData   : parseClipData,
         swipeData       : swipeData,
         utils           : utils,
-        urlParse        : urlParse
+        urlParse        : urlParse,
+        getURLpk        :getURLpk
     };
 }());
 

@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from shellac.views.util.permissions import IsAuthenticatedAndOwnerMixin
 
-from shellac.models import Person
+from shellac.models import Person, Playlist
 from shellac.views.util import pagination
 
 ### player - default to this user's following set
@@ -17,8 +17,9 @@ def shellac_app(request, *args, **kwargs):
     else:
         qperson = request.user.person
         qstatus = 'following'
+    playlist = Playlist.objects.filter(person=request.user.person, title='default')[0]
     return render(request, 'shellac/app/app.html',
-                  {'person': qperson, 'status': qstatus})
+                  {'person': qperson, 'status': qstatus, 'playlist': playlist})
 
 ### Tune in
 @login_required(login_url='/accounts/signin/')

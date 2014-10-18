@@ -1125,12 +1125,6 @@ select#id_categories.form-control {
   background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-000000/PNG/volume.png);
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-000000/SVG/volume.svg);
 }
-.menu {
-  background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/PNG/list2.png);
-  background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/list2.svg);
-  background-size: 58%;
-  background-position: 54% 51%;
-}
 .previous {
   background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/PNG/first.png);
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/first.svg);
@@ -1138,6 +1132,18 @@ select#id_categories.form-control {
 .next {
   background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/PNG/last.png);
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/last.svg);
+}
+.save {
+  background-image: url();
+  background-image: none, url(/static/shellac/assets/IcoMoon--limited--master/Icons/SVG/disk.svg);
+  background-size: 58%;
+  background-position: 54% 51%;
+}
+.menu {
+  background-image: url(/static/shellac/assets/IcoMoon--limited--master/Icons/PNG/32px/disk.png);
+  background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/list2.svg);
+  background-size: 58%;
+  background-position: 54% 51%;
 }
 .previous,
 .next {
@@ -1616,6 +1622,12 @@ body {
 /* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
 
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
 .sm2-bar-ui {
   position: relative;
   display: inline-block;
@@ -2096,12 +2108,6 @@ body {
   background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-000000/PNG/volume.png);
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-000000/SVG/volume.svg);
 }
-.menu {
-  background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/PNG/list2.png);
-  background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/list2.svg);
-  background-size: 58%;
-  background-position: 54% 51%;
-}
 .previous {
   background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/PNG/first.png);
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/first.svg);
@@ -2109,6 +2115,18 @@ body {
 .next {
   background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/PNG/last.png);
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/last.svg);
+}
+.save {
+  background-image: url();
+  background-image: none, url(/static/shellac/assets/IcoMoon--limited--master/Icons/SVG/disk.svg);
+  background-size: 58%;
+  background-position: 54% 51%;
+}
+.menu {
+  background-image: url(/static/shellac/assets/IcoMoon--limited--master/Icons/PNG/32px/disk.png);
+  background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/list2.svg);
+  background-size: 58%;
+  background-position: 54% 51%;
 }
 .previous,
 .next {

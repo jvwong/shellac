@@ -59,13 +59,16 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     clips = serializers.HyperlinkedRelatedField(many=True,
                                                 lookup_field='pk',
                                                 view_name='clip-detail')
+    playlists = serializers.HyperlinkedRelatedField(many=True,
+                                                    lookup_field='pk',
+                                                    view_name='playlist-detail')
     relationships = RelationshipSerializer(source='from_people', many=True)
 
     class Meta:
         lookup_field = 'username'
         model = Person
         fields = ('url', 'username', 'first_name', 'last_name', 'joined',
-                  'clips', 'relationships')
+                  'clips', 'relationships', 'playlists')
 
 
 class PaginatedPersonSerializer(pagination.PaginationSerializer):

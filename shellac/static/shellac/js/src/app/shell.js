@@ -11,7 +11,8 @@ var shell = (function () {
     var TAFFY   = require('taffydb').taffy,
         util    = require('../util.js'),
         sidebar = require('./sidebar.js'),
-        bar     = require('../players/bar-ui.js');
+        bar     = require('../players/bar-ui.js'),
+        async   = require('async');
 
     //---------------- END MODULE DEPENDENCIES --------------
 
@@ -21,9 +22,9 @@ var shell = (function () {
     utils = util.utils,
     PubSub = util.PubSub,
 
-    initModule, initUI, initDom,
+    initModule,
+    initDom, initLatest, initPlaylist, initUIModules,
     registerPubSub,
-    setPreferences,
 
     configMap = {
         main_html: String() +
@@ -64,11 +65,10 @@ var shell = (function () {
     },
 
     preferencesMap = {
-        positionsMap: {},
-        selected: {
-            selectedIndex: undefined,
-            position: 0
-        }
+        playlist_id         : undefined,
+        playlist            : undefined,
+        positionsMap        : {},
+        clips               : undefined
     },
 
     jqueryMap = {}, setJqueryMap,
@@ -118,15 +118,6 @@ var shell = (function () {
     };
 
     /**
-     * setPreferences initialize the preferences objects in stateMap for the
-     * initialization of the sm2 player
-     * @param
-     */
-    setPreferences = function(){
-//        console.log("setPreferences called");
-    };
-
-    /**
      * actions ui action-related event handlers
      */
     actions = {
@@ -169,27 +160,149 @@ var shell = (function () {
         }
     };
 
+
     /**
-     * initializes the shell UI
-     * @param status the type of relationship
-     * @param username the name of the user to load
+     * initLatest fetches the latest clips which defaults to recent, following
+     * @param done async callback
      */
-    initUI = function( status, username ){
-        //load data into in-browser database
+    initLatest = function( status, username, done ){
         var clipsUrl = ['/api/clips', status, username, ""].join('/');
         util.fetchUrl(clipsUrl, function( results ){
-            var sidebar_toggle,
-                formatted = util.parseClipData( results );
+            var formatted = util.parseClipData( results );
             stateMap.latest_clips_db.insert( formatted );
             render_clips( stateMap.latest_clips_db().order("id desc").get() );
-
-            //initialize the sidebar module
-            sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
-            sidebar_toggle = utils.dom.get('.sidebar-toggle');
-            utils.events.add(sidebar_toggle, 'click', function(e){ utils.css.toggle(dom.sidebar_container, 'nav-expanded'); });
-
-            bar.initModule( dom.player_container );
+            done(null);
         });
+    };
+
+
+    /**
+     * initPlaylist fetches the (default) playlist for this user and inflates
+     * @param done async callback
+     */
+    initPlaylist = function( user, done ){
+
+        var pMap, tracks;
+
+        //Do 3 things.
+        async.waterfall([
+            function(callback){
+                // 1. Fetch the default playlist
+                util.fetchUrl('/api/playlists/' + preferencesMap.playlist_id + '/', function( results ){
+                    if(results.id.toString() === preferencesMap.playlist_id.toString())
+                    {
+                        preferencesMap.playlist = results;
+
+                        if( results.hasOwnProperty('tracks') )
+                        {
+                            tracks = results.tracks;
+                            callback(null, tracks);
+                        }
+                        else
+                        {
+                            callback("error initPlaylist: Failed to load Track list");
+                        }
+                    }
+                    else
+                    {
+                        callback("error initPlaylist");
+                    }
+                });
+            },
+            function(tracks, callback)
+            {
+                var clipURLs = [];
+
+                // 2. Now fetch the Tracks and populate the positionsMap with the
+                // *** CLIP *** pk and NOT the Track pk
+                // Precondition tracks are fetched
+                async.each(tracks, function(track, finish) {
+                    var track_pk;
+
+                    track_pk = util.getURLpk( track );
+                    if(!track_pk){ finish("error initPlaylist: Invalid Track pk"); }
+
+                    util.fetchUrl('/api/tracks/' + track_pk + '/', function( results ){
+                        var clip_pk;
+                        if( results.hasOwnProperty('id') &&
+                            results.hasOwnProperty('position') &&
+                            results.hasOwnProperty('clip'))
+                        {
+                            clip_pk = util.getURLpk( results.clip );
+                            if(!clip_pk){ finish("error initPlaylist: Invalid Track.clip pk"); }
+
+                            preferencesMap.positionsMap[clip_pk] = results.position;
+                            clipURLs.push( results.clip );
+                            return finish(null);
+                        }
+                        finish("error initPlaylist: Track missing property");
+                    });
+                }, function(err) {
+                    if(err)
+                    {
+                        callback(err);
+                    }
+                    else
+                    {
+                        callback(null, clipURLs);
+                    }
+                });
+            },
+            function(clipURLs, callback)
+            {
+                var clips = [];
+                // 3. Now fetch the Clips and enqueue them with some position info
+                async.each(clipURLs, function(clipURL, finish) {
+                    var pk;
+
+                    pk = util.getURLpk( clipURL );
+                    if(!pk){ finish("error initPlaylist: Invalid Clip pk"); }
+
+                    util.fetchUrl('/api/clips/' + pk + '/', function( results ){
+                        clips.push(results);
+                        finish(null);
+                    });
+                }, function(err) {
+                    if(err)
+                    {
+                        callback(err);
+                    }
+                    else
+                    {
+                        //store out the clips for the UI init
+                        preferencesMap.clips = clips;
+                        callback(null);
+                    }
+                });
+            }
+        ],
+        function(err){
+            if(err) {
+                done(err);
+            }
+            else
+            {
+                done(null);
+            }
+        });
+    };
+
+    /**
+     * initUIModules installs other modules
+     * @param done async callback
+     */
+    initUIModules = function( done ){
+        var sidebar_toggle;
+
+        //initialize the sidebar module
+        sidebar.initModule( dom.sidebar_container, stateMap.latest_clips_db );
+        sidebar_toggle = utils.dom.get('.sidebar-toggle');
+        utils.events.add(sidebar_toggle, 'click', function(e){ utils.css.toggle(dom.sidebar_container, 'nav-expanded'); });
+
+        //initialize the bar-ui module
+        bar.initModule( dom.player_container, preferencesMap.clips, preferencesMap.positionsMap );
+
+        done(null);
     };
 
     /**
@@ -201,7 +314,6 @@ var shell = (function () {
         utils.dom.append(container, configMap.modal_button_html);
         setDomMap();
         setJqueryMap();
-        setPreferences();
     };
 
     /**
@@ -483,18 +595,90 @@ var shell = (function () {
         }
     };
 
+
+    /**
+     * handlePlayerSave Handler for the sm2 player 'save' action
+     * Action Clears out Track objects from the default playlist; Post
+     * Track objects to default playlist that exist in pMap
+     * @param pMap the positions map PlaylistController (exportPositionsMap())
+     * consisting of pattern {Clip_pk: position_pk, ..., clip_pk: position_pk} for
+     * each Clip in playlist
+     */
     handlePlayerSave = function( pMap ){
-        console.log('handlePlayerSave');
 
         //update the positionMap
         preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
 
-        console.log(preferencesMap.positionsMap);
-        //Patch to 'default' playlist
+        async.waterfall([
+            function(callback){
+                // 1. Haaack - clear out the playlist tracks
 
+                var tracks = preferencesMap.playlist.tracks;
+                async.each(tracks, function(track, done) {
 
-        //2) POST / DELETE / PATCH Track instances based on pMap
+                    //get the pk for this track
+                    var pk = util.getURLpk(track);
+                    if(!pk)
+                    {
+                        done("error handlePlayerSave: Track pk does not exist");
+                    }
+                    util.updateUrl('/api/tracks/' + pk + '/', function( results ){
+                        done(null);
+                    }, 'DELETE', JSON.stringify('{}'), stateMap.csrftoken);
 
+                }, function(err) {
+                    callback(null);
+                });
+            },
+            function(callback){
+                // 2. Create the Track map
+                // Verify that each item is a valid clip:
+                // for each key fetch /api/clips/<key>/ and
+                // store a map of clip urls and positions in trackMap
+
+                var keys,
+                    trackMap = {};
+
+                keys = Object.keys(preferencesMap.positionsMap);
+                async.each(keys, function(key, done) {
+                    util.fetchUrl('/api/clips/' + key + '/', function( results ){
+                        //store {Clip_url_1: position_1, ..., Clip_url_n: position_n}
+                        trackMap[results.url] = preferencesMap.positionsMap[key];
+                        done(null);
+                    });
+                }, function(err) {
+                    callback(null, trackMap);
+                });
+            },
+            function(trackMap, callback){
+                //3. Post a new Track for each clip in the positions map (pMap)
+                var clipURLs = Object.keys(trackMap);
+                async.each(clipURLs, function(clipURL, done) {
+
+                    var payload = {
+                        "clip": clipURL,
+                        "position": trackMap[clipURL],
+                        "playlist": '/api/playlists/' + preferencesMap.playlist_id + '/'
+                    };
+
+                    //should I post this? will it overwrite? no.
+                    //may need to get test for these tracks
+                    util.updateUrl('/api/tracks/', function( results ){
+
+                        done(null);
+                    }, 'POST', JSON.stringify(payload), stateMap.csrftoken);
+                }, function(err) {
+                    callback(null);
+                });
+            }
+        ],
+        // optional callback
+        function(err){
+            if(err)
+            {
+                console.warn(err);
+            }
+        });
     };
 
 
@@ -521,7 +705,8 @@ var shell = (function () {
      * @param target_username account holder username for retrieving clips
      * @param DEBUG for debug purposes (root url)
      */
-    initModule = function( container, user, target_username, status, DEBUG){
+    initModule = function( container, user, target_username, status, playlist_id, DEBUG)
+    {
 
         // load HTML and map jQuery collections
         stateMap.csrftoken = util.getCookie('csrftoken');
@@ -531,15 +716,42 @@ var shell = (function () {
         stateMap.status = status;
         stateMap.DEBUG = DEBUG;
 
-        if(stateMap.csrftoken) {
+        preferencesMap.playlist_id = playlist_id;
+
+        if(stateMap.csrftoken)
+        {
             initDom( container );
             registerPubSub();
-            initUI( stateMap.status, target_username );
+            async.series([
+                function(done)
+                {
+                    //Initialize default playlist
+                    initPlaylist(user, done);
+                },
+
+                function(done)
+                {
+                    //Initialize latest clips (status)
+                    //console.log(stateMap.playlist);
+                    initLatest( status, target_username, done);
+                },
+
+                function(done)
+                {
+                    //Initialize other UI modules
+                    //console.log(stateMap.latest_clips_db().get());
+                    initUIModules(done);
+                }
+            ],
+            // optional callback
+            function(err)
+            {
+                if(err)
+                { console.warn(err); }
+            });
         }
         else
-        {
-            console.warn('initModule failed - credentials missing');
-        }
+        { console.warn('initModule failed - credentials missing'); }
     };
 
     return { initModule: initModule };

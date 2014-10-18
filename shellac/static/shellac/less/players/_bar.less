@@ -1,3 +1,5 @@
+@import "../_elements";
+
 .sm2-bar-ui {
   position: relative;
   display: inline-block;
@@ -106,6 +108,8 @@
   height: 100%;
   background-image: -moz-linear-gradient(to bottom, rgba(255,255,255,0.125) 5%, rgba(255,255,255,0.125) 45%, rgba(255,255,255,0.15) 52%, rgba(0,0,0,0.01) 51%, rgba(0,0,0,0.1) 95%); /* W3C */
   background-image: linear-gradient(to bottom, rgba(255,255,255,0.125) 5%, rgba(255,255,255,0.125) 45%, rgba(255,255,255,0.15) 50%, rgba(0,0,0,0.1) 51%, rgba(0,0,0,0.1) 95%); /* W3C */
+//  .bw-gradient(#000, 0, 150);
+
 }
 
 .sm2-bar-ui.flat .sm2-inline-gradient {
@@ -518,6 +522,8 @@
 .paused .play-pause:hover {
   background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/PNG/play.png);
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/play.svg);
+//  background-image: url(/static/shellac/assets/IcoMoon--limited--master/Icons/PNG/32px/play3.png);
+//  background-image: none, url(/static/shellac/assets/IcoMoon--limited--master/Icons/SVG/play3.svg);
   background-size: 67.5%;
   background-position: 40% 53%;
 }
@@ -548,21 +554,32 @@
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-000000/SVG/volume.svg);
 }
 
-.menu {
-  background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/PNG/list2.png);
-  background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/list2.svg);
-  background-size: 58%;
-  background-position: 54% 51%;
-}
-
 .previous {
   background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/PNG/first.png);
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/first.svg);
+//  background-image: url(/static/shellac/assets/IcoMoon--limited--master/Icons/PNG/32px/first.png);
+//  background-image: none, url(/static/shellac/assets/IcoMoon--limited--master/Icons/SVG/last.svg);
 }
 
 .next {
   background-image: url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/PNG/last.png);
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/last.svg);
+//  background-image: url(/static/shellac/assets/IcoMoon--limited--master/Icons/PNG/32px/first.png);
+//  background-image: none, url(/static/shellac/assets/IcoMoon--limited--master/Icons/SVG/last.svg);
+}
+
+.save {
+  background-image: url();
+  background-image: none, url(/static/shellac/assets/IcoMoon--limited--master/Icons/SVG/disk.svg);
+  background-size: 58%;
+  background-position: 54% 51%;
+}
+
+.menu {
+  background-image: url(/static/shellac/assets/IcoMoon--limited--master/Icons/PNG/32px/disk.png);
+  background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/list2.svg);
+  background-size: 58%;
+  background-position: 54% 51%;
 }
 
 .previous,

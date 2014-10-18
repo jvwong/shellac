@@ -146,7 +146,6 @@ class PlaylistManager(models.Manager):
         playlist = self.create(person=person, title=title)
         return playlist
 
-
 def datetime_title_default():
     now = datetime.datetime.now()
     return now.strftime("%Y_%m_%d_%H%M%S")
