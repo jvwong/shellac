@@ -48,7 +48,14 @@ var shell = (function () {
                     '</div>' +
                 '</div>' +
             '</div>',
-        truncatemax: 30
+
+        truncatemax: 30,
+
+        playlist_endpoint: String() + '/api/playlists/',
+
+        clip_endpoint: String() + '/api/clips/',
+
+        track_endpoint: String() + '/api/tracks/'
     },
 
     stateMap = {
@@ -606,102 +613,121 @@ var shell = (function () {
      * each Clip in playlist
      */
     handlePlayerSave = function( pMap ){
-//
-//        var playlistURL = '/api/playlists/' + preferencesMap.playlist_id + '/';
-//        //update the positionMap
-//        preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
-//
-//        async.waterfall([
-//            function(callback){
-//                // 1. Haaack - clear out the playlist
-//                util.alert(dom.app_container, "success", "Saving playlist...", 2000);
-//
-//                async.series([
-//                    function(done)
-//                    {
-//                        //Delete the existing playlist
-//                        util.updateUrl(playlistURL, function( results ){
-//                            done(null);
-//                        }, 'DELETE', JSON.stringify('{}'), stateMap.csrftoken);
-//                    },
-//
-//                    function(done)
-//                    {
-//                        //Create a new playlist
-//                        var payload =
-//                        {
-//                            "title": "default",
-//                            "description": "default",
-//                            "person": "/api/people/"
-//                        }
-//                        util.updateUrl(playlistURL, function( results ){
-//                            done(null);
-//                        }, 'POST', JSON.stringify('{}'), stateMap.csrftoken);
-//                    }
-//                ],
-//                // optional callback
-//                function(err)
-//                {
-//                    if(err)
-//                    { console.warn(err); }
-//                });
-//
-//            },
-//            function(callback){
-//                // 2. Create the Track map
-//                // Verify that each item is a valid clip:
-//                // for each key fetch /api/clips/<key>/ and
-//                // store a map of clip urls and positions in trackMap
-//
-//                var keys,
-//                    trackMap = {};
-//
-//                keys = Object.keys(preferencesMap.positionsMap);
-//                async.each(keys, function(key, done) {
-//                    util.fetchUrl('/api/clips/' + key + '/', function( results ){
-//                        //store {Clip_url_1: position_1, ..., Clip_url_n: position_n}
-//                        trackMap[results.url] = preferencesMap.positionsMap[key];
-//                        done(null);
-//                    });
-//                }, function(err) {
-//                    callback(null, trackMap);
-//                });
-//            },
-//            function(trackMap, callback){
-//                //3. Post a new Track for each clip in the positions map (pMap)
-//                var clipURLs = Object.keys(trackMap);
-//                async.each(clipURLs, function(clipURL, done) {
-//
-//                    var payload = {
-//                        "clip": clipURL,
-//                        "position": trackMap[clipURL],
-//                        "playlist": ///TODO
-//                    };
-//
-//                    //should I post this? will it overwrite? no.
-//                    //may need to get test for these tracks
-//                    util.updateUrl('/api/tracks/', function( results ){
-//
-//                        done(null);
-//                    }, 'POST', JSON.stringify(payload), stateMap.csrftoken);
-//                }, function(err) {
-//                    callback(null);
-//                });
-//            }
-//        ],
-//        // optional callback
-//        function(err){
-//            if(err)
-//            {
-//                console.warn(err);
-//                util.alert(dom.app_container, "success", "Error: Not saved", 2000);
-//            }
-//            else
-//            {
-//                util.alert(dom.app_container, "success", "Playlist saved", 2000);
-//            }
-//
-//        });
+
+        var playlistPersonURL = preferencesMap.playlist.person;
+
+        //update the positionMap
+        preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
+
+        async.waterfall([
+            function(callback){
+                // 1. Haaack - clear out the playlist
+                util.alert(dom.app_container, "success", "Saving playlist...", 2000);
+
+                async.series([
+                    function(done)
+                    {
+                        var playlistURL = configMap.playlist_endpoint + preferencesMap.playlist_id + '/';
+
+                        //Delete default playlist for existing preferencesMap.playlist_id
+                        util.updateUrl(playlistURL, function( results ){
+                            done(null);
+                        }, 'DELETE', JSON.stringify('{}'), stateMap.csrftoken);
+                    },
+
+                    function(done)
+                    {
+                        //Create a new playlist
+                        var payload =
+                        {
+                            "title": "default",
+                            "description": "default",
+                            "person": playlistPersonURL
+                        };
+
+                        util.updateUrl(configMap.playlist_endpoint, function( results ){
+
+                            //reinstall the new playlist
+                            preferencesMap.playlist = results;
+                            preferencesMap.playlist_id = results.id;
+
+                            console.log("new playlist");
+                            console.log(results);
+
+                            done(null);
+                        }, 'POST', JSON.stringify( payload ), stateMap.csrftoken);
+                    }
+                ],
+                // optional callback
+                function(err)
+                {
+                    if(err)
+                    {
+                        callback(err);
+                    }
+                    else
+                    {
+                        callback(null);
+                    }
+                });
+
+            },
+            function(callback){
+                // 2. Create the Track map
+                // Verify that each item is a valid clip:
+                // for each key fetch /api/clips/<key>/ and
+                // store a map of clip urls and positions in trackMap
+
+                var keys,
+                    trackMap = {};
+
+                keys = Object.keys(preferencesMap.positionsMap);
+                async.each(keys, function(key, done) {
+                    util.fetchUrl(configMap.clip_endpoint + key + '/', function( results ){
+                        //store {Clip_url_1: position_1, ..., Clip_url_n: position_n}
+                        trackMap[results.url] = preferencesMap.positionsMap[key];
+                        done(null);
+                    });
+                }, function(err) {
+
+                    console.log(trackMap);
+                    callback(null, trackMap);
+                });
+            },
+            function(trackMap, callback){
+                //3. Post a new Track for each clip in the positions map (pMap)
+                var clipURLs = Object.keys(trackMap);
+
+                async.each(clipURLs, function(clipURL, done) {
+
+                    var payload = {
+                        "clip": clipURL,
+                        "position": trackMap[clipURL],
+                        "playlist": '/api/playlists/' + preferencesMap.playlist_id + '/'
+                    };
+
+                    util.updateUrl('/api/tracks/', function( results ){
+                        done(null);
+                    }, 'POST', JSON.stringify(payload), stateMap.csrftoken);
+
+                }, function(err) {
+                    callback(null);
+                });
+            }
+        ],
+        // optional callback
+        function(err){
+            if(err)
+            {
+                console.warn(err);
+                util.alert(dom.app_container, "success", "Error: Not saved", 2000);
+            }
+            else
+            {
+                util.alert(dom.app_container, "success", "Playlist saved", 2000);
+            }
+
+        });
     };
 
 

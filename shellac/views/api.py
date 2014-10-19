@@ -322,16 +322,16 @@ class PersonDetailView(generics.RetrieveAPIView):
 class PlaylistListViewSet(ListViewSet):
     queryset = Playlist.objects.all()
     serializer_class = PlaylistSerializer
-    permission_classes = (permissions.IsAuthenticated, PlaylistListViewPermissions)
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-    #
-    # def pre_save(self, obj):
-    #     obj.person = self.request.user.person
+
+    def pre_save(self, obj):
+        obj.person = self.request.user.person
 
 
 
