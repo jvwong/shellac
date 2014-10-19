@@ -31,9 +31,9 @@
             <form role="form" class="form-signin" method="post">{% csrf_token %}
                 <h3 class="form-login-heading">Sign in</h3>
                 {{ form.username.errors }}
-                <input type="text" name="username" id="signin_username" class="form-control username" placeholder="Username" required autofocus>
+                <input type="text" name="username" autocapitalize="none" id="signin_username" class="form-control username" placeholder="Username" required autofocus>
                 {{ form.password.errors }}
-                <input type="password" name="password" id="signin_password" class="form-control" placeholder="Password" required>
+                <input type="password" name="password" autocapitalize="none" id="signin_password" class="form-control" placeholder="Password" required>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="remember_me" value="remember">Remember me
