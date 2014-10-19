@@ -204,6 +204,12 @@ div.content-relationships div#accordion.panel-group div.panel div.panel-body {
   margin-top: 10px;
 }
 
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
 .btn-file {
   position: relative;
   overflow: hidden;
@@ -257,6 +263,23 @@ select#id_categories.form-control {
   padding: 1.5px;
   box-sizing: padding-box;
   color: #000000;
+}
+.alert {
+  position: fixed;
+  z-index: 10000;
+  width: 10em;
+  height: 2.5em;
+  bottom: 3em;
+  margin-left: 50%;
+  left: -5em;
+  border: none;
+  padding: 0.5em;
+  text-align: center;
+  font-size: 0.9em;
+  color: black;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
 }
 
 /*---------------------------------------------------
@@ -359,6 +382,23 @@ select#id_categories.form-control {
   padding: 1.5px;
   box-sizing: padding-box;
   color: #000000;
+}
+.alert {
+  position: fixed;
+  z-index: 10000;
+  width: 10em;
+  height: 2.5em;
+  bottom: 3em;
+  margin-left: 50%;
+  left: -5em;
+  border: none;
+  padding: 0.5em;
+  text-align: center;
+  font-size: 0.9em;
+  color: black;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
 }
 /*
 * Permalink

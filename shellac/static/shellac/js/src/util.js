@@ -10,7 +10,7 @@ var util = (function () {
 
     var fetchUrl, updateUrl,
         PubSub,
-        truncate,
+        truncate, alert,
         getCookie, sameOrigin, urlParse,
         swipeData, csrfSafeMethod, parseClipData, utils,
         getURLpk;
@@ -37,6 +37,42 @@ var util = (function () {
 
 
     //------------------- BEGIN PUBLIC METHODS -------------------
+    /**
+     * alert create an alert message
+     * @param dom the HTMLElement to append to
+     * @param type one of success, error
+     * @param message string message to alert
+     * @param duration message duration in ms
+     */
+    alert = function( container, type, message, duration )
+    {
+        var alert,
+            delay = duration || 2000,
+            element = document.createElement("div"),
+            alert_success_html = String() + '<div class="alert alert-success" role="alert"></div>',
+            alert_danger_html= String() + '<div class="alert alert-danger" role="alert"></div>';
+
+        switch(type)
+        {
+            case "success":
+                element.innerHTML = alert_success_html;
+                alert = utils.dom.get(element, '.alert-success');
+                break;
+            case "danger":
+                element.innerHTML = alert_danger_html;
+                alert = utils.dom.get(element, '.alert-danger');
+                break;
+            default:
+        }
+
+        alert.innerHTML = message;
+        utils.dom.append(container, alert);
+
+        var timeoutID = window.setTimeout(function(){
+            utils.dom.remove(alert);
+        }, delay);
+    };
+
     /**
      * parseClipData: transform any Clip fields to javascript-compatible
      * @param raw a string describing an array of valid JSON
@@ -371,8 +407,10 @@ var util = (function () {
 
                 //case 1: simply append the html child to the node
                 if (arguments.length === 2 &&
-                    arguments[0] === utils.nodeTypes.ELEMENT_NODE &&
-                    arguments[1] === utils.nodeTypes.ELEMENT_NODE)
+                    typeof(arguments[0]) === 'object' &&
+                    typeof(arguments[1]) === 'object' &&
+                    arguments[0].nodeType === utils.nodeTypes.ELEMENT_NODE &&
+                    arguments[1].nodeType === utils.nodeTypes.ELEMENT_NODE)
                 {
                     node = arguments[0];
                     html = arguments[1];
@@ -863,7 +901,8 @@ var util = (function () {
         swipeData       : swipeData,
         utils           : utils,
         urlParse        : urlParse,
-        getURLpk        :getURLpk
+        getURLpk        :getURLpk,
+        alert           : alert
     };
 }());
 

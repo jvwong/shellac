@@ -329,6 +329,10 @@ class PlaylistListViewSet(ListViewSet):
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+    #
+    # def pre_save(self, obj):
+    #     obj.person = self.request.user.person
+
 
 
 class PlaylistDetailViewSet(DetailViewSet):

@@ -1,3 +1,6 @@
+@import "_elements";
+@import "_fonts";
+
 .btn-file {
     position: relative;
     overflow: hidden;
@@ -64,4 +67,24 @@ select#id_categories.form-control
   padding: 1.5px;
   box-sizing: padding-box;
   color: #000000;
+}
+
+.alert
+{
+  position: fixed;
+  z-index: 10000;
+  width: 10em;
+  height: 2.5em;
+  bottom: 3em;
+  margin-left: 50%;
+  left: -5em;
+
+  border: none;
+  padding: 0.5em;
+
+  text-align: center;
+  font-size: @font_size_sm;
+  color: black;
+//  background-color: rgba(0, 0, 0, 0.80);
+  .rounded(15px);
 }

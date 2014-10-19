@@ -46,7 +46,7 @@ class TrackListViewSet(APITestCase):
 
     def test_TrackListViewSet_POST_to_own_playlist_accepted(self):
         myPlaylist = Playlist.objects.filter(person=self.person)[0]
-        myClip = Clip.objects.filter(author=self.person)[0]
+        myClip = Clip.objects.all()[0]
 
         payload = {
             "playlist": 'http://testserver/api/playlists/' + str(myPlaylist.id) + '/',

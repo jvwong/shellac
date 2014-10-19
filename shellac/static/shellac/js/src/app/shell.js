@@ -2,7 +2,7 @@
  * shell.js
  * Root namespace module
 */
-/* global $, window, AudioContext, XMLHttpRequest, target_username, DEBUG */
+/* global $, window, document, AudioContext, XMLHttpRequest, target_username, DEBUG */
 'use strict';
 
 var shell = (function () {
@@ -48,7 +48,6 @@ var shell = (function () {
                     '</div>' +
                 '</div>' +
             '</div>',
-
         truncatemax: 30
     },
 
@@ -83,6 +82,8 @@ var shell = (function () {
     //---------------- END MODULE SCOPE VARIABLES --------------
 
     //--------------------- BEGIN MODULE SCOPE METHODS --------------------
+
+
 
     /**
      * setJqueryMap record the jQuery elements of the page
@@ -605,80 +606,102 @@ var shell = (function () {
      * each Clip in playlist
      */
     handlePlayerSave = function( pMap ){
-
-        //update the positionMap
-        preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
-
-        async.waterfall([
-            function(callback){
-                // 1. Haaack - clear out the playlist tracks
-
-                var tracks = preferencesMap.playlist.tracks;
-                async.each(tracks, function(track, done) {
-
-                    //get the pk for this track
-                    var pk = util.getURLpk(track);
-                    if(!pk)
-                    {
-                        done("error handlePlayerSave: Track pk does not exist");
-                    }
-                    util.updateUrl('/api/tracks/' + pk + '/', function( results ){
-                        done(null);
-                    }, 'DELETE', JSON.stringify('{}'), stateMap.csrftoken);
-
-                }, function(err) {
-                    callback(null);
-                });
-            },
-            function(callback){
-                // 2. Create the Track map
-                // Verify that each item is a valid clip:
-                // for each key fetch /api/clips/<key>/ and
-                // store a map of clip urls and positions in trackMap
-
-                var keys,
-                    trackMap = {};
-
-                keys = Object.keys(preferencesMap.positionsMap);
-                async.each(keys, function(key, done) {
-                    util.fetchUrl('/api/clips/' + key + '/', function( results ){
-                        //store {Clip_url_1: position_1, ..., Clip_url_n: position_n}
-                        trackMap[results.url] = preferencesMap.positionsMap[key];
-                        done(null);
-                    });
-                }, function(err) {
-                    callback(null, trackMap);
-                });
-            },
-            function(trackMap, callback){
-                //3. Post a new Track for each clip in the positions map (pMap)
-                var clipURLs = Object.keys(trackMap);
-                async.each(clipURLs, function(clipURL, done) {
-
-                    var payload = {
-                        "clip": clipURL,
-                        "position": trackMap[clipURL],
-                        "playlist": '/api/playlists/' + preferencesMap.playlist_id + '/'
-                    };
-
-                    //should I post this? will it overwrite? no.
-                    //may need to get test for these tracks
-                    util.updateUrl('/api/tracks/', function( results ){
-
-                        done(null);
-                    }, 'POST', JSON.stringify(payload), stateMap.csrftoken);
-                }, function(err) {
-                    callback(null);
-                });
-            }
-        ],
-        // optional callback
-        function(err){
-            if(err)
-            {
-                console.warn(err);
-            }
-        });
+//
+//        var playlistURL = '/api/playlists/' + preferencesMap.playlist_id + '/';
+//        //update the positionMap
+//        preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
+//
+//        async.waterfall([
+//            function(callback){
+//                // 1. Haaack - clear out the playlist
+//                util.alert(dom.app_container, "success", "Saving playlist...", 2000);
+//
+//                async.series([
+//                    function(done)
+//                    {
+//                        //Delete the existing playlist
+//                        util.updateUrl(playlistURL, function( results ){
+//                            done(null);
+//                        }, 'DELETE', JSON.stringify('{}'), stateMap.csrftoken);
+//                    },
+//
+//                    function(done)
+//                    {
+//                        //Create a new playlist
+//                        var payload =
+//                        {
+//                            "title": "default",
+//                            "description": "default",
+//                            "person": "/api/people/"
+//                        }
+//                        util.updateUrl(playlistURL, function( results ){
+//                            done(null);
+//                        }, 'POST', JSON.stringify('{}'), stateMap.csrftoken);
+//                    }
+//                ],
+//                // optional callback
+//                function(err)
+//                {
+//                    if(err)
+//                    { console.warn(err); }
+//                });
+//
+//            },
+//            function(callback){
+//                // 2. Create the Track map
+//                // Verify that each item is a valid clip:
+//                // for each key fetch /api/clips/<key>/ and
+//                // store a map of clip urls and positions in trackMap
+//
+//                var keys,
+//                    trackMap = {};
+//
+//                keys = Object.keys(preferencesMap.positionsMap);
+//                async.each(keys, function(key, done) {
+//                    util.fetchUrl('/api/clips/' + key + '/', function( results ){
+//                        //store {Clip_url_1: position_1, ..., Clip_url_n: position_n}
+//                        trackMap[results.url] = preferencesMap.positionsMap[key];
+//                        done(null);
+//                    });
+//                }, function(err) {
+//                    callback(null, trackMap);
+//                });
+//            },
+//            function(trackMap, callback){
+//                //3. Post a new Track for each clip in the positions map (pMap)
+//                var clipURLs = Object.keys(trackMap);
+//                async.each(clipURLs, function(clipURL, done) {
+//
+//                    var payload = {
+//                        "clip": clipURL,
+//                        "position": trackMap[clipURL],
+//                        "playlist": ///TODO
+//                    };
+//
+//                    //should I post this? will it overwrite? no.
+//                    //may need to get test for these tracks
+//                    util.updateUrl('/api/tracks/', function( results ){
+//
+//                        done(null);
+//                    }, 'POST', JSON.stringify(payload), stateMap.csrftoken);
+//                }, function(err) {
+//                    callback(null);
+//                });
+//            }
+//        ],
+//        // optional callback
+//        function(err){
+//            if(err)
+//            {
+//                console.warn(err);
+//                util.alert(dom.app_container, "success", "Error: Not saved", 2000);
+//            }
+//            else
+//            {
+//                util.alert(dom.app_container, "success", "Playlist saved", 2000);
+//            }
+//
+//        });
     };
 
 

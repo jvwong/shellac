@@ -968,9 +968,7 @@ var bar_ui = (function() {
                 }
 
                 soundObject = makeSound(href, id);
-                console.log(playlistController.data.positionsMap);
                 position = playlistController.data.positionsMap[id];
-                console.log(position);
                 soundObject.play();
                 soundObject.setPosition(position);
             }
@@ -1194,7 +1192,7 @@ var bar_ui = (function() {
 
                 var target,
                     anchor_current, item_current,
-                    href,
+                    href, position,
                     url, id;
 
                 target = e.target || e.srcElement;
@@ -1210,6 +1208,7 @@ var bar_ui = (function() {
                     {
                         url = anchor_current.href;
                         id = anchor_current.dataset.id;
+                        position = playlistController.data.positionsMap[id];
                         soundObject = makeSound(url, id);
                     }
                     else
@@ -1223,6 +1222,10 @@ var bar_ui = (function() {
                 {
                     setTitle(item_current);
                     soundObject.togglePause();
+                    if(position)
+                    {
+                        soundObject.setPosition(position);
+                    }
                 }
                 else
                 {

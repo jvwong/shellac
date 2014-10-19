@@ -1,7 +1,7 @@
 [
 {
-    "pk": 1,
     "model": "auth.permission",
+    "pk": 1,
     "fields": {
         "name": "Can add site",
         "codename": "add_site",
@@ -9,8 +9,8 @@
     }
 },
 {
-    "pk": 2,
     "model": "auth.permission",
+    "pk": 2,
     "fields": {
         "name": "Can change site",
         "codename": "change_site",
@@ -18,8 +18,8 @@
     }
 },
 {
-    "pk": 3,
     "model": "auth.permission",
+    "pk": 3,
     "fields": {
         "name": "Can delete site",
         "codename": "delete_site",
@@ -27,8 +27,8 @@
     }
 },
 {
-    "pk": 4,
     "model": "auth.permission",
+    "pk": 4,
     "fields": {
         "name": "Can add log entry",
         "codename": "add_logentry",
@@ -36,8 +36,8 @@
     }
 },
 {
-    "pk": 5,
     "model": "auth.permission",
+    "pk": 5,
     "fields": {
         "name": "Can change log entry",
         "codename": "change_logentry",
@@ -45,8 +45,8 @@
     }
 },
 {
-    "pk": 6,
     "model": "auth.permission",
+    "pk": 6,
     "fields": {
         "name": "Can delete log entry",
         "codename": "delete_logentry",
@@ -54,8 +54,8 @@
     }
 },
 {
-    "pk": 7,
     "model": "auth.permission",
+    "pk": 7,
     "fields": {
         "name": "Can add permission",
         "codename": "add_permission",
@@ -63,8 +63,8 @@
     }
 },
 {
-    "pk": 8,
     "model": "auth.permission",
+    "pk": 8,
     "fields": {
         "name": "Can change permission",
         "codename": "change_permission",
@@ -72,8 +72,8 @@
     }
 },
 {
-    "pk": 9,
     "model": "auth.permission",
+    "pk": 9,
     "fields": {
         "name": "Can delete permission",
         "codename": "delete_permission",
@@ -81,8 +81,8 @@
     }
 },
 {
-    "pk": 10,
     "model": "auth.permission",
+    "pk": 10,
     "fields": {
         "name": "Can add group",
         "codename": "add_group",
@@ -90,8 +90,8 @@
     }
 },
 {
-    "pk": 11,
     "model": "auth.permission",
+    "pk": 11,
     "fields": {
         "name": "Can change group",
         "codename": "change_group",
@@ -99,8 +99,8 @@
     }
 },
 {
-    "pk": 12,
     "model": "auth.permission",
+    "pk": 12,
     "fields": {
         "name": "Can delete group",
         "codename": "delete_group",
@@ -108,8 +108,8 @@
     }
 },
 {
-    "pk": 13,
     "model": "auth.permission",
+    "pk": 13,
     "fields": {
         "name": "Can add user",
         "codename": "add_user",
@@ -117,8 +117,8 @@
     }
 },
 {
-    "pk": 14,
     "model": "auth.permission",
+    "pk": 14,
     "fields": {
         "name": "Can change user",
         "codename": "change_user",
@@ -126,8 +126,8 @@
     }
 },
 {
-    "pk": 15,
     "model": "auth.permission",
+    "pk": 15,
     "fields": {
         "name": "Can delete user",
         "codename": "delete_user",
@@ -135,8 +135,8 @@
     }
 },
 {
-    "pk": 16,
     "model": "auth.permission",
+    "pk": 16,
     "fields": {
         "name": "Can add content type",
         "codename": "add_contenttype",
@@ -144,8 +144,8 @@
     }
 },
 {
-    "pk": 17,
     "model": "auth.permission",
+    "pk": 17,
     "fields": {
         "name": "Can change content type",
         "codename": "change_contenttype",
@@ -153,8 +153,8 @@
     }
 },
 {
-    "pk": 18,
     "model": "auth.permission",
+    "pk": 18,
     "fields": {
         "name": "Can delete content type",
         "codename": "delete_contenttype",
@@ -162,8 +162,8 @@
     }
 },
 {
-    "pk": 19,
     "model": "auth.permission",
+    "pk": 19,
     "fields": {
         "name": "Can add session",
         "codename": "add_session",
@@ -171,8 +171,8 @@
     }
 },
 {
-    "pk": 20,
     "model": "auth.permission",
+    "pk": 20,
     "fields": {
         "name": "Can change session",
         "codename": "change_session",
@@ -180,8 +180,8 @@
     }
 },
 {
-    "pk": 21,
     "model": "auth.permission",
+    "pk": 21,
     "fields": {
         "name": "Can delete session",
         "codename": "delete_session",
@@ -189,8 +189,8 @@
     }
 },
 {
-    "pk": 22,
     "model": "auth.permission",
+    "pk": 22,
     "fields": {
         "name": "Can add flat page",
         "codename": "add_flatpage",
@@ -198,8 +198,8 @@
     }
 },
 {
-    "pk": 23,
     "model": "auth.permission",
+    "pk": 23,
     "fields": {
         "name": "Can change flat page",
         "codename": "change_flatpage",
@@ -207,8 +207,8 @@
     }
 },
 {
-    "pk": 24,
     "model": "auth.permission",
+    "pk": 24,
     "fields": {
         "name": "Can delete flat page",
         "codename": "delete_flatpage",
@@ -216,8 +216,8 @@
     }
 },
 {
-    "pk": 25,
     "model": "auth.permission",
+    "pk": 25,
     "fields": {
         "name": "Can add person manager",
         "codename": "add_personmanager",
@@ -225,8 +225,8 @@
     }
 },
 {
-    "pk": 26,
     "model": "auth.permission",
+    "pk": 26,
     "fields": {
         "name": "Can change person manager",
         "codename": "change_personmanager",
@@ -234,8 +234,8 @@
     }
 },
 {
-    "pk": 27,
     "model": "auth.permission",
+    "pk": 27,
     "fields": {
         "name": "Can delete person manager",
         "codename": "delete_personmanager",
@@ -243,8 +243,8 @@
     }
 },
 {
-    "pk": 28,
     "model": "auth.permission",
+    "pk": 28,
     "fields": {
         "name": "Can add person",
         "codename": "add_person",
@@ -252,8 +252,8 @@
     }
 },
 {
-    "pk": 29,
     "model": "auth.permission",
+    "pk": 29,
     "fields": {
         "name": "Can change person",
         "codename": "change_person",
@@ -261,8 +261,8 @@
     }
 },
 {
-    "pk": 30,
     "model": "auth.permission",
+    "pk": 30,
     "fields": {
         "name": "Can delete person",
         "codename": "delete_person",
@@ -270,8 +270,8 @@
     }
 },
 {
-    "pk": 31,
     "model": "auth.permission",
+    "pk": 31,
     "fields": {
         "name": "Can add relationship",
         "codename": "add_relationship",
@@ -279,8 +279,8 @@
     }
 },
 {
-    "pk": 32,
     "model": "auth.permission",
+    "pk": 32,
     "fields": {
         "name": "Can change relationship",
         "codename": "change_relationship",
@@ -288,8 +288,8 @@
     }
 },
 {
-    "pk": 33,
     "model": "auth.permission",
+    "pk": 33,
     "fields": {
         "name": "Can delete relationship",
         "codename": "delete_relationship",
@@ -297,8 +297,8 @@
     }
 },
 {
-    "pk": 34,
     "model": "auth.permission",
+    "pk": 34,
     "fields": {
         "name": "Can add category",
         "codename": "add_category",
@@ -306,8 +306,8 @@
     }
 },
 {
-    "pk": 35,
     "model": "auth.permission",
+    "pk": 35,
     "fields": {
         "name": "Can change category",
         "codename": "change_category",
@@ -315,8 +315,8 @@
     }
 },
 {
-    "pk": 36,
     "model": "auth.permission",
+    "pk": 36,
     "fields": {
         "name": "Can delete category",
         "codename": "delete_category",
@@ -324,8 +324,8 @@
     }
 },
 {
-    "pk": 37,
     "model": "auth.permission",
+    "pk": 37,
     "fields": {
         "name": "Can add clip",
         "codename": "add_clip",
@@ -333,8 +333,8 @@
     }
 },
 {
-    "pk": 38,
     "model": "auth.permission",
+    "pk": 38,
     "fields": {
         "name": "Can change clip",
         "codename": "change_clip",
@@ -342,8 +342,8 @@
     }
 },
 {
-    "pk": 39,
     "model": "auth.permission",
+    "pk": 39,
     "fields": {
         "name": "Can delete clip",
         "codename": "delete_clip",
@@ -351,8 +351,8 @@
     }
 },
 {
-    "pk": 40,
     "model": "auth.permission",
+    "pk": 40,
     "fields": {
         "name": "Can add user social auth",
         "codename": "add_usersocialauth",
@@ -360,8 +360,8 @@
     }
 },
 {
-    "pk": 41,
     "model": "auth.permission",
+    "pk": 41,
     "fields": {
         "name": "Can change user social auth",
         "codename": "change_usersocialauth",
@@ -369,8 +369,8 @@
     }
 },
 {
-    "pk": 42,
     "model": "auth.permission",
+    "pk": 42,
     "fields": {
         "name": "Can delete user social auth",
         "codename": "delete_usersocialauth",
@@ -378,8 +378,8 @@
     }
 },
 {
-    "pk": 43,
     "model": "auth.permission",
+    "pk": 43,
     "fields": {
         "name": "Can add nonce",
         "codename": "add_nonce",
@@ -387,8 +387,8 @@
     }
 },
 {
-    "pk": 44,
     "model": "auth.permission",
+    "pk": 44,
     "fields": {
         "name": "Can change nonce",
         "codename": "change_nonce",
@@ -396,8 +396,8 @@
     }
 },
 {
-    "pk": 45,
     "model": "auth.permission",
+    "pk": 45,
     "fields": {
         "name": "Can delete nonce",
         "codename": "delete_nonce",
@@ -405,8 +405,8 @@
     }
 },
 {
-    "pk": 46,
     "model": "auth.permission",
+    "pk": 46,
     "fields": {
         "name": "Can add association",
         "codename": "add_association",
@@ -414,8 +414,8 @@
     }
 },
 {
-    "pk": 47,
     "model": "auth.permission",
+    "pk": 47,
     "fields": {
         "name": "Can change association",
         "codename": "change_association",
@@ -423,8 +423,8 @@
     }
 },
 {
-    "pk": 48,
     "model": "auth.permission",
+    "pk": 48,
     "fields": {
         "name": "Can delete association",
         "codename": "delete_association",
@@ -432,8 +432,8 @@
     }
 },
 {
-    "pk": 49,
     "model": "auth.permission",
+    "pk": 49,
     "fields": {
         "name": "Can add code",
         "codename": "add_code",
@@ -441,8 +441,8 @@
     }
 },
 {
-    "pk": 50,
     "model": "auth.permission",
+    "pk": 50,
     "fields": {
         "name": "Can change code",
         "codename": "change_code",
@@ -450,8 +450,8 @@
     }
 },
 {
-    "pk": 51,
     "model": "auth.permission",
+    "pk": 51,
     "fields": {
         "name": "Can delete code",
         "codename": "delete_code",
@@ -459,8 +459,8 @@
     }
 },
 {
-    "pk": 52,
     "model": "auth.permission",
+    "pk": 52,
     "fields": {
         "name": "Can add Tag",
         "codename": "add_tag",
@@ -468,8 +468,8 @@
     }
 },
 {
-    "pk": 53,
     "model": "auth.permission",
+    "pk": 53,
     "fields": {
         "name": "Can change Tag",
         "codename": "change_tag",
@@ -477,8 +477,8 @@
     }
 },
 {
-    "pk": 54,
     "model": "auth.permission",
+    "pk": 54,
     "fields": {
         "name": "Can delete Tag",
         "codename": "delete_tag",
@@ -486,8 +486,8 @@
     }
 },
 {
-    "pk": 55,
     "model": "auth.permission",
+    "pk": 55,
     "fields": {
         "name": "Can add Tagged Item",
         "codename": "add_taggeditem",
@@ -495,8 +495,8 @@
     }
 },
 {
-    "pk": 56,
     "model": "auth.permission",
+    "pk": 56,
     "fields": {
         "name": "Can change Tagged Item",
         "codename": "change_taggeditem",
@@ -504,8 +504,8 @@
     }
 },
 {
-    "pk": 57,
     "model": "auth.permission",
+    "pk": 57,
     "fields": {
         "name": "Can delete Tagged Item",
         "codename": "delete_taggeditem",
@@ -513,8 +513,8 @@
     }
 },
 {
+    "model": "auth.permission",
     "pk": 58,
-    "model": "auth.permission",
     "fields": {
         "name": "Can add token",
         "codename": "add_token",
@@ -522,8 +522,8 @@
     }
 },
 {
+    "model": "auth.permission",
     "pk": 59,
-    "model": "auth.permission",
     "fields": {
         "name": "Can change token",
         "codename": "change_token",
@@ -531,8 +531,8 @@
     }
 },
 {
-    "pk": 60,
     "model": "auth.permission",
+    "pk": 60,
     "fields": {
         "name": "Can delete token",
         "codename": "delete_token",
@@ -540,8 +540,8 @@
     }
 },
 {
-    "pk": 61,
     "model": "auth.permission",
+    "pk": 61,
     "fields": {
         "name": "Can add token",
         "codename": "add_token",
@@ -549,8 +549,8 @@
     }
 },
 {
-    "pk": 62,
     "model": "auth.permission",
+    "pk": 62,
     "fields": {
         "name": "Can change token",
         "codename": "change_token",
@@ -558,8 +558,8 @@
     }
 },
 {
-    "pk": 63,
     "model": "auth.permission",
+    "pk": 63,
     "fields": {
         "name": "Can delete token",
         "codename": "delete_token",
@@ -567,8 +567,8 @@
     }
 },
 {
-    "pk": 64,
     "model": "auth.permission",
+    "pk": 64,
     "fields": {
         "name": "Can add cors model",
         "codename": "add_corsmodel",
@@ -576,8 +576,8 @@
     }
 },
 {
-    "pk": 65,
     "model": "auth.permission",
+    "pk": 65,
     "fields": {
         "name": "Can change cors model",
         "codename": "change_corsmodel",
@@ -585,8 +585,8 @@
     }
 },
 {
-    "pk": 66,
     "model": "auth.permission",
+    "pk": 66,
     "fields": {
         "name": "Can delete cors model",
         "codename": "delete_corsmodel",
@@ -594,8 +594,8 @@
     }
 },
 {
-    "pk": 67,
     "model": "auth.permission",
+    "pk": 67,
     "fields": {
         "name": "Can add search keyword",
         "codename": "add_searchkeyword",
@@ -603,8 +603,8 @@
     }
 },
 {
-    "pk": 68,
     "model": "auth.permission",
+    "pk": 68,
     "fields": {
         "name": "Can change search keyword",
         "codename": "change_searchkeyword",
@@ -612,8 +612,8 @@
     }
 },
 {
-    "pk": 69,
     "model": "auth.permission",
+    "pk": 69,
     "fields": {
         "name": "Can delete search keyword",
         "codename": "delete_searchkeyword",
@@ -621,111 +621,138 @@
     }
 },
 {
-    "pk": 1,
-    "model": "auth.user",
+    "model": "auth.permission",
+    "pk": 70,
     "fields": {
-        "last_name": "",
-        "last_login": "2014-10-08T10:51:46.043",
-        "is_active": true,
-        "email": "jvwong@outlook.com",
-        "is_superuser": true,
-        "username": "jvwong",
-        "user_permissions": [],
-        "is_staff": true,
+        "name": "Can add cors model",
+        "codename": "add_corsmodel",
+        "content_type": 24
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 71,
+    "fields": {
+        "name": "Can change cors model",
+        "codename": "change_corsmodel",
+        "content_type": 24
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 72,
+    "fields": {
+        "name": "Can delete cors model",
+        "codename": "delete_corsmodel",
+        "content_type": 24
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
         "password": "pbkdf2_sha256$12000$r15Xz2iGrg2R$p8QIa3YxeMVVPejaNsMFm7cniSIynYTJwYZHSRBYnyY=",
         "first_name": "",
-        "date_joined": "2014-09-26T13:55:38.747",
-        "groups": []
+        "last_name": "",
+        "user_permissions": [],
+        "username": "jvwong",
+        "last_login": "2014-10-19T15:18:55.571",
+        "is_active": true,
+        "groups": [],
+        "is_staff": true,
+        "email": "jvwong@outlook.com",
+        "is_superuser": true,
+        "date_joined": "2014-09-26T13:55:38.747"
     }
 },
 {
-    "pk": 2,
     "model": "auth.user",
+    "pk": 2,
     "fields": {
-        "last_name": "",
-        "last_login": "2014-10-06T23:13:21.107",
-        "is_active": true,
-        "email": "",
-        "is_superuser": false,
-        "username": "aray",
-        "user_permissions": [],
-        "is_staff": false,
         "password": "pbkdf2_sha256$12000$jntTziQ8AHcs$3/F89F3hheP17jsMP6LpijC5j1JnIbsxdtFGQ4QHV/Q=",
         "first_name": "",
-        "date_joined": "2014-09-26T13:56:11",
-        "groups": []
+        "last_name": "",
+        "user_permissions": [],
+        "username": "aray",
+        "last_login": "2014-10-06T23:13:21.107",
+        "is_active": true,
+        "groups": [],
+        "is_staff": false,
+        "email": "",
+        "is_superuser": false,
+        "date_joined": "2014-09-26T13:56:11"
     }
 },
 {
-    "pk": 3,
     "model": "auth.user",
+    "pk": 3,
     "fields": {
-        "last_name": "",
-        "last_login": "2014-09-26T13:56:22",
-        "is_active": true,
-        "email": "",
-        "is_superuser": false,
-        "username": "jray",
-        "user_permissions": [],
-        "is_staff": false,
         "password": "pbkdf2_sha256$12000$rFDZpuBBNJ6L$TcK2y/QEFwND9IlR/gjncpsUss9on/ZKzIMhggLqk3g=",
         "first_name": "",
-        "date_joined": "2014-09-26T13:56:22",
-        "groups": []
+        "last_name": "",
+        "user_permissions": [],
+        "username": "jray",
+        "last_login": "2014-09-26T13:56:22",
+        "is_active": true,
+        "groups": [],
+        "is_staff": false,
+        "email": "",
+        "is_superuser": false,
+        "date_joined": "2014-09-26T13:56:22"
     }
 },
 {
-    "pk": 4,
     "model": "auth.user",
+    "pk": 4,
     "fields": {
-        "last_name": "",
-        "last_login": "2014-09-26T13:56:31",
-        "is_active": true,
-        "email": "",
-        "is_superuser": false,
-        "username": "kray",
-        "user_permissions": [],
-        "is_staff": false,
         "password": "pbkdf2_sha256$12000$ZIoRd2WxRFTB$xjG/hko+j2w9s9qDu7GECl2cjHCaDPzF89dZwsMJn0k=",
         "first_name": "",
-        "date_joined": "2014-09-26T13:56:31",
-        "groups": []
-    }
-},
-{
-    "pk": 5,
-    "model": "auth.user",
-    "fields": {
         "last_name": "",
-        "last_login": "2014-10-02T17:45:30",
+        "user_permissions": [],
+        "username": "kray",
+        "last_login": "2014-09-26T13:56:31",
         "is_active": true,
+        "groups": [],
+        "is_staff": false,
         "email": "",
         "is_superuser": false,
-        "username": "fake",
-        "user_permissions": [],
-        "is_staff": false,
-        "password": "pbkdf2_sha256$12000$tP6EotkqcFSC$Dxm5HpIu35kI6lbW57IkzEixHGExIY5Pj2tHF2canRo=",
-        "first_name": "",
-        "date_joined": "2014-10-02T17:45:30",
-        "groups": []
+        "date_joined": "2014-09-26T13:56:31"
     }
 },
 {
-    "pk": 6,
     "model": "auth.user",
+    "pk": 5,
     "fields": {
+        "password": "pbkdf2_sha256$12000$tP6EotkqcFSC$Dxm5HpIu35kI6lbW57IkzEixHGExIY5Pj2tHF2canRo=",
+        "first_name": "",
         "last_name": "",
-        "last_login": "2014-10-08T10:27:09.418",
-        "is_active": true,
-        "email": "hollywoodProspectus@hollywoodProspectus.com",
-        "is_superuser": false,
-        "username": "hollywoodProspectus",
         "user_permissions": [],
+        "username": "fake",
+        "last_login": "2014-10-02T17:45:30",
+        "is_active": true,
+        "groups": [],
         "is_staff": false,
+        "email": "",
+        "is_superuser": false,
+        "date_joined": "2014-10-02T17:45:30"
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
         "password": "pbkdf2_sha256$12000$tpaD5lLwKoag$cVLi0lrRzLr+lafY6+6VWjHryQC8qwoqNyoBEF6/v1Q=",
         "first_name": "",
-        "date_joined": "2014-10-08T10:27:08.861",
-        "groups": []
+        "last_name": "",
+        "user_permissions": [],
+        "username": "hollywoodProspectus",
+        "last_login": "2014-10-08T10:27:09.418",
+        "is_active": true,
+        "groups": [],
+        "is_staff": false,
+        "email": "hollywoodProspectus@hollywoodProspectus.com",
+        "is_superuser": false,
+        "date_joined": "2014-10-08T10:27:08.861"
     }
 }
 ]
