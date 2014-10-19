@@ -1289,7 +1289,6 @@ var bar_ui = (function() {
 
             save: function(/* e */) {
                 //PubSub event
-                console.log('save');
                 //dump to the shell
                 util.PubSub.emit('player-save', playlistController.exportPositionsMap());
             },
@@ -1412,9 +1411,6 @@ var bar_ui = (function() {
             {
                 var pMap = playlistController.importPositionsMap(positionsMap);
                 playlistController.data.positionsMap = JSON.parse(JSON.stringify(pMap));
-                console.log(pMap);
-                //so initialized. I think the sound should check this map for
-                // position information.
             }
 
 

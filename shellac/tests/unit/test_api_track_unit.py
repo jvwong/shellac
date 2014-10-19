@@ -49,9 +49,10 @@ class TrackListViewSet(APITestCase):
         myClip = Clip.objects.all()[0]
 
         payload = {
-            "playlist": 'http://testserver/api/playlists/' + str(myPlaylist.id) + '/',
+            # "playlist": 'http://testserver/api/playlists/' + str(myPlaylist.id) + '/',
+            "playlist": '/api/playlists/' + str(myPlaylist.id) + '/',
             "position": 0,
-            "clip": 'http://testserver/api/clips/' + str(myClip.id) + '/',
+            "clip": '/api/clips/' + str(myClip.id) + '/',
         }
         response = self.client.post('/api/tracks/', payload)
         data = response.data

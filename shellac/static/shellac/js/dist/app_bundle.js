@@ -12810,10 +12810,6 @@ var shell = (function () {
                             //reinstall the new playlist
                             preferencesMap.playlist = results;
                             preferencesMap.playlist_id = results.id;
-
-                            console.log("new playlist");
-                            console.log(results);
-
                             done(null);
                         }, 'POST', JSON.stringify( payload ), stateMap.csrftoken);
                     }
@@ -12844,29 +12840,26 @@ var shell = (function () {
                 keys = Object.keys(preferencesMap.positionsMap);
                 async.each(keys, function(key, done) {
                     util.fetchUrl(configMap.clip_endpoint + key + '/', function( results ){
-                        //store {Clip_url_1: position_1, ..., Clip_url_n: position_n}
-                        trackMap[results.url] = preferencesMap.positionsMap[key];
+                        //store {Clip_id_1: position_1, ..., Clip_id_n: position_n}
+                        trackMap[results.id] = preferencesMap.positionsMap[key];
                         done(null);
                     });
                 }, function(err) {
-
-                    console.log(trackMap);
                     callback(null, trackMap);
                 });
             },
             function(trackMap, callback){
                 //3. Post a new Track for each clip in the positions map (pMap)
-                var clipURLs = Object.keys(trackMap);
+                var clipIDs = Object.keys(trackMap);
 
-                async.each(clipURLs, function(clipURL, done) {
+                async.each(clipIDs, function(clipID, done) {
 
                     var payload = {
-                        "clip": clipURL,
-                        "position": trackMap[clipURL],
-                        "playlist": '/api/playlists/' + preferencesMap.playlist_id + '/'
+                        "clip": configMap.clip_endpoint + clipID + '/',
+                        "position": trackMap[clipID],
+                        "playlist": configMap.playlist_endpoint + preferencesMap.playlist_id + '/'
                     };
-
-                    util.updateUrl('/api/tracks/', function( results ){
+                    util.updateUrl(configMap.track_endpoint, function( results ){
                         done(null);
                     }, 'POST', JSON.stringify(payload), stateMap.csrftoken);
 
@@ -12941,14 +12934,12 @@ var shell = (function () {
                 function(done)
                 {
                     //Initialize latest clips (status)
-                    //console.log(stateMap.playlist);
                     initLatest( status, target_username, done);
                 },
 
                 function(done)
                 {
                     //Initialize other UI modules
-                    //console.log(stateMap.latest_clips_db().get());
                     initUIModules(done);
                 }
             ],
@@ -14607,7 +14598,6 @@ var bar_ui = (function() {
 
             save: function(/* e */) {
                 //PubSub event
-                console.log('save');
                 //dump to the shell
                 util.PubSub.emit('player-save', playlistController.exportPositionsMap());
             },
@@ -14730,9 +14720,6 @@ var bar_ui = (function() {
             {
                 var pMap = playlistController.importPositionsMap(positionsMap);
                 playlistController.data.positionsMap = JSON.parse(JSON.stringify(pMap));
-                console.log(pMap);
-                //so initialized. I think the sound should check this map for
-                // position information.
             }
 
 
