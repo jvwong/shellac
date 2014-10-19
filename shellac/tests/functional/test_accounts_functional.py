@@ -144,4 +144,4 @@ class ReturningUserTest(FunctionalTest):
         submit_button = self.browser.find_element_by_id('signin_submit')
         submit_button.send_keys(Keys.ENTER)
         self.assertIn('App', self.browser.title)
-        #time.sleep(1)
+        time.sleep(3)

@@ -134,6 +134,9 @@ def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs)
         p = Person(user=instance)
         p.save()
 
+        u = Playlist(person=p, title='default')
+        u.save()
+
 
 ##########################################################################################
 ###                             BEGIN Class Playlist                                   ###
