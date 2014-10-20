@@ -15,8 +15,7 @@ def shellac_clips_create(request):
             new_clip = form.save(commit=False)
             new_clip.author = request.user.person
             new_clip.save()
-            if new_clip.categories.all().count() > 0:
-                new_clip.save_m2m()
+            form.save_m2m()
             return HttpResponsePermanentRedirect(new_clip.get_absolute_url())
     else:
         form = CreateClipForm()
