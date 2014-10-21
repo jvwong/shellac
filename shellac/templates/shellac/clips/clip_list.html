@@ -22,6 +22,7 @@
         <div class="col-xs-12 clip-list-container">
             {% for object in page_obj.object_list %}
                 {% include 'shellac/partials/clips/clip_detail.html' %}
+                <div class="row col-xs-12"><hr /></div>
             {% endfor %}
         </div>
 

@@ -7,6 +7,9 @@
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
+.clip-detail-container {
+  border: thin 1px #c2ccd1;
+}
 .clip-detail-container .clip-detail-img {
   margin-bottom: 1em;
 }
@@ -14,17 +17,24 @@
   max-width: 150px;
 }
 .clip-detail-container .clip-detail-description dt {
-  font-size: 1.0em;
-  margin-top: 0em;
-  margin-right: 1em;
+  font-size: 1em;
 }
 .clip-detail-container .clip-detail-description dd {
-  font-size: 1.1em;
+  font-size: 1em;
 }
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
 /* xs (phones) */
+@media (max-width: 768px) {
+  .clip-detail-container .clip-detail-description dt {
+    margin-top: 0.5em;
+    font-size: 0.95em;
+  }
+  .clip-detail-container .clip-detail-description dd {
+    font-size: 0.95em;
+  }
+}
 /* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
 
@@ -516,6 +526,9 @@ select#id_categories.form-control {
 /*
 * Clip detail
 */
+.clip-detail-container {
+  border: thin 1px #c2ccd1;
+}
 .clip-detail-container .clip-detail-img {
   margin-bottom: 1em;
 }
@@ -523,17 +536,24 @@ select#id_categories.form-control {
   max-width: 150px;
 }
 .clip-detail-container .clip-detail-description dt {
-  font-size: 1.0em;
-  margin-top: 0em;
-  margin-right: 1em;
+  font-size: 1em;
 }
 .clip-detail-container .clip-detail-description dd {
-  font-size: 1.1em;
+  font-size: 1em;
 }
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
 /* xs (phones) */
+@media (max-width: 768px) {
+  .clip-detail-container .clip-detail-description dt {
+    margin-top: 0.5em;
+    font-size: 0.95em;
+  }
+  .clip-detail-container .clip-detail-description dd {
+    font-size: 0.95em;
+  }
+}
 /* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
 /*

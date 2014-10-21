@@ -1,7 +1,7 @@
 {% load staticfiles %}
 {% load shellac_filters %}
 
-<div class="row clip-detail-container col-xs-12">
+<div class="row clip-detail-container col-sm-offset-0 col-sm-12">
     <div class="clip-detail-img col-xs-12 col-sm-3">
         <a class="clip-detail-url" href="{{ object.audio_file.url }}">
             <img src="{% if object.brand_thumb %}{{ object.brand_thumb.url }}
@@ -18,7 +18,7 @@
             {% endif %}
         </div>
     </div>
-    <div class="clip-detail-description col-xs-12 col-sm-9">
+    <div class="clip-detail-description col-xs-offset-0 col-xs-12 col-sm-offset-0 col-sm-9">
         <dl class="dl-horizontal">
             <!-- clip-detail-description content -->
             <dt class="">Title</dt>
@@ -49,5 +49,4 @@
             </dd>
         </dl>
     </div>
-
 </div>
