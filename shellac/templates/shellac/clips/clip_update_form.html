@@ -1,0 +1,56 @@
+{% extends "shellac/base.html" %}
+{% load staticfiles %}
+{% load shellac_filters %}
+
+<!-- Head -->
+    {% block title %}Update Clip{% endblock title %}
+     {% block head %}
+        <script src="{% static 'shellac/js/lib/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'shellac/js/lib/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css' %}">
+        <script type="text/javascript">
+             $(function() {
+                $("#datetimepicker").datetimepicker({
+                    format: "yyyy-mm-dd hh:ii:ss"
+                });
+                $('input[type=file]').change(function(e){
+                    var file, name, type, size, text;
+                    file = $(this).prop('files')[0];
+                    name = file.name;
+                    type = file.type;
+                    size = (file.size / (1024 * 1024)).toFixed(1);
+                    text = String() + name + " | " + type + " | " + size + " MB";
+                    $(this).siblings('.btn').html(text);
+                });
+             });
+        </script>
+     {% endblock head %}
+
+<!-- Main -->
+    {% block main %}
+        <div class="col-xs-12 clip-update">
+            <form action="" method="post">{% csrf_token %}
+                {% for field in form %}
+                <div class="form-group">
+                    <p>{{ field.errors }}</p>
+                    {{ field.label_tag }}&nbsp;{{ field.help_text }}
+
+                    {% if field.label == 'Created' %}
+                        <div class="input-append date" id="datetimepicker" data-date="{{ form.created.value|date:'Y-m-d H:i:s' }}" >
+                            <input id="id_created" class="form-control" type="text" value="{{ form.created.value|date:'Y-m-d H:i:s' }}" name="created">
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </div>
+                    {% elif field.label == 'Brand' or field.label == 'Audio file' %}
+                        <span class="btn btn-default btn-file btn-block brand">
+                            <button class="btn btn-primary btn-lg btn-block brand" type="button">Current: {{ field.value }}</button>
+                            <input id="{{ field.id_for_label }}" type="file" name="{{ field.html_name }}">
+                        </span>
+                    {% else %}
+                        {{ field | add_class:"form-control" }}
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <button class="btn btn-lg btn-primary btn-block" id="record_submit" type="submit">Submit</button>
+            </form>
+        </div>
+    {% endblock main %}
+
