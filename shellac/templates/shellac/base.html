@@ -100,13 +100,24 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li id="nav-navbar-right-bar-user">
                                     <a id="navbar-collapse-right-dropdown-user" href="{% url 'user_detail' user.id %}">
-                                        Account
+                                        My Account
                                     </a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
                                     <a id="navbar-collapse-right-dropdown-signout" href="{% url 'shellac_accounts_signout' %}?next={{ request.path }}">
                                         Signout
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a id="navbar-collapse-right-dropdown-about" href="{% url 'shellac_about' %}">
+                                        About
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="navbar-collapse-right-dropdown-privacy" href="#privacy">
+                                        Privacy
                                     </a>
                                 </li>
                             </ul>

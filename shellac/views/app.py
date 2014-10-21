@@ -19,6 +19,12 @@ def shellac_app(request, *args, **kwargs):
     return render(request, 'shellac/app/app.html',
                   {'person': qperson, 'status': qstatus, 'playlist': playlist})
 
+### about
+@login_required(login_url='/accounts/signin/')
+def shellac_about(request, *args, **kwargs):
+    return render(request, 'shellac/app/about.html')
+
+
 ### Tune in
 @login_required(login_url='/accounts/signin/')
 def shellac_relations(request, *args, **kwargs):

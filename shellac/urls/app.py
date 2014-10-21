@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
 
-from shellac.views.app import user_profile, shellac_app, \
+from shellac.views.app import user_profile, shellac_app, shellac_about,\
     shellac_relations, shellac_people, person_avatar_update
 
 from search.views import search
@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url('', include('django.contrib.auth.urls', namespace='auth')),
 
     url(r'^$', shellac_app, name='shellac_app'),
+    url(r'^about/$', shellac_about, name='shellac_about'),
     url(r'^player/(?P<username>[\w.@+-]+)/(?P<status>[a-z]+)/$', shellac_app, name='shellac_app'),
 
     url(r'profile/(?P<username>[\w.@+-]+)/$', person_avatar_update, name='shellac_profile'),

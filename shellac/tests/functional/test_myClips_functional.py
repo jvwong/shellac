@@ -133,7 +133,7 @@ class ClipDeleteTest(FunctionalTest):
         self.enable_pre_authenticated_session(self.user.username)
         self.browser.get(self.server_url + '/clips/list/')
         self.wait_to_be_signed_in(self.user.username)
-        self.myClips = Clip.objects.filter(author=self.person)
+        self.numClips = Clip.objects.filter(author=self.person).count()
 
     def test_myClips_page_shows_delete_confirmation(self):
         delete_button = self.browser.find_element_by_css_selector('.clip-detail-container .clip-detail-edit .delete')
@@ -145,7 +145,9 @@ class ClipDeleteTest(FunctionalTest):
     def test_myClips_delete_removes_clip(self):
         delete_button = self.browser.find_element_by_css_selector('.clip-detail-container .clip-detail-edit .delete')
         delete_button.click()
+
         confirm_button = self.browser.find_element_by_id('confirm_delete')
         confirm_button.click()
 
-        self.assertTrue(Clip.objects.filter(author=self.person).count() < len(self.myClips))
+        clips = self.browser.find_elements_by_css_selector('.clip-detail-container')
+        self.assertTrue(Clip.objects.filter(author=self.person).count() < self.numClips)
