@@ -111,13 +111,18 @@
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a id="navbar-collapse-right-dropdown-about" href="{% url 'shellac_about' %}">
+                                    <a id="navbar-collapse-right-dropdown-about" href="{% url 'shellac_info_about' %}">
                                         About
                                     </a>
                                 </li>
                                 <li>
-                                    <a id="navbar-collapse-right-dropdown-privacy" href="#privacy">
+                                    <a id="navbar-collapse-right-dropdown-privacy" href="{% url 'shellac_info_privacy' %}">
                                         Privacy
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="navbar-collapse-right-dropdown-started" href="{% url 'shellac_info_started' %}">
+                                        Getting Started
                                     </a>
                                 </li>
                             </ul>

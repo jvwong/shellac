@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     url('', include('django.contrib.auth.urls', namespace='auth')),
 
     url(r'^$', shellac_app, name='shellac_app'),
-    url(r'^about/$', shellac_about, name='shellac_about'),
+    url(r'^info/', include('shellac.urls.info')),
     url(r'^player/(?P<username>[\w.@+-]+)/(?P<status>[a-z]+)/$', shellac_app, name='shellac_app'),
 
     url(r'profile/(?P<username>[\w.@+-]+)/$', person_avatar_update, name='shellac_profile'),
