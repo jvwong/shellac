@@ -12165,7 +12165,7 @@ $( document ).ready(function() {
 /* global $, window, document, AudioContext, XMLHttpRequest, target_username, DEBUG */
 'use strict';
 
-var shell = (function () {
+var shellac = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var TAFFY   = require('taffydb').taffy,
@@ -12957,7 +12957,7 @@ var shell = (function () {
     return { initModule: initModule };
 }());
 
-module.exports = shell;
+module.exports = shellac;
 
 
 },{"../players/bar-ui.js":9,"../util.js":10,"./sidebar.js":8,"async":2,"taffydb":5}],8:[function(require,module,exports){
@@ -14853,7 +14853,7 @@ module.exports = bar_ui;
  * util.js
  * Utilities for the Audio app
 */
-/* global document, window, $*/
+/* global document, window, $ */
 'use strict';
 
 var util = (function () {

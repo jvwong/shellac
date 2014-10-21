@@ -5,7 +5,7 @@
 /* global $, window, document, AudioContext, XMLHttpRequest, target_username, DEBUG */
 'use strict';
 
-var shell = (function () {
+var shellac = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var TAFFY   = require('taffydb').taffy,
@@ -797,5 +797,5 @@ var shell = (function () {
     return { initModule: initModule };
 }());
 
-module.exports = shell;
+module.exports = shellac;
 

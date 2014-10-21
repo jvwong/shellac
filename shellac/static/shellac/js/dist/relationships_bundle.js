@@ -5179,7 +5179,7 @@ module.exports = shell;
  * util.js
  * Utilities for the Audio app
 */
-/* global document, window, $*/
+/* global document, window, $ */
 'use strict';
 
 var util = (function () {

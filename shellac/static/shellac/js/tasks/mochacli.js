@@ -7,11 +7,11 @@ module.exports = function mochacli(grunt) {
 
 	// Options
 	return {
-        src: ['test/**/*.js'],
+        src: ['test/mocha/**/*.js'],
         options: {
             timeout: 6000,
             'check-leaks': false,
-            globals: ['jQuery'],
+            globals: ['jQuery', 'window'],
             ui: 'bdd',
             reporter: 'spec'
         }
