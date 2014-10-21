@@ -13340,7 +13340,7 @@ var bar_ui = (function() {
 
                         '<div class="sm2-inline-element sm2-button-element">' +
                             '<div class="sm2-button-bd">' +
-                                '<a href="#play" class="sm2-inline-button play-pause">Play / pause</a>' +
+                                '<a data-toggle="tooltip" data-placement="top" title="Play / Pause" href="#play" class="sm2-inline-button play-pause">Play / pause</a>' +
                             '</div>' +
                         '</div>' +
 
@@ -13372,31 +13372,31 @@ var bar_ui = (function() {
                             '<div class="sm2-inline-element sm2-button-element sm2-volume">' +
                                 '<div class="sm2-button-bd">' +
                                     '<span class="sm2-inline-button sm2-volume-control volume-shade"></span>' +
-                                    '<a href="#volume" class="sm2-inline-button sm2-volume-control">volume</a>' +
+                                    '<a data-toggle="tooltip" data-placement="top" title="Volume" href="#volume" class="sm2-inline-button sm2-volume-control">volume</a>' +
                                 '</div>' +
                             '</div>' +
 
                             '<div class="sm2-inline-element sm2-button-element">' +
                                 '<div class="sm2-button-bd">' +
-                                    '<a href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a>' +
+                                    '<a data-toggle="tooltip" data-placement="top" href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a>' +
                                 '</div>' +
                             '</div>' +
 
                             '<div class="sm2-inline-element sm2-button-element">' +
                                 '<div class="sm2-button-bd">' +
-                                    '<a href="#next" title="Next" class="sm2-inline-button next">&gt; next</a>' +
+                                    '<a data-toggle="tooltip" data-placement="top" href="#next" title="Next" class="sm2-inline-button next">&gt; next</a>' +
                                 '</div>' +
                             '</div>' +
 
                             '<div class="sm2-inline-element sm2-button-element">' +
                                 '<div class="sm2-button-bd">' +
-                                    '<a href="#save" title="Save" class="sm2-inline-button save">^ save</a>' +
+                                    '<a data-toggle="tooltip" data-placement="top" href="#save" title="Save" class="sm2-inline-button save">^ save</a>' +
                                 '</div>' +
                             '</div>' +
 
                             '<div class="sm2-inline-element sm2-button-element sm2-menu">' +
                                 '<div class="sm2-button-bd">' +
-                                    '<a href="#menu" class="sm2-inline-button menu">menu</a>' +
+                                    '<a data-toggle="tooltip" data-placement="top" title="Menu" href="#menu" class="sm2-inline-button menu">menu</a>' +
                                 '</div>' +
                             '</div>' +
 

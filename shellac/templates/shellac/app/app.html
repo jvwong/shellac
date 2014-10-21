@@ -17,8 +17,8 @@
 
 <!-- Navbar -->
     {% block navbar-header-brand %}
-    <a role="button" class="btn navbar-btn sidebar-toggle"><span class="glyphicon glyphicon-chevron-right"></span></a>
-    <a class="navbar-brand" href="{% url 'shellac_app' %}"><span class="glyphicon glyphicon-headphones"></span></a>
+    <a data-toggle="tooltip" data-placement="bottom" title="Sidebar" role="button" class="btn navbar-btn sidebar-toggle"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    <a data-toggle="tooltip" data-placement="bottom" title="My Playlist" class="navbar-brand" href="{% url 'shellac_app' %}"><span class="glyphicon glyphicon-headphones"></span></a>
     {% endblock navbar-header-brand %}
 
 
