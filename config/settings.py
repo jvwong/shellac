@@ -183,7 +183,7 @@ REST_FRAMEWORK = {
         'user': '10000/day',
 
     },
-    'PAGINATE_BY': 20,                 # Default to 20
+    'PAGINATE_BY': 50,                 # Default to 20
     'PAGINATE_BY_PARAM': 'page_size',  # Allow client to override, using `?page_size=xxx`.
     'MAX_PAGINATE_BY': 250             # Maximum limit allowed when using `?page_size=xxx`.
 }
