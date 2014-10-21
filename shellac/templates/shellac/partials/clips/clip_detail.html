@@ -12,8 +12,8 @@
         <div class="clip-detail-edit">
             {% if object.author.user == user %}
             <div class="btn-group">
-                <a class="btn btn-default" href="{% url 'shellac_clip_update' object.pk %}" role="button">Update</a>
-                <a class="btn btn-default" href="{% url 'shellac_clip_confirm_delete' object.pk %}" role="button">Delete</a>
+                <a class="btn btn-default update" href="{% url 'shellac_clip_update' object.pk %}" role="button">Update</a>
+                <a class="btn btn-default delete" href="{% url 'shellac_clip_confirm_delete' object.pk %}" role="button">Delete</a>
             </div>
             {% endif %}
         </div>
@@ -28,7 +28,7 @@
             <dt class="">Created</dt>
             <dd class="clip-detail-description-content created">{{ object.created|dayssince }}</dd>
             <dt class="">Owner</dt>
-            <dd class="clip-detail-description-content username">{{ object.author }}</dd>
+            <dd class="clip-detail-description-content username">{{ object.author.username }}</dd>
             <dt class="">Plays</dt>
             <dd class="clip-detail-description-content plays">{{ object.plays }}</dd>
             <dt class="">Rating</dt>

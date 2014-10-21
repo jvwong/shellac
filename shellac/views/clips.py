@@ -63,3 +63,7 @@ class ClipDeleteView(Clip_IsAuthenticatedAndOwnerMixin, DeleteView):
     model = Clip
     template_name = 'shellac/clips/clip_confirm_delete.html'
     success_url = reverse_lazy('shellac_app')
+
+    def get_context_data(self, **kwargs):
+        context = super(ClipDeleteView, self).get_context_data(**kwargs)
+        return context

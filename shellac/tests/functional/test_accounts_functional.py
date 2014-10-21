@@ -76,7 +76,7 @@ class DuplicateUserTest(FunctionalTest):
         self.assertIn('SHELLAC', self.browser.title)
         self.assertIn('Sign in', self.browser.title)
         brand_text = self.browser.find_element_by_class_name('navbar-brand').text
-        self.assertEqual('SHELLAC', brand_text)
+        self.assertIn('SHELLAC', brand_text)
 
         #User is presented with an option to 'Sign up' in menu bar.
         menubar_signin_anchor = self.browser.find_element_by_id('navbar-collapse-right-bar-signup')

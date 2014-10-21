@@ -52,7 +52,9 @@
                         <span class="icon-bar"></span>
                     </button>
                     {% block navbar-header-brand %}
-                    <a class="navbar-brand" href="{% url 'shellac_app' %}"><span class="glyphicon glyphicon-headphones"></span> SHELLAC</a>
+                    <a data-toggle="tooltip" data-placement="bottom" title="My Playlist" class="navbar-brand" href="{% url 'shellac_app' %}">
+                        <span class="glyphicon glyphicon-headphones"></span>&nbsp;SHELLAC
+                    </a>
                     {% endblock navbar-header-brand %}
                 </div>
                 {% endblock navbar-header %}
@@ -63,20 +65,50 @@
                     {% block navbar-collapse-right %}
                     <ul class="nav navbar-nav navbar-right">
                         {% block navbar-collapse-right-bar %}
-                        <li id="nav-navbar-right-bar-user"><a href="{% url 'user_detail' user.id %}">{{user.username}}</a></li>
-                        <li id="nav-navbar-right-bar-people"><a href="{% url 'shellac_people' %}"><span class="glyphicon glyphicon-user"></span></a></li>
-                        <li id="nav-navbar-right-bar-record"><a href="{% url 'shellac_clip_create' %}"><span class="glyphicon glyphicon-record"></span></a></li>
-                        <li id="nav-navbar-right-bar-relations"><a href="{% url 'shellac_relations' %}"><span class="glyphicon glyphicon-globe"></span></a></li>
-                        <li id="nav-navbar-right-bar-myClips"><a href="{% url 'shellac_clip_list' %}"><span class="glyphicon glyphicon-list"></span></a></li>
+                        <li id="nav-navbar-right-bar-profile">
+                            <a data-toggle="tooltip" data-placement="bottom" title="My Profile" href="{{ user.person.get_absolute_url }}">
+                                {{ user.username }}
+                            </a>
+                        </li>
+                        <li id="nav-navbar-right-bar-people">
+                            <a data-toggle="tooltip" data-placement="bottom" title="Find People" href="{% url 'shellac_people' %}">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </a>
+                        </li>
+                        <li id="nav-navbar-right-bar-relations">
+                            <a data-toggle="tooltip" data-placement="bottom" title="Following / Followers " href="{% url 'shellac_relations' %}">
+                                <span class="glyphicon glyphicon-link"></span>
+                            </a>
+                        </li>
+                        <li id="nav-navbar-right-bar-myClips">
+                            <a data-toggle="tooltip" data-placement="bottom" title="My Clips" href="{% url 'shellac_clip_list' %}">
+                                <span class="glyphicon glyphicon-list"></span>
+                            </a>
+                        </li>
+                        <li id="nav-navbar-right-bar-record">
+                            <a data-toggle="tooltip" data-placement="bottom" title="Upload Clips" href="{% url 'shellac_clip_create' %}">
+                                <span class="glyphicon glyphicon-record"></span>
+                            </a>
+                        </li>
                         {% endblock navbar-collapse-right-bar %}
 
                         {% block navbar-collapse-right-dropdown %}
                         <li id=" nav-navbar-right-dropdown" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span></a>
+                            <a data-placement="bottom" title="Settings" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a id="navbar-collapse-right-dropdown-profile" href="{{ user.person.get_absolute_url }}">Profile</a></li>
+                                <li id="nav-navbar-right-bar-user">
+                                    <a id="navbar-collapse-right-dropdown-user" href="{% url 'user_detail' user.id %}">
+                                        Account
+                                    </a>
+                                </li>
                                 <li class="divider"></li>
-                                <li><a id="navbar-collapse-right-dropdown-signout" href="{% url 'shellac_accounts_signout' %}?next={{ request.path }}">Signout</a></li>
+                                <li>
+                                    <a id="navbar-collapse-right-dropdown-signout" href="{% url 'shellac_accounts_signout' %}?next={{ request.path }}">
+                                        Signout
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         {% endblock navbar-collapse-right-dropdown %}
