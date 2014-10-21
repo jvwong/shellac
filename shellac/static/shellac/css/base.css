@@ -1,3 +1,33 @@
+/*
+* Clip detail
+*/
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+.clip-detail-container .clip-detail-img {
+  margin-bottom: 1em;
+}
+.clip-detail-container .clip-detail-img img {
+  max-width: 150px;
+}
+.clip-detail-container .clip-detail-description dt {
+  font-size: 1.0em;
+  margin-top: 0em;
+  margin-right: 1em;
+}
+.clip-detail-container .clip-detail-description dd {
+  font-size: 1.1em;
+}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
+
 
 /*---------------------------------------------------
     LESS Elements 0.9
@@ -59,27 +89,12 @@
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
-.permalink .permalink-panel .permalink-img img {
-  max-width: 150px;
-}
-.permalink .permalink-panel .permalink-description dt {
-  font-size: 1.0em;
-  margin-top: 0em;
-  margin-right: 1em;
-}
-.permalink .permalink-panel .permalink-description dd {
-  font-size: 1.1em;
-}
-@media (max-width: 767px) {
-  .permalink .permalink-panel .permalink-img {
-    margin-bottom: 1em;
-  }
-}
-@media (max-width: 480px) {
-  .permalink .permalink-panel .permalink-img {
-    margin-bottom: 1em;
-  }
-}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 
 /*
  * partials/profile/person
@@ -403,27 +418,12 @@ select#id_categories.form-control {
 /*
 * Permalink
 */
-.permalink .permalink-panel .permalink-img img {
-  max-width: 150px;
-}
-.permalink .permalink-panel .permalink-description dt {
-  font-size: 1.0em;
-  margin-top: 0em;
-  margin-right: 1em;
-}
-.permalink .permalink-panel .permalink-description dd {
-  font-size: 1.1em;
-}
-@media (max-width: 767px) {
-  .permalink .permalink-panel .permalink-img {
-    margin-bottom: 1em;
-  }
-}
-@media (max-width: 480px) {
-  .permalink .permalink-panel .permalink-img {
-    margin-bottom: 1em;
-  }
-}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 /*
  * partials/profile/person
  */
@@ -513,6 +513,29 @@ select#id_categories.form-control {
 .content-user .content-user-detail .content-user-button {
   margin-top: 10px;
 }
+/*
+* Clip detail
+*/
+.clip-detail-container .clip-detail-img {
+  margin-bottom: 1em;
+}
+.clip-detail-container .clip-detail-img img {
+  max-width: 150px;
+}
+.clip-detail-container .clip-detail-description dt {
+  font-size: 1.0em;
+  margin-top: 0em;
+  margin-right: 1em;
+}
+.clip-detail-container .clip-detail-description dd {
+  font-size: 1.1em;
+}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 /*
  * Grid styling
  */

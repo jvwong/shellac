@@ -28,16 +28,7 @@ class CategoryModelTest(TestCase):
         self.assertEqual(saved_category_2.description, 'Description: Category 2')
         self.assertEqual(saved_category_2.slug, 'title-category-2')
 
-    def test_autopopulate(self):
-        Category.objects.autopopulate()
-        cato = Category.objects.all()
-        cats = [c.title for c in cato]
 
-        self.assertIn('MUSIC', cats)
-        self.assertIn('BUSINESS', cats)
-        self.assertIn('FOOD', cats)
-        self.assertIn('HEALTH', cats)
-        self.assertIn('OPINION', cats)
 
 
 

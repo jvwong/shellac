@@ -4,79 +4,40 @@
 
 @import "_elements";
 
-@permalink_margin: 0px;
-
-@caption_opacity: 0.8;
-
-@permalink_desc_padding: 0.5em;
-@permalink_dim_small: 125px;
-@permalink_dim_medium: 150px;
-
-@permalink_img_dim: 250px;
-
-.permalink {
-
-  .permalink-panel
+.permalink-container
+{
+  .permalink-content.detail-wrapper
   {
-    .permalink-img {
-
-      img {
-        max-width: @permalink_dim_medium;
-      }
-    }
-
-    .permalink-description {
-      dt
-      {
-        font-size: 1.0em;
-        margin-top: 0em;
-        margin-right: 1em;
-      }
-
-      dd
-      {
-        font-size:1.1em;
-      }
-
-    }
-
   }
-
 }
 
-@media (max-width: 767px)
+
+/* lg (large desktops, 1200px and up) */
+@media (min-width: 1200px)
 {
-  .permalink {
-    .permalink-panel
-    {
-      .permalink-img
-      {
-        margin-bottom: 1em;
-        img
-        {
-        }
-      }
-      .permalink-description
-      {}
-    }
-  }
 }
 
-@media (max-width: 480px)
+/* md (desktops, 992px and up) */
+@media (min-width: 992px)
 {
-  .permalink {
-    .permalink-panel
-    {
-      .permalink-img
-      {
-        margin-bottom: 1em;
-        img
-        {
-        }
-      }
-      .permalink-description
-      {}
-    }
-  }
 }
 
+/* sm (tablets, 768px and up) */
+@media (min-width: 768px)
+{
+}
+
+/* xs (phones) */
+@media (max-width: 768px)
+{
+}
+
+/* xs Nexus4 portrait*/
+@media (max-width: 640px)
+{
+}
+
+/* xs Nexus4 portrait*/
+@media (max-width: 384px)
+{
+}

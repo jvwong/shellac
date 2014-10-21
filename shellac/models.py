@@ -321,10 +321,7 @@ class Clip(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return ('shellac_clip_detail', (), {'year': self.created.strftime("%Y"),
-                                            'month':  self.created.strftime("%b").lower(),
-                                            'day': self.created.strftime("%d"),
-                                            'slug': self.slug})
+        return ('shellac_clip_detail', (), {'pk': self.pk})
     get_absolute_url = models.permalink(get_absolute_url)
 
     def getStatusPretty(self):

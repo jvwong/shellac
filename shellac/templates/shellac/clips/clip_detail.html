@@ -10,55 +10,9 @@
 
 <!-- Main -->
     {% block main %}
-        <div class="col-xs-12 permalink">
-            <div class="permalink-panel">
-                <div class="row">
-                    <div class="permalink-img col-xs-12 col-sm-3">
-                        <a class="permalink-url" href="{{ object.audio_file.url }}">
-                            <img src="{% if object.brand_thumb %}{{ object.brand_thumb.url }}
-                            {% elif object.author.avatar_thumb %}{{ object.author.avatar_thumb.url }}
-                            {% else %}{% static 'shellac/assets/seventyEight.png' %}
-                            {% endif %}"  alt="{{ object.title }}" />
-                        </a>
-                    </div>
-                    <div class="permalink-description col-xs-12 col-sm-9">
-                        <dl class="dl-horizontal">
-                            <!-- permalink-description content -->
-                            <dt class="">Title</dt>
-                            <dd class="permalink-description-content title">{{ object.title }}</dd>
-                            <dt class="">Description</dt>
-                            <dd class="permalink-description-content description">{{ object.description }}</dd>
-                            <dt class="">Created</dt>
-                            <dd class="permalink-description-content created">{{ object.created|dayssince }}</dd>
-                            <dt class="">Owner</dt>
-                            <dd class="permalink-description-content username">{{ object.author }}</dd>
-                            <dt class="">Plays</dt>
-                            <dd class="permalink-description-content plays">{{ object.plays }}</dd>
-                            <dt class="">Rating</dt>
-                            <dd class="permalink-description-content rating">{{ object.rating }}</dd>
-                            <dt class="">Status</dt>
-                            <dd class="permalink-description-content status">{{ object.status }}</dd>
-                            <dt class="">Tags</dt>
-                            <dd class="permalink-description-content tags">
-                                {% for t in object.tags.names %}
-                                {% if not forloop.first %}| {% endif %} {{ t }}
-                                {% endfor %}
-                            </dd>
-                            <dt class="">Categories</dt>
-                            <dd class="permalink-description-content categories">
-                                {% for c in object.categories.all %}
-                                {% if not forloop.first %}| {% endif %} {{ c }}
-                                {% endfor %}
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-
-            <div class="permalink-edit">
-                {% if object.author.user == user %}
-                    <p>TODO -- Edit form</p>
-                {% endif %}
+        <div class="permalink-container">
+            <div class="permalink-content">
+                {% include 'shellac/partials/clips/clip_detail.html' %}
             </div>
             <div class="permalink-comments">
                 <p>TODO -- Comment form</p>

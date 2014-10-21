@@ -79,7 +79,7 @@ class PlaylistListViewSet(APITestCase):
         new = Playlist.objects.filter(person=self.person)[0]
         self.assertIsNotNone(new.title)
 
-    def test_PlaylistListViewSet_POST_by_nonowner_rejected(self):
+    def test_PlaylistListViewSet_POST_by_nonowner_ignored(self):
         badurlname = 'http://testserver/api/people/jray/'
         payload = {
             "person": badurlname,
@@ -91,7 +91,9 @@ class PlaylistListViewSet(APITestCase):
         #print(data)
 
         #Should get a 201 created back
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(data["person"], self.urlname)
+
 
 
 class PlaylistDetailViewSet(APITestCase):

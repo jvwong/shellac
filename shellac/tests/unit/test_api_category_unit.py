@@ -30,6 +30,15 @@ class Api_Root(APITestCase):
 
 ### API categories(/api/categories/)
 class CategoryViewSet(APITestCase):
+    fixtures = ['shellac.json', 'auth.json']
+
+    def setUp(self):
+        username = 'aray'
+        password = 'aray'
+        self.urlname = 'http://testserver/api/people/' + username + '/'
+        self.user = User.objects.get(username=username)
+        self.person = self.user.person
+        self.client.login(username=username, password=password)
 
     # line up view for '/'
     def test_CategoryViewSet_url_resolves_to_correct_view(self):
@@ -37,11 +46,6 @@ class CategoryViewSet(APITestCase):
         self.assertEqual(url, '/api/categories/')
 
     def test_CategoryViewSet_GET_returns_correct_response(self):
-        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        self.client.login(username='andrea', password='a')
-
-        Category.objects.autopopulate()
-
         response = self.client.get('/api/categories/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -53,17 +57,10 @@ class CategoryViewSet(APITestCase):
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
     def test_CategoryViewSet_POST_creates_and_returns_correct_response(self):
-        # Category.objects.autopopulate()
-        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        self.client.login(username='andrea', password='a')
         payload = {"title": "cat1", "description": "cat1 description"}
         response = self.client.post("/api/categories/", payload, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        #gotta massage the reponse to match with our original payload
-        # print(response.data)
-        # print(response.data['id'])
 
         self.assertEqual(response.data['title'], "CAT1")
         self.assertEqual(response.data['description'], "cat1 description")
@@ -95,9 +92,6 @@ class CategoryViewSet(APITestCase):
         self.assertEqual(response.data['clips'], [])
 
     def test_CategoryViewSet_GET_paginate_returns_correct_number_of_records(self):
-        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        self.client.login(username='andrea', password='a')
-        Category.objects.autopopulate()
 
         n = 1
 
@@ -113,6 +107,16 @@ class CategoryViewSet(APITestCase):
 
 
 class CategoryDetail(APITestCase):
+    fixtures = ['shellac.json', 'auth.json']
+
+    def setUp(self):
+        username = 'aray'
+        password = 'aray'
+        self.urlname = 'http://testserver/api/people/' + username + '/'
+        self.user = User.objects.get(username=username)
+        self.person = self.user.person
+        self.client.login(username=username, password=password)
+
 
     # line up view for '/'
     def test_Api_CategoryDetail_url_resolves_to_api_categorylist_view(self):
@@ -120,24 +124,16 @@ class CategoryDetail(APITestCase):
         self.assertEqual(url, '/api/categories/arts/')
 
     def test_Api_CategoryDetail_GET_returns_correct_response(self):
-        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        self.client.login(username='andrea', password='a')
-        Category.objects.autopopulate()
-
         response = self.client.get('/api/categories/arts/')
+        #print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertIn('"id": 1', response.content.decode())
         self.assertIn('"title": "ARTS"', response.content.decode())
         self.assertIn('"description": "arts"', response.content.decode())
-        self.assertIn('"clips": []', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
     def test_Api_CategoryDetail_PUT_updates_existing_object(self):
-        Category.objects.autopopulate()
-        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        self.client.login(username='andrea', password='a')
-
         payload = {"title": "ARTS", "description": "arts"}
         response = self.client.put("/api/categories/arts/", payload)
 
@@ -153,10 +149,6 @@ class CategoryDetail(APITestCase):
 
 
     def test_Api_CategoryDetail_DELETE_removes_existing_object(self):
-        Category.objects.autopopulate()
-        User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        self.client.login(username='andrea', password='a')
-
         payload = {"title": "ARTS", "description": "arts"}
         response = self.client.delete("/api/categories/arts/")
 

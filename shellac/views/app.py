@@ -1,7 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
-from django.core.urlresolvers import reverse
-from shellac.views.util.permissions import IsAuthenticatedAndOwnerMixin
 
 from shellac.models import Person, Playlist
 from shellac.views.util import pagination

@@ -140,7 +140,7 @@ var shell = (function () {
             if (url)
             {
                 util.fetchUrl(url, function(results){
-                    jqueryMap.$modal_body.html($(results).find('.permalink'));
+                    jqueryMap.$modal_body.html($(results).find('.clip-detail-container'));
                     jqueryMap.$modal_container.modal('show');
                 });
             }
