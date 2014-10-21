@@ -22,8 +22,8 @@ def deploy():
     _update_config(source_dir, env.host)
     _update_virtualenv(source_dir)
     _update_static_files(js_dir, static_dir, source_dir)
-    _update_database(source_dir)
-    _restart_supervisor(env.host)
+    # _update_database(source_dir)
+    # _restart_supervisor(env.host)
 
 
 def _create_directory_structure_if_necessary(base_dir):

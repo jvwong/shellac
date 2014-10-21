@@ -7,16 +7,24 @@ CATEGORIES = (
     'mixed martial arts',
     'wrestling',
     'horse racing',
-    'football',
+    'ncaa football',
     'ncaa basketball',
     'nba',
     'nhl',
     'nfl',
     'mls',
+    'mlb',
     'baseball',
     'rugby',
     'lacrosse',
-    'cricket'
+    'cricket',
+    'soccer',
+    'champions league',
+    'world cup soccer',
+    'pop culture',
+    'in the news',
+    'business',
+    'olympics'
 )
 
 # CATEGORIES = (
