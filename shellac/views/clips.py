@@ -19,7 +19,7 @@ class ClipListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Clip.objects.filter(author=self.request.user.person)
+        return Clip.objects.filter(author=self.request.user.person).order_by('-created')
 
     def get_context_data(self, **kwargs):
         context = super(ClipListView, self).get_context_data(**kwargs)
