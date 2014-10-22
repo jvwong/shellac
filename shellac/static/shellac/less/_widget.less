@@ -1,5 +1,6 @@
 @import "_elements";
 @import "_fonts";
+@import "_colors";
 
 .btn-file {
     position: relative;
@@ -69,6 +70,8 @@ select#id_categories.form-control
   color: #000000;
 }
 
+@alert-message-background: @brand-info;
+
 .alert
 {
   position: fixed;
@@ -83,8 +86,26 @@ select#id_categories.form-control
   padding: 0.5em;
 
   text-align: center;
-  font-size: @font_size_sm;
+  font-size: @font_size_md;
   color: black;
-//  background-color: rgba(0, 0, 0, 0.80);
+  background-color: @brand-primary;
   .rounded(15px);
+}
+
+.alert-warning
+{
+  background-color: @brand-warning;
+}
+
+.alert-success
+{
+  background-color: @brand-success;
+}
+.alert-info
+{
+  background-color: @brand-info;
+}
+.alert-danger
+{
+  background-color: @brand-danger;
 }

@@ -179,8 +179,6 @@ var shellac = (function () {
             var formatted = util.parseClipData( results );
             stateMap.latest_clips_db.insert( formatted );
             render_clips( stateMap.latest_clips_db().order("created_i desc").get() );
-            console.log(stateMap.latest_clips_db().get());
-            console.log(stateMap.latest_clips_db().order("id desc").get());
             done(null);
         });
     };
@@ -624,7 +622,7 @@ var shellac = (function () {
         async.waterfall([
             function(callback){
                 // 1. Haaack - clear out the playlist
-                util.alert(dom.app_container, "success", "Saving playlist...", 2000);
+                util.alert(dom.app_container, "warning", "Saving playlist...", 60 * 1000);
 
                 async.series([
                     function(done)
@@ -715,11 +713,11 @@ var shellac = (function () {
             if(err)
             {
                 console.warn(err);
-                util.alert(dom.app_container, "success", "Error: Not saved", 2000);
+                util.alert(dom.app_container, "success", "Error: Not saved");
             }
             else
             {
-                util.alert(dom.app_container, "success", "Playlist saved", 2000);
+                util.alert(dom.app_container, "success", "Playlist saved");
             }
 
         });

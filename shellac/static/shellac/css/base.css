@@ -70,6 +70,24 @@
 }
 
 /*
+* /info styling
+*/
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .shellac-info .dl-horizontal dt {
+    width: 20em;
+  }
+  .shellac-info .dl-horizontal dd {
+    margin-left: 21em;
+  }
+}
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
+
+/*
 * <main> styling
 */
 /* lg (large desktops, 1200px and up) */
@@ -300,11 +318,24 @@ select#id_categories.form-control {
   border: none;
   padding: 0.5em;
   text-align: center;
-  font-size: 0.9em;
+  font-size: 0.95em;
   color: black;
+  background-color: #428bca;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
+}
+.alert-warning {
+  background-color: #f0ad4e;
+}
+.alert-success {
+  background-color: #5cb85c;
+}
+.alert-info {
+  background-color: #5bc0de;
+}
+.alert-danger {
+  background-color: #d9534f;
 }
 
 /*---------------------------------------------------
@@ -419,11 +450,24 @@ select#id_categories.form-control {
   border: none;
   padding: 0.5em;
   text-align: center;
-  font-size: 0.9em;
+  font-size: 0.95em;
   color: black;
+  background-color: #428bca;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
+}
+.alert-warning {
+  background-color: #f0ad4e;
+}
+.alert-success {
+  background-color: #5cb85c;
+}
+.alert-info {
+  background-color: #5bc0de;
+}
+.alert-danger {
+  background-color: #d9534f;
 }
 /*
 * Permalink

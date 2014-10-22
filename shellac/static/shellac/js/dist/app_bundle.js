@@ -12339,8 +12339,6 @@ var shellac = (function () {
             var formatted = util.parseClipData( results );
             stateMap.latest_clips_db.insert( formatted );
             render_clips( stateMap.latest_clips_db().order("created_i desc").get() );
-            console.log(stateMap.latest_clips_db().get());
-            console.log(stateMap.latest_clips_db().order("id desc").get());
             done(null);
         });
     };
@@ -12784,7 +12782,7 @@ var shellac = (function () {
         async.waterfall([
             function(callback){
                 // 1. Haaack - clear out the playlist
-                util.alert(dom.app_container, "success", "Saving playlist...", 2000);
+                util.alert(dom.app_container, "warning", "Saving playlist...", 60 * 1000);
 
                 async.series([
                     function(done)
@@ -12875,11 +12873,11 @@ var shellac = (function () {
             if(err)
             {
                 console.warn(err);
-                util.alert(dom.app_container, "success", "Error: Not saved", 2000);
+                util.alert(dom.app_container, "success", "Error: Not saved");
             }
             else
             {
-                util.alert(dom.app_container, "success", "Playlist saved", 2000);
+                util.alert(dom.app_container, "success", "Playlist saved");
             }
 
         });
@@ -14861,7 +14859,8 @@ module.exports = bar_ui;
 var util = (function () {
     var moment = require('moment');
 
-    var fetchUrl, updateUrl,
+    var sleep,
+        fetchUrl, updateUrl,
         PubSub,
         truncate, alert,
         getCookie, sameOrigin, urlParse,
@@ -14890,6 +14889,15 @@ var util = (function () {
 
 
     //------------------- BEGIN PUBLIC METHODS -------------------
+    sleep = function(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds){
+                break;
+            }
+        }
+    };
+
     /**
      * alert create an alert message
      * @param dom the HTMLElement to append to
@@ -14899,31 +14907,70 @@ var util = (function () {
      */
     alert = function( container, type, message, duration )
     {
-        var alert,
-            delay = duration || 2000,
+        var alert, existing,
+            default_delay = 2 * 1000,
+            delay = duration || default_delay,
             element = document.createElement("div"),
             alert_success_html = String() + '<div class="alert alert-success" role="alert"></div>',
-            alert_danger_html= String() + '<div class="alert alert-danger" role="alert"></div>';
+            alert_danger_html= String() + '<div class="alert alert-danger" role="alert"></div>',
+            alert_warning_html= String() + '<div class="alert alert-warning" role="alert"></div>';
 
-        switch(type)
+
+        //bail if there isn't a container or message
+        if(!message || typeof message !== 'string' || !container) { return; }
+
+        if(type)
         {
-            case "success":
-                element.innerHTML = alert_success_html;
-                alert = utils.dom.get(element, '.alert-success');
-                break;
-            case "danger":
-                element.innerHTML = alert_danger_html;
-                alert = utils.dom.get(element, '.alert-danger');
-                break;
-            default:
+            switch(type)
+            {
+                case "success":
+                    element.innerHTML = alert_success_html;
+                    alert = utils.dom.get(element, '.alert-success');
+                    break;
+                case "danger":
+                    element.innerHTML = alert_danger_html;
+                    alert = utils.dom.get(element, '.alert-danger');
+                    break;
+                case "warning":
+                    element.innerHTML = alert_warning_html;
+                    alert = utils.dom.get(element, '.alert-warning');
+                    break;
+                default:
+                    element.innerHTML = alert_success_html;
+                    alert = utils.dom.get(element, '.alert-success');
+                    break;
+            }
         }
 
         alert.innerHTML = message;
-        utils.dom.append(container, alert);
 
-        var timeoutID = window.setTimeout(function(){
-            utils.dom.remove(alert);
-        }, delay);
+        //remove any existing alerts
+        existing = utils.dom.getAll(container, '.alert');
+        if(existing.length)
+        {
+            //punt all but the last
+            for(var i = 0; i < existing.length - 2; i++)
+            {
+                utils.dom.remove( existing[i] );
+            }
+
+            window.setTimeout(function(){
+                utils.dom.remove( existing[existing.length - 1] );
+                setAlert(alert, delay);
+            }, default_delay);
+        }
+        else
+        {
+            setAlert(alert, delay);
+        }
+
+        function setAlert(alert, delay)
+        {
+            utils.dom.append(container, alert);
+            var timeoutID = window.setTimeout(function(){
+                utils.dom.remove(alert);
+            }, delay);
+        }
     };
 
     /**
@@ -15744,6 +15791,7 @@ var util = (function () {
     };
 
     return {
+        sleep           : sleep,
         fetchUrl        : fetchUrl,
         updateUrl       : updateUrl,
         PubSub          : PubSub,

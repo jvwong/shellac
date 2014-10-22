@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 <!-- Head -->
-    {% block title %}App{% endblock title %}
+    {% block title %}About{% endblock title %}
     {% block head %}
     {% endblock head %}
 
@@ -12,8 +12,69 @@
 
 <!-- Main -->
     {% block main %}
-        <div class="shellac-about-container">
-            <h1>About Shellac <small></small></h1>
+        <div class="shellac-info about">
+
+            <div class="shellac-info-header">
+                <div class="">
+                    <h2>Shellac
+                        <br/><small>Publish -- Curate -- Listen</small>
+                    </h2>
+                    <ul class="">
+                        <li>Pre-Game and Post-Game</li>
+                        <li>Game-Time Analysis</li>
+                        <li>In the News</li>
+                        <li>The Business & Culture of Sport</li>
+                    </ul>
+                </div>
+            </div>
+            <br/><hr/>
+
+            <h2>Features<small></small></h2>
+            <br/><hr/>
+
+            <h2>Technology Stack<small></small></h2>
+            <dl class="dl-horizontal">
+            <!--<dl>-->
+                <dt>Web Framework</dt>
+                <dd><a href="https://www.djangoproject.com/">Django (v1.7)</a></dd>
+                <br/>
+
+                <dt>Storage</dt>
+                <dd><a href="http://dev.mysql.com/">MySql (v5.5)</a></dd>
+                <br/>
+
+                <dt>Single-Page App (SPA)</dt>
+                <dd>
+                    <ul class="list-unstyled">
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">Javascript</a></li>
+                        <li><a href="http://jquery.com/">jQuery</a></li>
+                        <li><a href="http://www.taffydb.com/">TAFFYdb</a></li>
+                    </ul>
+                </dd>
+                <br/>
+
+                <dt>Testing</dt>
+                <dd>
+                    <ul class="list-unstyled">
+                        <li><a href="http://mochajs.org/">Mocaha (SPA)</a></li>
+                        <li><a href="http://selenium-python.readthedocs.org/">Selenium with Python (API, Django)</a></li>
+                    </ul>
+                </dd>
+
+                <dt>Application Programming Interface (API)</dt>
+                <dd>
+                    <ul class="list-unstyled">
+                        <li><a href="">Django Rest Framework</a></li>
+                    </ul>
+                </dd>
+
+                <dt></dt>
+                <dd>
+                    <ul class="list-unstyled">
+                        <li><a href=""></a></li>
+                    </ul>
+                </dd>
+            </dl>
         </div>
     {% endblock main %}
 
