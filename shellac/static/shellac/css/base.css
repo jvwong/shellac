@@ -72,18 +72,18 @@
 /*
 * /info styling
 */
-.shellac-info .dl-horizontal dd ul,
-.shellac-info .dl-horizontal dd ol {
+.shellac-info .shellac-info-section .shellac-info-section-detail .dl-horizontal dd ul,
+.shellac-info .shellac-info-section .shellac-info-section-detail .dl-horizontal dd ol {
   margin-bottom: 0.5em;
 }
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
 @media (min-width: 768px) {
-  .shellac-info .dl-horizontal dt {
+  .shellac-info .shellac-info-section .shellac-info-section-detail .dl-horizontal dt {
     width: 20em;
   }
-  .shellac-info .dl-horizontal dd {
+  .shellac-info .shellac-info-section .shellac-info-section-detail .dl-horizontal dd {
     margin-left: 21em;
   }
 }

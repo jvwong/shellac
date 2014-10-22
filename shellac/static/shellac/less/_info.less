@@ -7,17 +7,23 @@
 
 .shellac-info
 {
-  .dl-horizontal
+  .shellac-info-section
   {
-    dt
+    .shellac-info-section-detail
     {
-    }
-    dd
-    {
-
-      ul, ol
+      .dl-horizontal
       {
-        margin-bottom: 0.5em;
+        dt
+        {
+        }
+        dd
+        {
+
+          ul, ol
+          {
+            margin-bottom: 0.5em;
+          }
+        }
       }
     }
   }
@@ -38,15 +44,21 @@
 {
   .shellac-info
   {
-    .dl-horizontal
+    .shellac-info-section
     {
-      dt
+      .shellac-info-section-detail
       {
-        width: @dl_horizontal_width;
-      }
-      dd
-      {
-        margin-left: @dl_horizontal_width + 1em;
+        .dl-horizontal
+        {
+          dt
+          {
+            width: @dl_horizontal_width;
+          }
+          dd
+          {
+            margin-left: @dl_horizontal_width + 1em;
+          }
+        }
       }
     }
   }
@@ -55,17 +67,6 @@
 /* xs (phones) */
 @media (max-width: 768px)
 {
-  .shellac-info
-  {
-    .dl-horizontal
-    {
-      dt
-      {}
-
-      dd
-      {}
-    }
-  }
 }
 
 /* xs Nexus4 portrait*/

@@ -6,16 +6,46 @@
     {% block head %}
     {% endblock head %}
 
-
-<!-- Navbar -->
-
-
 <!-- Main -->
     {% block main %}
-        <div class="shellac-about-container">
-            <h1>Getting Started <small>Web</small></h1>
+        <div class="shellac-info started">
+
+            <div class="shellac-info-header">
+                <h2>Getting Started</h2>
+            </div>
+            <hr/>
+
+            <div class="shellac-info-section">
+                <div class="shellac-info-section-header">
+                    <h2>
+                        <small>
+                            <a href="{% url 'shellac_app' %}">Player</a>
+                        </small>
+                    </h2>
+                    <p>
+                        Go to the player page by clicking on the &nbsp;<span class="glyphicon glyphicon-headphones"></span>&nbsp; in the left of the navigation bar.
+                        The clips shown are those from people that you have chosen to 'follow'. The audio player is affixed at the bottom of the page.
+                    </p>
+                </div>
+                <div class="shellac-info-section-detail">
+                    <dl class="dl-horizontal">
+                        <dt>Play</dt>
+                        <dd><ul class="list-inline"><li>Full-featured player</li></ul></dd>
+
+                        <dt>Save</dt>
+                        <dd><ul class="list-inline"><li>Create and save playlists</li></ul></dd>
+
+                        <dt>Record</dt>
+                        <dd>Audio support
+                            <ul class="list-inline">
+                                <li>.mp3</li>
+                                <li>.ogg</li>
+                                <li>.wav</li>
+                            </ul>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
         </div>
     {% endblock main %}
 
-
-<!-- Footer -->
