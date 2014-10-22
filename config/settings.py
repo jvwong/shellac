@@ -30,8 +30,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', #'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': APP_NAME,                     #DATABASE_NAME,  # Or path to database file if using sqlite3.
-        'USER': os.getenv('MYSQL_SHELLAC_USER', default=''),
-        'PASSWORD': os.getenv('MYSQL_SHELLAC_PASSWORD', default=''),
+        'USER': os.getenv('MYSQL_SHELLAC_USER', default='shellac'),
+        'PASSWORD': os.getenv('MYSQL_SHELLAC_PASSWORD', default='Kordic27'),
         'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '3306',                           # Set to empty string for default.
     }

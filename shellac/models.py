@@ -278,7 +278,7 @@ class Clip(models.Model):
         (PRIVATE_STATUS, 'Private')
     )
 
-    title = models.CharField(max_length=50, help_text=("Limit 50 characters"))
+    title = models.CharField(max_length=50, help_text=("Limit 50 characters"), unique_for_date='created')
     author = models.ForeignKey(Person, related_name="clips")
 
     ### Optional
@@ -310,7 +310,7 @@ class Clip(models.Model):
         super(Clip, self).save(*args, **kwargs)
 
     class Meta:
-        unique_together = ('author', 'title')
+        unique_together = ('author', 'title', 'created')
         verbose_name_plural = "Clips"
         ordering = ['created']
 
