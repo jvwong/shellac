@@ -18,34 +18,113 @@
             <div class="shellac-info-section">
                 <div class="shellac-info-section-header">
                     <h2>
-                        <small>
-                            <a href="{% url 'shellac_app' %}">Player</a>
-                        </small>
+                        <small>Navigation Bar</small>
                     </h2>
                     <p>
-                        Go to the player page by clicking on the &nbsp;<span class="glyphicon glyphicon-headphones"></span>&nbsp; in the left of the navigation bar.
-                        The clips shown are those from people that you have chosen to 'follow'. The audio player is affixed at the bottom of the page.
+                        The navigation bar is affixed atop and collapses into the <span class="glyphicon glyphicon-align-justify"></span> icon (top, right) in mobile browsers.
                     </p>
                 </div>
                 <div class="shellac-info-section-detail">
                     <dl class="dl-horizontal">
-                        <dt>Play</dt>
-                        <dd><ul class="list-inline"><li>Full-featured player</li></ul></dd>
+                        <dt><span class="glyphicon glyphicon-user"></span></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>People: View a list of Users. (Un)Follow</li>
+                            </ul>
+                        </dd>
 
-                        <dt>Save</dt>
-                        <dd><ul class="list-inline"><li>Create and save playlists</li></ul></dd>
+                        <dt><span class="glyphicon glyphicon-link"></span></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>Following / Followers: Manage what shows up in your playlist</li>
+                            </ul>
+                        </dd>
 
-                        <dt>Record</dt>
-                        <dd>Audio support
-                            <ul class="list-inline">
-                                <li>.mp3</li>
-                                <li>.ogg</li>
-                                <li>.wav</li>
+                        <dt><span class="glyphicon glyphicon-list"></span></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>My Clips: View a list of your clips. Update / Delete</li>
+                            </ul>
+                        </dd>
+
+                        <dt><span class="glyphicon glyphicon-record"></span></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>Upload: Upload a new Clip</li>
+                            </ul>
+                        </dd>
+
+                        <dt><span class="glyphicon glyphicon-cog"></span></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>Settings: Dropdown menu</li>
+                                <li>View 'My Account', 'Sign Out', and site information</li>
                             </ul>
                         </dd>
                     </dl>
                 </div>
             </div>
+            <hr/>
+
+            <div class="shellac-info-section">
+                <div class="shellac-info-section-header">
+                    <h2>
+                        <small>
+                            <a href="{% url 'shellac_app' %}">Audio Player</a>
+                        </small>
+                    </h2>
+                    <p>
+                        Clicking the &nbsp;<span class="glyphicon glyphicon-headphones"></span>&nbsp; navigates to the player page.
+                        The clips shown are those from people that you have chosen to 'follow'. The audio player is affixed at the bottom.
+                    </p>
+                </div>
+                <div class="shellac-info-section-detail">
+                    <dl class="dl-horizontal">
+                        <dt><img src="{% static 'shellac/assets/players/bar/image/icomoon/entypo-25px-000000/PNG/play.png' %}"/></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>Play the current item in the queue</li>
+                            </ul>
+                        </dd>
+
+                        <dt><img src="{% static 'shellac/assets/players/bar/image/icomoon/entypo-25px-000000/PNG/first.png' %}"/></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>Play the previous item in the queue</li>
+                            </ul>
+                        </dd>
+
+                        <dt><img src="{% static 'shellac/assets/players/bar/image/icomoon/entypo-25px-000000/PNG/last.png' %}"/></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>Play the next item in the queue</li>
+                            </ul>
+                        </dd>
+
+                        <dt><img src="{% static 'shellac/assets/IcoMoon--limited--master/Icons/PNG/16px/cloud-upload.png' %}"/></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>Save playlist and clip positions</li>
+                            </ul>
+                        </dd>
+
+                        <dt><img src="{% static 'shellac/assets/players/bar/image/icomoon/entypo-25px-000000/PNG/volume.png' %}"/></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>Adjust volume (disabled mobile)</li>
+                            </ul>
+                        </dd>
+
+                        <dt><img src="{% static 'shellac/assets/players/bar/image/icomoon/entypo-25px-000000/PNG/list2.png' %}"/></dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                <li>Toggle playlist menu</li>
+                            </ul>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <hr/>
         </div>
     {% endblock main %}
 
