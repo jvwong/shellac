@@ -5,11 +5,6 @@
 
 @dl_horizontal_width: 20em;
 
-.shellac-info-header
-{
-  .page-title
-  {}
-}
 
 /* lg (large desktops, 1200px and up) */
 @media (min-width: 1200px)
@@ -44,6 +39,24 @@
 /* xs (phones) */
 @media (max-width: 768px)
 {
+  .shellac-info
+  {
+    .dl-horizontal
+    {
+      dt
+      {
+        margin-top: 1em;
+      }
+
+      dd
+      {
+        ul
+        {
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }
 }
 
 /* xs Nexus4 portrait*/
