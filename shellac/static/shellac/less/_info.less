@@ -5,7 +5,23 @@
 
 @dl_horizontal_width: 20em;
 
+.shellac-info
+{
+  .dl-horizontal
+  {
+    dt
+    {
+    }
+    dd
+    {
 
+      ul, ol
+      {
+        margin-bottom: 0.5em;
+      }
+    }
+  }
+}
 
 /* lg (large desktops, 1200px and up) */
 @media (min-width: 1200px)
@@ -31,7 +47,6 @@
       dd
       {
         margin-left: @dl_horizontal_width + 1em;
-        margin-bottom: 0.5em;
       }
     }
   }
@@ -48,13 +63,7 @@
       {}
 
       dd
-      {
-        ul, ol
-        {
-          margin-bottom: 0em;
-        }
-        margin-bottom: 0.5em;
-      }
+      {}
     }
   }
 }

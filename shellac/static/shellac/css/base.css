@@ -72,6 +72,10 @@
 /*
 * /info styling
 */
+.shellac-info .dl-horizontal dd ul,
+.shellac-info .dl-horizontal dd ol {
+  margin-bottom: 0.5em;
+}
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
@@ -81,19 +85,9 @@
   }
   .shellac-info .dl-horizontal dd {
     margin-left: 21em;
-    margin-bottom: 0.5em;
   }
 }
 /* xs (phones) */
-@media (max-width: 768px) {
-  .shellac-info .dl-horizontal dd {
-    margin-bottom: 0.5em;
-  }
-  .shellac-info .dl-horizontal dd ul,
-  .shellac-info .dl-horizontal dd ol {
-    margin-bottom: 0em;
-  }
-}
 /* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
 
