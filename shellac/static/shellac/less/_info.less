@@ -6,6 +6,7 @@
 @dl_horizontal_width: 20em;
 
 
+
 /* lg (large desktops, 1200px and up) */
 @media (min-width: 1200px)
 {
@@ -27,10 +28,10 @@
       {
         width: @dl_horizontal_width;
       }
-
       dd
       {
         margin-left: @dl_horizontal_width + 1em;
+        margin-bottom: 0.5em;
       }
     }
   }
@@ -44,16 +45,15 @@
     .dl-horizontal
     {
       dt
-      {
-        margin-top: 1em;
-      }
+      {}
 
       dd
       {
-        ul
+        ul, ol
         {
-          margin-bottom: 0px;
+          margin-bottom: 0em;
         }
+        margin-bottom: 0.5em;
       }
     }
   }
