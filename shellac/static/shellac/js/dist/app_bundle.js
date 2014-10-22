@@ -12338,7 +12338,9 @@ var shellac = (function () {
         util.fetchUrl(clipsUrl, function( results ){
             var formatted = util.parseClipData( results );
             stateMap.latest_clips_db.insert( formatted );
-            render_clips( stateMap.latest_clips_db().order("id desc").get() );
+            render_clips( stateMap.latest_clips_db().order("created_i desc").get() );
+            console.log(stateMap.latest_clips_db().get());
+            console.log(stateMap.latest_clips_db().order("id desc").get());
             done(null);
         });
     };
@@ -12356,7 +12358,7 @@ var shellac = (function () {
         async.waterfall([
             function(callback){
                 // 1. Fetch the default playlist
-                util.fetchUrl('/api/playlists/' + preferencesMap.playlist_id + '/', function( results ){
+                util.fetchUrl(configMap.playlist_endpoint + preferencesMap.playlist_id + '/', function( results ){
                     if(results.id.toString() === preferencesMap.playlist_id.toString())
                     {
                         preferencesMap.playlist = results;
@@ -12390,7 +12392,7 @@ var shellac = (function () {
                     track_pk = util.getURLpk( track );
                     if(!track_pk){ finish("error initPlaylist: Invalid Track pk"); }
 
-                    util.fetchUrl('/api/tracks/' + track_pk + '/', function( results ){
+                    util.fetchUrl(configMap.track_endpoint + track_pk + '/', function( results ){
                         var clip_pk;
                         if( results.hasOwnProperty('id') &&
                             results.hasOwnProperty('position') &&
@@ -12426,7 +12428,7 @@ var shellac = (function () {
                     pk = util.getURLpk( clipURL );
                     if(!pk){ finish("error initPlaylist: Invalid Clip pk"); }
 
-                    util.fetchUrl('/api/clips/' + pk + '/', function( results ){
+                    util.fetchUrl(configMap.clip_endpoint + pk + '/', function( results ){
                         clips.push(results);
                         finish(null);
                     });
@@ -12506,7 +12508,7 @@ var shellac = (function () {
         }
         else if(callback)
         {
-            util.fetchUrl('/api/clips/' + id + '/', function( results ){
+            util.fetchUrl(configMap.clip_endpoint + id + '/', function( results ){
                 database.insert(results);
                 callback(results);
             });
@@ -12755,7 +12757,7 @@ var shellac = (function () {
                     plays = clip.plays;
                     payload.plays = plays + 1;
 
-                    util.updateUrl('/api/clips/' + id + '/', utils.noop,
+                    util.updateUrl(configMap.clip_endpoint + id + '/', utils.noop,
                         'PATCH', JSON.stringify(payload), stateMap.csrftoken);
                 });
                 break;
@@ -14935,6 +14937,7 @@ var util = (function () {
 
             try{
                 jsonObj.created = moment(jsonObj.created);
+                jsonObj.created_i = new Date( moment(jsonObj.created)._i );
 
                 //sub-in dummy image
                 if(jsonObj.brand === "")

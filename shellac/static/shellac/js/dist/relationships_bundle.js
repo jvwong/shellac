@@ -5261,6 +5261,7 @@ var util = (function () {
 
             try{
                 jsonObj.created = moment(jsonObj.created);
+                jsonObj.created_i = new Date( moment(jsonObj.created)._i );
 
                 //sub-in dummy image
                 if(jsonObj.brand === "")

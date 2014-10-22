@@ -130,9 +130,9 @@ class ClipListViewSet(ListViewSet):
                 Q(categories__slug__in=[q]) |
                 Q(tags__name__in=[q]) |
                 Q(description__icontains=q)
-            ).distinct()
+            ).order_by('-created').distinct()
 
-        return Clip.objects.all()
+        return Clip.objects.all().order_by('-created')
 
 
 
