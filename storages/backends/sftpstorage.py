@@ -47,23 +47,19 @@
 # set "~/.ssh/known_hosts" will be used
 
 
-import getpass
 import os
+import stat
 import paramiko
 import posixpath
-import stat
-import urlparse
+import getpass
 from datetime import datetime
-
 from django.conf import settings
-from django.core.files.base import File
 from django.core.files.storage import Storage
-
+from django.core.files.base import File
 try:
-    from cStringIO import StringIO
+    from io import StringIO
 except ImportError:
-    from StringIO import StringIO  # noqa
-
+    from io import StringIO
 
 class SFTPStorage(Storage):
 
@@ -85,7 +81,6 @@ class SFTPStorage(Storage):
         self._known_host_file = getattr(settings, 'SFTP_KNOWN_HOST_FILE', None)
 
         self._root_path = settings.SFTP_STORAGE_ROOT
-        self._base_url = settings.MEDIA_URL
 
         # for now it's all posix paths.  Maybe someday we'll support figuring
         # out if the remote host is windows.
@@ -105,7 +100,7 @@ class SFTPStorage(Storage):
 
         try:
             self._ssh.connect(self._host, **self._params)
-        except paramiko.AuthenticationException, e:
+        except paramiko.AuthenticationException as e:
             if self._interactive and 'password' not in self._params:
                 # If authentication has failed, and we haven't already tried
                 # username/password, and configuration allows it, then try
@@ -115,9 +110,9 @@ class SFTPStorage(Storage):
                 self._params['password'] = getpass.getpass()
                 self._connect()
             else:
-                raise paramiko.AuthenticationException, e
-        except Exception, e:
-            print e
+                raise paramiko.AuthenticationException(e)
+        except Exception as e:
+            print(e)
 
         if not hasattr(self, '_sftp'):
             self._sftp = self._ssh.open_sftp()
@@ -231,10 +226,8 @@ class SFTPStorage(Storage):
         return datetime.fromtimestamp(utime)
 
     def url(self, name):
-        if self._base_url is None:
-            raise ValueError("This file is not accessible via a URL.")
-        return urlparse.urljoin(self._base_url, name).replace('\\', '/')
-
+        remote_path = self._remote_path(name)
+        return 'sftp://%s/%s' % (self._host, remote_path)
 
 class SFTPStorageFile(File):
     def __init__(self, name, storage, mode):

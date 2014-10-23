@@ -12685,7 +12685,7 @@ var shellac = (function () {
      * @param the updated map of clip id's in the playlist
      */
     handlePlaylistChange = function( item, isAdded, pMap ){
-        var anchor, pathname,
+        var anchor, pathname, selected_pathname,
             parent, enqueue,
             i, j;
 
@@ -12694,12 +12694,15 @@ var shellac = (function () {
 
         //update the particular Clip in the UI
         anchor = utils.dom.get(item, 'a');
-        if(anchor)
+
+        //ensure there is an anchor and the selected is defined
+        if(anchor && stateMap.selected)
         {
             pathname = util.urlParse(anchor.href).pathname;
+            selected_pathname = util.urlParse(stateMap.selected.dataset.url).pathname;
 
             //make sure the stateMap last clicked is this one
-            if(stateMap.selected && stateMap.selected.dataset.url === pathname)
+            if(selected_pathname === pathname)
             {
                 parent = stateMap.selected;
 
