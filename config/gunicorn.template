@@ -9,4 +9,5 @@ debug = False
 loglevel = "info"
 user = "shellac"
 group = "webapps"
+timeout = 360
 
