@@ -28,7 +28,7 @@
 <!-- Main -->
     {% block main %}
         <div class="col-xs-12 clip-update">
-            <form action="" method="post">{% csrf_token %}
+            <form class="update" role="form" enctype="multipart/form-data" action="" method="POST">{% csrf_token %}
                 {% for field in form %}
                 <div class="form-group">
                     <p>{{ field.errors }}</p>

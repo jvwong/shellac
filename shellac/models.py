@@ -1,5 +1,6 @@
 import os.path
 import datetime
+from uuid import uuid4
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -15,7 +16,35 @@ from audio.fields import AudioField
 
 from shellac import util
 
+def path_and_rename(path):
+    def wrapper(instance, filename):
+        date_prefix = (datetime.datetime.now()).strftime('%Y/%m/%d')
+        path_date = os.path.join(path, date_prefix)
+        name, ext = filename.split('.')
 
+        # set filename as name + random string
+        fn = '{}_{}.{}'.format(name, uuid4().hex, ext)
+
+        print("path: %s" % (path,))
+
+        print("instance: %s" % (instance,))
+        print("filename: %s" % (filename,))
+
+        print("date_prefix: %s" % (date_prefix,))
+        print("fn: %s" % (fn,))
+
+        if instance.pk:
+            print("saw an instance with pk")
+            print(instance.pk)
+            ###Update case:
+            ### 1. Remove existing file(s)
+            # if os.path.isfile(filename):
+            #     os.remove(filename)
+            ### 2. Return the new file path
+
+        # return the whole path to the file
+        return filename
+    return wrapper
 
 ##########################################################################################
 ###                             BEGIN Class Person                                     ###
@@ -120,10 +149,18 @@ class Person(models.Model):
     objects = PersonManager()
 
 @receiver(post_delete, sender=Person)
-def on_user_delete(sender, instance, **kwargs):
+def on_person_delete(sender, instance, **kwargs):
     if instance.avatar:
         if os.path.isfile(instance.avatar.url):
             os.remove(instance.avatar.url)
+        # Pass false so ImageField doesn't save the model.
+        instance.avatar.delete(False)
+
+    if instance.avatar_thumb:
+        if os.path.isfile(instance.avatar_thumb.url):
+            os.remove(instance.avatar_thumb.url)
+        # Pass false so ImageField doesn't save the model.
+        instance.avatar_thumb.delete(False)
 
 
 # Receive the post_save signal
@@ -287,8 +324,8 @@ class Clip(models.Model):
     description = models.TextField(max_length=2000, blank=True, help_text=("Limit 2000 characters"))
 
     ###upload to subdirectory with user id prefixed
-    brand = models.ImageField(upload_to='brands/%Y/%m/%d', blank=True, help_text=("Images will be cropped as squares"))
-    brand_thumb = ThumbnailImageField(upload_to='brands/%Y/%m/%d', blank=True, editable=False)
+    brand = models.ImageField(upload_to=path_and_rename('brands'), blank=True, help_text=("Images will be cropped as squares"))
+    brand_thumb = ThumbnailImageField(upload_to=path_and_rename('brands'), blank=True, editable=False)
 
     ### Default
     plays = models.PositiveSmallIntegerField(default=0, blank=True)
@@ -301,7 +338,7 @@ class Clip(models.Model):
 
     #AUDIO
     # Add the audio field to your model -- required
-    audio_file = AudioField(upload_to='sounds/%Y/%m/%d', blank=False, help_text=("Allowed type - .mp3, .wav, .ogg"))
+    audio_file = AudioField(upload_to=path_and_rename('sounds'), blank=False, help_text=("Allowed type - .mp3, .wav, .ogg"))
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
