@@ -1290,6 +1290,14 @@ var bar_ui = (function() {
             save: function(/* e */) {
                 //PubSub event
                 //dump to the shell
+                //should get current position and store
+                if(soundObject)
+                {
+                    var id = soundObject.id,
+                        position = Math.round(soundObject.position);
+
+                    playlistController.data.positionsMap[id] = position;
+                }
                 util.PubSub.emit('player-save', playlistController.exportPositionsMap());
             },
 
