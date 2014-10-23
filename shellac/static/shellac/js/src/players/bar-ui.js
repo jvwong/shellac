@@ -1290,7 +1290,6 @@ var bar_ui = (function() {
             save: function(/* e */) {
                 //PubSub event
                 //dump to the shell
-                //should get current position and store
                 if(soundObject)
                 {
                     var id = soundObject.id,
