@@ -139,7 +139,7 @@ def make_test_fixtures():
     local('../virtualenv/bin/python3.4 manage.py dumpdata taggit --format=json --indent=4 > %s/taggit.json' % (lfixtures_dir,))
 
 def make_db_fixture():
-    local('../virtualenv/bin/python3.4 manage.py dumpdata shellac --format=json --indent=4 > %s/shellac_working.json' % (lfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py dumpdata shellac --exclude=shellac.Person --exclude=shellac.Playlist --format=json --indent=4 > %s/shellac_working.json' % (lfixtures_dir,))
     local('../virtualenv/bin/python3.4 manage.py dumpdata auth --format=json --indent=4 > %s/auth_working.json' % (lfixtures_dir,))
     local('../virtualenv/bin/python3.4 manage.py dumpdata taggit --format=json --indent=4 > %s/taggit_working.json' % (lfixtures_dir,))
 
