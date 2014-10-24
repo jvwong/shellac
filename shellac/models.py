@@ -20,11 +20,19 @@ def path_and_rename(path):
     def wrapper(instance, filename):
         date_prefix = (datetime.datetime.now()).strftime('%Y/%m/%d')
         path_date = os.path.join(path, date_prefix)
-        name, ext = filename.split('.')
+
+        ##May need to guard against weird input (non file)
+        fname = os.path.split(filename)[1]
+
+        ##just get the extension
+        ext = fname.split('.')[-1]
+
         # set filename as name + random string
         fn = '{}.{}'.format(uuid4().hex, ext)
+
         # return the whole path to the file
         return os.path.join(path_date, fn)
+
     return wrapper
 
 ##########################################################################################
