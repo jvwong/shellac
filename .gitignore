@@ -8,3 +8,4 @@ __pycache__/*
 virtualenv/
 secret_key.py
 *.bak
+shellac/fixtures/production/*
