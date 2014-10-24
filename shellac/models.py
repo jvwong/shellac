@@ -7,10 +7,9 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.db.models.signals import post_delete
 from django.dispatch.dispatcher import receiver
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save
 
 from taggit.managers import TaggableManager
-from shellac.fixtures import categories
 from image.fields import ThumbnailImageField
 from audio.fields import AudioField
 
@@ -153,16 +152,34 @@ def on_person_delete(sender, instance, **kwargs):
         instance.avatar_thumb.delete(False)
 
 
+##########################################################################################
+###                             BEGIN User Signals                                     ###
+##########################################################################################
+from django.contrib.auth.models import Group
+
 # Receive the post_save signal
 @receiver(post_save, sender=User)
 def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs):
-    if(created):
+
+    if created:
         #create a Person
         p = Person(user=instance)
         p.save()
 
+        #create a default Playlist for this Person
         u = Playlist(person=p, title='default')
         u.save()
+
+        # #Assign groups to users -- Contributors must be assigned manually
+        # try:
+        #     contributor = Group.objects.get(name='Contributor')
+        #     user = Group.objects.get(name='User')
+        # except Group.DoesNotExist:
+        #     # group should exist, but this is just for safety's sake,
+        #     # it case the improbable should happen
+        #     print('Failed to load Permission Groups')
+        # else:
+        #     instance.groups = [user]
 
 
 ##########################################################################################
@@ -237,10 +254,6 @@ class CategoryManager(models.Manager):
     def create_category(self, title, description):
         category = self.create(title=title, description=description)
         return category
-
-    def autopopulate(self):
-        for category in categories.CATEGORIES:
-            self.create_category(title=category, description=category)
 
 
 class Category(models.Model):

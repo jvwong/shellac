@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render
 from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.contrib.auth import get_user_model
@@ -27,7 +27,7 @@ class ClipListView(ListView):
 
 
 ## CRUD
-@login_required(login_url='/accounts/signin/')
+@permission_required('shellac.add_clip', raise_exception=True)
 def shellac_clip_create(request):
     if request.method == 'POST':
         form = CreateClipForm(request.POST, request.FILES)
@@ -44,9 +44,11 @@ def shellac_clip_create(request):
                   'shellac/clips/create.html',
                   {'form': form})
 
+
 class ClipDetailView(DetailView):
     model = Clip
     template_name = "shellac/clips/clip_detail.html"
+
 
 class ClipUpdateView(Clip_IsAuthenticatedAndOwnerMixin, UpdateView):
     model = Clip
@@ -57,6 +59,7 @@ class ClipUpdateView(Clip_IsAuthenticatedAndOwnerMixin, UpdateView):
     def get_success_url(self):
         pk = self.kwargs.get('pk')
         return reverse('shellac_clip_detail', kwargs={'pk': pk})
+
 
 
 class ClipDeleteView(Clip_IsAuthenticatedAndOwnerMixin, DeleteView):

@@ -37,8 +37,8 @@ class NewClipTest(FunctionalTest):
 
     def setUp(self):
         super(NewClipTest, self).setUp()
-        username = 'aray'
-        password = 'aray'
+        username = 'jvwong'
+        password = 'jvwong'
         self.user = User.objects.get(username=username)
         self.person = self.user.person
         self.userid = str(self.user.id)
@@ -46,7 +46,7 @@ class NewClipTest(FunctionalTest):
         self.browser.get(self.server_url + '/clips/create/')
         self.wait_to_be_signed_in(self.user.username)
 
-    def test_user_can_add_a_clip_and_view_permalink(self):
+    def test_Contributor_or_staff_can_add_a_clip_and_view_permalink(self):
         #The user is presented with a form that allows her to add a new Clip
         # including fields for title, categories, description, brand, status, audio, tags
         title_input = self.browser.find_element_by_css_selector('#id_title')
@@ -82,7 +82,7 @@ class NewClipTest(FunctionalTest):
             any(dd.text == self.user.username for dd in descriptors)
         )
 
-    def test_user_cannot_add_invalid_audio_type(self):
+    def test_Contributor_or_staff_cannot_add_invalid_audio_type(self):
         #The user is presented with a form that allows her to add a new Clip
         # including fields for title, categories, description, brand, status, audio, tags
         title_input = self.browser.find_element_by_css_selector('#id_title')
@@ -110,4 +110,34 @@ class NewClipTest(FunctionalTest):
 
 
 
+class NewClipTest_Listener(FunctionalTest):
+    fixtures = ['shellac.json', 'auth.json']
 
+    def setUp(self):
+        super(NewClipTest_Listener, self).setUp()
+        username = 'aray'
+        password = 'aray'
+        self.user = User.objects.get(username=username)
+        self.person = self.user.person
+        self.userid = str(self.user.id)
+        self.enable_pre_authenticated_session(self.user.username)
+        self.browser.get(self.server_url + '/clips/list/')
+        self.wait_to_be_signed_in(self.user.username)
+
+    def test_Listener_cannot_add_a_clip(self):
+        #When she hits 'record' icon the user gets a forbidden
+        record_icon = self.browser.find_element_by_css_selector('#nav-navbar-right-bar-record a')
+        record_icon.send_keys(Keys.ENTER)
+        self.assertIn('403 Error', self.browser.title)
+
+    def test_Listener_cannot_change_a_clip(self):
+        #When she hits 'record' icon the user gets a forbidden
+        update_button = self.browser.find_element_by_css_selector('.btn.btn-default.update')
+        update_button.send_keys(Keys.ENTER)
+        self.assertIn('403 Error', self.browser.title)
+
+    def test_Listener_cannot_delete_a_clip(self):
+        #When she hits 'record' icon the user gets a forbidden
+        del_button = self.browser.find_element_by_css_selector('.btn.btn-default.delete')
+        del_button .send_keys(Keys.ENTER)
+        self.assertIn('403 Error', self.browser.title)
