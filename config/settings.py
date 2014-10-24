@@ -73,22 +73,18 @@ USE_L10N = True
 USE_TZ = False
 
 # MEDIA STORAGE --- AWS S3 / django-storages
-MEDIA_URL = '/media/'
-
-USE_S3 = False
+USE_S3 = True
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', default='')
-AWS_STORAGE_BUCKET_NAME = '%s.media' % (APP_NAME,)
+AWS_STORAGE_BUCKET_NAME = '%s-media' % (APP_NAME,)
 AWS_QUERYSTRING_AUTH = False
 S3_URL = 'https://%s.s3.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,)
 
 if USE_S3:
     DEFAULT_FILE_STORAGE = '%s.s3utils.MediaRootS3BotoStorage' % (APP_NAME,)
-    MEDIA_URL = S3_URL + '/media/'
 
-# Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/var/www/example.com/media/"
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, "media"))
 
 # Absolute path to the directory static files should be collected to.

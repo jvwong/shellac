@@ -1,44 +1,44 @@
 [
 {
-    "fields": {
-        "name": "clip1",
-        "slug": "clip1"
-    },
     "pk": 1,
-    "model": "taggit.tag"
+    "model": "taggit.tag",
+    "fields": {
+        "slug": "clip1",
+        "name": "clip1"
+    }
 },
 {
-    "fields": {
-        "name": "a1a",
-        "slug": "a1a"
-    },
     "pk": 2,
-    "model": "taggit.tag"
+    "model": "taggit.tag",
+    "fields": {
+        "slug": "a1a",
+        "name": "a1a"
+    }
 },
 {
-    "fields": {
-        "name": "a1b",
-        "slug": "a1b"
-    },
     "pk": 3,
-    "model": "taggit.tag"
+    "model": "taggit.tag",
+    "fields": {
+        "slug": "a1b",
+        "name": "a1b"
+    }
 },
 {
+    "pk": 6,
+    "model": "taggit.taggeditem",
     "fields": {
-        "tag": 2,
         "object_id": 1,
-        "content_type": 14
-    },
-    "pk": 3,
-    "model": "taggit.taggeditem"
+        "content_type": 14,
+        "tag": 2
+    }
 },
 {
+    "pk": 7,
+    "model": "taggit.taggeditem",
     "fields": {
-        "tag": 3,
         "object_id": 4,
-        "content_type": 14
-    },
-    "pk": 5,
-    "model": "taggit.taggeditem"
+        "content_type": 14,
+        "tag": 3
+    }
 }
 ]

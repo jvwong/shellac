@@ -4,11 +4,13 @@
 from __future__ import with_statement
 from fabric.contrib.files import exists, sed
 from fabric.api import env, local, run
+
 import os
 import random
 
 APP_NAME = "shellac"
 REPO_URL = 'https://github.com/jvwong/shellac.git'
+AWS_STORAGE_BUCKET_NAME = '%s-media' % (APP_NAME,)
 
 ### ***** BRING Deployment *****
 def deploy():
@@ -118,6 +120,8 @@ lfixtures_dir = os.path.abspath(os.path.join(lsource_dir, "shellac/fixtures"))
 lprodfixtures_dir = os.path.abspath(os.path.join(lsource_dir, "shellac/fixtures/production"))
 ldevfixtures_dir = os.path.abspath(os.path.join(lsource_dir, "shellac/fixtures/development"))
 ljs_dir = os.path.abspath(os.path.join(lsource_dir, "%s/static/%s/js" % (APP_NAME, APP_NAME)))
+lmedia_dir = os.path.abspath(os.path.join(lsource_dir, "../media/"))
+
 
 def start():
     local('../virtualenv/bin/python3.4 manage.py runserver 127.0.0.1:8000')
@@ -161,3 +165,6 @@ def load_devdb_fixture():
     local('../virtualenv/bin/python3.4 manage.py loaddata %s/auth_dev.json' % (ldevfixtures_dir,))
     local('../virtualenv/bin/python3.4 manage.py loaddata %s/shellac_dev.json' % (ldevfixtures_dir,))
     local('../virtualenv/bin/python3.4 manage.py loaddata %s/taggit_dev.json' % (ldevfixtures_dir,))
+
+def sync_aws_dev():
+    local(' s3cmd sync --delete-removed --skip-existing %s/* s3://%s/debug/media/' % (lmedia_dir, APP_NAME + '.media'))
