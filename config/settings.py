@@ -75,7 +75,7 @@ USE_TZ = False
 # MEDIA STORAGE --- AWS S3 / django-storages
 MEDIA_URL = '/media/'
 
-USE_S3 = not DEBUG
+USE_S3 = False
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', default='')
