@@ -176,7 +176,8 @@ INSTALLED_APPS = (
     'corsheaders',
     'image',
     'audio',
-    'storages'
+    'storages',
+    'django_cleanup'
 )
 
 REST_FRAMEWORK = {

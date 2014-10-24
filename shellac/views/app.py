@@ -55,7 +55,7 @@ def person_avatar_update(request, username):
     person = get_object_or_404(Person, username=username)
     if request.method == 'POST':
         form = PersonUpdateForm(request.POST, request.FILES)
-        if form.is_valid():
+        if 'avatar' in request.FILES and form.is_valid():
             instance = form.save(commit=False)
             person.avatar = instance.avatar
             person.save()

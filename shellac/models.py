@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.db.models.signals import post_delete
 from django.dispatch.dispatcher import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 
 from taggit.managers import TaggableManager
 from shellac.fixtures import categories
@@ -43,7 +43,7 @@ def path_and_rename(path):
             ### 2. Return the new file path
 
         # return the whole path to the file
-        return filename
+        return os.path.join(path_date, fn)
     return wrapper
 
 ##########################################################################################
@@ -147,6 +147,7 @@ class Person(models.Model):
     get_absolute_url = models.permalink(get_absolute_url)
 
     objects = PersonManager()
+
 
 @receiver(post_delete, sender=Person)
 def on_person_delete(sender, instance, **kwargs):
@@ -324,8 +325,8 @@ class Clip(models.Model):
     description = models.TextField(max_length=2000, blank=True, help_text=("Limit 2000 characters"))
 
     ###upload to subdirectory with user id prefixed
-    brand = models.ImageField(upload_to=path_and_rename('brands'), blank=True, help_text=("Images will be cropped as squares"))
-    brand_thumb = ThumbnailImageField(upload_to=path_and_rename('brands'), blank=True, editable=False)
+    brand = models.ImageField(upload_to='brands', blank=True, help_text=("Images will be cropped as squares"))
+    brand_thumb = ThumbnailImageField(upload_to='brands', blank=True, editable=False)
 
     ### Default
     plays = models.PositiveSmallIntegerField(default=0, blank=True)

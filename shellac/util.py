@@ -32,7 +32,7 @@ def squarer(field, thumb_field, name):
         region = im.crop(box)
         region.save(f, format='JPEG')
         s = f.getvalue()
-        thumb_field.save(name, ContentFile(s), save=True)
+        thumb_field.save(name, ContentFile(s), save=False)
 
     except IOError:
         print("Image decoding error")
