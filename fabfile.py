@@ -120,6 +120,7 @@ lfixtures_dir = os.path.abspath(os.path.join(lsource_dir, "shellac/fixtures"))
 lprodfixtures_dir = os.path.abspath(os.path.join(lsource_dir, "shellac/fixtures/production"))
 ldevfixtures_dir = os.path.abspath(os.path.join(lsource_dir, "shellac/fixtures/development"))
 ljs_dir = os.path.abspath(os.path.join(lsource_dir, "%s/static/%s/js" % (APP_NAME, APP_NAME)))
+lmediadebug_dir = os.path.abspath(os.path.join(lsource_dir, "../debug/media/"))
 lmedia_dir = os.path.abspath(os.path.join(lsource_dir, "../media/"))
 
 
@@ -167,4 +168,7 @@ def load_devdb_fixture():
     local('../virtualenv/bin/python3.4 manage.py loaddata %s/taggit_dev.json' % (ldevfixtures_dir,))
 
 def sync_aws_dev():
-    local(' s3cmd sync --delete-removed --skip-existing %s/* s3://%s/debug/media/' % (lmedia_dir, APP_NAME + '.media'))
+    local(' s3cmd sync --delete-removed --skip-existing %s/* s3://%s/debug/media/' % (lmediadebug_dir, APP_NAME + '-media'))
+
+def sync_aws_prod():
+    local(' s3cmd sync --delete-removed --skip-existing %s/* s3://%s/media/' % (lmedia_dir, APP_NAME + '-media'))
