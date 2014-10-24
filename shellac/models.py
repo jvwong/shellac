@@ -22,7 +22,7 @@ def path_and_rename(path):
         path_date = os.path.join(path, date_prefix)
         name, ext = filename.split('.')
         # set filename as name + random string
-        fn = '{}_{}.{}'.format(name, uuid4().hex, ext)
+        fn = '{}.{}'.format(uuid4().hex, ext)
         # return the whole path to the file
         return os.path.join(path_date, fn)
     return wrapper
@@ -40,8 +40,8 @@ class Person(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     username = models.CharField(max_length=30, editable=False)
     joined = models.DateTimeField(auto_now_add=True, blank=True)
-    avatar = models.ImageField(upload_to='avatars', blank=True)
-    avatar_thumb = ThumbnailImageField(upload_to='avatars', blank=True, editable=False)
+    avatar = models.ImageField(upload_to=path_and_rename('avatars'), blank=True)
+    avatar_thumb = ThumbnailImageField(upload_to=path_and_rename('avatars'), blank=True, editable=False)
 
     relationships = models.ManyToManyField('self',
                                            through='Relationship',
@@ -306,8 +306,8 @@ class Clip(models.Model):
     description = models.TextField(max_length=2000, blank=True, help_text=("Limit 2000 characters"))
 
     ###upload to subdirectory with user id prefixed
-    brand = models.ImageField(upload_to='brands', blank=True, help_text=("Images will be cropped as squares"))
-    brand_thumb = ThumbnailImageField(upload_to='brands', blank=True, editable=False)
+    brand = models.ImageField(upload_to=path_and_rename('brands'), blank=True, help_text=("Images will be cropped as squares"))
+    brand_thumb = ThumbnailImageField(upload_to=path_and_rename('brands'), blank=True, editable=False)
 
     ### Default
     plays = models.PositiveSmallIntegerField(default=0, blank=True)
@@ -325,7 +325,12 @@ class Clip(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         if self.brand:
-            util.squarer(self.brand, self.brand_thumb, self.brand.name)
+            ###Caution -- self.brand.name could be
+            #1. file.ext
+            #2. path/to/file.ext
+            #os.path.split gives (path, file)
+            filename = os.path.split(self.brand.name)[1]
+            util.squarer(self.brand, self.brand_thumb, filename)
         super(Clip, self).save(*args, **kwargs)
 
     class Meta:
