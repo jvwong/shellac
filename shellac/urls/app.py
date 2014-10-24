@@ -16,6 +16,8 @@ urlpatterns = patterns('',
 
     url(r'^$', shellac_app, name='shellac_app'),
     url(r'^info/', include('shellac.urls.info')),
+    url(r'^init/', include('shellac.urls.init')),
+
     url(r'^player/(?P<username>[\w.@+-]+)/(?P<status>[a-z]+)/$', shellac_app, name='shellac_app'),
 
     url(r'profile/(?P<username>[\w.@+-]+)/$', person_avatar_update, name='shellac_profile'),

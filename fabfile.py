@@ -115,6 +115,8 @@ def lgittag():
 ### ***** Django *****
 lsource_dir = os.path.abspath(os.path.dirname(__file__))
 lfixtures_dir = os.path.abspath(os.path.join(lsource_dir, "shellac/fixtures"))
+lprodfixtures_dir = os.path.abspath(os.path.join(lsource_dir, "shellac/fixtures/production"))
+ldevfixtures_dir = os.path.abspath(os.path.join(lsource_dir, "shellac/fixtures/development"))
 ljs_dir = os.path.abspath(os.path.join(lsource_dir, "%s/static/%s/js" % (APP_NAME, APP_NAME)))
 
 def start():
@@ -138,12 +140,24 @@ def make_test_fixtures():
     local('../virtualenv/bin/python3.4 manage.py dumpdata auth --natural --exclude auth.permission --exclude contenttypes --format=json --indent=4 > %s/auth.json' % (lfixtures_dir,))
     local('../virtualenv/bin/python3.4 manage.py dumpdata taggit --format=json --indent=4 > %s/taggit.json' % (lfixtures_dir,))
 
-def make_db_fixture():
-    local('../virtualenv/bin/python3.4 manage.py dumpdata shellac --exclude=shellac.Person --exclude=shellac.Playlist --format=json --indent=4 > %s/shellac_working.json' % (lfixtures_dir,))
-    local('../virtualenv/bin/python3.4 manage.py dumpdata auth --format=json --indent=4 > %s/auth_working.json' % (lfixtures_dir,))
-    local('../virtualenv/bin/python3.4 manage.py dumpdata taggit --format=json --indent=4 > %s/taggit_working.json' % (lfixtures_dir,))
+def make_proddb_fixture():
+    local('mkdir -p %s' % (lprodfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py dumpdata shellac --exclude=shellac.Person --exclude=shellac.Playlist --format=json --indent=4 > %s/shellac_production.json' % (lprodfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py dumpdata auth --format=json --indent=4 > %s/auth_production.json' % (lprodfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py dumpdata taggit --format=json --indent=4 > %s/taggit_production.json' % (lprodfixtures_dir,))
 
-def load_db_fixture():
-    local('../virtualenv/bin/python3.4 manage.py loaddata %s/auth_working.json' % (lfixtures_dir,))
-    local('../virtualenv/bin/python3.4 manage.py loaddata %s/shellac_working.json' % (lfixtures_dir,))
-    local('../virtualenv/bin/python3.4 manage.py loaddata %s/taggit_working.json' % (lfixtures_dir,))
+def load_proddb_fixture():
+    local('../virtualenv/bin/python3.4 manage.py loaddata %s/auth_production.json' % (lprodfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py loaddata %s/shellac_production.json' % (lprodfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py loaddata %s/taggit_production.json' % (lprodfixtures_dir,))
+
+def make_devdb_fixture():
+    local('mkdir -p %s' % (ldevfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py dumpdata shellac --exclude=shellac.Person --exclude=shellac.Playlist --format=json --indent=4 > %s/shellac_dev.json' % (ldevfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py dumpdata auth --format=json --indent=4 > %s/auth_dev.json' % (ldevfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py dumpdata taggit --format=json --indent=4 > %s/taggit_dev.json' % (ldevfixtures_dir,))
+
+def load_devdb_fixture():
+    local('../virtualenv/bin/python3.4 manage.py loaddata %s/auth_dev.json' % (ldevfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py loaddata %s/shellac_dev.json' % (ldevfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py loaddata %s/taggit_dev.json' % (ldevfixtures_dir,))
