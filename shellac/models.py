@@ -156,7 +156,7 @@ def on_person_delete(sender, instance, **kwargs):
 ###                             BEGIN User Signals                                     ###
 ##########################################################################################
 from django.contrib.auth.models import Group
-
+from django.core.exceptions import ObjectDoesNotExist
 # Receive the post_save signal
 @receiver(post_save, sender=User)
 def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs):
@@ -167,17 +167,16 @@ def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs)
         p.save()
 
         #create a default Playlist for this Person
-        u = Playlist(person=p, title='default')
-        u.save()
+        playlist, created = Playlist.objects.get_or_create(person=p, title='default')
 
-        # #Assign groups to users -- Contributors must be assigned manually
+        # #Assign groups -- Contributors default
         # try:
         #     contributor = Group.objects.get(name='Contributor')
-        #     user = Group.objects.get(name='User')
-        # except Group.DoesNotExist:
+        #     listener = Group.objects.get(name='Listener')
+        # except ObjectDoesNotExist:
         #     # group should exist, but this is just for safety's sake,
         #     # it case the improbable should happen
-        #     print('Failed to load Permission Groups')
+        #     print('ObjectDoesNotExist: Groups')
         # else:
         #     instance.groups = [user]
 

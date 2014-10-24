@@ -140,10 +140,15 @@ def unit():
 def functional():
     local('../virtualenv/bin/python3.4 manage.py test %s.tests.functional' % (APP_NAME,))
 
-def make_test_fixtures():
+def make_test_fixture():
     local('../virtualenv/bin/python3.4 manage.py dumpdata shellac --exclude=shellac.Person --format=json --indent=4 > %s/shellac.json' % (lfixtures_dir,))
     local('../virtualenv/bin/python3.4 manage.py dumpdata auth --natural --exclude auth.permission --exclude contenttypes --format=json --indent=4 > %s/auth.json' % (lfixtures_dir,))
     local('../virtualenv/bin/python3.4 manage.py dumpdata taggit --format=json --indent=4 > %s/taggit.json' % (lfixtures_dir,))
+
+def load_test_fixture():
+    local('../virtualenv/bin/python3.4 manage.py loaddata %s/auth.json' % (lfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py loaddata %s/shellac.json' % (lfixtures_dir,))
+    local('../virtualenv/bin/python3.4 manage.py loaddata %s/taggit.json' % (lfixtures_dir,))
 
 def make_proddb_fixture():
     local('mkdir -p %s' % (lprodfixtures_dir,))
