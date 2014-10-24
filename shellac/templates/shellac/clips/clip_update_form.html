@@ -36,7 +36,7 @@
 
                     {% if field.label == 'Created' %}
                         <div class="input-append date" id="datetimepicker" data-date="{{ form.created.value|date:'Y-m-d H:i:s' }}" >
-                            <input id="id_created" class="form-control" type="text" value="{{ form.created.value|date:'Y-m-d H:i:s' }}" name="created">
+                            <input id="id_created" class="form-control" type="text" value="{{ form.created.value|date:'Y-m-d H:i:s' }}" name="created" required>
                             <span class="add-on"><i class="icon-th"></i></span>
                         </div>
                     {% elif field.label == 'Brand' or field.label == 'Audio file' %}

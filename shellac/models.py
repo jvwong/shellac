@@ -21,27 +21,8 @@ def path_and_rename(path):
         date_prefix = (datetime.datetime.now()).strftime('%Y/%m/%d')
         path_date = os.path.join(path, date_prefix)
         name, ext = filename.split('.')
-
         # set filename as name + random string
         fn = '{}_{}.{}'.format(name, uuid4().hex, ext)
-
-        print("path: %s" % (path,))
-
-        print("instance: %s" % (instance,))
-        print("filename: %s" % (filename,))
-
-        print("date_prefix: %s" % (date_prefix,))
-        print("fn: %s" % (fn,))
-
-        if instance.pk:
-            print("saw an instance with pk")
-            print(instance.pk)
-            ###Update case:
-            ### 1. Remove existing file(s)
-            # if os.path.isfile(filename):
-            #     os.remove(filename)
-            ### 2. Return the new file path
-
         # return the whole path to the file
         return os.path.join(path_date, fn)
     return wrapper
