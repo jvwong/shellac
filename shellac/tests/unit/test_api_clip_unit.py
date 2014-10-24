@@ -279,11 +279,14 @@ class ClipDetailViewSet(APITestCase):
         clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
         clip2.description = "clip2 description"
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
-        self.assertEqual(User.objects.all().count(), 2)
-        self.assertEqual(Clip.objects.all().count(), 2)
 
+        self.assertEqual(User.objects.all().count(), 2)
+        self.assertEqual(Clip.objects.count(), 2)
+
+        qsaved = Clip.objects.all()
+        qclip = qsaved.get(author=user1.person)
         self.client.login(username='andrea', password='a')
-        response = self.client.get('/api/clips/1/')
+        response = self.client.get('/api/clips/' + str(qclip.pk) + '/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         resp = response.data
@@ -316,8 +319,11 @@ class ClipDetailViewSet(APITestCase):
         self.assertEqual(User.objects.all().count(), 2)
         self.assertEqual(Clip.objects.all().count(), 2)
 
+        qsaved = Clip.objects.all()
+        qclip = qsaved.get(author=user1.person)
+
         self.client.login(username='jvwong', password='j')
-        response = self.client.get('/api/clips/1/')
+        response = self.client.get('/api/clips/' + str(qclip.pk) + '/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         resp = response.data
@@ -342,6 +348,7 @@ class ClipDetailViewSet(APITestCase):
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
+
         # setFileAttributefromLocal(clip1.audio_file, audio_path, "song.mp3")
         self.assertEqual(User.objects.all().count(), 1)
         self.assertEqual(Clip.objects.all().count(), 1)
@@ -350,7 +357,7 @@ class ClipDetailViewSet(APITestCase):
         f = open(audio_path, "rb")
 
         self.client.login(username='andrea', password='a')
-        response = self.client.put('/api/clips/1/', data={'title': 'updated clip1 title',
+        response = self.client.put('/api/clips/' + str(clip1.pk) + '/', data={'title': 'updated clip1 title',
                                                          'author': 'http://testserver/api/people/andrea/',
                                                          'description': 'updated clip1 description',
                                                          'audio_file': f})
@@ -382,7 +389,7 @@ class ClipDetailViewSet(APITestCase):
         f = open(audio_path, "rb")
 
         self.client.login(username='andrea', password='a')
-        response = self.client.patch('/api/clips/1/',
+        response = self.client.patch('/api/clips/' + str(clip1.pk) + '/',
                                      data={'title': 'updated clip1 title', 'plays': 100})
 
         resp = response.data
@@ -408,7 +415,7 @@ class ClipDetailViewSet(APITestCase):
         f = open(audio_path, "rb")
 
         self.client.login(username='jvwong', password='j')
-        response = self.client.put('/api/clips/1/', data={'title': 'updated clip1 title',
+        response = self.client.put('/api/clips/' + str(clip1.pk) + '/', data={'title': 'updated clip1 title',
                                                          'author': 'http://testserver/api/users/andrea/',
                                                          'description': 'updated clip1 description',
                                                          'audio_file': f})
@@ -435,12 +442,12 @@ class ClipDetailViewSet(APITestCase):
 
         #A 204 indicated modified resource
         self.client.login(username='andrea', password='a')
-        response = self.client.delete('/api/clips/1/')
+        response = self.client.delete('/api/clips/' + str(clip1.pk) + '/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         # A get response to NOT match
         self.assertEqual(Clip.objects.all().count(), 1)
-        r = self.client.get("/api/categories/1/")
+        r = self.client.get('/api/categories/' + str(clip1.pk) + '/')
         self.assertEqual(r.status_code, 404)
 
         cleanClips()
@@ -462,7 +469,7 @@ class ClipDetailViewSet(APITestCase):
 
         #A 403 Forbidden indicates non-owner attempts to alter resource
         self.client.login(username='jvwong', password='j')
-        response = self.client.delete('/api/clips/1/')
+        response = self.client.delete('/api/clips/' + str(clip1.pk) + '/')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         cleanClips()
