@@ -26,7 +26,7 @@
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
 /* xs (phones) */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .clip-detail-container .clip-detail-description dt {
     margin-top: 0.5em;
     font-size: 0.95em;
@@ -598,7 +598,7 @@ select#id_categories.form-control {
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
 /* xs (phones) */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .clip-detail-container .clip-detail-description dt {
     margin-top: 0.5em;
     font-size: 0.95em;
@@ -726,11 +726,12 @@ select#id_categories.form-control {
 .modal .modal-dialog .modal-content .modal-footer {
   border-top: none;
 }
-.modal .modal-dialog .modal-content .modal-footer button {
-  position: absolute;
-  bottom: 1em;
-  right: 1em;
-}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 /*
  * Sidebar
  */
@@ -2567,11 +2568,12 @@ body {
 .modal .modal-dialog .modal-content .modal-footer {
   border-top: none;
 }
-.modal .modal-dialog .modal-content .modal-footer button {
-  position: absolute;
-  bottom: 1em;
-  right: 1em;
-}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 
 /*
  * Generic Player styling
