@@ -4912,10 +4912,10 @@ var shell = (function () {
     initModule,
 
     configMap = {
-        follow_button_html: String() + '<button type="button" class="btn btn-default relationships follow">Follow</button>',
-        unfollow_button_html: String() + '<button type="button" class="btn btn-default relationships unfollow">Unfollow</button>',
-        block_button_html: String() + '<button type="button" class="btn btn-default relationships block">Block</button>',
-        unblock_button_html: String() + '<button type="button" class="btn btn-default relationships unblock">Unblock</button>'
+        follow_button_html: String() + '<a role="button" type="button" class="btn btn-default relationships follow"><span class="icon-user-add"></span><span class="mls"> Follow</span></a>',
+        unfollow_button_html: String() + '<a role="button" type="button" class="btn btn-default relationships unfollow"><span class="icon-minus"></span><span class="mls"> Unfollow</span></a>',
+        block_button_html: String() + '<a role="button" type="button" class="btn btn-default relationships block"><span class=""></span><span class="mls"> Block</span></a>',
+        unblock_button_html: String() + '<a role="button" type="button" class="btn btn-default relationships unblock"><span class=""></span><span class="mls"> Unblock</span></a>'
     },
 
     stateMap = {
@@ -5004,7 +5004,7 @@ var shell = (function () {
         });
 
         //rebind listeners
-        jqueryMap.$person_list.find('button.btn.relationships').on('click', onClickRelationshipsButton);
+        jqueryMap.$person_list.find('.btn.relationships').on('click', onClickRelationshipsButton);
     };
 
 
@@ -5017,7 +5017,8 @@ var shell = (function () {
      */
     onClickRelationshipsButton = function(event) {
 
-        var $parent, $button, $div_btn_group, $div_status, username,
+        var $parent, $button, $div_btn_group, $div_status,
+            username, button_text,
             from_person = String(), to_person = String(),
             http_method = '',
             payload = {},
@@ -5026,6 +5027,8 @@ var shell = (function () {
             button_update = String();
 
         $button = $(this);
+        button_text = $button.find('.mls').html().trim();
+
         $parent = ($button.parent()).parent();
         $div_status = $parent.find('.partial-relationships-description-content.status');
         $div_btn_group = $button.parent();
@@ -5034,7 +5037,7 @@ var shell = (function () {
         from_person = stateMap.endpoint + "people/" + stateMap.username + "/";
         to_person = stateMap.endpoint + "people/" + username + "/";
 
-        if($button.html() === 'Follow' & $div_btn_group.attr('data-status') === '')
+        if(button_text === 'Follow' & $div_btn_group.attr('data-status') === '')
         {
             //No Relationship exists --- POST
             http_method = 'POST';
@@ -5042,7 +5045,7 @@ var shell = (function () {
             status_update = status = 'following';
             button_update = 'Unfollow';
         }
-        else if($button.html() === 'Follow' & $div_btn_group.attr('data-status') === 'follower')
+        else if(button_text === 'Follow' & $div_btn_group.attr('data-status') === 'follower')
         {
             //There is a Person with a following Relationship --- POST
             //No Relationship exists --- POST
@@ -5056,7 +5059,7 @@ var shell = (function () {
         {
             var relationship = stateMap.relationships_db({from_person: from_person, to_person: to_person}).first() || {};
 
-            if($button.html() === 'Unfollow' & $div_btn_group.attr('data-status') === 'following')
+            if(button_text === 'Unfollow' & $div_btn_group.attr('data-status') === 'following')
             {
                 //Relationship exists --- DELETE
                 http_method = 'DELETE';
@@ -5064,7 +5067,7 @@ var shell = (function () {
                 status_update = status = '';
                 button_update = 'Follow';
             }
-            else if($button.html() === 'Unfollow' & $div_btn_group.attr('data-status') === 'friend')
+            else if(button_text === 'Unfollow' & $div_btn_group.attr('data-status') === 'friend')
             {
                 //Relationship exists --- DELETE
                 http_method = 'DELETE';
@@ -5115,11 +5118,14 @@ var shell = (function () {
             });
 
             matching.each(function(index, element){
-                //update button text
-                $(this).find('button').html(button_update);
                 //update btn group data-status
+//                console.log($(this).find('.btn-group.partial-relationships-action'));
+//                console.log(status_update);
                 $(this).find('.btn-group.partial-relationships-action').attr('data-status', status_update);
-                //update div_status
+
+                //update the status tag (div_status) ['following', 'friend', 'follower']
+//                console.log($(this).find('.partial-relationships-description-content.status'));
+//                console.log(status_update);
                 $(this).find('.partial-relationships-description-content.status').html(status_update);
             });
             setActionButtons(jqueryMap.$person_list);
