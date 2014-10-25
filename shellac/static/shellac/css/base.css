@@ -1264,8 +1264,8 @@ select#id_categories.form-control {
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/last.svg);
 }
 .save {
-  background-image: url(/static/shellac/assets/IcoMoon--limited--master/Icons/PNG/32px/cloud-upload.png);
-  background-image: none, url(/static/shellac/assets/IcoMoon--limited--master/Icons/SVG/cloud-upload.svg);
+  background-image: url(/static/shellac/assets/icons_ffffff/PNG/cloud.png);
+  background-image: none, url(/static/shellac/assets/icons_ffffff/SVG/cloud.svg);
   background-size: 58%;
   background-position: 54% 51%;
 }
@@ -2247,8 +2247,8 @@ body {
   background-image: none, url(/static/shellac/assets/players/bar/image/icomoon/entypo-25px-ffffff/SVG/last.svg);
 }
 .save {
-  background-image: url(/static/shellac/assets/IcoMoon--limited--master/Icons/PNG/32px/cloud-upload.png);
-  background-image: none, url(/static/shellac/assets/IcoMoon--limited--master/Icons/SVG/cloud-upload.svg);
+  background-image: url(/static/shellac/assets/icons_ffffff/PNG/cloud.png);
+  background-image: none, url(/static/shellac/assets/icons_ffffff/SVG/cloud.svg);
   background-size: 58%;
   background-position: 54% 51%;
 }

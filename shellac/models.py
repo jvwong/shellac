@@ -169,7 +169,7 @@ def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs)
         #create a default Playlist for this Person
         playlist, created = Playlist.objects.get_or_create(person=p, title='default')
 
-        # #Assign groups -- Contributors default
+        # # #Assign groups -- Contributors default
         # try:
         #     contributor = Group.objects.get(name='Contributor')
         #     listener = Group.objects.get(name='Listener')
@@ -178,7 +178,7 @@ def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs)
         #     # it case the improbable should happen
         #     print('ObjectDoesNotExist: Groups')
         # else:
-        #     instance.groups = [user]
+        #     instance.groups = [listener]
 
 
 ##########################################################################################
