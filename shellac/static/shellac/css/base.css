@@ -256,6 +256,9 @@ div.content-relationships div#accordion.panel-group div.panel div.panel-body {
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
+a.btn.navbar-btn {
+  color: #777777;
+}
 .btn-file {
   position: relative;
   overflow: hidden;
@@ -388,6 +391,9 @@ select#id_categories.form-control {
 }
 /* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
+a.btn.navbar-btn {
+  color: #777777;
+}
 .btn-file {
   position: relative;
   overflow: hidden;
