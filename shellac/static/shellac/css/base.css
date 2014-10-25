@@ -797,6 +797,7 @@ select#id_categories.form-control {
   font-variant: normal;
   text-transform: none;
   line-height: 1;
+  font-size: 1.2em;
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -2646,6 +2647,7 @@ body {
   font-variant: normal;
   text-transform: none;
   line-height: 1;
+  font-size: 1.2em;
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
