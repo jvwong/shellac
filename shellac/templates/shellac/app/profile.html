@@ -40,7 +40,7 @@
                 <div class="partial-profile-description person">
                     <p class="partial-profile-description-content email">
                         <a class="partial-profile-app" href="{% url 'shellac_app' person.username 'following' %}">
-                            <span class="glyphicon glyphicon-headphones">&nbsp;</span>{{ person.username }}
+                            <span class="icon-sound"></span><span class="mls"> {{ person.username }}</span>
                         </a>
                     </p><hr/>
                     <p class="partial-profile-description-content joined">{{ person.joined|date:"M d, Y" }}</p>

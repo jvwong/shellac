@@ -53,7 +53,7 @@
                     </button>
                     {% block navbar-header-brand %}
                     <a data-toggle="tooltip" data-placement="bottom" title="My Playlist" class="navbar-brand" href="{% url 'shellac_app' %}">
-                        <span class="glyphicon glyphicon-headphones"></span>&nbsp;SHELLAC
+                        <span class="icon-sound"></span><span class="mls"> SHELLAC</span>
                     </a>
                     {% endblock navbar-header-brand %}
                 </div>
@@ -82,12 +82,12 @@
                         </li>
                         <li id="nav-navbar-right-bar-myClips">
                             <a data-toggle="tooltip" data-placement="bottom" title="Clips" href="{% url 'shellac_clip_list' %}">
-                                <span class="icon-sound"></span><span class="mls"></span>
+                                <span class="icon-list"></span><span class="mls"></span>
                             </a>
                         </li>
                         <li id="nav-navbar-right-bar-record">
                             <a data-toggle="tooltip" data-placement="bottom" title="Upload" href="{% url 'shellac_clip_create' %}">
-                                <span class="glyphicon glyphicon-record"></span>
+                                <span class="icon-add-to-list"></span><span class="mls"></span>
                             </a>
                         </li>
                         {% endblock navbar-collapse-right-bar %}
@@ -95,12 +95,12 @@
                         {% block navbar-collapse-right-dropdown %}
                         <li id=" nav-navbar-right-dropdown" class="dropdown">
                             <a data-placement="bottom" title="Settings" href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-cog"></span>
+                                <span class="icon-cog"></span><span class="mls"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li id="nav-navbar-right-bar-user">
                                     <a id="navbar-collapse-right-dropdown-user" href="{% url 'user_detail' user.id %}">
-                                        My Account
+                                        <span class="icon-vcard"></span><span class="mls"> My Account</span>
                                     </a>
                                 </li>
                                 <li class="divider"></li>
