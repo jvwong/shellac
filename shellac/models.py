@@ -15,6 +15,9 @@ from audio.fields import AudioField
 
 from shellac import util
 
+APP_DIR = os.path.abspath(os.path.dirname(__file__))
+DEFAULT_AVATAR = os.path.abspath(os.path.join(APP_DIR, './static/shellac/assets/avatar.jpeg'))
+
 def path_and_rename(path):
     def wrapper(instance, filename):
         date_prefix = (datetime.datetime.now()).strftime('%Y/%m/%d')
@@ -41,8 +44,7 @@ class PersonManager(models.Model):
     pass
 
 ## One-to-one model -- extend User to accomodate relationships
-APP_DIR = os.path.abspath(os.path.dirname(__file__))
-DEFAULT_AVATAR = os.path.abspath(os.path.join(APP_DIR, './static/shellac/assets/avatar.jpeg'))
+
 class Person(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     username = models.CharField(max_length=30, editable=False)
@@ -155,30 +157,18 @@ def on_person_delete(sender, instance, **kwargs):
 ##########################################################################################
 ###                             BEGIN User Signals                                     ###
 ##########################################################################################
-from django.contrib.auth.models import Group
-from django.core.exceptions import ObjectDoesNotExist
 # Receive the post_save signal
 @receiver(post_save, sender=User)
 def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs):
 
     if created:
-        #create a Person
+        ###create a Person
         p = Person(user=instance)
+        util.setFileAttributefromLocal(p.avatar, DEFAULT_AVATAR, 'avatar.jpeg')
         p.save()
 
         #create a default Playlist for this Person
         playlist, created = Playlist.objects.get_or_create(person=p, title='default')
-
-        # # #Assign groups -- Contributors default
-        # try:
-        #     contributor = Group.objects.get(name='Contributor')
-        #     listener = Group.objects.get(name='Listener')
-        # except ObjectDoesNotExist:
-        #     # group should exist, but this is just for safety's sake,
-        #     # it case the improbable should happen
-        #     print('ObjectDoesNotExist: Groups')
-        # else:
-        #     instance.groups = [listener]
 
 
 ##########################################################################################

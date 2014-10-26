@@ -7,7 +7,7 @@ from django.core.files.base import ContentFile
 
 def setFileAttributefromLocal(field, path, fname):
     with open(path, 'rb') as f:
-        field.save(fname, File(f), save=True)
+        field.save(fname, File(f), save=False)
 
 # thumbnailer converts the given file to the size, preserving the aspect ratio as a jpeg
 def thumbnailer(filename, size):

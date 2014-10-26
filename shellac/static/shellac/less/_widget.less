@@ -2,67 +2,71 @@
 @import "_fonts";
 @import "_colors";
 
-a.btn.navbar-btn
-{
-  color: @base-glyphicon;
-}
+//******* BEGIN btn
+  a.btn.navbar-btn
+  {
+    color: @base-glyphicon;
+  }
 
-.btn-file {
-    position: relative;
-    overflow: hidden;
-}
-.btn-file input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
-    cursor: inherit;
-    display: block;
-    padding: 0px;
-}
+  .btn-file {
+      position: relative;
+      overflow: hidden;
+  }
+  .btn-file input[type=file] {
+      position: absolute;
+      top: 0;
+      right: 0;
+      min-width: 100%;
+      min-height: 100%;
+      font-size: 100px;
+      text-align: right;
+      filter: alpha(opacity=0);
+      opacity: 0;
+      outline: none;
+      background: white;
+      cursor: inherit;
+      display: block;
+      padding: 0px;
+  }
 
-.btn.btn-default.btn-file{
-    padding: 0px;
-    border: none;
-}
+  .btn.btn-default.btn-file{
+      padding: 0px;
+      border: none;
+  }
+//******* END btn
 
-.form-group, .form-signin
-{
-    ul.errorlist
-    {
-        list-style-type: none;
-        padding-top: 5px;
-        padding-left: 5px;
+//******* BEGIN Forms
+  .form-group, .form-signin
+  {
+      ul.errorlist
+      {
+          list-style-type: none;
+          padding-top: 5px;
+          padding-left: 5px;
 
-        li
-        {
-            color: red;
-        }
-    }
-}
+          li
+          {
+              color: red;
+          }
+      }
+  }
 
-textarea.form-control
-{
-    height: 5em;
-}
+  textarea.form-control
+  {
+      height: 5em;
+  }
 
-select#id_categories.form-control
-{
-    height: 10em;
-}
+  select#id_categories.form-control
+  {
+      height: 10em;
+  }
 
-.upload-file-text
-{
-    margin-top: 5px;
-    margin-left: 5px;
-}
+  .upload-file-text
+  {
+      margin-top: 5px;
+      margin-left: 5px;
+  }
+//******* END Forms
 
 .label {
   position: relative;
@@ -75,42 +79,101 @@ select#id_categories.form-control
   color: #000000;
 }
 
-@alert-message-background: @brand-info;
+//******* BEGIN Alert
+  @alert-message-background: @brand-info;
 
-.alert
+  .alert
+  {
+    position: fixed;
+    z-index: 10000;
+    width: 10em;
+    height: 2.5em;
+    bottom: 3em;
+    margin-left: 50%;
+    left: -5em;
+
+    border: none;
+    padding: 0.5em;
+
+    text-align: center;
+    font-size: @font_size_md;
+    color: black;
+    background-color: @brand-primary;
+    .rounded(15px);
+  }
+
+  .alert-warning
+  {
+    background-color: @brand-warning;
+  }
+
+  .alert-success
+  {
+    background-color: @brand-success;
+  }
+  .alert-info
+  {
+    background-color: @brand-info;
+  }
+  .alert-danger
+  {
+    background-color: @brand-danger;
+  }
+//******* END Alert
+
+
+//******* BEGIN Lists
+  dl.dl-horizontal
+  {
+    dt
+    {
+      font-size: @font_size_lg;
+    }
+
+    dd
+    {
+      font-size: @font_size_lg;
+    }
+  }
+//******* END Lists
+
+
+/* lg (large desktops, 1200px and up) */
+@media (min-width: 1200px)
 {
-  position: fixed;
-  z-index: 10000;
-  width: 10em;
-  height: 2.5em;
-  bottom: 3em;
-  margin-left: 50%;
-  left: -5em;
-
-  border: none;
-  padding: 0.5em;
-
-  text-align: center;
-  font-size: @font_size_md;
-  color: black;
-  background-color: @brand-primary;
-  .rounded(15px);
 }
 
-.alert-warning
+/* md (desktops, 992px and up) */
+@media (min-width: 992px)
 {
-  background-color: @brand-warning;
 }
 
-.alert-success
+/* sm (tablets, 768px and up) */
+@media (min-width: 768px)
 {
-  background-color: @brand-success;
 }
-.alert-info
+
+/* xs (phones) */
+@media (max-width: 767px)
 {
-  background-color: @brand-info;
+  dl.dl-horizontal {
+    dt {
+      margin-top: 0.5em;
+      font-size: @font_size_md;
+    }
+
+    dd {
+      font-size: @font_size_md;
+    }
+  }
 }
-.alert-danger
+
+/* xs Nexus4 portrait*/
+@media (max-width: 640px)
 {
-  background-color: @brand-danger;
+}
+
+/* xs Nexus4 portrait*/
+@media (max-width: 384px)
+{
 }

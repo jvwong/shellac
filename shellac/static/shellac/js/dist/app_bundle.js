@@ -12951,6 +12951,11 @@ var shellac = (function () {
             {
                 if(err)
                 { console.warn(err); }
+
+                if(DEBUG)
+                {
+                    console.log(utils.dom.get(container, '.sm2-playlist-wrapper .sm2-playlist-bd'));
+                }
             });
         }
         else
@@ -13960,7 +13965,8 @@ var bar_ui = (function() {
                 exportPositionsMap  : exportPositionsMap,
                 validatedStringID   : validatedStringID,
                 importPositionsMap  : importPositionsMap,
-                validatedNumericID  : validatedNumericID
+                validatedNumericID  : validatedNumericID,
+                resetLastSelected   : resetLastSelected
             };
 
         }
@@ -14534,6 +14540,7 @@ var bar_ui = (function() {
                 {
                     setTitle(item_current);
                     soundObject.togglePause();
+                    utils.css.toggle(item_current, css.selected);
                     if(position)
                     {
                         soundObject.setPosition(position);
@@ -14701,9 +14708,12 @@ var bar_ui = (function() {
 
             //buggy behaviour -- preventdefault() does not apply to child tags within anchor
             template = [
-                '<a data-id="id_' + clip.id + '"href="', clip.audio_file_url,'">',
-                    clip.owner, ' - ', clip.title,
-                '</a>'
+                    '<a class="sm2-track" data-id="id_', clip.id, '" href="', clip.audio_file_url,'">',
+                        clip.owner, ' - ', clip.title,
+                    '</a>',
+                    '<a data-id="id_', clip.id, '" href="#delete-track">',
+                        '<span class="icon-cross2 sm2-delete-track"></span>',
+                    '</a>',
             ].join('');
 
             liNode = document.createElement('li');

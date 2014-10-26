@@ -16,25 +16,10 @@
 .clip-detail-container .clip-detail-img img {
   max-width: 150px;
 }
-.clip-detail-container .clip-detail-description dt {
-  font-size: 1em;
-}
-.clip-detail-container .clip-detail-description dd {
-  font-size: 1em;
-}
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
 /* xs (phones) */
-@media (max-width: 767px) {
-  .clip-detail-container .clip-detail-description dt {
-    margin-top: 0.5em;
-    font-size: 0.95em;
-  }
-  .clip-detail-container .clip-detail-description dd {
-    font-size: 0.95em;
-  }
-}
 /* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
 
@@ -72,9 +57,6 @@
 /*
 * /info styling
 */
-.shellac-info .shellac-info-section .shellac-info-section-detail .dl-horizontal dd ul {
-  margin-bottom: 0.5em;
-}
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
@@ -103,7 +85,7 @@
   }
 }
 /* xs (phones) */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   main {
     width: 100%;
   }
@@ -136,34 +118,42 @@
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
+.content-profile {
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 500px;
+}
 .content-profile .partial-profile {
-  margin-top: 25px;
+  border: solid thin #808080;
 }
 .content-profile .partial-profile .partial-profile-avatar {
-  float: left;
+  border: solid thin #808080;
+  border-color: red;
 }
-.content-profile .partial-profile .partial-profile-avatar img {
-  width: 200px;
+.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-img_panel {
+  border: solid thin #808080;
+}
+.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-img_panel .partial-profile-avatar-img_panel-input_panel {
+  border: solid thin #808080;
+}
+.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-img_panel .partial-profile-avatar-img_panel-input_panel img {
+  width: 150px;
+}
+.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-app_panel {
+  border: solid thin #808080;
 }
 .content-profile .partial-profile .partial-profile-description {
-  margin-left: 225px;
-  padding-top: 25px;
+  border: solid thin #808080;
+  border-color: blue;
 }
-.content-profile .partial-profile button {
-  margin-top: 1em;
-  width: 200px;
+.content-profile .partial-profile .partial-profile-description .partial-profile-description-content {
+  border: solid thin #808080;
 }
-@media (max-width: 480px) {
-  .content-profile {
-    text-align: center;
-  }
-  .content-profile .partial-profile .partial-profile-avatar {
-    float: none;
-  }
-  .content-profile .partial-profile .partial-profile-description {
-    margin-left: 0px;
-  }
-}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 
 /*
 * /relations/ styling
@@ -343,6 +333,27 @@ select#id_categories.form-control {
 .alert-danger {
   background-color: #d9534f;
 }
+dl.dl-horizontal dt {
+  font-size: 1em;
+}
+dl.dl-horizontal dd {
+  font-size: 1em;
+}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+@media (max-width: 767px) {
+  dl.dl-horizontal dt {
+    margin-top: 0.5em;
+    font-size: 0.95em;
+  }
+  dl.dl-horizontal dd {
+    font-size: 0.95em;
+  }
+}
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 
 /*---------------------------------------------------
     LESS Elements 0.9
@@ -384,7 +395,7 @@ select#id_categories.form-control {
   }
 }
 /* xs (phones) */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   main {
     width: 100%;
   }
@@ -478,6 +489,27 @@ select#id_categories.form-control {
 .alert-danger {
   background-color: #d9534f;
 }
+dl.dl-horizontal dt {
+  font-size: 1em;
+}
+dl.dl-horizontal dd {
+  font-size: 1em;
+}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+@media (max-width: 767px) {
+  dl.dl-horizontal dt {
+    margin-top: 0.5em;
+    font-size: 0.95em;
+  }
+  dl.dl-horizontal dd {
+    font-size: 0.95em;
+  }
+}
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 /*
 * Permalink
 */
@@ -490,34 +522,42 @@ select#id_categories.form-control {
 /*
  * partials/profile/person
  */
+.content-profile {
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 500px;
+}
 .content-profile .partial-profile {
-  margin-top: 25px;
+  border: solid thin #808080;
 }
 .content-profile .partial-profile .partial-profile-avatar {
-  float: left;
+  border: solid thin #808080;
+  border-color: red;
 }
-.content-profile .partial-profile .partial-profile-avatar img {
-  width: 200px;
+.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-img_panel {
+  border: solid thin #808080;
+}
+.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-img_panel .partial-profile-avatar-img_panel-input_panel {
+  border: solid thin #808080;
+}
+.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-img_panel .partial-profile-avatar-img_panel-input_panel img {
+  width: 150px;
+}
+.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-app_panel {
+  border: solid thin #808080;
 }
 .content-profile .partial-profile .partial-profile-description {
-  margin-left: 225px;
-  padding-top: 25px;
+  border: solid thin #808080;
+  border-color: blue;
 }
-.content-profile .partial-profile button {
-  margin-top: 1em;
-  width: 200px;
+.content-profile .partial-profile .partial-profile-description .partial-profile-description-content {
+  border: solid thin #808080;
 }
-@media (max-width: 480px) {
-  .content-profile {
-    text-align: center;
-  }
-  .content-profile .partial-profile .partial-profile-avatar {
-    float: none;
-  }
-  .content-profile .partial-profile .partial-profile-description {
-    margin-left: 0px;
-  }
-}
+/* lg (large desktops, 1200px and up) */
+/* md (desktops, 992px and up) */
+/* sm (tablets, 768px and up) */
+/* xs (phones) */
+/* xs Nexus4 portrait*/
+/* xs Nexus4 portrait*/
 /*
  * partials/relationship
  */
@@ -588,25 +628,10 @@ select#id_categories.form-control {
 .clip-detail-container .clip-detail-img img {
   max-width: 150px;
 }
-.clip-detail-container .clip-detail-description dt {
-  font-size: 1em;
-}
-.clip-detail-container .clip-detail-description dd {
-  font-size: 1em;
-}
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
 /* xs (phones) */
-@media (max-width: 767px) {
-  .clip-detail-container .clip-detail-description dt {
-    margin-top: 0.5em;
-    font-size: 0.95em;
-  }
-  .clip-detail-container .clip-detail-description dd {
-    font-size: 0.95em;
-  }
-}
 /* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
 /*
@@ -2311,40 +2336,49 @@ select#id_categories.form-control {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 .sm2-playlist-wrapper ul li:nth-child(odd) {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(255, 255, 255, 0.08);
 }
-.sm2-playlist-wrapper ul li a {
-  display: block;
+.sm2-playlist-wrapper ul li a.sm2-track {
+  display: inline-block;
   padding: 0.5em 0.25em 0.5em 0.75em;
-  margin-right: 0.5em;
   font-size: 90%;
   vertical-align: middle;
+  width: 85%;
 }
-.sm2-playlist-wrapper ul li a.sm2-exclude {
+.sm2-playlist-wrapper ul li .sm2-delete-track {
+  display: inline-block;
+  padding: 0.5em 0.25em 0.5em 0.75em;
+  font-size: 95%;
+  vertical-align: middle;
+  width: 15%;
+  text-align: right;
+}
+.sm2-playlist-wrapper ul li a.sm2-track.sm2-exclude {
   display: inline-block;
 }
-.sm2-playlist-wrapper ul li a.sm2-exclude .label {
+.sm2-playlist-wrapper ul li a.sm2-track.sm2-exclude .label {
   font-size: 95%;
   line-height: 1em;
   margin-left: 0px;
   padding: 2px 4px;
 }
-.sm2-playlist-wrapper ul li:hover a {
+.sm2-playlist-wrapper ul li:hover a.sm2-track {
   background-color: rgba(0, 0, 0, 0.2);
   background-image: url(/static/shellac/assets/players/bar/image/black-20.png);
   background-image: none, none;
 }
-.sm2-bar-ui.dark-text .sm2-playlist-wrapper ul li:hover a {
+.sm2-bar-ui.dark-text .sm2-playlist-wrapper ul li:hover a.sm2-track {
   background-color: rgba(255, 255, 255, 0.1);
   background-image: url(/static/shellac/assets/players/bar/image/black-10.png);
   background-image: none, none;
 }
-.sm2-playlist-wrapper ul li.selected a {
+.sm2-playlist-wrapper ul li.selected a.sm2-track {
   background-color: rgba(0, 0, 0, 0.25);
   background-image: url(/static/shellac/assets/players/bar/image/black-20.png);
   background-image: none, none;
+  color: #f0ad4e;
 }
-.sm2-bar-ui.dark-text ul li.selected a {
+.sm2-bar-ui.dark-text ul li.selected a.sm2-track {
   background-color: rgba(255, 255, 255, 0.1);
   background-image: url(/static/shellac/assets/players/bar/image/black-10.png);
   background-image: none, none;
@@ -4169,40 +4203,49 @@ body {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 .sm2-playlist-wrapper ul li:nth-child(odd) {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(255, 255, 255, 0.08);
 }
-.sm2-playlist-wrapper ul li a {
-  display: block;
+.sm2-playlist-wrapper ul li a.sm2-track {
+  display: inline-block;
   padding: 0.5em 0.25em 0.5em 0.75em;
-  margin-right: 0.5em;
   font-size: 90%;
   vertical-align: middle;
+  width: 85%;
 }
-.sm2-playlist-wrapper ul li a.sm2-exclude {
+.sm2-playlist-wrapper ul li .sm2-delete-track {
+  display: inline-block;
+  padding: 0.5em 0.25em 0.5em 0.75em;
+  font-size: 95%;
+  vertical-align: middle;
+  width: 15%;
+  text-align: right;
+}
+.sm2-playlist-wrapper ul li a.sm2-track.sm2-exclude {
   display: inline-block;
 }
-.sm2-playlist-wrapper ul li a.sm2-exclude .label {
+.sm2-playlist-wrapper ul li a.sm2-track.sm2-exclude .label {
   font-size: 95%;
   line-height: 1em;
   margin-left: 0px;
   padding: 2px 4px;
 }
-.sm2-playlist-wrapper ul li:hover a {
+.sm2-playlist-wrapper ul li:hover a.sm2-track {
   background-color: rgba(0, 0, 0, 0.2);
   background-image: url(/static/shellac/assets/players/bar/image/black-20.png);
   background-image: none, none;
 }
-.sm2-bar-ui.dark-text .sm2-playlist-wrapper ul li:hover a {
+.sm2-bar-ui.dark-text .sm2-playlist-wrapper ul li:hover a.sm2-track {
   background-color: rgba(255, 255, 255, 0.1);
   background-image: url(/static/shellac/assets/players/bar/image/black-10.png);
   background-image: none, none;
 }
-.sm2-playlist-wrapper ul li.selected a {
+.sm2-playlist-wrapper ul li.selected a.sm2-track {
   background-color: rgba(0, 0, 0, 0.25);
   background-image: url(/static/shellac/assets/players/bar/image/black-20.png);
   background-image: none, none;
+  color: #f0ad4e;
 }
-.sm2-bar-ui.dark-text ul li.selected a {
+.sm2-bar-ui.dark-text ul li.selected a.sm2-track {
   background-color: rgba(255, 255, 255, 0.1);
   background-image: url(/static/shellac/assets/players/bar/image/black-10.png);
   background-image: none, none;

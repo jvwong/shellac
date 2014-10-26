@@ -791,6 +791,11 @@ var shellac = (function () {
             {
                 if(err)
                 { console.warn(err); }
+
+                if(DEBUG)
+                {
+                    console.log(utils.dom.get(container, '.sm2-playlist-wrapper .sm2-playlist-bd'));
+                }
             });
         }
         else
