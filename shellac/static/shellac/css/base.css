@@ -667,6 +667,29 @@ dl.dl-horizontal dd {
   color: #2288cc;
   z-index: 50;
 }
+.shellac-grid-element .shellac-grid-element-panel .shellac-playstate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 5px;
+  font-size: 2em;
+  color: #2288cc;
+  z-index: 50;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-playstate .icon {
+  display: none;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-playstate.playing .icon.play {
+  display: block;
+  -webkit-transition: width 2s;
+  transition: width 2s;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-playstate.paused .icon.pause {
+  display: block;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-playstate.stopped .icon.stop {
+  display: block;
+}
 .shellac-grid-element .shellac-grid-element-panel .enqueued.enqueue-icon {
   visibility: visible;
 }
@@ -2524,6 +2547,29 @@ body {
   visibility: hidden;
   color: #2288cc;
   z-index: 50;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-playstate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 5px;
+  font-size: 2em;
+  color: #2288cc;
+  z-index: 50;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-playstate .icon {
+  display: none;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-playstate.playing .icon.play {
+  display: block;
+  -webkit-transition: width 2s;
+  transition: width 2s;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-playstate.paused .icon.pause {
+  display: block;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-playstate.stopped .icon.stop {
+  display: block;
 }
 .shellac-grid-element .shellac-grid-element-panel .enqueued.enqueue-icon {
   visibility: visible;

@@ -848,8 +848,6 @@ var bar_ui = (function() {
 
                         utils.css.remove(dom.o, 'playing');
                         util.PubSub.emit('player-change', 'onstop', this);
-                        //console.log('stopped');
-
                     },
 
                     onfinish: function () {
@@ -859,6 +857,8 @@ var bar_ui = (function() {
                         utils.css.remove(dom.o, 'playing');
 
                         dom.progress.style.left = '0%';
+
+                        util.PubSub.emit('player-change', 'onfinish', this);
 
                         actions.next();
                     }

@@ -12244,7 +12244,20 @@ var shellac = (function () {
     },
 
     css = {
-        playing: 'playing'
+        playing: 'playing',
+        paused: 'paused',
+        stopped: 'stopped'
+    },
+
+    dom_selectors = {
+        grid_element            : '.shellac-grid-element',
+        grid_element_panel      : '.shellac-grid-element-panel',
+        enqueue_icon            : '.enqueue-icon',
+        img_panel               : '.shellac-img-panel',
+        playstate               : '.shellac-playstate',
+        caption_panel           : '.shellac-caption-panel',
+        description_container   : '.shellac-description-container',
+        description_content     : '.shellac-description-content'
     },
 
     jqueryMap = {}, setJqueryMap,
@@ -12573,6 +12586,12 @@ var shellac = (function () {
 
                         '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
 
+                        '<div class="shellac-playstate">' +
+                            '<span class="icon-play icon play"></span>' +
+                            '<span class="icon-pause icon pause"></span>' +
+                            '<span class="icon-stop icon stop"></span>' +
+                        '</div>' +
+
                         '<div class ="shellac-img-panel">' +
                             '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-id="' + object.id + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
                                 '<img class="img-thumbnail shellac-grid-img " src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
@@ -12761,8 +12780,8 @@ var shellac = (function () {
      * @param sm2Object the relevant soundManager sound object
      */
     handlePlayerStateChange = function(state, sm2Object){
-        console.log("handlePlayerStateChange");
-        console.log(state);
+//        console.log("handlePlayerStateChange");
+//        console.log(state);
 
         var selector, nodeList, parent, panel,
             i, j;
@@ -12808,22 +12827,32 @@ var shellac = (function () {
         if( nodeList === undefined || !nodeList.length ){ return; }
 
         parent = nodeList[nodeList.length - 1];
-        panel = utils.dom.getAll(parent, '.shellac-caption-panel');
+        panel = utils.dom.getAll(parent, dom_selectors.playstate);
 
         if( !panel.length ){ return; }
 
         //Query actions: pause(), resume(), togglePause()
-        if(sm2Object.paused || sm2Object.playState === playState.STOPPED)
+//        console.log("sm2Object.paused: %s", sm2Object.paused);
+//        console.log("sm2Object.playState : %s", sm2Object.playState );
+
+        if(sm2Object.paused)
         {
             utils.css.remove(panel[panel.length - 1], css.playing);
+            utils.css.add(panel[panel.length - 1], css.paused);
         }
         else if( sm2Object.playState === playState.PLAYING )
         {
+            utils.css.remove(panel[panel.length - 1], css.paused);
+            utils.css.remove(panel[panel.length - 1], css.stopped);
             utils.css.add(panel[panel.length - 1], css.playing);
         }
-        console.log(sm2Object.playState);
-        console.log(sm2Object.playState);
-        console.log(sm2Object.paused);
+        else if( sm2Object.playState === playState.STOPPED)
+        {
+            utils.css.remove(panel[panel.length - 1], css.playing);
+            utils.css.remove(panel[panel.length - 1], css.paused);
+            utils.css.add(panel[panel.length - 1], css.stopped);
+        }
+
     };
 
 
@@ -14225,8 +14254,6 @@ var bar_ui = (function() {
 
                         utils.css.remove(dom.o, 'playing');
                         util.PubSub.emit('player-change', 'onstop', this);
-                        //console.log('stopped');
-
                     },
 
                     onfinish: function () {
@@ -14236,6 +14263,8 @@ var bar_ui = (function() {
                         utils.css.remove(dom.o, 'playing');
 
                         dom.progress.style.left = '0%';
+
+                        util.PubSub.emit('player-change', 'onfinish', this);
 
                         actions.next();
                     }
