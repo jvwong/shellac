@@ -12554,14 +12554,14 @@ var shellac = (function () {
                     .slice(0,3)
                     .join(" | ")
                     .toString() : "&nbsp;",
-                enqueued = Object.keys(preferencesMap.positionsMap).indexOf(object.id.toString()) === -1 ? '' : 'enqueued',
+                id_x = "id_" + object.id.toString(),
                 rating = '<span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>';
 
             clipString +=
                 '<div class="col-xs-6 col-sm-4 shellac-grid-element">' +
-                    '<div class ="shellac-grid-element-panel">' +
+                    '<div class ="shellac-grid-element-panel ' + id_x + '">' +
 
-                        '<span class="glyphicon enqueue-icon glyphicon-ok-circle ' + enqueued + '"></span>' +
+                        '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
 
                         '<div class ="shellac-img-panel">' +
                             '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-id="' + object.id + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
@@ -12685,46 +12685,61 @@ var shellac = (function () {
      * @param the updated map of clip id's in the playlist
      */
     handlePlaylistChange = function( item, isAdded, pMap ){
-        var anchor, pathname, selected_pathname,
-            parent, enqueue,
-            i, j;
+
+        var anchor, pathname, parent, enqueue,
+            selected_pathname,
+            id_x, id, nodeList, i, j;
 
         //update the positionMap
         preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
 
         //update the particular Clip in the UI
-        anchor = utils.dom.get(item, 'a');
+        anchor = utils.dom.get(item, 'a.sm2-track');
 
         //ensure there is an anchor and the selected is defined
-        if(anchor && stateMap.selected)
-        {
+        // stateMap.selected is defined after a shell click event
+        if(anchor) {
             pathname = util.urlParse(anchor.href).pathname;
-            selected_pathname = util.urlParse(stateMap.selected.dataset.url).pathname;
 
-            //make sure the stateMap last clicked is this one
-            if(selected_pathname === pathname)
-            {
-                parent = stateMap.selected;
+            if (stateMap.selected) {
+                //Case I: stateMap.selected is defined so it's a shell change
+                //Locate the <span class="enqueue-icon"> from stateMap.selected
 
-                //should crawl up the dom to find this
-                do {
-                    parent = parent.parentNode;
-                    enqueue = utils.dom.get(parent, '.enqueue-icon');
-                } while( enqueue.length === 0 && parent.parentNode);
+                selected_pathname = util.urlParse(stateMap.selected.dataset.url).pathname;
 
+                //make sure the stateMap last clicked is this one
+                if (selected_pathname === pathname) {
+                    parent = stateMap.selected;
 
-                if(isAdded)
-                {
-                    utils.css.add(enqueue, 'enqueued');
+                    //should crawl up the dom to find this
+                    do {
+                        parent = parent.parentNode;
+                        enqueue = utils.dom.get(parent, '.enqueue-icon');
+                    } while (enqueue.length === 0 && parent.parentNode);
+
                 }
-                else
-                {
-                    utils.css.remove(enqueue, 'enqueued');
-                }
+                //clear out selected
+                stateMap.selected = undefined;
             }
             else
             {
-                //need to crawl around the dom search for this
+                //Case II: it's a player ui change event or DB load
+                // Find the right <span.enqueue-icon> for the anchor
+                id_x = (anchor.dataset.id).split('_');
+                if( id_x.length < 2 || isNaN( parseInt(id_x[1])) ){ return; }
+
+                id = ['.shellac-grid-element-panel', anchor.dataset.id].join('.');
+                nodeList = utils.dom.getAll(dom.clip_content_container, id);
+
+                //get the last one
+                enqueue = utils.dom.get(nodeList[nodeList.length - 1], '.enqueue-icon');
+            }
+
+            if (isAdded) {
+                utils.css.add(enqueue, 'enqueued');
+            }
+            else {
+                utils.css.remove(enqueue, 'enqueued');
             }
         }
     };
@@ -12954,7 +12969,7 @@ var shellac = (function () {
 
                 if(DEBUG)
                 {
-                    console.log(utils.dom.get(container, '.sm2-playlist-wrapper .sm2-playlist-bd'));
+//                    console.log(utils.dom.get(container, '.sm2-playlist-wrapper .sm2-playlist-bd'));
                 }
             });
         }
@@ -13616,7 +13631,7 @@ var bar_ui = (function() {
              */
             function addToPlaylist( item ) {
 
-                var id = utils.dom.get(item, 'a').dataset.id;
+                var id = utils.dom.get(item, 'a.sm2-track').dataset.id;
 
                 if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE ||
                     item.nodeName.toLowerCase() !== 'li' ||
@@ -13647,9 +13662,10 @@ var bar_ui = (function() {
              * @return true if removed successfully
              */
             function deleteFromPlaylist( item ) {
+                //console.log("deleteFromPlaylist");
 
                 var next,
-                    id = utils.dom.get(item, 'a').dataset.id;
+                    id = utils.dom.get(item, 'a.sm2-track').dataset.id;
 
                 if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE ||
                     item.nodeName.toLowerCase() !== 'li' ||
@@ -14325,6 +14341,7 @@ var bar_ui = (function() {
                     if (target.parentNode) {
 
                         target = utils.dom.getParentAnchor(target);
+                        targetNodeName = target.nodeName.toLowerCase();
 
                         if (!target) {
                             // something went wrong. bail.
@@ -14360,6 +14377,7 @@ var bar_ui = (function() {
 
                         if (offset !== -1) {
                             methodName = target.href.substr(offset+1);
+                            console.log(methodName);
                             if (methodName && actions[methodName]) {
                                 handled = true;
                                 actions[methodName](e);
@@ -14521,7 +14539,7 @@ var bar_ui = (function() {
                 if (href.indexOf('#') !== -1 && !soundObject) {
 
                     //this might be an emptylist
-                    anchor_current = utils.dom.get(item_current, 'a');
+                    anchor_current = utils.dom.get(item_current, 'a.sm2-track');
                     if(anchor_current)
                     {
                         url = anchor_current.href;
@@ -14551,6 +14569,34 @@ var bar_ui = (function() {
                     console.warn('Cannot play: Missing soundObject.');
                 }
 
+            },
+
+            remove: function(e) {
+
+                var target, targetNodeName,
+                    parentTargetNodeName, parent;
+
+                target = e.target || e.srcElement;
+                targetNodeName = target.nodeName.toLowerCase();
+
+                //I might nest the stuff within the anchorso crawl up DOM
+                // to find anchor element, if any
+                if (targetNodeName !== 'a') {
+
+                    target = utils.dom.getParentAnchor(target);
+
+                    parent = target.parentNode;
+                    parentTargetNodeName = parent.nodeName.toLowerCase();
+
+                    if (parentTargetNodeName !== 'li') {
+                        // something went wrong. bail.
+                        return false;
+                    }
+                }
+
+                //so now we have a li -- remove it
+                //this needs to emit a playlist change.
+                playlistController.deleteFromPlaylist(parent);
             },
 
             next: function(/* e */) {
@@ -14711,7 +14757,7 @@ var bar_ui = (function() {
                     '<a class="sm2-track" data-id="id_', clip.id, '" href="', clip.audio_file_url,'">',
                         clip.owner, ' - ', clip.title,
                     '</a>',
-                    '<a data-id="id_', clip.id, '" href="#delete-track">',
+                    '<a data-id="id_', clip.id, '" href="#remove">',
                         '<span class="icon-cross2 sm2-delete-track"></span>',
                     '</a>',
             ].join('');
@@ -14741,9 +14787,6 @@ var bar_ui = (function() {
                 var pMap = playlistController.importPositionsMap(positionsMap);
                 playlistController.data.positionsMap = JSON.parse(JSON.stringify(pMap));
             }
-
-
-
             var item, sid, offset, existing, isRemoved;
 
             //construct the li item from the url

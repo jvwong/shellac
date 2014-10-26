@@ -2352,6 +2352,8 @@ dl.dl-horizontal dd {
   vertical-align: middle;
   width: 15%;
   text-align: right;
+  font-size: 1.2em;
+  cursor: pointer;
 }
 .sm2-playlist-wrapper ul li a.sm2-track.sm2-exclude {
   display: inline-block;
@@ -4219,6 +4221,8 @@ body {
   vertical-align: middle;
   width: 15%;
   text-align: right;
+  font-size: 1.2em;
+  cursor: pointer;
 }
 .sm2-playlist-wrapper ul li a.sm2-track.sm2-exclude {
   display: inline-block;

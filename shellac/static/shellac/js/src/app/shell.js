@@ -394,14 +394,14 @@ var shellac = (function () {
                     .slice(0,3)
                     .join(" | ")
                     .toString() : "&nbsp;",
-                enqueued = Object.keys(preferencesMap.positionsMap).indexOf(object.id.toString()) === -1 ? '' : 'enqueued',
+                id_x = "id_" + object.id.toString(),
                 rating = '<span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>';
 
             clipString +=
                 '<div class="col-xs-6 col-sm-4 shellac-grid-element">' +
-                    '<div class ="shellac-grid-element-panel">' +
+                    '<div class ="shellac-grid-element-panel ' + id_x + '">' +
 
-                        '<span class="glyphicon enqueue-icon glyphicon-ok-circle ' + enqueued + '"></span>' +
+                        '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
 
                         '<div class ="shellac-img-panel">' +
                             '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-id="' + object.id + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
@@ -525,46 +525,61 @@ var shellac = (function () {
      * @param the updated map of clip id's in the playlist
      */
     handlePlaylistChange = function( item, isAdded, pMap ){
-        var anchor, pathname, selected_pathname,
-            parent, enqueue,
-            i, j;
+
+        var anchor, pathname, parent, enqueue,
+            selected_pathname,
+            id_x, id, nodeList, i, j;
 
         //update the positionMap
         preferencesMap.positionsMap = JSON.parse(JSON.stringify(pMap));
 
         //update the particular Clip in the UI
-        anchor = utils.dom.get(item, 'a');
+        anchor = utils.dom.get(item, 'a.sm2-track');
 
         //ensure there is an anchor and the selected is defined
-        if(anchor && stateMap.selected)
-        {
+        // stateMap.selected is defined after a shell click event
+        if(anchor) {
             pathname = util.urlParse(anchor.href).pathname;
-            selected_pathname = util.urlParse(stateMap.selected.dataset.url).pathname;
 
-            //make sure the stateMap last clicked is this one
-            if(selected_pathname === pathname)
-            {
-                parent = stateMap.selected;
+            if (stateMap.selected) {
+                //Case I: stateMap.selected is defined so it's a shell change
+                //Locate the <span class="enqueue-icon"> from stateMap.selected
 
-                //should crawl up the dom to find this
-                do {
-                    parent = parent.parentNode;
-                    enqueue = utils.dom.get(parent, '.enqueue-icon');
-                } while( enqueue.length === 0 && parent.parentNode);
+                selected_pathname = util.urlParse(stateMap.selected.dataset.url).pathname;
 
+                //make sure the stateMap last clicked is this one
+                if (selected_pathname === pathname) {
+                    parent = stateMap.selected;
 
-                if(isAdded)
-                {
-                    utils.css.add(enqueue, 'enqueued');
+                    //should crawl up the dom to find this
+                    do {
+                        parent = parent.parentNode;
+                        enqueue = utils.dom.get(parent, '.enqueue-icon');
+                    } while (enqueue.length === 0 && parent.parentNode);
+
                 }
-                else
-                {
-                    utils.css.remove(enqueue, 'enqueued');
-                }
+                //clear out selected
+                stateMap.selected = undefined;
             }
             else
             {
-                //need to crawl around the dom search for this
+                //Case II: it's a player ui change event or DB load
+                // Find the right <span.enqueue-icon> for the anchor
+                id_x = (anchor.dataset.id).split('_');
+                if( id_x.length < 2 || isNaN( parseInt(id_x[1])) ){ return; }
+
+                id = ['.shellac-grid-element-panel', anchor.dataset.id].join('.');
+                nodeList = utils.dom.getAll(dom.clip_content_container, id);
+
+                //get the last one
+                enqueue = utils.dom.get(nodeList[nodeList.length - 1], '.enqueue-icon');
+            }
+
+            if (isAdded) {
+                utils.css.add(enqueue, 'enqueued');
+            }
+            else {
+                utils.css.remove(enqueue, 'enqueued');
             }
         }
     };
@@ -794,7 +809,7 @@ var shellac = (function () {
 
                 if(DEBUG)
                 {
-                    console.log(utils.dom.get(container, '.sm2-playlist-wrapper .sm2-playlist-bd'));
+//                    console.log(utils.dom.get(container, '.sm2-playlist-wrapper .sm2-playlist-bd'));
                 }
             });
         }

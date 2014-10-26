@@ -299,7 +299,7 @@ var bar_ui = (function() {
              */
             function addToPlaylist( item ) {
 
-                var id = utils.dom.get(item, 'a').dataset.id;
+                var id = utils.dom.get(item, 'a.sm2-track').dataset.id;
 
                 if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE ||
                     item.nodeName.toLowerCase() !== 'li' ||
@@ -330,9 +330,10 @@ var bar_ui = (function() {
              * @return true if removed successfully
              */
             function deleteFromPlaylist( item ) {
+                //console.log("deleteFromPlaylist");
 
                 var next,
-                    id = utils.dom.get(item, 'a').dataset.id;
+                    id = utils.dom.get(item, 'a.sm2-track').dataset.id;
 
                 if(item.nodeType !== utils.nodeTypes.ELEMENT_NODE ||
                     item.nodeName.toLowerCase() !== 'li' ||
@@ -1008,6 +1009,7 @@ var bar_ui = (function() {
                     if (target.parentNode) {
 
                         target = utils.dom.getParentAnchor(target);
+                        targetNodeName = target.nodeName.toLowerCase();
 
                         if (!target) {
                             // something went wrong. bail.
@@ -1043,6 +1045,7 @@ var bar_ui = (function() {
 
                         if (offset !== -1) {
                             methodName = target.href.substr(offset+1);
+                            console.log(methodName);
                             if (methodName && actions[methodName]) {
                                 handled = true;
                                 actions[methodName](e);
@@ -1204,7 +1207,7 @@ var bar_ui = (function() {
                 if (href.indexOf('#') !== -1 && !soundObject) {
 
                     //this might be an emptylist
-                    anchor_current = utils.dom.get(item_current, 'a');
+                    anchor_current = utils.dom.get(item_current, 'a.sm2-track');
                     if(anchor_current)
                     {
                         url = anchor_current.href;
@@ -1234,6 +1237,34 @@ var bar_ui = (function() {
                     console.warn('Cannot play: Missing soundObject.');
                 }
 
+            },
+
+            remove: function(e) {
+
+                var target, targetNodeName,
+                    parentTargetNodeName, parent;
+
+                target = e.target || e.srcElement;
+                targetNodeName = target.nodeName.toLowerCase();
+
+                //I might nest the stuff within the anchorso crawl up DOM
+                // to find anchor element, if any
+                if (targetNodeName !== 'a') {
+
+                    target = utils.dom.getParentAnchor(target);
+
+                    parent = target.parentNode;
+                    parentTargetNodeName = parent.nodeName.toLowerCase();
+
+                    if (parentTargetNodeName !== 'li') {
+                        // something went wrong. bail.
+                        return false;
+                    }
+                }
+
+                //so now we have a li -- remove it
+                //this needs to emit a playlist change.
+                playlistController.deleteFromPlaylist(parent);
             },
 
             next: function(/* e */) {
@@ -1394,7 +1425,7 @@ var bar_ui = (function() {
                     '<a class="sm2-track" data-id="id_', clip.id, '" href="', clip.audio_file_url,'">',
                         clip.owner, ' - ', clip.title,
                     '</a>',
-                    '<a data-id="id_', clip.id, '" href="#delete-track">',
+                    '<a data-id="id_', clip.id, '" href="#remove">',
                         '<span class="icon-cross2 sm2-delete-track"></span>',
                     '</a>',
             ].join('');
@@ -1424,9 +1455,6 @@ var bar_ui = (function() {
                 var pMap = playlistController.importPositionsMap(positionsMap);
                 playlistController.data.positionsMap = JSON.parse(JSON.stringify(pMap));
             }
-
-
-
             var item, sid, offset, existing, isRemoved;
 
             //construct the li item from the url
