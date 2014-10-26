@@ -780,6 +780,7 @@ var bar_ui = (function() {
 
                     onresume: function () {
                         utils.css.swap(dom.o, 'paused', 'playing');
+                        util.PubSub.emit('player-change', 'onresume', this);
                     },
 
                     whileloading: function () {
@@ -846,6 +847,7 @@ var bar_ui = (function() {
                     onstop: function () {
 
                         utils.css.remove(dom.o, 'playing');
+                        util.PubSub.emit('player-change', 'onstop', this);
                         //console.log('stopped');
 
                     },
@@ -1045,7 +1047,6 @@ var bar_ui = (function() {
 
                         if (offset !== -1) {
                             methodName = target.href.substr(offset+1);
-                            console.log(methodName);
                             if (methodName && actions[methodName]) {
                                 handled = true;
                                 actions[methodName](e);

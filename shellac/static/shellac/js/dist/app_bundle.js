@@ -12237,6 +12237,16 @@ var shellac = (function () {
         clips               : undefined
     },
 
+    playState = {
+      STOPPED: 0,
+      PLAYING: 1,
+      BUFFERING: 1
+    },
+
+    css = {
+        playing: 'playing'
+    },
+
     jqueryMap = {}, setJqueryMap,
     dom = {}, setDomMap,
 
@@ -12732,6 +12742,7 @@ var shellac = (function () {
                 nodeList = utils.dom.getAll(dom.clip_content_container, id);
 
                 //get the last one
+                if(!nodeList.length){ return; }
                 enqueue = utils.dom.get(nodeList[nodeList.length - 1], '.enqueue-icon');
             }
 
@@ -12750,6 +12761,12 @@ var shellac = (function () {
      * @param sm2Object the relevant soundManager sound object
      */
     handlePlayerStateChange = function(state, sm2Object){
+        console.log("handlePlayerStateChange");
+        console.log(state);
+
+        var selector, nodeList, parent, panel,
+            i, j;
+
         switch (state) {
             case 'onplay':
 
@@ -12758,6 +12775,7 @@ var shellac = (function () {
                     payload = {
                         plays: undefined
                     };
+
 
                 //retrieve the id; bail if this doesn't exist
                 id_components = sm2Object.id.split("_");
@@ -12776,9 +12794,36 @@ var shellac = (function () {
                     util.updateUrl(configMap.clip_endpoint + id + '/', utils.noop,
                         'PATCH', JSON.stringify(payload), stateMap.csrftoken);
                 });
+
                 break;
             default:
         }
+
+        //update the ui
+        selector = ['.shellac-grid-element-panel', sm2Object.id].join('.');
+        nodeList = utils.dom.getAll(dom.clip_content_container, selector);
+
+        //check if there is a nodeList retrieved
+        //if so, clear out the clip states and highlight clip
+        if( nodeList === undefined || !nodeList.length ){ return; }
+
+        parent = nodeList[nodeList.length - 1];
+        panel = utils.dom.getAll(parent, '.shellac-caption-panel');
+
+        if( !panel.length ){ return; }
+
+        //Query actions: pause(), resume(), togglePause()
+        if(sm2Object.paused || sm2Object.playState === playState.STOPPED)
+        {
+            utils.css.remove(panel[panel.length - 1], css.playing);
+        }
+        else if( sm2Object.playState === playState.PLAYING )
+        {
+            utils.css.add(panel[panel.length - 1], css.playing);
+        }
+        console.log(sm2Object.playState);
+        console.log(sm2Object.playState);
+        console.log(sm2Object.paused);
     };
 
 
@@ -14112,6 +14157,7 @@ var bar_ui = (function() {
 
                     onresume: function () {
                         utils.css.swap(dom.o, 'paused', 'playing');
+                        util.PubSub.emit('player-change', 'onresume', this);
                     },
 
                     whileloading: function () {
@@ -14178,6 +14224,7 @@ var bar_ui = (function() {
                     onstop: function () {
 
                         utils.css.remove(dom.o, 'playing');
+                        util.PubSub.emit('player-change', 'onstop', this);
                         //console.log('stopped');
 
                     },
@@ -14377,7 +14424,6 @@ var bar_ui = (function() {
 
                         if (offset !== -1) {
                             methodName = target.href.substr(offset+1);
-                            console.log(methodName);
                             if (methodName && actions[methodName]) {
                                 handled = true;
                                 actions[methodName](e);
