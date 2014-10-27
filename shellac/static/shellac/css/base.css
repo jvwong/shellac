@@ -776,7 +776,7 @@ dl.dl-horizontal dd {
 /* xs Nexus4 portrait*/
 @media (max-width: 640px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
-    height: 5.5em;
+    height: 6em;
     -moz-opacity: 0.75;
     -khtml-opacity: 0.75;
     -webkit-opacity: 0.75;
@@ -785,16 +785,23 @@ dl.dl-horizontal dd {
     filter: alpha(opacity=75);
   }
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-    font-size: 0.8em;
+    font-size: 0.85em;
   }
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.title {
-    font-size: 0.9em;
+    font-size: 1em;
   }
 }
 /* xs Nexus4 portrait*/
 @media (max-width: 384px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
-    height: 5.0em;
+    height: 4.5em;
+    line-height: 0.95em;
+  }
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
+    font-size: 0.8em;
+  }
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.title {
+    font-size: 0.9em;
   }
 }
 /*
@@ -2698,7 +2705,7 @@ body {
 /* xs Nexus4 portrait*/
 @media (max-width: 640px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
-    height: 5.5em;
+    height: 6em;
     -moz-opacity: 0.75;
     -khtml-opacity: 0.75;
     -webkit-opacity: 0.75;
@@ -2707,16 +2714,23 @@ body {
     filter: alpha(opacity=75);
   }
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-    font-size: 0.8em;
+    font-size: 0.85em;
   }
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.title {
-    font-size: 0.9em;
+    font-size: 1em;
   }
 }
 /* xs Nexus4 portrait*/
 @media (max-width: 384px) {
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
-    height: 5.0em;
+    height: 4.5em;
+    line-height: 0.95em;
+  }
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
+    font-size: 0.8em;
+  }
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.title {
+    font-size: 0.9em;
   }
 }
 
