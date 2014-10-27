@@ -26,10 +26,10 @@ class ProfileTest(FunctionalTest):
     def test_profile_page_displays_correct_Person_details(self):
         # jvwong --> jray
         # aray --> jray
-        img_avatar = self.browser.find_element_by_css_selector('.content-profile .partial-profile.person .partial-profile-avatar.person img')
+        img_avatar = self.browser.find_element_by_css_selector('.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-img_panel .partial-profile-avatar-img_panel-input_panel img')
         self.assertEqual(img_avatar.get_attribute('alt'), self.user.person.username)
 
-        detail_list = self.browser.find_elements_by_css_selector('.content-profile .partial-profile-description-content')
+        detail_list = self.browser.find_elements_by_css_selector('.content-profile .partial-profile .partial-profile-description .partial-profile-description-content')
         # print(detail_list[0].text)
         #print(self.user.person.joined.strftime("%b %d, %Y"))
         # self.assertTrue(
@@ -40,7 +40,7 @@ class ProfileTest(FunctionalTest):
         )
 
     def test_profile_page_can_navigate_to_clip_app(self):
-        app_link = self.browser.find_element_by_css_selector('.content-profile .partial-profile.person .partial-profile-app')
+        app_link = self.browser.find_element_by_css_selector('.content-profile .partial-profile .partial-profile-avatar-app_panel a')
         #print(app_link.tag_name)
         app_link.click()
         #
@@ -49,5 +49,5 @@ class ProfileTest(FunctionalTest):
         self.assertIn(title.text, 'App')
 
     def test_profile_page_same_user_can_edit_avatar(self):
-        button_select_image = self.browser.find_element_by_css_selector('.content-profile .partial-profile.person button')
-        self.assertIn(button_select_image.text, 'Update')
+        button_select_image = self.browser.find_element_by_css_selector('.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-img_panel button.update')
+        self.assertIn(button_select_image.text, 'Save')

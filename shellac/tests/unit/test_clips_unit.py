@@ -38,6 +38,7 @@ class ClipCreateView(TestCase):
         expected_html = render_to_string('shellac/clips/create.html', {'form': form, 'user': self.user})
         self.assertEqual(response.content.decode(), expected_html)
 
+
 class ClipDetailView(TestCase):
     fixtures = ['shellac.json', 'auth.json']
 
@@ -60,7 +61,6 @@ class ClipDetailView(TestCase):
     def test_ClipDetailView_applies_correct_template(self):
         response = self.client.get('/clips/2/detail/')
         self.assertTemplateUsed(response, 'shellac/clips/clip_detail.html')
-
 
 
 class ClipUpdateView(TestCase):

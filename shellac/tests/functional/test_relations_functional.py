@@ -28,14 +28,14 @@ class RelationsTest(FunctionalTest):
         #Select the anchor headings
         title_anchors = self.browser.find_elements_by_css_selector('.panel-title-link')
 
-        following_spans = self.browser.find_elements_by_css_selector('.content-tune-relationship.following .partial-relationships-description-content.username')
+        following_spans = self.browser.find_elements_by_css_selector('.following .partial-relationships-description .mls')
         self.assertTrue(any(span.text == 'jvwong' for span in following_spans))
         self.assertTrue(any(span.text == 'kray' for span in following_spans))
 
         #These are not visible at the time of presentation
         title_anchors[1].click()
         time.sleep(0.5)
-        followers_spans = self.browser.find_elements_by_css_selector('.content-tune-relationship.followers .partial-relationships-description-content.username')
+        followers_spans = self.browser.find_elements_by_css_selector('.followers .partial-relationships-description .mls')
         self.assertTrue(any(span.text == 'jvwong' for span in followers_spans))
         self.assertTrue(any(span.text == 'aray' for span in followers_spans))
 

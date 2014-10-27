@@ -18,6 +18,7 @@ audio_path_invalid = os.path.abspath(os.path.join(UNIT_DIR, "../assets/song_inva
 # curl -X POST http://localhost:8000/api-token-auth/ -d '{"username": "aray", "password": "aray"}' -H "Content-Type: application/json"
 # curl -X GET http://localhost:8000/api/people/.json -H "Authorization:Token 180d6d22335f2471f717ce3c121eebc47a0fa2a8"
 
+
 class ClipListViewSet(APITestCase):
 
     def test_ClipListViewSet_resolves_to_correct_view(self):
@@ -33,9 +34,12 @@ class ClipListViewSet(APITestCase):
         clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
         setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
+        clip1.save()
+
         clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
         clip2.description = "clip2 description"
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
+        clip2.save()
 
         # print(Clip.objects.all().count())
 
@@ -103,7 +107,6 @@ class ClipListViewSet(APITestCase):
         self.assertEqual(data['plays'], 0)
         self.assertEqual(data['rating'], 0)
         self.assertEqual(data['status'], 1)
-        self.assertEqual(data['brand_url'], '')
         self.assertEqual(data['categories'], [])
         #self.assertEqual(data['author']['user']['username'], 'andrea')
 
@@ -217,6 +220,7 @@ class ClipListViewSet(APITestCase):
         results = response.data['results']
         #print(results)
         self.assertEqual(len(results), n)
+
 
 class ClipListViewSetSearch(APITestCase):
     fixtures = ['shellac.json', 'auth.json', 'taggit.json']
@@ -473,7 +477,6 @@ class ClipDetailViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         cleanClips()
-
 
 
 class ClipListFollowingView(APITestCase):
