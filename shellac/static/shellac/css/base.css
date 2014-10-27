@@ -672,7 +672,7 @@ dl.dl-horizontal dd {
   top: 0;
   left: 0;
   margin: 5px;
-  font-size: 2.5em;
+  font-size: 2em;
   color: #5cb85c;
   z-index: 50;
 }
@@ -699,6 +699,7 @@ dl.dl-horizontal dd {
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel {
   max-height: 100%;
+  /* shorthand: property duration timingFunc delay */
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
   white-space: nowrap;
@@ -711,15 +712,19 @@ dl.dl-horizontal dd {
   padding: 5px;
   background: black;
   color: white;
-  -moz-opacity: 0.8;
-  -khtml-opacity: 0.8;
-  -webkit-opacity: 0.8;
-  opacity: 0.8;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-  filter: alpha(opacity=80);
+  height: 6.5em;
+  -moz-opacity: 0.75;
+  -khtml-opacity: 0.75;
+  -webkit-opacity: 0.75;
+  opacity: 0.75;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=75);
+  filter: alpha(opacity=75);
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-  font-size: 1em;
+  font-size: 0.9em;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.title {
+  font-size: 1.2em;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .meta-data {
   position: relative;
@@ -730,6 +735,18 @@ dl.dl-horizontal dd {
   right: 0em;
   margin-right: 5px;
 }
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container:hover {
+  -moz-opacity: 0.9;
+  -khtml-opacity: 0.9;
+  -webkit-opacity: 0.9;
+  opacity: 0.9;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=90);
+  filter: alpha(opacity=90);
+  -moz-transition: opacity 0.3s ease-in-out;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
+}
 .shellac-grid-element.no-content {
   position: relative;
   top: 5em;
@@ -738,20 +755,46 @@ dl.dl-horizontal dd {
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
-@media (min-width: 768px) {
-  .shellac-grid-element {
-    padding: 2px;
+/* xs (phones) */
+@media (max-width: 767px) {
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
+    height: 6em;
+    -moz-opacity: 0.75;
+    -khtml-opacity: 0.75;
+    -webkit-opacity: 0.75;
+    opacity: 0.75;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=75);
+    filter: alpha(opacity=75);
   }
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
+    font-size: 0.85em;
+  }
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.title {
+    font-size: 0.95em;
+  }
+}
+/* xs Nexus4 portrait*/
+@media (max-width: 640px) {
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
+    height: 5.5em;
+    -moz-opacity: 0.75;
+    -khtml-opacity: 0.75;
+    -webkit-opacity: 0.75;
+    opacity: 0.75;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=75);
+    filter: alpha(opacity=75);
+  }
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
+    font-size: 0.8em;
+  }
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.title {
     font-size: 0.9em;
   }
 }
-/* xs (phones) */
-/* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
 @media (max-width: 384px) {
-  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-    font-size: 0.75em;
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
+    height: 5.0em;
   }
 }
 /*
@@ -2551,7 +2594,7 @@ body {
   top: 0;
   left: 0;
   margin: 5px;
-  font-size: 2.5em;
+  font-size: 2em;
   color: #5cb85c;
   z-index: 50;
 }
@@ -2578,6 +2621,7 @@ body {
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel {
   max-height: 100%;
+  /* shorthand: property duration timingFunc delay */
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
   white-space: nowrap;
@@ -2590,15 +2634,19 @@ body {
   padding: 5px;
   background: black;
   color: white;
-  -moz-opacity: 0.8;
-  -khtml-opacity: 0.8;
-  -webkit-opacity: 0.8;
-  opacity: 0.8;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
-  filter: alpha(opacity=80);
+  height: 6.5em;
+  -moz-opacity: 0.75;
+  -khtml-opacity: 0.75;
+  -webkit-opacity: 0.75;
+  opacity: 0.75;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=75);
+  filter: alpha(opacity=75);
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-  font-size: 1em;
+  font-size: 0.9em;
+}
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.title {
+  font-size: 1.2em;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .meta-data {
   position: relative;
@@ -2609,6 +2657,18 @@ body {
   right: 0em;
   margin-right: 5px;
 }
+.shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container:hover {
+  -moz-opacity: 0.9;
+  -khtml-opacity: 0.9;
+  -webkit-opacity: 0.9;
+  opacity: 0.9;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=90);
+  filter: alpha(opacity=90);
+  -moz-transition: opacity 0.3s ease-in-out;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
+}
 .shellac-grid-element.no-content {
   position: relative;
   top: 5em;
@@ -2617,20 +2677,46 @@ body {
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
-@media (min-width: 768px) {
-  .shellac-grid-element {
-    padding: 2px;
+/* xs (phones) */
+@media (max-width: 767px) {
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
+    height: 6em;
+    -moz-opacity: 0.75;
+    -khtml-opacity: 0.75;
+    -webkit-opacity: 0.75;
+    opacity: 0.75;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=75);
+    filter: alpha(opacity=75);
   }
   .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
+    font-size: 0.85em;
+  }
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.title {
+    font-size: 0.95em;
+  }
+}
+/* xs Nexus4 portrait*/
+@media (max-width: 640px) {
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
+    height: 5.5em;
+    -moz-opacity: 0.75;
+    -khtml-opacity: 0.75;
+    -webkit-opacity: 0.75;
+    opacity: 0.75;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=75);
+    filter: alpha(opacity=75);
+  }
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
+    font-size: 0.8em;
+  }
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content.title {
     font-size: 0.9em;
   }
 }
-/* xs (phones) */
-/* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
 @media (max-width: 384px) {
-  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container .shellac-description-content {
-    font-size: 0.75em;
+  .shellac-grid-element .shellac-grid-element-panel .shellac-caption-panel .shellac-description-container {
+    height: 5.0em;
   }
 }
 

@@ -5,7 +5,8 @@
     More info at: http://lesselements.com
   ---------------------------------------------------*/
 
-.gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) {
+.gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF)
+{
   background: @color;
   background: -webkit-gradient(linear,
                                left bottom,
@@ -22,7 +23,8 @@
                                  @start);
   filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop,@start));
 }
-.bw-gradient(@color: #F5F5F5, @start: 0, @stop: 255) {
+.bw-gradient(@color: #F5F5F5, @start: 0, @stop: 255)
+{
   background: @color;
   background: -webkit-gradient(linear,
                                left bottom,
@@ -39,23 +41,27 @@
                                  rgb(@start,@start,@start));
   filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",rgb(@stop,@stop,@stop),rgb(@start,@start,@start)));
 }
-.bordered(@top-color: #EEE, @right-color: #EEE, @bottom-color: #EEE, @left-color: #EEE) {
+.bordered(@top-color: #EEE, @right-color: #EEE, @bottom-color: #EEE, @left-color: #EEE)
+{
   border-top: solid 1px @top-color;
   border-left: solid 1px @left-color;
   border-right: solid 1px @right-color;
   border-bottom: solid 1px @bottom-color;
 }
-.drop-shadow(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1) {
+.drop-shadow(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1)
+{
   -webkit-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
   -moz-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
   box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
 }
-.rounded(@radius: 2px) {
+.rounded(@radius: 2px)
+{
   -webkit-border-radius: @radius;
   -moz-border-radius: @radius;
   border-radius: @radius;
 }
-.border-radius(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+.border-radius(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0)
+{
   -webkit-border-top-right-radius: @topright;
   -webkit-border-bottom-right-radius: @bottomright;
   -webkit-border-bottom-left-radius: @bottomleft;
@@ -70,7 +76,8 @@
   border-top-left-radius: @topleft;
   .background-clip(padding-box);
 }
-.opacity(@opacity: 0.5) {
+.opacity(@opacity: 0.5)
+{
   -moz-opacity: @opacity;
   -khtml-opacity: @opacity;
   -webkit-opacity: @opacity;
@@ -78,6 +85,21 @@
   @opperc: @opacity * 100;
   -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=@{opperc})";
   filter: ~"alpha(opacity=@{opperc})";
+}
+.opacity_transition(@opacity: 0.5, @easing: 0.3s)
+{
+  -moz-opacity: @opacity;
+  -khtml-opacity: @opacity;
+  -webkit-opacity: @opacity;
+  opacity: @opacity;
+  @opperc: @opacity * 100;
+  -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=@{opperc})";
+  filter: ~"alpha(opacity=@{opperc})";
+
+  -moz-transition: opacity @easing ease-in-out;
+  -webkit-transition: opacity @easing ease-in-out;
+  -o-transition: opacity @easing ease-in-out;
+  transition: opacity @easing ease-in-out;
 }
 .transition-duration(@duration: 0.2s) {
   -moz-transition-duration: @duration;

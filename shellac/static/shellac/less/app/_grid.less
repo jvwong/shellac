@@ -13,8 +13,11 @@
 
 @grid_enqueue_margin: 5px;
 
-@caption_opacity: 0.8;
+@caption_opacity: 0.75;
+@caption_opacity_dark: 0.9;
 @caption_padding: 5px;
+
+@transition_easing: 0.3s;
 
 @grid_img_dim: 100%;
 @grid_checksz: 1.5em;
@@ -64,7 +67,7 @@
       top: 0;
       left: 0;
       margin: @grid_enqueue_margin;
-      font-size: @font_size_icon_lg;
+      font-size: @font_size_icon_md;
       color: @brand-success;
       z-index: 50;
 
@@ -108,11 +111,19 @@
 
         background: black;
         color: white;
+
+        height: 6.5em;
+
         .opacity(@caption_opacity);
 
         .shellac-description-content
         {
-          font-size: @font_size_lg;
+          font-size: @font_size_sm;
+        }
+
+        .shellac-description-content.title
+        {
+          font-size: @font_size_xl;
         }
 
         .meta-data
@@ -126,6 +137,12 @@
             margin-right: @grid_margin;
           }
         }
+      }
+
+      /* shorthand: property duration timingFunc delay */
+      .shellac-description-container:hover
+      {
+        .opacity_transition(@caption_opacity_dark, @transition_easing);
       }
     }
   }
@@ -150,14 +167,27 @@
 /* sm (tablets, 768px and up) */
 @media (min-width: 768px)
 {
-  .shellac-grid-element {
+}
 
-    padding: @grid_padding;
-
-    .shellac-grid-element-panel
+/* xs (phones) */
+@media (max-width: 767px)
+{
+  .shellac-grid-element
+  {
+  .shellac-grid-element-panel
     {
       .enqueue-icon
       {}
+
+      .shellac-playstate
+      {
+        .icon
+        {}
+      }
+
+      .shellac-playstate.playing { .icon.play {} }
+      .shellac-playstate.paused { .icon.pause {} }
+      .shellac-playstate.stopped { .icon.stop {} }
 
       .enqueued.enqueue-icon
       {}
@@ -172,38 +202,50 @@
       {
         .shellac-description-container
         {
+          height: 6em;
+          .opacity(@caption_opacity);
+
           .shellac-description-content
           {
-            font-size: @font_size_sm;
+            font-size: @font_size_xs;
           }
-          .created
-          {}
+
+          .shellac-description-content.title
+          {
+            font-size: @font_size_md;
+          }
+
+          .meta-data
+          {
+            .shellac-description-content.created
+            {}
+          }
         }
       }
     }
   }
-}
-
-/* xs (phones) */
-@media (max-width: 768px)
-{
 
 }
 
 /* xs Nexus4 portrait*/
 @media (max-width: 640px)
 {
-}
-
-/* xs Nexus4 portrait*/
-@media (max-width: 384px)
-{
-  .shellac-grid-element {
-
+  .shellac-grid-element
+  {
     .shellac-grid-element-panel
     {
       .enqueue-icon
       {}
+
+      .shellac-playstate
+      {
+        .icon
+        {}
+      }
+
+      .shellac-playstate.playing { .icon.play {} }
+      .shellac-playstate.paused { .icon.pause {} }
+      .shellac-playstate.stopped { .icon.stop {} }
 
       .enqueued.enqueue-icon
       {}
@@ -216,16 +258,80 @@
 
       .shellac-caption-panel
       {
-
         .shellac-description-container
         {
+          height: 5.5em;
+          .opacity(@caption_opacity);
 
           .shellac-description-content
           {
-            font-size: @font_size_xs;
+            font-size: @font_size_xxs;
           }
-          .created
-          {}
+
+          .shellac-description-content.title
+          {
+            font-size: @font_size_sm;
+          }
+
+          .meta-data
+          {
+            .shellac-description-content.created
+            {}
+          }
+        }
+      }
+    }
+  }
+}
+
+/* xs Nexus4 portrait*/
+@media (max-width: 384px)
+{
+  .shellac-grid-element
+  {
+    .shellac-grid-element-panel
+    {
+      .enqueue-icon
+      {}
+
+      .shellac-playstate
+      {
+        .icon
+        {}
+      }
+
+      .shellac-playstate.playing { .icon.play {} }
+      .shellac-playstate.paused { .icon.pause {} }
+      .shellac-playstate.stopped { .icon.stop {} }
+
+      .enqueued.enqueue-icon
+      {}
+
+      .shellac-img-panel
+      {
+        .shellac-grid-img
+        {}
+      }
+
+      .shellac-caption-panel
+      {
+        .shellac-description-container
+        {
+          height: 5.0em;
+
+          .shellac-description-content
+          {
+          }
+
+          .shellac-description-content.title
+          {
+          }
+
+          .meta-data
+          {
+            .shellac-description-content.created
+            {}
+          }
         }
       }
     }
