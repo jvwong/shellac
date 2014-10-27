@@ -672,8 +672,8 @@ dl.dl-horizontal dd {
   top: 0;
   left: 0;
   margin: 5px;
-  font-size: 2em;
-  color: #2288cc;
+  font-size: 2.5em;
+  color: #5cb85c;
   z-index: 50;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-playstate .icon {
@@ -681,8 +681,6 @@ dl.dl-horizontal dd {
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-playstate.playing .icon.play {
   display: block;
-  -webkit-transition: width 2s;
-  transition: width 2s;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-playstate.paused .icon.pause {
   display: block;
@@ -2553,8 +2551,8 @@ body {
   top: 0;
   left: 0;
   margin: 5px;
-  font-size: 2em;
-  color: #2288cc;
+  font-size: 2.5em;
+  color: #5cb85c;
   z-index: 50;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-playstate .icon {
@@ -2562,8 +2560,6 @@ body {
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-playstate.playing .icon.play {
   display: block;
-  -webkit-transition: width 2s;
-  transition: width 2s;
 }
 .shellac-grid-element .shellac-grid-element-panel .shellac-playstate.paused .icon.pause {
   display: block;

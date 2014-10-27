@@ -64,8 +64,8 @@
       top: 0;
       left: 0;
       margin: @grid_enqueue_margin;
-      font-size: @font_size_icon_md;
-      color: @boostrap-blue;
+      font-size: @font_size_icon_lg;
+      color: @brand-success;
       z-index: 50;
 
       .icon
@@ -74,13 +74,7 @@
       }
     }
 
-    .shellac-playstate.playing {
-      .icon.play {
-        display: block;
-        -webkit-transition: width 2s;
-        transition: width 2s;
-      }
-    }
+    .shellac-playstate.playing { .icon.play { display: block; } }
     .shellac-playstate.paused { .icon.pause { display: block; } }
     .shellac-playstate.stopped { .icon.stop { display: block; } }
 
