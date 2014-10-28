@@ -1,5 +1,7 @@
 import os
+import djcelery
 
+djcelery.setup_loader()
 APP_NAME = "shellac"
 
 DEBUG = True
@@ -173,7 +175,8 @@ INSTALLED_APPS = (
     'image',
     'audio',
     'storages',
-    'django_cleanup'
+    'django_cleanup',
+    'djcelery'
 )
 
 REST_FRAMEWORK = {
