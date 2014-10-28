@@ -20,40 +20,40 @@ def cleanClips():
 ### The base class for all functional tests
 class FunctionalTest(StaticLiveServerTestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
-
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls.server_url == cls.live_server_url:
-            super().tearDownClass()
-
     # @classmethod
     # def setUpClass(cls):
-    #     super(FunctionalTest, cls).setUpClass()
     #     for arg in sys.argv:
     #         if 'liveserver' in arg:
     #             cls.server_url = 'http://' + arg.split('=')[1]
     #             return
-    #     cls.xvfb = Xvfb(width=1280, height=720)
-    #     cls.xvfb.start()
-    #     cls.wd = WebDriver()
+    #     super().setUpClass()
     #     cls.server_url = cls.live_server_url
+    #
     #
     # @classmethod
     # def tearDownClass(cls):
-    #     super(FunctionalTest, cls).tearDownClass()
     #     if cls.server_url == cls.live_server_url:
     #         super().tearDownClass()
-    #     cls.wd.quit()
-    #     cls.xvfb.stop()
+
+    @classmethod
+    def setUpClass(cls):
+        super(FunctionalTest, cls).setUpClass()
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = 'http://' + arg.split('=')[1]
+                return
+        cls.xvfb = Xvfb(width=1280, height=720)
+        cls.xvfb.start()
+        cls.wd = WebDriver()
+        cls.server_url = cls.live_server_url
+
+    @classmethod
+    def tearDownClass(cls):
+        super(FunctionalTest, cls).tearDownClass()
+        if cls.server_url == cls.live_server_url:
+            super().tearDownClass()
+        cls.wd.quit()
+        cls.xvfb.stop()
 
     def setUp(self):
         self.browser = webdriver.Firefox()
