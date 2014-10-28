@@ -1,7 +1,5 @@
 import os
-import djcelery
 
-djcelery.setup_loader()
 APP_NAME = "shellac"
 
 DEBUG = True
@@ -115,9 +113,17 @@ STATICFILES_DIRS = (
     STATIC_PATH,
 )
 
+### Celery
+import djcelery
+djcelery.setup_loader()
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 
-INTERNAL_IPS = ('127.0.0.1',)
+# INTERNAL_IPS = ('127.0.0.1',)
 
 # Make this unique, and don't share it with anybody.
 # SECRET_KEY = '0g6yk+xa!&xl%@rgf%eh%k_10v7p!ts6c00$0by@fx)95w(&pn'
