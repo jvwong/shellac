@@ -6,6 +6,7 @@ anyjson==0.3.3
 billiard==3.3.0.18
 boto==2.32.1
 celery==3.1.13
+celery-with-redis==3.0
 django-appconf==0.6
 django-celery==3.1.10
 django-cleanup==0.1.10
@@ -29,6 +30,7 @@ python-dateutil==2.2
 python-social-auth==0.1.26
 python3-openid==3.0.4
 pytz==2014.4
+redis==2.10.3
 requests==2.3.0
 requests-oauthlib==0.3.1
 selenium==2.42.1

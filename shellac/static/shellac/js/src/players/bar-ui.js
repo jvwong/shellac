@@ -796,6 +796,8 @@ var bar_ui = (function() {
                         if (ok) {
 
                             dom.duration.innerHTML = getTime(this.duration, true);
+                            util.PubSub.emit('onSoundLoad', 'playLink', this);
+                            util.PubSub.emit('onSoundLoad', 'actions.play', this);
 
                         } else if (this._iO && this._iO.onerror) {
 
@@ -971,10 +973,29 @@ var bar_ui = (function() {
                     //soundObject = null;
                 }
 
-                soundObject = makeSound(href, id);
                 position = playlistController.data.positionsMap[id];
-                soundObject.play();
-                soundObject.setPosition(position);
+                soundObject = makeSound(href, id);
+                util.PubSub.on('onSoundLoad', function( tag, sm2Object ){
+                    if( tag === 'playLink' )
+                    {
+                        sm2Object.setPosition(position);
+
+                        if(soundObject.paused)
+                        {
+                            soundObject.resume();
+                        }
+                    }
+                });
+
+                if(!soundObject.loaded)
+                {
+                    soundObject.play();
+                    soundObject.pause();
+                }
+                else
+                {
+                    soundObject.play();
+                }
             }
         }
         // --- END playLink ---
@@ -1225,13 +1246,35 @@ var bar_ui = (function() {
 
                 if(soundObject)
                 {
-                    setTitle(item_current);
-                    soundObject.togglePause();
-                    utils.css.toggle(item_current, css.selected);
+
+                    //Mobile issue: On Chrome, 3G, this can sometimes be
+                    // skipped. Can we enforce this somehow?
                     if(position)
                     {
-                        soundObject.setPosition(position);
+                        util.PubSub.on('onSoundLoad', function( tag, sm2Object ){
+                            if( tag === 'actions.play' )
+                            {
+                                sm2Object.setPosition(position);
+
+                                if(soundObject.paused)
+                                {
+                                    soundObject.togglePause();
+                                }
+                            }
+                        });
                     }
+
+                    if(!soundObject.loaded)
+                    {
+                        soundObject.play();
+                        soundObject.togglePause();
+                    }
+                    else
+                    {
+                        soundObject.togglePause();
+                    }
+                    setTitle(item_current);
+                    utils.css.toggle(item_current, css.selected);
                 }
                 else
                 {
@@ -1512,6 +1555,7 @@ var bar_ui = (function() {
         if(container.nodeType === 1){
 
             container.innerHTML = configMap.bar_html;
+
 
             soundManager.setup({
                 // trade-off: higher UI responsiveness (play/progress bar), but may use more CPU.
