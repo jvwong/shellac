@@ -796,9 +796,6 @@ var bar_ui = (function() {
                         if (ok) {
 
                             dom.duration.innerHTML = getTime(this.duration, true);
-                            util.PubSub.emit('onSoundLoad', 'playLink', this);
-                            util.PubSub.emit('onSoundLoad', 'actions.play', this);
-
                         } else if (this._iO && this._iO.onerror) {
 
                             this._iO.onerror();
@@ -973,29 +970,10 @@ var bar_ui = (function() {
                     //soundObject = null;
                 }
 
-                position = playlistController.data.positionsMap[id];
                 soundObject = makeSound(href, id);
-                util.PubSub.on('onSoundLoad', function( tag, sm2Object ){
-                    if( tag === 'playLink' )
-                    {
-                        sm2Object.setPosition(position);
-
-                        if(soundObject.paused)
-                        {
-                            soundObject.resume();
-                        }
-                    }
-                });
-
-                if(!soundObject.loaded)
-                {
-                    soundObject.play();
-                    soundObject.pause();
-                }
-                else
-                {
-                    soundObject.play();
-                }
+                position = playlistController.data.positionsMap[id];
+                soundObject.play();
+                soundObject.setPosition(position);
             }
         }
         // --- END playLink ---
@@ -1246,35 +1224,13 @@ var bar_ui = (function() {
 
                 if(soundObject)
                 {
-
-                    //Mobile issue: On Chrome, 3G, this can sometimes be
-                    // skipped. Can we enforce this somehow?
+                    setTitle(item_current);
+                    soundObject.togglePause();
+                    utils.css.toggle(item_current, css.selected);
                     if(position)
                     {
-                        util.PubSub.on('onSoundLoad', function( tag, sm2Object ){
-                            if( tag === 'actions.play' )
-                            {
-                                sm2Object.setPosition(position);
-
-                                if(soundObject.paused)
-                                {
-                                    soundObject.togglePause();
-                                }
-                            }
-                        });
+                        soundObject.setPosition(position);
                     }
-
-                    if(!soundObject.loaded)
-                    {
-                        soundObject.play();
-                        soundObject.togglePause();
-                    }
-                    else
-                    {
-                        soundObject.togglePause();
-                    }
-                    setTitle(item_current);
-                    utils.css.toggle(item_current, css.selected);
                 }
                 else
                 {
