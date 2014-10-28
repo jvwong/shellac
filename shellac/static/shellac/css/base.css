@@ -158,7 +158,7 @@
 /*
 * /relations/ styling
 */
-div.content-relationships div#accordion.panel-group div.panel div.panel-body {
+.content-relationships div#accordion.panel-group div.panel div.panel-body {
   padding: 1px;
 }
 /* lg (large desktops, 1200px and up) */

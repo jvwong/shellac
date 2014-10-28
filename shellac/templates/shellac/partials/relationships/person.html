@@ -10,7 +10,7 @@
         <div class="partial-relationships-description person">
             <div class="partial-relationships-app">
                 <a href="{% url 'shellac_app' person.username 'following' %}">
-                    <span data-username="{{ person.username }}" class="partial-relationships-detail-content username icon-sound"></span>
+                    <span data-username="{{ person.username }}" class="partial-relationships-description-content username icon-sound"></span>
                     <span class="mls"> {{ person.username | truncatechars:30  }}</span>
                 </a>
                 <div class="partial-relationships-description-content status label">{% if person in user.person.get_friends %}friend{% else %}{% if person in user.person.get_following %}following{% elif person in user.person.get_followers %}follower{% elif person in user.person.get_blocked %}blocked{% endif %}{% endif %}</div>
