@@ -3,39 +3,20 @@
  * Utilities for the Audio app
 */
 /* global document, window, $ */
-'use strict';
 
+'use strict';
 var util = (function () {
-    var moment = require('moment');
+
 
     var sleep,
         fetchUrl, updateUrl,
+        fetchUrlXHR,
         PubSub,
         truncate, alert,
         getCookie, sameOrigin, urlParse,
-        swipeData, csrfSafeMethod, parseClipData, utils,
+        swipeData, csrfSafeMethod, utils,
+        isArray,
         getURLpk;
-
-    //---------------- BEGIN MODULE DEPENDENCIES --------------
-    moment.locale('en', {
-        relativeTime : {
-            future: "in %s",
-            past:   "%s ago",
-            s:  "s",
-            m:  "1min",
-            mm: "%dmin",
-            h:  "1h",
-            hh: "%dh",
-            d:  "1d",
-            dd: "%dd",
-            M:  "1mon",
-            MM: "%dmon",
-            y:  "1yr",
-            yy: "%dyrs"
-        }
-    });
-    //---------------- END MODULE DEPENDENCIES --------------
-
 
     //------------------- BEGIN PUBLIC METHODS -------------------
     sleep = function(milliseconds) {
@@ -54,8 +35,7 @@ var util = (function () {
      * @param message string message to alert
      * @param duration message duration in ms
      */
-    alert = function( container, type, message, duration )
-    {
+    alert = function( container, type, message, duration ){
         var alert, existing,
             default_delay = 2 * 1000,
             delay = duration || default_delay,
@@ -123,33 +103,6 @@ var util = (function () {
     };
 
     /**
-     * parseClipData: transform any Clip fields to javascript-compatible
-     * @param raw a string describing an array of valid JSON
-     * @return jsonArray - a list of valid JSON objects
-     */
-    parseClipData = function(raw){
-        var jsonArray;
-        jsonArray = raw.results.map(function(jsonObj){
-
-            try{
-                jsonObj.created = moment(jsonObj.created);
-                jsonObj.created_i = new Date( moment(jsonObj.created)._i );
-
-                //sub-in dummy image
-                if(jsonObj.brand === "")
-                {
-                    jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
-                }
-                return jsonObj;
-            }catch(err){
-                console.log(err);
-            }
-        });
-        //console.log(jsonArray);
-        return jsonArray;
-    };
-
-    /**
      * fetchUrl make a call to the given url and emit a Pubsub on complete
      * @param url
      * @param callback the callback for the results
@@ -169,6 +122,41 @@ var util = (function () {
         })
         .always(function(){
         });
+    };
+
+    /**
+     * fetchUrlXHR make a call to the given url and emit a Pubsub on complete
+     * @param url
+     * @param type the data response type
+     * @param success async callback
+     * @param fail (optional) async callback
+     */
+    fetchUrlXHR = function(url, type, success, fail){
+
+        var xhr,
+            f = fail || function () { console.log('loadBuffer: XHR error'); };
+
+        xhr = new window.XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = type;
+        xhr.onload = function(){
+            if (this.status === 200) {
+                success(this);
+            }
+            else{
+                console.warn("util:fetchUrlXHR status %s", this.status);
+            }
+        };
+
+        xhr.onError = f;
+        xhr.send();
+    };
+
+    isArray = function( my_value ){
+        return my_value &&
+            typeof my_value === 'object' &&
+            typeof my_value.length === 'number' &&
+            !(my_value.propertyIsEnumerable('length'));
     };
 
     /**
@@ -941,6 +929,7 @@ var util = (function () {
 
     return {
         sleep           : sleep,
+        fetchUrlXHR     : fetchUrlXHR,
         fetchUrl        : fetchUrl,
         updateUrl       : updateUrl,
         PubSub          : PubSub,
@@ -948,12 +937,12 @@ var util = (function () {
         getCookie       : getCookie,
         csrfSafeMethod  : csrfSafeMethod,
         sameOrigin      : sameOrigin,
-        parseClipData   : parseClipData,
         swipeData       : swipeData,
         utils           : utils,
         urlParse        : urlParse,
-        getURLpk        :getURLpk,
-        alert           : alert
+        getURLpk        : getURLpk,
+        alert           : alert,
+        isArray         : isArray
     };
 }());
 

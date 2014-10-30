@@ -24,6 +24,15 @@ module.exports = function browserify(grunt) {
                 debug: true,
                 watch: true
             }
+        },
+        siren: {
+            files: {
+                'dist/siren_bundle.js': ['src/siren/main.js']
+            },
+            options: {
+                debug: true,
+                watch: true
+            }
         }
 	};
 };

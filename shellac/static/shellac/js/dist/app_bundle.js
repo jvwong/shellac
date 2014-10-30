@@ -12143,6 +12143,67 @@ if ( typeof(exports) === 'object' ){
 
 },{}],6:[function(require,module,exports){
 /*
+ * app_util.js
+ * Utilities for app
+ */
+/* global document, window, $ */
+'use strict';
+
+var app_util = (function () {
+    var moment = require('moment');
+    var parseClipData;
+
+    //---------------- BEGIN MODULE DEPENDENCIES --------------
+    moment.locale('en', {
+        relativeTime : {
+            future: "in %s",
+            past:   "%s ago",
+            s:  "s",
+            m:  "1min",
+            mm: "%dmin",
+            h:  "1h",
+            hh: "%dh",
+            d:  "1d",
+            dd: "%dd",
+            M:  "1mon",
+            MM: "%dmon",
+            y:  "1yr",
+            yy: "%dyrs"
+        }
+    });
+    //---------------- END MODULE DEPENDENCIES --------------
+
+    /**
+     * parseClipData: transform any Clip fields to javascript-compatible
+     * @param raw a string describing an array of valid JSON
+     * @return jsonArray - a list of valid JSON objects
+     */
+    parseClipData = function(raw){
+        var jsonArray;
+        jsonArray = raw.results.map(function(jsonObj){
+
+            try{
+                jsonObj.created = moment(jsonObj.created);
+                jsonObj.created_i = new Date( moment(jsonObj.created)._i );
+                return jsonObj;
+            }catch(err){
+                console.log(err);
+            }
+        });
+        //console.log(jsonArray);
+        return jsonArray;
+    };
+
+    return {
+        parseClipData: parseClipData
+    };
+}());
+
+module.exports = app_util;
+
+
+},{"moment":4}],7:[function(require,module,exports){
+/*
  * main.js
  * Entry point for audio app
 */
@@ -12157,7 +12218,7 @@ $( document ).ready(function() {
 });
 
 
-},{"../util.js":10,"./shell.js":7}],7:[function(require,module,exports){
+},{"../util.js":11,"./shell.js":8}],8:[function(require,module,exports){
 /*
  * shell.js
  * Root namespace module
@@ -12169,6 +12230,7 @@ var shellac = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var TAFFY   = require('taffydb').taffy,
+        app_util = require('./app_util.js'),
         util    = require('../util.js'),
         sidebar = require('./sidebar.js'),
         bar     = require('../players/bar-ui.js'),
@@ -12359,7 +12421,7 @@ var shellac = (function () {
     initLatest = function( status, username, done ){
         var clipsUrl = ['/api/clips', status, username, ""].join('/');
         util.fetchUrl(clipsUrl, function( results ){
-            var formatted = util.parseClipData( results );
+            var formatted = app_util.parseClipData( results );
             stateMap.latest_clips_db.insert( formatted );
             render_clips( stateMap.latest_clips_db().order("created_i desc").get() );
             done(null);
@@ -13057,7 +13119,7 @@ var shellac = (function () {
 module.exports = shellac;
 
 
-},{"../players/bar-ui.js":9,"../util.js":10,"./sidebar.js":8,"async":2,"taffydb":5}],8:[function(require,module,exports){
+},{"../players/bar-ui.js":10,"../util.js":11,"./app_util.js":6,"./sidebar.js":9,"async":2,"taffydb":5}],9:[function(require,module,exports){
 /*
 * sidebar.js
 * Sidebar module
@@ -13069,6 +13131,7 @@ var sidebar = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var TAFFY = require('taffydb').taffy,
+        app_util = require('./app_util.js'),
         util = require('../util.js'),
         utils = util.utils;
 
@@ -13338,7 +13401,7 @@ var sidebar = (function () {
         var q = jqueryMap.$sidebar_search_input.val(),
             endpoint = ['/api/clips/?q=', q].join('');
         util.fetchUrl(endpoint, function(results){
-            util.PubSub.emit( "shellac-app-clip-change", util.parseClipData(results));
+            util.PubSub.emit( "shellac-app-clip-change", app_util.parseClipData(results));
         });
     };
 
@@ -13403,7 +13466,7 @@ var sidebar = (function () {
 module.exports = sidebar;
 
 
-},{"../util.js":10,"taffydb":5}],9:[function(require,module,exports){
+},{"../util.js":11,"./app_util.js":6,"taffydb":5}],10:[function(require,module,exports){
 /**
  * SoundManager 2: "Bar UI" player
  * http://www.schillmania.com/projects/soundmanager2/
@@ -14986,45 +15049,26 @@ var bar_ui = (function() {
 }());
 
 module.exports = bar_ui;
-},{"../../lib/soundmanager2/script/soundmanager2.js":1,"../util.js":10,"taffydb":5}],10:[function(require,module,exports){
+},{"../../lib/soundmanager2/script/soundmanager2.js":1,"../util.js":11,"taffydb":5}],11:[function(require,module,exports){
 /*
  * util.js
  * Utilities for the Audio app
 */
 /* global document, window, $ */
-'use strict';
 
+'use strict';
 var util = (function () {
-    var moment = require('moment');
+
 
     var sleep,
         fetchUrl, updateUrl,
+        fetchUrlXHR,
         PubSub,
         truncate, alert,
         getCookie, sameOrigin, urlParse,
-        swipeData, csrfSafeMethod, parseClipData, utils,
+        swipeData, csrfSafeMethod, utils,
+        isArray,
         getURLpk;
-
-    //---------------- BEGIN MODULE DEPENDENCIES --------------
-    moment.locale('en', {
-        relativeTime : {
-            future: "in %s",
-            past:   "%s ago",
-            s:  "s",
-            m:  "1min",
-            mm: "%dmin",
-            h:  "1h",
-            hh: "%dh",
-            d:  "1d",
-            dd: "%dd",
-            M:  "1mon",
-            MM: "%dmon",
-            y:  "1yr",
-            yy: "%dyrs"
-        }
-    });
-    //---------------- END MODULE DEPENDENCIES --------------
-
 
     //------------------- BEGIN PUBLIC METHODS -------------------
     sleep = function(milliseconds) {
@@ -15043,8 +15087,7 @@ var util = (function () {
      * @param message string message to alert
      * @param duration message duration in ms
      */
-    alert = function( container, type, message, duration )
-    {
+    alert = function( container, type, message, duration ){
         var alert, existing,
             default_delay = 2 * 1000,
             delay = duration || default_delay,
@@ -15112,33 +15155,6 @@ var util = (function () {
     };
 
     /**
-     * parseClipData: transform any Clip fields to javascript-compatible
-     * @param raw a string describing an array of valid JSON
-     * @return jsonArray - a list of valid JSON objects
-     */
-    parseClipData = function(raw){
-        var jsonArray;
-        jsonArray = raw.results.map(function(jsonObj){
-
-            try{
-                jsonObj.created = moment(jsonObj.created);
-                jsonObj.created_i = new Date( moment(jsonObj.created)._i );
-
-                //sub-in dummy image
-                if(jsonObj.brand === "")
-                {
-                    jsonObj.brand_url = 'static/shellac/assets/seventyEight.png';
-                }
-                return jsonObj;
-            }catch(err){
-                console.log(err);
-            }
-        });
-        //console.log(jsonArray);
-        return jsonArray;
-    };
-
-    /**
      * fetchUrl make a call to the given url and emit a Pubsub on complete
      * @param url
      * @param callback the callback for the results
@@ -15158,6 +15174,41 @@ var util = (function () {
         })
         .always(function(){
         });
+    };
+
+    /**
+     * fetchUrlXHR make a call to the given url and emit a Pubsub on complete
+     * @param url
+     * @param type the data response type
+     * @param success async callback
+     * @param fail (optional) async callback
+     */
+    fetchUrlXHR = function(url, type, success, fail){
+
+        var xhr,
+            f = fail || function () { console.log('loadBuffer: XHR error'); };
+
+        xhr = new window.XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = type;
+        xhr.onload = function(){
+            if (this.status === 200) {
+                success(this);
+            }
+            else{
+                console.warn("util:fetchUrlXHR status %s", this.status);
+            }
+        };
+
+        xhr.onError = f;
+        xhr.send();
+    };
+
+    isArray = function( my_value ){
+        return my_value &&
+            typeof my_value === 'object' &&
+            typeof my_value.length === 'number' &&
+            !(my_value.propertyIsEnumerable('length'));
     };
 
     /**
@@ -15930,6 +15981,7 @@ var util = (function () {
 
     return {
         sleep           : sleep,
+        fetchUrlXHR     : fetchUrlXHR,
         fetchUrl        : fetchUrl,
         updateUrl       : updateUrl,
         PubSub          : PubSub,
@@ -15937,16 +15989,16 @@ var util = (function () {
         getCookie       : getCookie,
         csrfSafeMethod  : csrfSafeMethod,
         sameOrigin      : sameOrigin,
-        parseClipData   : parseClipData,
         swipeData       : swipeData,
         utils           : utils,
         urlParse        : urlParse,
-        getURLpk        :getURLpk,
-        alert           : alert
+        getURLpk        : getURLpk,
+        alert           : alert,
+        isArray         : isArray
     };
 }());
 
 module.exports = util;
 
 
-},{"moment":4}]},{},[6]);
+},{}]},{},[7]);

@@ -9,6 +9,7 @@ var sidebar = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var TAFFY = require('taffydb').taffy,
+        app_util = require('./app_util.js'),
         util = require('../util.js'),
         utils = util.utils;
 
@@ -278,7 +279,7 @@ var sidebar = (function () {
         var q = jqueryMap.$sidebar_search_input.val(),
             endpoint = ['/api/clips/?q=', q].join('');
         util.fetchUrl(endpoint, function(results){
-            util.PubSub.emit( "shellac-app-clip-change", util.parseClipData(results));
+            util.PubSub.emit( "shellac-app-clip-change", app_util.parseClipData(results));
         });
     };
 

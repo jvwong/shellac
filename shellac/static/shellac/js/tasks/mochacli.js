@@ -7,11 +7,11 @@ module.exports = function mochacli(grunt) {
 
 	// Options
 	return {
-        src: ['test/mocha/**/*.js'],
+        src: ['test/mocha/siren.js'],
         options: {
             timeout: 6000,
             'check-leaks': false,
-            globals: ['jQuery', 'window'],
+            globals: ['jQuery', 'window', 'XMLHttpRequest'],
             ui: 'bdd',
             reporter: 'spec'
         }

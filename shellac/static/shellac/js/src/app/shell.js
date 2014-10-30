@@ -9,6 +9,7 @@ var shellac = (function () {
 
     //---------------- BEGIN MODULE DEPENDENCIES --------------
     var TAFFY   = require('taffydb').taffy,
+        app_util = require('./app_util.js'),
         util    = require('../util.js'),
         sidebar = require('./sidebar.js'),
         bar     = require('../players/bar-ui.js'),
@@ -199,7 +200,7 @@ var shellac = (function () {
     initLatest = function( status, username, done ){
         var clipsUrl = ['/api/clips', status, username, ""].join('/');
         util.fetchUrl(clipsUrl, function( results ){
-            var formatted = util.parseClipData( results );
+            var formatted = app_util.parseClipData( results );
             stateMap.latest_clips_db.insert( formatted );
             render_clips( stateMap.latest_clips_db().order("created_i desc").get() );
             done(null);

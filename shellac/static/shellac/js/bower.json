@@ -26,5 +26,8 @@
     "less": "~1.7.5",
     "jquery-touchswipe": "~1.6.6",
     "bootstrap-datetimepicker": "~0.0.11"
+  },
+  "devDependencies": {
+    "jasmine": "~2.0.4"
   }
 }
