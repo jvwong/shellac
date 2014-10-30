@@ -9,12 +9,11 @@ module.exports = function watch(grunt) {
 	return {
         js: {
             files: [
-                'src/**/*.js',
-                'test/jasmine/siren/src/*.js'
+                'src/**/*.js'
             ],
             tasks: [
-                'jshint'
-//                'browserify'
+                'jshint',
+                'browserify'
             ]
         },
         styles: {

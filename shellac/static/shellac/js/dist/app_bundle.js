@@ -12220,8 +12220,8 @@ $( document ).ready(function() {
 
 },{"../util.js":11,"./shell.js":8}],8:[function(require,module,exports){
 /*
- * shell.js
- * Root namespace module
+* shell.js
+* Root namespace module
 */
 /* global $, window, document, AudioContext, XMLHttpRequest, target_username, DEBUG */
 'use strict';
@@ -12612,76 +12612,79 @@ var shellac = (function () {
      * 'span.enqueue-icon' element every time clips are inserted
      * @param clipList the list of clip objects
      */
+
+    //TOTDO shouldhav some way of knowing which clips are enqueued
     render_clips = function( clipList ){
+      var container = dom.clip_content_container,
+          clipString = String();
 
-        var container = dom.clip_content_container,
-            clipString = String();
+      //clear out any existing html nodes and listeners
+      container.innerHTML = "";
+      utils.events.remove(container, 'click', handleClick);
 
-        //clear out any existing html nodes and listeners
-        container.innerHTML = "";
-        utils.events.remove(container, 'click', handleClick);
+      if(stateMap.latest_clips_db().count() === 0)
+      {
+          var message = String() +
+              '<div class="col-xs-12 shellac-grid-element no-content">' +
+                  '<h3>Nothing to hear here...</h3>' +
+              '</div>';
+          container.innerHTML  = message;
+          return;
+      }
 
-        if(stateMap.latest_clips_db().count() === 0)
-        {
-            var message = String() +
-                '<div class="col-xs-12 shellac-grid-element no-content">' +
-                    '<h3>Nothing to hear here...</h3>' +
-                '</div>';
-            container.innerHTML  = message;
-            return;
-        }
+      clipList.forEach(function(object){
 
-        clipList.forEach(function(object){
+        var clip,
+            created = object.created.startOf('minute').fromNow(true),
+            categories = object.categories.length > 0 ? object.categories.map(function(c){ return c.split('/')[5].toUpperCase(); })
+                .slice(0,3)
+                .join(" | ")
+                .toString() : "&nbsp;",
+            id = object.id.toString(),
+            id_x = "id_" + id,
+            enqueue = preferencesMap.positionsMap.hasOwnProperty(id) ? 'enqueued' : '',
+            rating = '<span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>';
 
-            var clip,
-                created = object.created.startOf('minute').fromNow(true),
-                categories = object.categories.length > 0 ? object.categories.map(function(c){ return c.split('/')[5].toUpperCase(); })
-                    .slice(0,3)
-                    .join(" | ")
-                    .toString() : "&nbsp;",
-                id_x = "id_" + object.id.toString(),
-                rating = '<span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>';
+        clipString +=
+          '<div class="col-xs-6 col-sm-4 shellac-grid-element">' +
+            '<div class ="shellac-grid-element-panel ' + id_x + '">' +
 
-            clipString +=
-                '<div class="col-xs-6 col-sm-4 shellac-grid-element">' +
-                    '<div class ="shellac-grid-element-panel ' + id_x + '">' +
+              '<span class="glyphicon enqueue-icon glyphicon-ok-circle ' + enqueue + '"></span>' +
 
-                        '<span class="glyphicon enqueue-icon glyphicon-ok-circle"></span>' +
+              '<div class="shellac-playstate">' +
+                '<span class="icon-play icon play"></span>' +
+                '<span class="icon-pause icon pause"></span>' +
+                '<span class="icon-stop icon stop"></span>' +
+              '</div>' +
 
-                        '<div class="shellac-playstate">' +
-                            '<span class="icon-play icon play"></span>' +
-                            '<span class="icon-pause icon pause"></span>' +
-                            '<span class="icon-stop icon stop"></span>' +
-                        '</div>' +
+              '<div class ="shellac-img-panel">' +
+                '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-id="' + object.id + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
+                  '<img class="img-thumbnail shellac-grid-img " src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
+                '</a>' +
+              '</div>' +
 
-                        '<div class ="shellac-img-panel">' +
-                            '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-id="' + object.id + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
-                                '<img class="img-thumbnail shellac-grid-img " src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
-                            '</a>' +
-                        '</div>' +
-
-                        '<div class ="shellac-caption-panel">' +
-                            '<a href="#modal" data-url="' + object.permalink + '">' +
-                                '<div class ="shellac-description-container">' +
-                                    '<div class="shellac-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</div>' +
-                                    '<div class="shellac-description-content owner">' + object.owner + '</div>' +
-                                    '<div class="shellac-description-content description-short">' + util.truncate(object.description , configMap.truncatemax) + '</div>' +
-                                    '<div class="meta-data">' +
-                                        '<div class="shellac-description-content plays">' + object.plays + ' plays</div>' +
-                                        '<div class="shellac-description-content created">' + created + '</div>' +
-                                    '</div>' +
-                                '</div>' +
-                            '</a>' +
-                        '</div>' +
-
+                '<div class ="shellac-caption-panel">' +
+                  '<a href="#modal" data-url="' + object.permalink + '">' +
+                    '<div class ="shellac-description-container">' +
+                      '<div class="shellac-description-content title">' + util.truncate(object.title, configMap.truncatemax) + '</div>' +
+                      '<div class="shellac-description-content owner">' + object.owner + '</div>' +
+                      '<div class="shellac-description-content description-short">' + util.truncate(object.description , configMap.truncatemax) + '</div>' +
+                      '<div class="meta-data">' +
+                        '<div class="shellac-description-content plays">' + object.plays + ' plays</div>' +
+                        '<div class="shellac-description-content created">' + created + '</div>' +
+                      '</div>' +
                     '</div>' +
-                '</div>';
-        });
+                  '</a>' +
+                '</div>' +
 
-        container.innerHTML = clipString;
+            '</div>' +
+          '</div>';
+      });
 
-        // (re-)register click events on <a> of the entire ui
-        utils.events.add(container, 'click', handleClick);
+      container.innerHTML = clipString;
+
+      // (re-)register click events on <a> of the entire ui
+      utils.events.add(container, 'click', handleClick);
     };
     //--------------------- END DOM METHODS ----------------------
 
@@ -12841,6 +12844,8 @@ var shellac = (function () {
      * @param state string identifier indicating the type of state change
      * @param sm2Object the relevant soundManager sound object
      */
+
+    ///this needs to update when sidebar emit signals
     handlePlayerStateChange = function(state, sm2Object){
 //        console.log("handlePlayerStateChange");
 //        console.log(state);
@@ -13105,7 +13110,7 @@ var shellac = (function () {
 
                 if(DEBUG)
                 {
-//                    console.log(utils.dom.get(container, '.sm2-playlist-wrapper .sm2-playlist-bd'));
+                  console.log(utils.dom.get(container, '.sm2-playlist-wrapper .sm2-playlist-bd'));
                 }
             });
         }
@@ -13356,7 +13361,6 @@ var sidebar = (function () {
             category = category_db({slug: id}).first();
             clips = latest_clips_db({categories: {has: category.url}}).get();
         }
-
         util.PubSub.emit( "shellac-app-clip-change", clips);
     };
 

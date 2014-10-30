@@ -234,7 +234,6 @@ var sidebar = (function () {
             category = category_db({slug: id}).first();
             clips = latest_clips_db({categories: {has: category.url}}).get();
         }
-
         util.PubSub.emit( "shellac-app-clip-change", clips);
     };
 

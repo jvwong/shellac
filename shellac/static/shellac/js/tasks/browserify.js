@@ -16,23 +16,14 @@ module.exports = function browserify(grunt) {
 			    watch: true
 			}
 		},
-        people: {
-            files: {
-                'dist/relationships_bundle.js': ['src/relationships/main.js']
-            },
-            options: {
-                debug: true,
-                watch: true
-            }
+    people: {
+        files: {
+            'dist/relationships_bundle.js': ['src/relationships/main.js']
         },
-        siren: {
-            files: {
-                'dist/siren_bundle.js': ['src/siren/main.js']
-            },
-            options: {
-                debug: true,
-                watch: true
-            }
+        options: {
+            debug: true,
+            watch: true
         }
+    }
 	};
 };
