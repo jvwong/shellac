@@ -332,7 +332,7 @@ var shellac = (function () {
         utils.events.add(sidebar_toggle, 'click', function(e){ utils.css.toggle(dom.sidebar_container, 'nav-expanded'); });
 
         //initialize the bar-ui module
-        bar.initModule( dom.player_container, preferencesMap.clips, preferencesMap.positionsMap );
+        bar.initModule( dom.player_container, preferencesMap.clips, preferencesMap.positionsMap, stateMap.DEBUG );
 
         done(null);
     };

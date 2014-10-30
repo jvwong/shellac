@@ -12553,7 +12553,7 @@ var shellac = (function () {
         utils.events.add(sidebar_toggle, 'click', function(e){ utils.css.toggle(dom.sidebar_container, 'nav-expanded'); });
 
         //initialize the bar-ui module
-        bar.initModule( dom.player_container, preferencesMap.clips, preferencesMap.positionsMap );
+        bar.initModule( dom.player_container, preferencesMap.clips, preferencesMap.positionsMap, stateMap.DEBUG );
 
         done(null);
     };
@@ -14978,7 +14978,7 @@ var bar_ui = (function() {
      * @param $container a single DOM Element
      * @clips clips list of Clip objects to populate the playlist
      */
-    initModule = function( container, clips, positionsMap ){
+    initModule = function( container, clips, positionsMap, DEBUG ){
 
         //ensure this is HTMLNode
         if(container.nodeType === 1){
@@ -14989,7 +14989,8 @@ var bar_ui = (function() {
             soundManager.setup({
                 // trade-off: higher UI responsiveness (play/progress bar), but may use more CPU.
                 html5PollingInterval: 50,
-                flashVersion: 9
+                flashVersion: 9,
+                debugMode: DEBUG
             });
 
             soundManager.onready(function() {
