@@ -144,7 +144,7 @@ class UserPassswordChangeTest(FunctionalTest):
         newpass1_textfield.send_keys('jray_updated')
         newpass2_textfield.send_keys('jray_updated')
 
-        change_button = self.browser.find_element_by_css_selector('.content-user .content-user-password_change button')
+        change_button = self.browser.find_element_by_css_selector('.content-user .content-user-password_change .btn')
         change_button.send_keys(Keys.ENTER)
 
         #The user gets redirected to the details page
@@ -166,7 +166,7 @@ class UserPassswordChangeTest(FunctionalTest):
         newpass1_textfield.send_keys('jray_updated')
         newpass2_textfield.send_keys('jray_updated')
 
-        change_button = self.browser.find_element_by_css_selector('.content-user .content-user-password_change button')
+        change_button = self.browser.find_element_by_css_selector('.content-user .content-user-password_change .btn')
         change_button.send_keys(Keys.ENTER)
 
         #The user gets errors
