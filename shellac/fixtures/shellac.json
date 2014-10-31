@@ -534,7 +534,7 @@
     "pk": 1,
     "model": "shellac.clip",
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "status": 1,
         "audio_file": "sounds/2014/10/19/water_Fy0CRFv.mp3",
         "description": "wer",
@@ -552,7 +552,7 @@
     "pk": 2,
     "model": "shellac.clip",
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "status": 1,
         "audio_file": "sounds/2014/10/19/water_lFAudJx.mp3",
         "description": "asdasd",
@@ -570,7 +570,7 @@
     "pk": 3,
     "model": "shellac.clip",
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "status": 1,
         "audio_file": "sounds/2014/10/19/water_TsJPtsM.mp3",
         "description": "asd",
@@ -588,7 +588,7 @@
     "pk": 4,
     "model": "shellac.clip",
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "status": 1,
         "audio_file": "sounds/2014/10/19/water_gin0DI9.mp3",
         "description": "kray1",
@@ -608,7 +608,7 @@
     "pk": 5,
     "model": "shellac.clip",
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "status": 1,
         "audio_file": "sounds/2014/10/19/water_XExmIdJ.mp3",
         "description": "kray1",
@@ -628,7 +628,7 @@
     "pk": 6,
     "model": "shellac.clip",
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "status": 1,
         "audio_file": "sounds/2014/10/19/water_fht0Pq5.mp3",
         "description": "jray1",
@@ -648,7 +648,7 @@
     "pk": 7,
     "model": "shellac.clip",
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "status": 1,
         "audio_file": "sounds/2014/10/19/heart_hckIBAe.mp3",
         "description": "jray2",
@@ -668,7 +668,7 @@
     "pk": 8,
     "model": "shellac.clip",
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "status": 1,
         "audio_file": "sounds/2014/10/19/water_VV1jivv.mp3",
         "description": "aray1",
@@ -689,7 +689,7 @@
     "pk": 9,
     "model": "shellac.clip",
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "status": 1,
         "audio_file": "sounds/2014/10/19/water_vmcDJCj.mp3",
         "description": "aray2",

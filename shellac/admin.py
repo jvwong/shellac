@@ -2,24 +2,11 @@ import os.path
 from django.contrib import admin
 from shellac.models import Category, Clip, Person, Relationship, Playlist, Track
 
-def custom_delete_selected(modeladmin, request, queryset):
-    #custom delete code
-    n = queryset.count()
-    for i in queryset:
-        if i.audio_file:
-            if os.path.exists(i.audio_file.path):
-                os.remove(i.audio_file.path)
-        i.delete()
-    modeladmin.message_user(request, ("Successfully deleted %d audio files.") % n)
-custom_delete_selected.short_description = "Delete selected items and content"
-
-
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('title',)
     ordering = ['title']
     prepopulated_fields = {'slug': ['title']}
 admin.site.register(Category, CategoryAdmin)
-
 
 
 class ClipInline(admin.StackedInline):

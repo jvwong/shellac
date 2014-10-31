@@ -302,7 +302,7 @@
 {
     "pk": 1,
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "title": "aray1",
         "brand": "",
         "author": 22,
@@ -324,7 +324,7 @@
 {
     "pk": 2,
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "title": "aray2",
         "brand": "",
         "author": 22,
@@ -345,7 +345,7 @@
 {
     "pk": 3,
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "title": "jray1",
         "brand": "",
         "author": 23,
@@ -366,7 +366,7 @@
 {
     "pk": 4,
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "title": "jray2",
         "brand": "",
         "author": 23,
@@ -387,7 +387,7 @@
 {
     "pk": 5,
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "title": "kray1",
         "brand": "",
         "author": 24,
@@ -408,7 +408,7 @@
 {
     "pk": 6,
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "title": "kray2",
         "brand": "",
         "author": 24,
@@ -429,7 +429,7 @@
 {
     "pk": 7,
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "title": "kray3",
         "brand": "",
         "author": 24,
@@ -450,7 +450,7 @@
 {
     "pk": 8,
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "title": "jvwong1",
         "brand": "",
         "author": 2,
@@ -471,7 +471,7 @@
 {
     "pk": 9,
     "fields": {
-        "brand_thumb": "",
+        "brand": "",
         "title": "jvwong2",
         "brand": "",
         "author": 2,

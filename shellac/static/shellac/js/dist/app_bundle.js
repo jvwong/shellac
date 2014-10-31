@@ -12643,7 +12643,7 @@ var shellac = (function () {
             id = object.id.toString(),
             id_x = "id_" + id,
             enqueue = preferencesMap.positionsMap.hasOwnProperty(id) ? 'enqueued' : '',
-            brand = object.brand_thumb_url === '' ? '/static/shellac/assets/avatar.jpeg' : object.brand_thumb_url,
+            brand = object.brand_url === '' ? '/static/shellac/assets/avatar.jpeg' : object.brand_url,
             rating = '<span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>';
 
         clipString +=

@@ -542,7 +542,7 @@
         "created": "2014-10-08T12:08:51",
         "author": 1,
         "slug": "wer",
-        "brand_thumb": "",
+        "brand": "",
         "description": "wer"
     },
     "pk": 1,
@@ -560,7 +560,7 @@
         "created": "2014-10-08T12:09:40",
         "author": 1,
         "slug": "2",
-        "brand_thumb": "",
+        "brand": "",
         "description": "asdasd"
     },
     "pk": 2,
@@ -578,7 +578,7 @@
         "created": "2014-10-08T15:07:36",
         "author": 1,
         "slug": "asd",
-        "brand_thumb": "",
+        "brand": "",
         "description": "asd"
     },
     "pk": 3,
@@ -598,7 +598,7 @@
         "created": "2014-10-08T16:59:17",
         "author": 4,
         "slug": "kray1",
-        "brand_thumb": "",
+        "brand": "",
         "description": "kray1"
     },
     "pk": 4,
@@ -618,7 +618,7 @@
         "created": "2014-10-08T16:59:59",
         "author": 4,
         "slug": "kray2",
-        "brand_thumb": "",
+        "brand": "",
         "description": "kray1"
     },
     "pk": 5,
@@ -638,7 +638,7 @@
         "created": "2014-10-08T17:00:41",
         "author": 3,
         "slug": "jray1",
-        "brand_thumb": "",
+        "brand": "",
         "description": "jray1"
     },
     "pk": 6,
@@ -658,7 +658,7 @@
         "created": "2014-10-08T17:01:06",
         "author": 3,
         "slug": "jray2",
-        "brand_thumb": "",
+        "brand": "",
         "description": "jray2"
     },
     "pk": 7,
@@ -679,7 +679,7 @@
         "created": "2014-10-08T17:01:30",
         "author": 2,
         "slug": "aray1",
-        "brand_thumb": "",
+        "brand": "",
         "description": "aray1"
     },
     "pk": 8,
@@ -700,7 +700,7 @@
         "created": "2014-10-08T17:01:30",
         "author": 2,
         "slug": "aray2",
-        "brand_thumb": "",
+        "brand": "",
         "description": "aray2"
     },
     "pk": 9,

@@ -40,8 +40,8 @@
 
                         <div class="btn btn-default btn-file partial-profile-avatar-img_panel-input_panel">
                             <img class="img-circle" src="
-                            {% if person.avatar_thumb %}
-                                {{ person.avatar_thumb.url }}
+                            {% if person.avatar %}
+                                {{ person.avatar.url }}
                             {% else %}
                                 {% static 'shellac/assets/avatar.jpeg' %}
                             {% endif %}" alt="{{ person.username }}" />

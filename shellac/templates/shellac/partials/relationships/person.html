@@ -3,7 +3,11 @@
 <div class="partial-relationships person col-xs-12 col-md-offset-2 col-md-10" data-person="{{ person.username}}">
     <div class="partial-relationships-avatar person">
         <a href="{{ person.get_absolute_url}}">
-            <img class="img-thumbnail" src="{% if person.avatar %}{{ person.avatar_thumb.url }}{% else %}{% static 'shellac/assets/avatar.jpeg' %}{% endif %}" alt="{{ person.username }}" />
+            <img class="img-thumbnail" src="{% if person.avatar %}
+                                              {{ person.avatar.url }}
+                                            {% else %}
+                                              {% static 'shellac/assets/avatar.jpeg' %}
+                                            {% endif %}" alt="{{ person.username }}" />
         </a>
     </div>
     <div class="partial-relationships-detail person">

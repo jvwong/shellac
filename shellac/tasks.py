@@ -80,12 +80,14 @@ def upload_task(bucket_name, source_path, key_prefix):
         return False
 
 
-def get_task_status(task_id):
+def get_upload_task_status(task_id):
 
     # If you have a task_id, this is how you query that task
     task = upload_task.AsyncResult(task_id)
 
     status = task.status
+    result = task.result
+
     progress = 0
 
     if status == u'SUCCESS':
@@ -95,12 +97,59 @@ def get_task_status(task_id):
     elif status == 'PROGRESS':
         progress = task.info['progress']
 
-    return {'status': status, 'progress': progress}
+    return {
+        'status': status,
+        'progress': progress,
+        'result': result
+    }
 
-# bname = 'shellac-media'
-# lspath = '/home/jvwong/Music/U2/Songs of Innocence/02 Every Breaking Wave.m4a'
-# spath = '/home/jvwong/Projects/shellac/shellac.no-ip.ca/source/shellac/tests/assets/water.mp3'
-# kprefix = '/debug/media/sounds/2014/10/30/'
 
+def clear_keys(bucket_name, key_prefix):
+
+    #Open the connection
+    try:
+        conn = boto.connect_s3()
+        bucket = conn.get_bucket(bucket_name)
+
+        #Get a list of keys and delete()
+        for key in bucket.list(prefix=key_prefix):
+            key.delete()
+
+        return True
+
+    except IOError as e:
+        print("I/O error({0}): {1}".format(e.errno, e.strerror))
+        return False
+
+
+def clear_a_key(bucket_name, key_name):
+
+    #Open the connection
+    try:
+        conn = boto.connect_s3()
+        bucket = conn.get_bucket(bucket_name)
+
+        #Get a key and delete()
+        key = bucket.delete_key(key_name)
+
+        if key.exists():
+            return False
+
+        return True
+
+    except IOError as e:
+        print("I/O error({0}): {1}".format(e.errno, e.strerror))
+        return False
+
+
+bname = 'shellac-media'
+lspath = '/home/jvwong/Music/U2/Songs of Innocence/02 Every Breaking Wave.m4a'
+spath = '/home/jvwong/Projects/shellac/shellac.no-ip.ca/source/shellac/tests/assets/water.mp3'
+kprefix = '/debug/media/sounds/2014/10/30/'
+#
 ###Fire off a task
 # t = upload_task.delay(bname, spath, kprefix)
+
+
+###starting celery daemon
+### celery --app=config.celery:app worker --loglevel=INFO

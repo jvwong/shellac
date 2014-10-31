@@ -4,10 +4,13 @@
 <div class="row clip-detail-container col-sm-offset-0 col-sm-12">
     <div class="clip-detail-img col-xs-12 col-sm-3">
         <a class="clip-detail-url" href="{{ object.audio_file.url }}">
-            <img src="{% if object.brand_thumb %}{{ object.brand_thumb.url }}
-                            {% elif object.author.avatar_thumb %}{{ object.author.avatar_thumb.url }}
-                            {% else %}{% static 'shellac/assets/seventyEight.png' %}
-                            {% endif %}"  alt="{{ object.title }}" />
+            <img src="{% if object.brand %}
+                        {{ object.brand.url }}
+                      {% elif object.author.avatar %}
+                        {{ object.author.avatar.url }}
+                      {% else %}
+                        {% static 'shellac/assets/seventyEight.png' %}
+                      {% endif %}"  alt="{{ object.title }}" />
         </a>
         <div class="clip-detail-edit">
             {% if object.author.user == user %}

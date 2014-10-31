@@ -124,26 +124,16 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
     audio_file_url = serializers.SerializerMethodField('get_audio_file_url')
 
     brand_url = serializers.SerializerMethodField('get_brand_url')
-    brand_thumb_url = serializers.SerializerMethodField('get_brand_thumb_url')
 
     permalink = serializers.Field(source='get_absolute_url')
 
     tags = serializers.Field(source='tags.names')
-
 
     def get_brand_url(self, obj):
         if obj.brand:
             return obj.brand.url
         elif obj.author.avatar:
             return obj.author.avatar.url
-        else:
-            return ""
-
-    def get_brand_thumb_url(self, obj):
-        if obj.brand_thumb:
-            return obj.brand_thumb.url
-        elif obj.author.avatar:
-            return obj.author.avatar_thumb.url
         else:
             return ""
 
@@ -156,7 +146,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
         lookup_field = 'pk'
         model = Clip
         fields = ('url', 'id', 'title', 'author', 'description', 'categories', 'tags',
-                  'brand', 'brand_url', 'brand_thumb_url', 'plays', 'rating', 'status', 'slug',
+                  'brand', 'brand_url', 'plays', 'rating', 'status', 'slug',
                   'audio_file', 'audio_file_url', 'created', 'owner', 'permalink')
         # read_only_fields = ('categories',)
 

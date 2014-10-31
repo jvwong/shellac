@@ -1,6 +1,7 @@
 import os.path
 import datetime
 from uuid import uuid4
+from collections import namedtuple
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -15,6 +16,8 @@ from image.fields import ThumbnailImageField
 from audio.fields import AudioField
 
 from shellac import util
+from shellac.tasks import upload_task, clear_a_key, clear_keys
+
 
 APP_DIR = os.path.abspath(os.path.dirname(__file__))
 DEFAULT_AVATAR = os.path.abspath(os.path.join(APP_DIR, './static/shellac/assets/avatar.jpeg'))
@@ -50,8 +53,7 @@ class Person(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     username = models.CharField(max_length=30, editable=False)
     joined = models.DateTimeField(auto_now_add=True, blank=True)
-    avatar = models.ImageField(upload_to=path_and_rename('avatars'), blank=True)
-    avatar_thumb = ThumbnailImageField(upload_to=path_and_rename('avatars'), blank=True, editable=False)
+    avatar = ThumbnailImageField(upload_to=path_and_rename('avatars'), blank=True)
 
     relationships = models.ManyToManyField('self',
                                            through='Relationship',
@@ -123,7 +125,7 @@ class Person(models.Model):
     def save(self, *args, **kwargs):
         self.username = self.user.username
         if self.avatar:
-           util.squarer(self.avatar, self.avatar_thumb, self.avatar.name)
+           util.squarer(self.avatar, self.avatar, self.avatar.name)
         super(Person, self).save(*args, **kwargs)
 
 
@@ -147,12 +149,6 @@ def on_person_delete(sender, instance, **kwargs):
             os.remove(instance.avatar.url)
         # Pass false so ImageField doesn't save the model.
         instance.avatar.delete(False)
-
-    if instance.avatar_thumb:
-        if os.path.isfile(instance.avatar_thumb.url):
-            os.remove(instance.avatar_thumb.url)
-        # Pass false so ImageField doesn't save the model.
-        instance.avatar_thumb.delete(False)
 
 
 ##########################################################################################
@@ -282,24 +278,49 @@ class Category(models.Model):
 ##########################################################################################
 ###                             BEGIN Class Clip                                       ###
 ##########################################################################################
-def clear_clip_files(instance):
+def clear_brand(instance):
     if instance.brand:
         if os.path.isfile(instance.brand.url):
             os.remove(instance.brand.url)
         # Pass false so ImageField doesn't save the model.
         instance.brand.delete(False)
 
-    if instance.brand_thumb:
-        if os.path.isfile(instance.brand_thumb.url):
-            os.remove(instance.brand_thumb.url)
-        # Pass false so ImageField doesn't save the model.
-        instance.brand_thumb.delete(False)
-
+def clear_audio_file(instance):
     if instance.audio_file:
         if os.path.isfile(instance.audio_file.url):
             os.remove(instance.audio_file.url)
         # Pass false so ImageField doesn't save the model.
         instance.audio_file.delete(False)
+
+
+def clear_clip_files(instance):
+    clear_brand(instance)
+    clear_audio_file(instance)
+
+
+
+def upload_clip(instance):
+    Result = namedtuple('Result', ['brand', 'audio_file'])
+
+    debug = ""
+    if settings.DEBUG:
+        debug = "debug"
+
+    ### CAREFUL with keys --- leading slash versus no leading slash??
+    # after upload, delete the local brand, brand, and audio_file
+    if instance.brand:
+        path = os.path.normpath(settings.BASE_DIR + instance.brand.url)
+        if os.path.isfile(path):
+            btask = upload_task.delay(settings.AWS_STORAGE_BUCKET_NAME, path,
+                                      "{}{}".format(debug, os.path.split(instance.brand.url)[0]))
+
+    if instance.audio_file:
+        path = os.path.normpath(settings.BASE_DIR + instance.audio_file.url)
+        if os.path.isfile(path):
+            atask = upload_task.delay(settings.AWS_STORAGE_BUCKET_NAME, path,
+                                      "{}{}".format(debug, os.path.split(instance.audio_file.url)[0]))
+
+    return Result(brand=btask, audio_file=atask)
 
 
 class ClipManager(models.Manager):
@@ -336,8 +357,7 @@ class Clip(models.Model):
     description = models.TextField(max_length=2000, blank=True, help_text=("Limit 2000 characters"))
 
     ###upload to subdirectory with user id prefixed
-    brand = models.ImageField(upload_to=path_and_rename('brands'), blank=True, help_text=("Images will be cropped as squares"))
-    brand_thumb = ThumbnailImageField(upload_to=path_and_rename('brands'), blank=True, editable=False)
+    brand = ThumbnailImageField(upload_to=path_and_rename('brands'), blank=True, help_text=("Images will be cropped as squares"))
 
     ### Default
     plays = models.PositiveSmallIntegerField(default=0, blank=True)
@@ -354,18 +374,35 @@ class Clip(models.Model):
 
     def save(self, *args, **kwargs):
         ###There is no requirement for a brand
+        # print(self.brand)
+        # print(self.pk)
+
+        # brand exists only on new or updated clips
         if self.brand:
+            # print("self.brand exists!")
+
             filename = os.path.split(self.brand.name)[1]
+
             if self.pk is not None:
-                ##Prevent re-saving same brand
+                # case: existing clip (pk) and has a brand
+                # print("Brand with pk: {}".format(self.pk))
+
+                ## Don't re-save the exact same brand
                 orig = Clip.objects.get(pk=self.pk)
                 if orig.brand != self.brand:
-                    util.squarer(self.brand, self.brand_thumb, filename)
+                    util.squarer(self.brand, self.brand, filename)
+
             else:
-                util.squarer(self.brand, self.brand_thumb, filename)
+                # case: created clip (pk = None) and has a brand
+                # print("pk is none")
+                # print(self.brand)
+                util.squarer(self.brand, self.brand, filename)
+
+
+            #delete the brand; self.brancd will not exist
+            # clear_brand(self)
 
         self.slug = slugify(self.title)
-
         super(Clip, self).save(*args, **kwargs)
 
     class Meta:
@@ -398,30 +435,20 @@ class Clip(models.Model):
 
     objects = ClipManager()
 
+
 # @receiver(post_save, sender=Clip)
 # def on_clip_save(sender, instance, created, raw, using, update_fields, **kwargs):
-#     from shellac.tasks import upload_task, get_task_status
-#
-#     #delete the local files for brand, thumb, and audio_file
-#     if instance.brand_thumb:
-#         path = os.path.normpath(settings.BASE_DIR + instance.brand_thumb.url)
-#         if os.path.isfile(path):
-#             bt = upload_task.delay(settings.AWS_STORAGE_BUCKET_NAME,
-#                                    path,
-#                                    'debug' + os.path.split(instance.brand_thumb.url)[0])
-#
-#
-#     if instance.audio_file:
-#         path = os.path.normpath(settings.BASE_DIR + instance.audio_fileurl)
-#         if os.path.isfile(path):
-#             bt = upload_task.delay(settings.AWS_STORAGE_BUCKET_NAME,
-#                                    path,
-#                                    'debug' + os.path.split(instance.audio_file.url)[0])
+#     results = upload_clip(instance)
 
 
 @receiver(post_delete, sender=Clip)
 def on_clip_delete(sender, instance, **kwargs):
+    debug = ""
+    if settings.DEBUG:
+        debug = "debug"
+
     clear_clip_files(instance)
+    # clear_a_key(settings.AWS_STORAGE_BUCKET_NAME, "{}{}".format(debug, instance.brand.url))
 
 
 ##########################################################################################
