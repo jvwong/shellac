@@ -8,6 +8,7 @@ from django.template.defaultfilters import slugify
 from django.db.models.signals import post_delete
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
+from django.conf import settings
 
 from taggit.managers import TaggableManager
 from image.fields import ThumbnailImageField
@@ -281,6 +282,26 @@ class Category(models.Model):
 ##########################################################################################
 ###                             BEGIN Class Clip                                       ###
 ##########################################################################################
+def clear_clip_files(instance):
+    if instance.brand:
+        if os.path.isfile(instance.brand.url):
+            os.remove(instance.brand.url)
+        # Pass false so ImageField doesn't save the model.
+        instance.brand.delete(False)
+
+    if instance.brand_thumb:
+        if os.path.isfile(instance.brand_thumb.url):
+            os.remove(instance.brand_thumb.url)
+        # Pass false so ImageField doesn't save the model.
+        instance.brand_thumb.delete(False)
+
+    if instance.audio_file:
+        if os.path.isfile(instance.audio_file.url):
+            os.remove(instance.audio_file.url)
+        # Pass false so ImageField doesn't save the model.
+        instance.audio_file.delete(False)
+
+
 class ClipManager(models.Manager):
     def create_clip(self, title, author):
         clip = self.create(title=title, author=author)
@@ -375,37 +396,29 @@ class Clip(models.Model):
 
 # @receiver(post_save, sender=Clip)
 # def on_clip_save(sender, instance, created, raw, using, update_fields, **kwargs):
-#     #upload to s3
-#     #delete the local files for brand, thumb, and audio_file
-#     if instance.brand:
-#         print(instance.brand.url)
+#     from shellac.tasks import upload_task, get_task_status
 #
+#     #delete the local files for brand, thumb, and audio_file
 #     if instance.brand_thumb:
-#         print(instance.brand_thumb.url)
+#         path = os.path.normpath(settings.BASE_DIR + instance.brand_thumb.url)
+#         if os.path.isfile(path):
+#             bt = upload_task.delay(settings.AWS_STORAGE_BUCKET_NAME,
+#                                    path,
+#                                    'debug' + os.path.split(instance.brand_thumb.url)[0])
+#
 #
 #     if instance.audio_file:
-#         print(instance.audio_file.url)
+#         path = os.path.normpath(settings.BASE_DIR + instance.audio_fileurl)
+#         if os.path.isfile(path):
+#             bt = upload_task.delay(settings.AWS_STORAGE_BUCKET_NAME,
+#                                    path,
+#                                    'debug' + os.path.split(instance.audio_file.url)[0])
 
 
 @receiver(post_delete, sender=Clip)
 def on_clip_delete(sender, instance, **kwargs):
-    if instance.brand:
-        if os.path.isfile(instance.brand.url):
-            os.remove(instance.brand.url)
-        # Pass false so ImageField doesn't save the model.
-        instance.brand.delete(False)
+    clear_clip_files(instance)
 
-    if instance.brand_thumb:
-        if os.path.isfile(instance.brand_thumb.url):
-            os.remove(instance.brand_thumb.url)
-        # Pass false so ImageField doesn't save the model.
-        instance.brand_thumb.delete(False)
-
-    if instance.audio_file:
-        if os.path.isfile(instance.audio_file.url):
-            os.remove(instance.audio_file.url)
-        # Pass false so ImageField doesn't save the model.
-        instance.audio_file.delete(False)
 
 ##########################################################################################
 ###                             BEGIN Class Track                                      ###
