@@ -16,7 +16,7 @@ from image.fields import ThumbnailImageField
 from audio.fields import AudioField
 
 from shellac import util
-from shellac.tasks import upload_task, clear_a_key, clear_keys
+from shellac.tasks import upload_task, get_upload_task_status, clear_a_key, clear_keys
 
 
 APP_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -306,6 +306,9 @@ def upload_clip(instance):
     if settings.DEBUG:
         debug = "debug"
 
+    btask = None
+    atask = None
+
     ### CAREFUL with keys --- leading slash versus no leading slash??
     # after upload, delete the local brand, brand, and audio_file
     if instance.brand:
@@ -373,20 +376,12 @@ class Clip(models.Model):
     audio_file = AudioField(upload_to=path_and_rename('sounds'), blank=False, help_text=("Allowed type - .mp3, .wav, .ogg"))
 
     def save(self, *args, **kwargs):
-        ###There is no requirement for a brand
-        # print(self.brand)
-        # print(self.pk)
-
         # brand exists only on new or updated clips
         if self.brand:
-            # print("self.brand exists!")
-
             filename = os.path.split(self.brand.name)[1]
 
             if self.pk is not None:
                 # case: existing clip (pk) and has a brand
-                # print("Brand with pk: {}".format(self.pk))
-
                 ## Don't re-save the exact same brand
                 orig = Clip.objects.get(pk=self.pk)
                 if orig.brand != self.brand:
@@ -394,13 +389,7 @@ class Clip(models.Model):
 
             else:
                 # case: created clip (pk = None) and has a brand
-                # print("pk is none")
-                # print(self.brand)
                 util.squarer(self.brand, self.brand, filename)
-
-
-            #delete the brand; self.brancd will not exist
-            # clear_brand(self)
 
         self.slug = slugify(self.title)
         super(Clip, self).save(*args, **kwargs)
@@ -439,6 +428,8 @@ class Clip(models.Model):
 # @receiver(post_save, sender=Clip)
 # def on_clip_save(sender, instance, created, raw, using, update_fields, **kwargs):
 #     results = upload_clip(instance)
+#     print(get_upload_task_status(results.brand.id))
+#     print(get_upload_task_status(results.audio_file.id))
 
 
 @receiver(post_delete, sender=Clip)

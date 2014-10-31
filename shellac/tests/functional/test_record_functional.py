@@ -3,6 +3,7 @@ import time
 
 from selenium.webdriver.common.keys import Keys
 from shellac.tests.utils.functional import FunctionalTest
+from shellac.tests.utils.unit import cleanClips
 from shellac.models import Clip, Category
 
 from django.contrib.auth.models import User
@@ -81,6 +82,7 @@ class NewClipTest(FunctionalTest):
         self.assertTrue(
             any(dd.text == self.user.username for dd in descriptors)
         )
+        cleanClips()
 
     def test_Contributor_or_staff_cannot_add_invalid_audio_type(self):
         #The user is presented with a form that allows her to add a new Clip
@@ -107,6 +109,7 @@ class NewClipTest(FunctionalTest):
         #Valdiate that we're still on the Record page
         self.assertIn('Record', self.browser.title)
         #time.sleep(3)
+        cleanClips()
 
 
 
