@@ -12,7 +12,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings'
 from django.conf import settings
 
 CHUNK_SIZE = 1048576 * 10
-MIN_FILE_SIZE = 5 * 1048576
+MIN_FILE_SIZE = 6 * 1048576
 
 
 ## upload_task upload a file to amazon s3 bucket
@@ -141,6 +141,22 @@ def clear_a_key(bucket_name, key_name):
         print("I/O error({0}): {1}".format(e.errno, e.strerror))
         return False
 
+
+def key_exists(bucket_name, key_name):
+
+    #Open the connection
+    try:
+        conn = boto.connect_s3()
+        bucket = conn.get_bucket(bucket_name)
+
+        #Get a key and delete()
+        key = bucket.delete_key(key_name)
+
+        return key.exists()
+
+    except IOError as e:
+        print("I/O error({0}): {1}".format(e.errno, e.strerror))
+        return None
 
 bname = 'shellac-media'
 lspath = '/home/jvwong/Music/U2/Songs of Innocence/02 Every Breaking Wave.m4a'

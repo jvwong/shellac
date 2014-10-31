@@ -1,12 +1,13 @@
 import os.path
 import datetime
+import logging
 from uuid import uuid4
 from collections import namedtuple
 
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, pre_save
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
 from django.conf import settings
@@ -16,8 +17,9 @@ from image.fields import ThumbnailImageField
 from audio.fields import AudioField
 
 from shellac import util
-from shellac.tasks import upload_task, get_upload_task_status, clear_a_key, clear_keys
+from shellac.tasks import upload_task, get_upload_task_status, clear_a_key, key_exists
 
+logger = logging.getLogger(__name__)
 
 APP_DIR = os.path.abspath(os.path.dirname(__file__))
 DEFAULT_AVATAR = os.path.abspath(os.path.join(APP_DIR, './static/shellac/assets/avatar.jpeg'))
@@ -175,6 +177,7 @@ class PlaylistManager(models.Manager):
         playlist = self.create(person=person, title=title)
         return playlist
 
+
 def datetime_title_default():
     now = datetime.datetime.now()
     return now.strftime("%Y_%m_%d_%H%M%S")
@@ -278,34 +281,13 @@ class Category(models.Model):
 ##########################################################################################
 ###                             BEGIN Class Clip                                       ###
 ##########################################################################################
-def clear_brand(instance):
-    if instance.brand:
-        if os.path.isfile(instance.brand.url):
-            os.remove(instance.brand.url)
-        # Pass false so ImageField doesn't save the model.
-        instance.brand.delete(False)
-
-def clear_audio_file(instance):
-    if instance.audio_file:
-        if os.path.isfile(instance.audio_file.url):
-            os.remove(instance.audio_file.url)
-        # Pass false so ImageField doesn't save the model.
-        instance.audio_file.delete(False)
-
-
-def clear_clip_files(instance):
-    clear_brand(instance)
-    clear_audio_file(instance)
-
+debug_prefix = ""
+if settings.DEBUG:
+    debug_prefix = "debug"
 
 
 def upload_clip(instance):
     Result = namedtuple('Result', ['brand', 'audio_file'])
-
-    debug = ""
-    if settings.DEBUG:
-        debug = "debug"
-
     btask = None
     atask = None
 
@@ -315,13 +297,14 @@ def upload_clip(instance):
         path = os.path.normpath(settings.BASE_DIR + instance.brand.url)
         if os.path.isfile(path):
             btask = upload_task.delay(settings.AWS_STORAGE_BUCKET_NAME, path,
-                                      "{}{}".format(debug, os.path.split(instance.brand.url)[0]))
+                                      "{}{}".format(debug_prefix, os.path.split(instance.brand.url)[0]))
+
 
     if instance.audio_file:
         path = os.path.normpath(settings.BASE_DIR + instance.audio_file.url)
         if os.path.isfile(path):
             atask = upload_task.delay(settings.AWS_STORAGE_BUCKET_NAME, path,
-                                      "{}{}".format(debug, os.path.split(instance.audio_file.url)[0]))
+                                      "{}{}".format(debug_prefix, os.path.split(instance.audio_file.url)[0]))
 
     return Result(brand=btask, audio_file=atask)
 
@@ -425,21 +408,85 @@ class Clip(models.Model):
     objects = ClipManager()
 
 
-# @receiver(post_save, sender=Clip)
-# def on_clip_save(sender, instance, created, raw, using, update_fields, **kwargs):
-#     results = upload_clip(instance)
-#     print(get_upload_task_status(results.brand.id))
-#     print(get_upload_task_status(results.audio_file.id))
+@receiver(post_save, sender=Clip)
+def on_clip_save(sender, instance, created, raw, using, update_fields, **kwargs):
 
+    #Case I: no change to audio_file or brand
+    #Case II: change to brand -- replace AWS file in brand
+    #Case III: change to audio_file -- replace AWS file in sound
+    results = upload_clip(instance)
+
+    if results.brand:
+        print(get_upload_task_status(results.brand.id))
+
+    if results.audio_file:
+        print(get_upload_task_status(results.audio_file.id))
 
 @receiver(post_delete, sender=Clip)
-def on_clip_delete(sender, instance, **kwargs):
-    debug = ""
-    if settings.DEBUG:
-        debug = "debug"
+def remove_remote_files(sender, instance, **kwargs):
+    for field in instance._meta.fields:
+        if not isinstance(field, models.FileField):
+            continue
 
-    clear_clip_files(instance)
-    # clear_a_key(settings.AWS_STORAGE_BUCKET_NAME, "{}{}".format(debug, instance.brand.url))
+        file_to_delete = getattr(instance, field.name)
+
+        if not file_to_delete:
+            continue
+
+        bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+        key_name = "{}{}".format(debug_prefix, file_to_delete.url)
+        #
+        # print(field.name) ## i.e 'brand', 'audio_file'
+        # print(file_to_delete) ## brands/2014/10/31/laksdjasdjasd.jpg
+        # print(file_to_delete.url) ## /media/brands/2014/10/31/laksdjasdjasd.jpg
+        # print(key_exists(bucket_name, key_name))
+
+        if file_to_delete and key_exists(bucket_name, key_name):
+            try:
+                ##NB: leading slash in key name???
+                clear_a_key(bucket_name, key_name)
+            except IOError:
+                logger.exception("IOError delete file {}".format(file_to_delete.name))
+
+### Remove previously associated files
+@receiver(pre_save, sender=Clip)
+def remove_old_remote_files(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+
+    try:
+        old_instance = instance.__class__.objects.get(pk=instance.pk)
+    except instance.DoesNotExist:
+        return
+
+    for field in instance._meta.fields:
+        if not isinstance(field, models.FileField):
+            continue
+        old_file = getattr(old_instance, field.name)
+        new_file = getattr(instance, field.name)
+        #storage = old_file.storage
+
+        if not old_file:
+            continue
+
+        bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+        key_name = "{}{}".format(debug_prefix, old_file.url)
+
+        print(field.name) ## i.e 'brand', 'audio_file'
+        print(old_file) # brands/2014/10/31/dfkjsdfskdf.jpg
+        print(new_file) # brands/2014/10/31/afsdfsdfsdf.jpg
+        print(key_exists(bucket_name, key_name))
+
+        if old_file != new_file and key_exists(bucket_name, key_name):
+            try:
+                #storage.delete(old_file.name)
+                ##NB: leading slash in key name???
+                clear_a_key(bucket_name, key_name)
+                pass
+
+            except IOError:
+                logger.exception("IOError delete old file {}".format(old_file.name))
+
 
 
 ##########################################################################################
@@ -449,6 +496,7 @@ class TrackManager(models.Manager):
     def create_track(self, clip, playlist):
         track = self.create(clip=clip, playlist=playlist)
         return track
+
 
 class Track(models.Model):
     PATCHABLE = ('position',
