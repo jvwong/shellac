@@ -155,6 +155,7 @@ class ClipListViewSet(APITestCase):
         #print(data)
 
         self.assertEqual(token[0].key, data['token'])
+        cleanClips()
 
 
     def test_ClipListViewSet_POST_with_token_auth_creates_and_returns_correct_response(self):
@@ -220,6 +221,7 @@ class ClipListViewSet(APITestCase):
         results = response.data['results']
         #print(results)
         self.assertEqual(len(results), n)
+        cleanClips()
 
 
 class ClipListViewSetSearch(APITestCase):

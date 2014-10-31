@@ -39,7 +39,12 @@
                     <form enctype="multipart/form-data" class="form-group" role="form" action="" method="post">{% csrf_token %}
 
                         <div class="btn btn-default btn-file partial-profile-avatar-img_panel-input_panel">
-                            <img class="img-circle" src="{{ person.avatar_thumb.url }}" alt="{{ person.username }}" />
+                            <img class="img-circle" src="
+                            {% if person.avatar_thumb %}
+                                {{ person.avatar_thumb.url }}
+                            {% else %}
+                                {% static 'shellac/assets/avatar.jpeg' %}
+                            {% endif %}" alt="{{ person.username }}" />
                             <input id="id_avatar" type="file" name="avatar">
                         </div>
                         {% if person == user.person %}

@@ -12643,6 +12643,7 @@ var shellac = (function () {
             id = object.id.toString(),
             id_x = "id_" + id,
             enqueue = preferencesMap.positionsMap.hasOwnProperty(id) ? 'enqueued' : '',
+            brand = object.brand_thumb_url === '' ? '/static/shellac/assets/avatar.jpeg' : object.brand_thumb_url,
             rating = '<span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>';
 
         clipString +=
@@ -12659,7 +12660,7 @@ var shellac = (function () {
 
               '<div class ="shellac-img-panel">' +
                 '<a href="#enqueue" data-url="' + object.audio_file_url + '" data-id="' + object.id + '" data-title="' + object.title + '" data-owner="' + object.owner + '">' +
-                  '<img class="img-thumbnail shellac-grid-img " src="' + object.brand_thumb_url  + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
+                  '<img class="img-thumbnail shellac-grid-img " src="' + brand + '" alt="' + util.truncate(object.title, configMap.truncatemax) + '" />' +
                 '</a>' +
               '</div>' +
 

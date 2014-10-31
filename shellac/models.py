@@ -164,7 +164,6 @@ def on_user_save(sender, instance, created, raw, using, update_fields, **kwargs)
     if created:
         ###create a Person
         p = Person(user=instance)
-        util.setFileAttributefromLocal(p.avatar, DEFAULT_AVATAR, 'avatar.jpeg')
         p.save()
 
         #create a default Playlist for this Person
@@ -372,6 +371,19 @@ class Clip(models.Model):
 
     objects = ClipManager()
 
+# @receiver(post_save, sender=Clip)
+# def on_clip_save(sender, instance, created, raw, using, update_fields, **kwargs):
+#     #upload to s3
+#     #delete the local files for brand, thumb, and audio_file
+#     if instance.brand:
+#         print(instance.brand.url)
+#
+#     if instance.brand_thumb:
+#         print(instance.brand_thumb.url)
+#
+#     if instance.audio_file:
+#         print(instance.audio_file.url)
+
 
 @receiver(post_delete, sender=Clip)
 def on_clip_delete(sender, instance, **kwargs):
@@ -386,7 +398,6 @@ def on_clip_delete(sender, instance, **kwargs):
             os.remove(instance.brand_thumb.url)
         # Pass false so ImageField doesn't save the model.
         instance.brand_thumb.delete(False)
-
 
     if instance.audio_file:
         if os.path.isfile(instance.audio_file.url):
