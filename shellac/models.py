@@ -353,15 +353,19 @@ class Clip(models.Model):
     audio_file = AudioField(upload_to=path_and_rename('sounds'), blank=False, help_text=("Allowed type - .mp3, .wav, .ogg"))
 
     def save(self, *args, **kwargs):
-        filename = os.path.split(self.brand.name)[1]
-        if self.pk is not None:
-            ##Prevent re-saving same brand
-            orig = Clip.objects.get(pk=self.pk)
-            if orig.brand != self.brand:
+        ###There is no requirement for a brand
+        if self.brand:
+            filename = os.path.split(self.brand.name)[1]
+            if self.pk is not None:
+                ##Prevent re-saving same brand
+                orig = Clip.objects.get(pk=self.pk)
+                if orig.brand != self.brand:
+                    util.squarer(self.brand, self.brand_thumb, filename)
+            else:
                 util.squarer(self.brand, self.brand_thumb, filename)
-        else:
-            util.squarer(self.brand, self.brand_thumb, filename)
+
         self.slug = slugify(self.title)
+
         super(Clip, self).save(*args, **kwargs)
 
     class Meta:
