@@ -5,7 +5,7 @@ import boto
 
 from boto.s3.key import Key
 from config import celery_app
-from s3Manager.filechunkio import FileChunkIO
+from .filechunkio import FileChunkIO
 
 sys.path.append('/home/jvwong/Projects/shellac')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings'
@@ -102,15 +102,3 @@ def get_upload_task_status(task_id):
         'progress': progress,
         'result': result
     }
-
-# bname = 'shellac-media'
-# lspath = '/home/jvwong/Music/U2/Songs of Innocence/02 Every Breaking Wave.m4a'
-# spath = '/home/jvwong/Projects/shellac/shellac.no-ip.ca/source/shellac/tests/assets/water.mp3'
-# kprefix = '/debug/media/sounds/2014/10/30/'
-#
-###Fire off a task
-# t = upload_task.delay(bname, spath, kprefix)
-
-
-###starting celery daemon
-### celery --app=config.celery:app worker --loglevel=INFO

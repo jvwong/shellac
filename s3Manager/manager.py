@@ -7,7 +7,7 @@ from django.db.models.signals import pre_save, post_delete, post_save
 from django.conf import settings
 
 from .utils import clear_a_key, key_exists
-from shellac.tasks import upload_task, get_upload_task_status
+from s3Manager.tasks import upload_task, get_upload_task_status
 
 
 debug_prefix = ""
