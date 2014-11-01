@@ -2,22 +2,20 @@ import os.path
 import datetime
 import logging
 from uuid import uuid4
-from collections import namedtuple
+
 
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from django.db.models.signals import post_delete, pre_save
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
-from django.conf import settings
 
 from taggit.managers import TaggableManager
 from image.fields import ThumbnailImageField
 from audio.fields import AudioField
 
 from shellac import util
-from shellac.tasks import upload_task, get_upload_task_status, clear_a_key, key_exists
+
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +24,7 @@ DEFAULT_AVATAR = os.path.abspath(os.path.join(APP_DIR, './static/shellac/assets/
 
 def path_and_rename(path):
     def wrapper(instance, filename):
+
         date_prefix = (datetime.datetime.now()).strftime('%Y/%m/%d')
         path_date = os.path.join(path, date_prefix)
 
@@ -142,15 +141,6 @@ class Person(models.Model):
     get_absolute_url = models.permalink(get_absolute_url)
 
     objects = PersonManager()
-
-
-@receiver(post_delete, sender=Person)
-def on_person_delete(sender, instance, **kwargs):
-    if instance.avatar:
-        if os.path.isfile(instance.avatar.url):
-            os.remove(instance.avatar.url)
-        # Pass false so ImageField doesn't save the model.
-        instance.avatar.delete(False)
 
 
 ##########################################################################################
@@ -281,33 +271,6 @@ class Category(models.Model):
 ##########################################################################################
 ###                             BEGIN Class Clip                                       ###
 ##########################################################################################
-debug_prefix = ""
-if settings.DEBUG:
-    debug_prefix = "debug"
-
-
-def upload_clip(instance):
-    Result = namedtuple('Result', ['brand', 'audio_file'])
-    btask = None
-    atask = None
-
-    ### CAREFUL with keys --- leading slash versus no leading slash??
-    # after upload, delete the local brand, brand, and audio_file
-    if instance.brand:
-        path = os.path.normpath(settings.BASE_DIR + instance.brand.url)
-        if os.path.isfile(path):
-            btask = upload_task.delay(settings.AWS_STORAGE_BUCKET_NAME, path,
-                                      "{}{}".format(debug_prefix, os.path.split(instance.brand.url)[0]))
-
-
-    if instance.audio_file:
-        path = os.path.normpath(settings.BASE_DIR + instance.audio_file.url)
-        if os.path.isfile(path):
-            atask = upload_task.delay(settings.AWS_STORAGE_BUCKET_NAME, path,
-                                      "{}{}".format(debug_prefix, os.path.split(instance.audio_file.url)[0]))
-
-    return Result(brand=btask, audio_file=atask)
-
 
 class ClipManager(models.Manager):
     def create_clip(self, title, author):
@@ -342,9 +305,6 @@ class Clip(models.Model):
     tags = TaggableManager(blank=True, help_text=("Comma separated list"))
     description = models.TextField(max_length=2000, blank=True, help_text=("Limit 2000 characters"))
 
-    ###upload to subdirectory with user id prefixed
-    brand = ThumbnailImageField(upload_to=path_and_rename('brands'), blank=True, help_text=("Images will be cropped as squares"))
-
     ### Default
     plays = models.PositiveSmallIntegerField(default=0, blank=True)
     rating = models.PositiveSmallIntegerField(default=0, blank=True)
@@ -353,6 +313,10 @@ class Clip(models.Model):
     ### Auto
     slug = models.SlugField(blank=True)
     created = models.DateTimeField(default=datetime.datetime.now, blank=True)
+
+    #VISUAL
+    ###upload to subdirectory with user id prefixed
+    brand = ThumbnailImageField(upload_to=path_and_rename('brands'), blank=True, help_text=("Images will be cropped as squares"))
 
     #AUDIO
     # Add the audio field to your model -- required
@@ -397,30 +361,11 @@ class Clip(models.Model):
             return "PUBLIC"
         return "PRIVATE"
 
-
     def getCreatedPretty(self):
         return " ".join([self.created.strftime("%b"), self.created.strftime("%d"), self.created.strftime("%Y")])
 
-    def getCategoriesPretty(self):
-        cats = [c.title for c in list(self.categories.all())]
-        return cats
-
     objects = ClipManager()
 
-
-@receiver(post_save, sender=Clip)
-def on_clip_save(sender, instance, created, raw, using, update_fields, **kwargs):
-
-    #Case I: no change to audio_file or brand
-    #Case II: change to brand -- replace AWS file in brand
-    #Case III: change to audio_file -- replace AWS file in sound
-    results = upload_clip(instance)
-
-    if results.brand:
-        print(get_upload_task_status(results.brand.id))
-
-    if results.audio_file:
-        print(get_upload_task_status(results.audio_file.id))
 
 
 

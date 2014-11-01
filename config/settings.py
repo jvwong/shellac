@@ -73,7 +73,7 @@ USE_L10N = True
 USE_TZ = False
 
 # MEDIA STORAGE --- AWS S3 / django-storages
-USE_S3 = not DEBUG
+USE_S3 = False
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', default='')
@@ -82,7 +82,7 @@ AWS_QUERYSTRING_AUTH = False
 S3_URL = 'https://%s.s3.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,)
 
 if USE_S3:
-    DEFAULT_FILE_STORAGE = '%s.s3utils.MediaRootS3BotoStorage' % (APP_NAME,)
+    DEFAULT_FILE_STORAGE = 's3Manager.utils.MediaRootS3BotoStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, "media"))
@@ -182,7 +182,8 @@ INSTALLED_APPS = (
     'audio',
     'storages',
     'django_cleanup',
-    'djcelery'
+    'djcelery',
+    's3Manager',
 )
 
 REST_FRAMEWORK = {
