@@ -111,10 +111,11 @@ def upload_created_files(sender, instance, created, raw, using, update_fields, *
 
 
 def connect_signals():
-    for model in find_models_with_filefield():
-        pre_save.connect(remove_orphan_remote_files, sender=model)
-        post_save.connect(upload_created_files, sender=model)
-        post_delete.connect(remove_remote_files, sender=model)
+    if settings.USE_S3:
+        for model in find_models_with_filefield():
+            pre_save.connect(remove_orphan_remote_files, sender=model)
+            post_save.connect(upload_created_files, sender=model)
+            post_delete.connect(remove_remote_files, sender=model)
 
 
 if django.VERSION < (1, 7):
