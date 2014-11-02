@@ -7,5 +7,6 @@ static/shellac/js/lib/
 __pycache__/*
 virtualenv/
 secret_key.py
+migrations/*
 *.bak
 shellac/fixtures/production/*
