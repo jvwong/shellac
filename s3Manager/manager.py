@@ -93,9 +93,13 @@ def upload_created_files(sender, instance, created, raw, using, update_fields, *
 
         bucket_name = settings.AWS_STORAGE_BUCKET_NAME
         new_file = getattr(instance, field.name)
+
+        if not new_file:
+            continue
+
         key_name = "{}{}".format(debug_prefix, new_file.url)
 
-        if new_file and not key_exists(bucket_name, key_name):
+        if not key_exists(bucket_name, key_name):
             path = os.path.normpath(settings.BASE_DIR + new_file.url)
             if os.path.isfile(path):
                 task = upload_task.delay(bucket_name,
@@ -103,6 +107,7 @@ def upload_created_files(sender, instance, created, raw, using, update_fields, *
                                          "{}{}".format(debug_prefix, os.path.split(new_file.url)[0]))
 
                 print(get_upload_task_status(task.id))
+                logger.info("celery upload task: {}".format(get_upload_task_status(task.id)))
 
 
 def connect_signals():

@@ -56,9 +56,12 @@ def key_exists(bucket_name, key_name):
         bucket = conn.get_bucket(bucket_name)
 
         #Get a key and delete()
-        key = bucket.delete_key(key_name)
+        key = bucket.get_key(key_name)
 
-        return key.exists()
+        if key and key.exists():
+            return True
+
+        return False
 
     except IOError as e:
         print("I/O error({0}): {1}".format(e.errno, e.strerror))
