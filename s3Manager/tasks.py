@@ -1,8 +1,8 @@
 import os
 import sys
 import math
-import boto
 
+from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from config import celery_app
 from .filechunkio import FileChunkIO
@@ -25,7 +25,8 @@ MIN_FILE_SIZE = 5 * 1048576
 def upload_task(bucket_name, source_path, key_prefix):
     #Open the connection
     try:
-        conn = boto.connect_s3()
+        # conn = boto.connect_s3()
+        conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
 
         #Retrieve the bucket and Key object
         bucket = conn.get_bucket(bucket_name)

@@ -1,20 +1,11 @@
-import boto
-
+from boto.s3.connection import S3Connection
 from django.conf import settings
-from storages.backends.s3boto import S3BotoStorage
-
-
-if settings.DEBUG:
-    MediaRootS3BotoStorage = lambda: S3BotoStorage(location='debug/media')
-else:
-    MediaRootS3BotoStorage = lambda: S3BotoStorage(location='media')
-
 
 def clear_keys(bucket_name, key_prefix):
 
     #Open the connection
     try:
-        conn = boto.connect_s3()
+        conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.get_bucket(bucket_name)
 
         #Get a list of keys and delete()
@@ -32,7 +23,7 @@ def clear_a_key(bucket_name, key_name):
 
     #Open the connection
     try:
-        conn = boto.connect_s3()
+        conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.get_bucket(bucket_name)
 
         #Get a key and delete()
@@ -52,7 +43,7 @@ def key_exists(bucket_name, key_name):
 
     #Open the connection
     try:
-        conn = boto.connect_s3()
+        conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.get_bucket(bucket_name)
 
         #Get a key and delete()
