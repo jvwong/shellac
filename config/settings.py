@@ -73,11 +73,15 @@ USE_L10N = True
 USE_TZ = False
 
 # MEDIA STORAGE --- AWS S3 / django-storages
+USE_S3 = False
+
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', default='')
 AWS_STORAGE_BUCKET_NAME = '%s-media' % (APP_NAME,)
 AWS_QUERYSTRING_AUTH = False
 S3_URL = 'https://%s.s3.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,)
+
+# if USE_S3:
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, "media"))
@@ -175,7 +179,6 @@ INSTALLED_APPS = (
     'corsheaders',
     'image',
     'audio',
-    'storages',
     'django_cleanup',
     'djcelery',
     's3Manager',
