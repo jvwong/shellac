@@ -126,7 +126,7 @@ class Person(models.Model):
     def save(self, *args, **kwargs):
         self.username = self.user.username
         if self.avatar:
-           util.squarer(self.avatar, self.avatar, self.avatar.name)
+           util.squarer(self.avatar, self.avatar.name)
         super(Person, self).save(*args, **kwargs)
 
 

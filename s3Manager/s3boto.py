@@ -324,7 +324,11 @@ class S3BotoStorage(Storage):
         if self.encryption:
             kwargs['encrypt_key'] = self.encryption
 
-        #Synchronous operation (for now...)
+        # Synchronous operation (for now...)
+        # Save to local file system (MEDIA_ROOT)
+        # upload to s3
+        # clear as OK in model instance when complete
+
         key.set_contents_from_file(content, headers=headers,
                                    policy=self.acl,
                                    reduced_redundancy=self.reduced_redundancy,

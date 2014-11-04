@@ -78,13 +78,11 @@ USE_S3 = False
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', default='')
 AWS_STORAGE_BUCKET_NAME = '{}-media'.format(APP_NAME)
-AWS_QUERYSTRING_AUTH = False
-S3_URL = 'https://{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
 
-DEFAULT_FILE_STORAGE = 's3Manager.daisy.HybridStorage'
-HYBRID_STORAGE_BACKENDS = {
-    'LOCAL_BACKEND'     :  'django.core.files.storage.FileSystemStorage'
-}
+if USE_S3:
+    DEFAULT_FILE_STORAGE = 's3Manager.config.MediaRootS3BotoStorage'
+else:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 
 MEDIA_URL = '/media/'
