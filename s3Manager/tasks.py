@@ -117,6 +117,23 @@ def get_upload_task_status(task_id):
     }
 
 
+@celery_app.task()
+def handle_instance_upload(result, model_class, primary_key):
+
+    if result:
+        print("model_class: {}".format(model_class))
+        print("primary_key: {}".format(primary_key))
+        ### delete local file,
+        #       FieldFile.delete(save=True)
+        # reset brand path to s3,
+        #       FieldFile.save(name, content, save=True)[source]
+        # signal model OK to display
+        return True
+
+    ### the upload failed. Don't touch local file
+    return False
+
+
 ##Debugging
 # from s3Manager.tasks import *;from s3Manager.utils import *
 # bucket_name = 'shellac-media'

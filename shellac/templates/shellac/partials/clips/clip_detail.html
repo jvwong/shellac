@@ -1,55 +1,63 @@
 {% load staticfiles %}
 {% load shellac_filters %}
 
-<div class="row clip-detail-container col-sm-offset-0 col-sm-12">
+<div class="clip-detail-container col-sm-offset-0 col-sm-12">
+  <div class="row">
     <div class="clip-detail-img col-xs-12 col-sm-3">
-        <a class="clip-detail-url" href="{{ object.audio_file.url }}">
-            <img src="{% if object.brand %}
-                        {{ object.brand.url }}
-                      {% elif object.author.avatar %}
-                        {{ object.author.avatar.url }}
-                      {% else %}
-                        {% static 'shellac/assets/seventyEight.png' %}
-                      {% endif %}"  alt="{{ object.title }}" />
-        </a>
-        <div class="clip-detail-edit">
-            {% if object.author.user == user %}
-            <div class="btn-group">
-                <a class="btn btn-default update" href="{% url 'shellac_clip_update' object.pk %}" role="button">Update</a>
-                <a class="btn btn-default delete" href="{% url 'shellac_clip_confirm_delete' object.pk %}" role="button">Delete</a>
-            </div>
-            {% endif %}
+      <a class="clip-detail-url" href="{{ object.audio_file.url }}">
+        <img src="{% if object.brand %}
+                    {{ object.brand.url }}
+                  {% elif object.author.avatar %}
+                    {{ object.author.avatar.url }}
+                  {% else %}
+                    {% static 'shellac/assets/seventyEight.png' %}
+                  {% endif %}"  alt="{{ object.title }}" />
+      </a>
+      <div class="clip-detail-edit">
+        {% if object.author.user == user %}
+        <div class="btn-group">
+            <a class="btn btn-default update" href="{% url 'shellac_clip_update' object.pk %}" role="button">Update</a>
+            <a class="btn btn-default delete" href="{% url 'shellac_clip_confirm_delete' object.pk %}" role="button">Delete</a>
         </div>
+        {% endif %}
+      </div>
     </div>
-    <div class="clip-detail-description col-xs-offset-0 col-xs-12 col-sm-offset-0 col-sm-9">
-        <dl class="dl-horizontal">
-            <!-- clip-detail-description content -->
-            <dt class="">Title</dt>
-            <dd class="clip-detail-description-content title">{{ object.title }}</dd>
-            <dt class="">Description</dt>
-            <dd class="clip-detail-description-content description">{{ object.description }}</dd>
-            <dt class="">Created</dt>
-            <dd class="clip-detail-description-content created">{{ object.created|dayssince }}</dd>
-            <dt class="">Owner</dt>
-            <dd class="clip-detail-description-content username">{{ object.author.username }}</dd>
-            <dt class="">Plays</dt>
-            <dd class="clip-detail-description-content plays">{{ object.plays }}</dd>
-            <dt class="">Rating</dt>
-            <dd class="clip-detail-description-content rating">{{ object.rating }}</dd>
-            <dt class="">Status</dt>
-            <dd class="clip-detail-description-content status">{{ object.status }}</dd>
-            <dt class="">Tags</dt>
-            <dd class="clip-detail-description-content tags">
-                {% for t in object.tags.names %}
-                {% if not forloop.first %}| {% endif %} {{ t }}
-                {% endfor %}
-            </dd>
-            <dt class="">Categories</dt>
-            <dd class="clip-detail-description-content categories">
-                {% for c in object.categories.all %}
-                {% if not forloop.first %}| {% endif %} {{ c }}
-                {% endfor %}
-            </dd>
-        </dl>
+    <div class="clip-detail-meta col-xs-offset-0 col-xs-12 col-sm-offset-0 col-sm-9">
+      <dl class="dl-horizontal">
+        <!-- clip-detail-description content -->
+        <dt class="">Title</dt>
+        <dd class="clip-detail-description-content title">{{ object.title }}</dd>
+        <dt class="">Created</dt>
+        <dd class="clip-detail-description-content created">{{ object.created|dayssince }}</dd>
+        <dt class="">Owner</dt>
+        <dd class="clip-detail-description-content username">{{ object.author.username }}</dd>
+        <dt class="">Plays</dt>
+        <dd class="clip-detail-description-content plays">{{ object.plays }}</dd>
+        <dt class="">Rating</dt>
+        <dd class="clip-detail-description-content rating">{{ object.rating }}</dd>
+        <dt class="">Status</dt>
+        <dd class="clip-detail-description-content status">{{ object.status }}</dd>
+        <dt class="">Tags</dt>
+        <dd class="clip-detail-description-content tags">
+          {% for t in object.tags.names %}
+          {% if not forloop.first %}| {% endif %} {{ t }}
+          {% endfor %}
+        </dd>
+        <dt class="">Categories</dt>
+        <dd class="clip-detail-description-content categories">
+          {% for c in object.categories.all %}
+          {% if not forloop.first %}| {% endif %} {{ c }}
+          {% endfor %}
+        </dd>
+      </dl>
     </div>
+  </div>
+  <div class="row">
+    <div class="clip-detail-description col-xs-offset-0 col-xs-12">
+      <p>
+        <!-- clip-detail-description content -->
+        {{ object.description }}
+      </p>
+    </div>
+  </div>
 </div>

@@ -6,8 +6,9 @@ from django.db import models
 from django.db.models.signals import pre_save, post_delete, post_save
 from django.conf import settings
 
+from celery import chain
 from .utils import clear_a_key, key_exists
-from s3Manager.tasks import upload_task, get_upload_task_status
+from s3Manager.tasks import upload_task, get_upload_task_status, handle_instance_upload
 
 
 debug_prefix = ""
@@ -15,6 +16,11 @@ if settings.DEBUG:
     debug_prefix = "debug"
 
 logger = logging.getLogger(__name__)
+
+### This code will eventually be uneccessary as the Storage class will be properly
+# implemented on the AWS through S3boto class. This means that django_cleanup
+# should work. That is django_cleanup call to
+# storage.delete >>> HybridStorage >>> storage_1, storage_2, ..., storage_n
 
 def find_models_with_filefield():
     result = []
@@ -102,9 +108,10 @@ def upload_created_files(sender, instance, created, raw, using, update_fields, *
         if not key_exists(bucket_name, key_name):
             path = os.path.normpath(settings.BASE_DIR + new_file.url)
             if os.path.isfile(path):
-                task = upload_task.delay(bucket_name,
-                                         path,
-                                         "{}{}".format(debug_prefix, os.path.split(new_file.url)[0]))
+                task = upload_task.apply_async(
+                    args=[bucket_name, path, "{}{}".format(debug_prefix, os.path.split(new_file.url)[0])],
+                    link=handle_instance_upload.s(instance.__class__.__name__, instance.pk)
+                )
 
                 print(get_upload_task_status(task.id))
                 logger.info("celery upload task: {}".format(get_upload_task_status(task.id)))
@@ -120,43 +127,3 @@ def connect_signals():
 
 if django.VERSION < (1, 7):
     connect_signals()
-
-
-# ### Using pre_save is fundamentally unsound as the upload_to file may not be set
-# ### https://docs.djangoproject.com/en/1.7/releases/1.1/#names-of-uploaded-files-are-available-later
-# ### Problem - I need the old instance but the saved filename???????
-# #### Alternative is to re-upload ALL files on update - inefficient but no way around this right now
-# @receiver(pre_save, sender=Clip)
-# def upload_updated_files(sender, instance, raw, using, update_fields, **kwargs):
-#     if not instance.pk:
-#         return
-#
-#     try:
-#         old_instance = instance.__class__.objects.get(pk=instance.pk)
-#     except instance.DoesNotExist:
-#         return
-#
-#     for field in instance._meta.fields:
-#         if not isinstance(field, models.FileField):
-#             continue
-#
-#         old_file = getattr(old_instance, field.name)
-#         new_file = getattr(instance, field.name)
-#
-#         bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-#         key_name = "{}{}".format(debug_prefix, new_file.url)
-#
-#         new_name = path_and_rename(path)
-#
-#         if old_file != new_file and not key_exists(bucket_name, key_name):
-#             try:
-#                 print("updating...")
-#                 #Case I: created so upload
-#                 path = os.path.normpath(settings.BASE_DIR + new_file.url)
-#                 if os.path.isfile(path):
-#                     task = upload_task.delay(bucket_name,
-#                                              path,
-#                                              "{}{}".format(debug_prefix, os.path.split(new_file.url)[0]))
-#                     print(get_upload_task_status(task.id))
-#             except IOError:
-#                 logger.exception("IOError update file {}".format(old_file.name))

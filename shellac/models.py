@@ -356,14 +356,6 @@ class Clip(models.Model):
         return ('shellac_clip_detail', (), {'pk': self.pk})
     get_absolute_url = models.permalink(get_absolute_url)
 
-    def getStatusPretty(self):
-        if self.status == Clip.PUBLIC_STATUS:
-            return "PUBLIC"
-        return "PRIVATE"
-
-    def getCreatedPretty(self):
-        return " ".join([self.created.strftime("%b"), self.created.strftime("%d"), self.created.strftime("%Y")])
-
     objects = ClipManager()
 
 

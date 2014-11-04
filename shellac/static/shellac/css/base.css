@@ -16,10 +16,19 @@
 .clip-detail-container .clip-detail-img img {
   max-width: 150px;
 }
+.clip-detail-container .clip-detail-description {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
 /* xs (phones) */
+@media (max-width: 767px) {
+  .clip-detail-container .clip-detail-description {
+    margin-top: 0.5em;
+  }
+}
 /* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
 
@@ -628,10 +637,19 @@ dl.dl-horizontal dd {
 .clip-detail-container .clip-detail-img img {
   max-width: 150px;
 }
+.clip-detail-container .clip-detail-description {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
 /* xs (phones) */
+@media (max-width: 767px) {
+  .clip-detail-container .clip-detail-description {
+    margin-top: 0.5em;
+  }
+}
 /* xs Nexus4 portrait*/
 /* xs Nexus4 portrait*/
 /*
