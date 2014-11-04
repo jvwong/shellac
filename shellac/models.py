@@ -332,11 +332,11 @@ class Clip(models.Model):
                 ## Don't re-save the exact same brand
                 orig = Clip.objects.get(pk=self.pk)
                 if orig.brand != self.brand:
-                    util.squarer(self.brand, self.brand, filename)
+                    util.squarer(self.brand, filename)
 
             else:
                 # case: created clip (pk = None) and has a brand
-                util.squarer(self.brand, self.brand, filename)
+                util.squarer(self.brand, filename)
 
         self.slug = slugify(self.title)
         super(Clip, self).save(*args, **kwargs)

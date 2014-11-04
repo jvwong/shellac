@@ -1,10 +1,15 @@
 import os
+import mimetypes
+import sys
+
 from django import forms
-from django.db.models.fields.files import FileField
+from django.db.models.fields.files import FileField, FieldFile, File
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import signals
 from django.utils.translation import ugettext_lazy as _
 from django.core import exceptions, validators, checks
+from django.core.exceptions import ValidationError
+from django.utils import six
 
 from audio.files import AudioFileDescriptor, AudioFieldFile
 from audio import forms
@@ -13,8 +18,15 @@ from django.conf import settings
 
 
 class AudioField(FileField):
+    default_whitelist = {
+        'EXTENSIONS': ('.mp3', '.wav', '.ogg'),
+        'MIMETYPES': ('audio/mpeg', 'audio/x-wav', 'audio/ogg')
+    }
+
     default_error_messages = {
-        'invalid_audio': _("Upload a valid audio file. The file you uploaded was either not valid audio type or corrupt"),
+        'invalid_audio': _("Upload a valid audio file. "
+                           "The file you uploaded was either not valid audio type "
+                           "or corrupt"),
     }
 
     attr_class = AudioFieldFile
@@ -53,16 +65,30 @@ class AudioField(FileField):
         Validates value and throws ValidationError. Here, value is a
         AudioFieldFile instance
         """
-        #simple, basic file extension validation. Check file contents eventually
-        file, ext = os.path.splitext(value.name)
-        #print("file: %s, ext: %s" % (file, ext))
 
-        if ext not in settings.AUDIO_EXT_WHITELIST:
-            raise exceptions.ValidationError(
-                self.error_messages['invalid_audio'],
-                code='invalid_audio',
-                params={'value': value},
-            )
+        # Ensure that we are getting a File object
+        assert value is not None and isinstance(value, FieldFile), 'Invalid arguments'
+
+        # get the whitelist or defaults
+        whitelist = getattr(settings, 'AUDIO_WHITELIST', self.default_whitelist)
+        whitelisted_mimetypes = whitelist.get('MIMETYPES', ())
+        whitelisted_extensions = whitelist.get('EXTENSIONS', ())
+
+        #validate mimetype
+        mimetype, encoding = mimetypes.guess_type(value.name)
+
+        if mimetype not in whitelisted_mimetypes:
+            six.reraise(ValidationError,
+                        ValidationError(self.error_messages['invalid_audio'], code='invalid_audio'),
+                        sys.exc_info()[2])
+
+
+        #validate extension
+        file, ext = os.path.splitext(value.name)
+        if ext not in whitelisted_extensions:
+            six.reraise(ValidationError,
+                        ValidationError(self.error_messages['invalid_audio'], code='invalid_audio'),
+                        sys.exc_info()[2])
 
         super(AudioField, self).validate(value, model_instance)
 

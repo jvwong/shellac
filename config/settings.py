@@ -243,7 +243,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'social.apps.django_app.context_processors.login_redirect',
 )
 
-AUDIO_EXT_WHITELIST = ('.mp3', '.wav', '.ogg')
+AUDIO_WHITELIST = {
+    'EXTENSIONS': ('.mp3', '.wav', '.ogg'),
+    'MIMETYPES': ('audio/mpeg', 'audio/x-wav', 'audio/ogg')
+}
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
