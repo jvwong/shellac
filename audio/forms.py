@@ -15,6 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms.fields import FileField
 from django.conf import settings
 
+from audio.files import DEFAULT_WHITELIST
 
 class AudioField(FileField):
 
@@ -27,19 +28,17 @@ class AudioField(FileField):
         Checks that the file-upload field data contains a valid image (GIF, JPG,
         PNG, possibly others -- whatever the Python Imaging Library supports).
         """
-
-        default_whitelist = {
-            'EXTENSIONS': ('.mp3', '.wav', '.ogg'),
-            'MIMETYPES': ('audio/mpeg', 'audio/x-wav', 'audio/ogg')
-        }
-
         f = super(AudioField, self).to_python(data)
 
         # Ensure that we are getting a File object
-        assert f is not None and isinstance(f, File), 'Invalid arguments'
+        if f is None or not isinstance(f, File):
+            six.reraise(ValidationError,
+                        ValidationError(self.error_messages['invalid_audio'], code='invalid_audio'),
+                        sys.exc_info()[2])
+
 
         # get the whitelist or defaults
-        whitelist = getattr(settings, 'AUDIO_WHITELIST', default_whitelist)
+        whitelist = getattr(settings, 'AUDIO_WHITELIST', DEFAULT_WHITELIST)
         whitelisted_mimetypes = whitelist.get('MIMETYPES', ())
         whitelisted_extensions = whitelist.get('EXTENSIONS', ())
 

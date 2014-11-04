@@ -72,16 +72,20 @@ class NewClipTest(FunctionalTest):
 
         #Valdiate that we're on the Permalink site and can examine the Clip details
         self.assertIn('Permalink', self.browser.title)
-        descriptors = self.browser.find_elements_by_css_selector(".clip-detail-description-content")
+
+        meta = self.browser.find_elements_by_css_selector(".clip-detail-meta dd")
         self.assertTrue(
-            any(dd.text == c['title'] for dd in descriptors)
+            any(dd.text == c['title'] for dd in meta)
         )
         self.assertTrue(
-            any(dd.text == c['description'] for dd in descriptors)
+            any(dd.text == self.user.username for dd in meta)
         )
+
+        description = self.browser.find_elements_by_css_selector(".clip-detail-description p")
         self.assertTrue(
-            any(dd.text == self.user.username for dd in descriptors)
+            any(p.text == c['description'] for p in description)
         )
+
         cleanClips()
 
     def test_Contributor_or_staff_cannot_add_invalid_audio_type(self):

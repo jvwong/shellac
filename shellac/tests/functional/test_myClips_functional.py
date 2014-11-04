@@ -25,27 +25,31 @@ class ClipListTest(FunctionalTest):
         self.myClips = Clip.objects.filter(author=self.person)
 
     def test_myClips_page_displays_aClip_in_list_of_Clips(self):
-        details = self.browser.find_elements_by_css_selector('.clip-detail-container .clip-detail-description dd')
+        meta = self.browser.find_elements_by_css_selector('.clip-detail-container .clip-detail-meta dd')
         aClip = self.myClips[0]
 
         self.assertTrue(
-            any(dd.text == aClip.title for dd in details)
+            any(dd.text == aClip.title for dd in meta)
         )
         self.assertTrue(
-            any(dd.text == aClip.author.username for dd in details)
+            any(dd.text == aClip.author.username for dd in meta)
         )
         self.assertTrue(
-            any(dd.text == aClip.description for dd in details)
+            any(dd.text == str(aClip.plays) for dd in meta)
         )
         self.assertTrue(
-            any(dd.text == str(aClip.plays) for dd in details)
+            any(dd.text == str(aClip.rating) for dd in meta)
         )
         self.assertTrue(
-            any(dd.text == str(aClip.rating) for dd in details)
+            any(dd.text == str(aClip.status) for dd in meta)
         )
+
+        description = self.browser.find_elements_by_css_selector('.clip-detail-container .clip-detail-description p')
         self.assertTrue(
-            any(dd.text == str(aClip.status) for dd in details)
+            any(p.text == aClip.description for p in description)
         )
+
+
 
 
 class ClipUpdateTest(FunctionalTest):
@@ -111,12 +115,13 @@ class ClipUpdateTest(FunctionalTest):
         submit_button.send_keys(Keys.ENTER)
 
         #The user gets redirected to the permalink page
-        details = self.browser.find_elements_by_css_selector('.clip-detail-container .clip-detail-description dd')
+        meta = self.browser.find_elements_by_css_selector('.clip-detail-container .clip-detail-meta dd')
         self.assertTrue(
-            any(dd.text == 'updated_title' for dd in details)
+            any(dd.text == 'updated_title' for dd in meta)
         )
+        description = self.browser.find_elements_by_css_selector('.clip-detail-container .clip-detail-description p')
         self.assertTrue(
-            any(dd.text == 'updated_description' for dd in details)
+            any(dd.text == 'updated_description' for dd in description)
         )
 
 

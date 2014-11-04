@@ -4,6 +4,10 @@ Utility functions for handling audio.
 from django.core.files import File
 from django.db.models.fields.files import FieldFile, FileDescriptor
 
+DEFAULT_WHITELIST = {
+    'EXTENSIONS': ('.mp3', '.wav', '.ogg'),
+    'MIMETYPES': ('audio/mpeg', 'audio/x-wav', 'audio/ogg')
+}
 
 class AudioFile(File):
     """

@@ -12,17 +12,13 @@ from django.core.exceptions import ValidationError
 from django.utils import six
 
 from audio.files import AudioFileDescriptor, AudioFieldFile
+from audio.files import DEFAULT_WHITELIST
 from audio import forms
 
 from django.conf import settings
 
 
 class AudioField(FileField):
-    default_whitelist = {
-        'EXTENSIONS': ('.mp3', '.wav', '.ogg'),
-        'MIMETYPES': ('audio/mpeg', 'audio/x-wav', 'audio/ogg')
-    }
-
     default_error_messages = {
         'invalid_audio': _("Upload a valid audio file. "
                            "The file you uploaded was either not valid audio type "
@@ -64,13 +60,15 @@ class AudioField(FileField):
         """
         Validates value and throws ValidationError. Here, value is a
         AudioFieldFile instance
+
+        TODO validate length of audio file as this is not processed or compressed (yet)
         """
 
         # Ensure that we are getting a File object
         assert value is not None and isinstance(value, FieldFile), 'Invalid arguments'
 
         # get the whitelist or defaults
-        whitelist = getattr(settings, 'AUDIO_WHITELIST', self.default_whitelist)
+        whitelist = getattr(settings, 'AUDIO_WHITELIST', DEFAULT_WHITELIST)
         whitelisted_mimetypes = whitelist.get('MIMETYPES', ())
         whitelisted_extensions = whitelist.get('EXTENSIONS', ())
 
