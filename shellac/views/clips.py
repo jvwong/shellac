@@ -19,17 +19,19 @@ class ClipListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Clip.objects.filter(author=self.request.user.person).order_by('-created')
+        return Clip.live.filter(author=self.request.user.person).order_by('-created')
 
     def get_context_data(self, **kwargs):
         context = super(ClipListView, self).get_context_data(**kwargs)
         return context
 
 
+
 ## CRUD
 @permission_required('shellac.add_clip', raise_exception=True)
 def shellac_clip_create(request):
     if request.method == 'POST':
+
         form = CreateClipForm(request.POST, request.FILES)
         if form.is_valid():
             #save a new Clip object from the data passed
@@ -47,13 +49,15 @@ def shellac_clip_create(request):
 
 class ClipDetailView(DetailView):
     model = Clip
+    queryset = Clip.objects.all()
     template_name = "shellac/clips/clip_detail.html"
 
 
 class ClipUpdateView(Clip_IsAuthenticatedAndOwnerMixin, UpdateView):
     model = Clip
+    queryset = Clip.live.all()
     fields = ['title', 'categories', 'description', 'brand',
-              'status', 'created', 'audio_file', 'tags']
+              'created', 'audio_file', 'tags']
     template_name = 'shellac/clips/clip_update_form.html'
 
     def get_success_url(self):
@@ -64,6 +68,7 @@ class ClipUpdateView(Clip_IsAuthenticatedAndOwnerMixin, UpdateView):
 
 class ClipDeleteView(Clip_IsAuthenticatedAndOwnerMixin, DeleteView):
     model = Clip
+    queryset = Clip.live.all()
     template_name = 'shellac/clips/clip_confirm_delete.html'
     success_url = reverse_lazy('shellac_clip_list')
 

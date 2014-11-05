@@ -14,13 +14,12 @@ class ClipInline(admin.StackedInline):
     fk_name = 'author'
     #raw_id_fields = ('from_person', 'to_person')
     extra = 1
-
+    readonly_fields = ('status',)
     fieldsets = (
         ('Advanced options', {
             'classes': ('collapse',),
-            'fields': ('title', 'author', 'categories', 'tags',
-                       'description', 'brand', 'status',
-                       'audio_file', 'created')
+            'fields': ('title', 'author', 'categories', 'tags', 'status',
+                       'description', 'brand', 'audio_file', 'created')
         }),
     )
 
@@ -53,7 +52,6 @@ class TrackInline(admin.StackedInline):
     fk_name = 'playlist'
     #raw_id_fields = ('playlist', 'clip')
     extra = 1
-
     fieldsets = (
         ('Advanced options', {
             'classes': ('collapse',),

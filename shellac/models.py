@@ -136,6 +136,10 @@ class Person(models.Model):
     class Meta:
         verbose_name_plural = "People"
 
+    def live_clips(self):
+        from shellac.models import Clip
+        return self.clips.filter(status=Clip.LIVE_STATUS)
+
     def get_absolute_url(self):
         return ('shellac_profile', (), { 'username': self.username })
     get_absolute_url = models.permalink(get_absolute_url)
@@ -261,6 +265,11 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
+    def live_clips(self):
+        from shellac.models import Clip
+        return self.clips.filter(status=Clip.LIVE_STATUS)
+
+
     def get_absolute_url(self):
         return ('shellac_category', (), {'slug': self.slug})
     get_absolute_url = models.permalink(get_absolute_url)
@@ -272,10 +281,18 @@ class Category(models.Model):
 ###                             BEGIN Class Clip                                       ###
 ##########################################################################################
 
+class LiveClipManager(models.Manager):
+    def get_queryset(self):
+        return super(LiveClipManager, self).get_queryset().filter(status=self.model.LIVE_STATUS)
+
+
 class ClipManager(models.Manager):
     def create_clip(self, title, author):
         clip = self.create(title=title, author=author)
         return clip
+
+    def get_queryset(self):
+        return super(ClipManager, self).get_queryset()
 
 
 class Clip(models.Model):
@@ -292,9 +309,14 @@ class Clip(models.Model):
     PUBLIC_STATUS = 1
     PRIVATE_STATUS = 2
 
+    LIVE_STATUS = 1
+    PENDING_STATUS = 2
+    HIDDEN_STATUS = 3
+
     STATUS_CHOICES = (
-        (PUBLIC_STATUS, 'Public'),
-        (PRIVATE_STATUS, 'Private')
+        (LIVE_STATUS, 'Live'),
+        (PENDING_STATUS, 'Pending'),
+        (HIDDEN_STATUS, 'Hidden')
     )
 
     title = models.CharField(max_length=50, help_text=("Limit 50 characters"), unique_for_date='created')
@@ -308,7 +330,7 @@ class Clip(models.Model):
     ### Default
     plays = models.PositiveSmallIntegerField(default=0, blank=True)
     rating = models.PositiveSmallIntegerField(default=0, blank=True)
-    status = models.IntegerField(choices=STATUS_CHOICES, default=PUBLIC_STATUS)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=PENDING_STATUS)
 
     ### Auto
     slug = models.SlugField(blank=True)
@@ -357,6 +379,7 @@ class Clip(models.Model):
     get_absolute_url = models.permalink(get_absolute_url)
 
     objects = ClipManager()
+    live = LiveClipManager()
 
 
 ##########################################################################################

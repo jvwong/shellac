@@ -39,7 +39,7 @@ class ClipModelTest(TestCase):
         self.assertEqual(saved_clip_1.description, '')
         self.assertEqual(saved_clip_1.plays, 0)
         self.assertEqual(saved_clip_1.rating, 0)
-        self.assertEqual(saved_clip_1.status, Clip.PUBLIC_STATUS)
+        self.assertEqual(saved_clip_1.status, Clip.PENDING_STATUS)
         self.assertEqual(saved_clip_1.slug, 'clip_test_1')
         #query on categories
         self.assertEqual(saved_clip_1.categories.all().count(), 1)

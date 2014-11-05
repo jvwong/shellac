@@ -74,19 +74,26 @@ USE_TZ = False
 
 # MEDIA STORAGE --- AWS S3 / django-storages
 USE_S3 = False
-
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', default='')
 AWS_STORAGE_BUCKET_NAME = '{}-media'.format(APP_NAME)
 
-if USE_S3:
-    DEFAULT_FILE_STORAGE = 's3Manager.config.MediaRootS3BotoStorage'
-else:
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-
-
+###Filesystem defaults
+# if USE_S3:
+#     DEFAULT_FILE_STORAGE = 's3Manager.config.MediaRootS3BotoStorage'
+# else:
+#     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# DEFAULT_FILE_STORAGE = 's3Manager.config.MediaRootS3BotoStorage'
+#Uploaded files under this size are kept in-memory (RAM)
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
+FILE_UPLOAD_HANDLERS =(
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler'
+)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, "media"))
+
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files

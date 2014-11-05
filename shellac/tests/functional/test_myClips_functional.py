@@ -84,9 +84,6 @@ class ClipUpdateTest(FunctionalTest):
             any(text.text == 'Brand:' for text in labels)
         )
         self.assertTrue(
-            any(text.text == 'Status:' for text in labels)
-        )
-        self.assertTrue(
             any(text.text == 'Created:' for text in labels)
         )
         self.assertTrue(

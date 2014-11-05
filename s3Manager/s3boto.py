@@ -8,7 +8,8 @@ except ImportError:
 
 from django.conf import settings
 from django.core.files.base import File
-from django.core.files.storage import Storage
+from .storage import Storage, FileSystemStorage
+
 from django.core.exceptions import ImproperlyConfigured, SuspiciousOperation
 from django.utils.encoding import force_text as force_unicode, smart_str
 from django.utils.deconstruct import deconstructible
@@ -268,6 +269,7 @@ class S3BotoStorage(Storage):
         specific to the backend storage system.
         """
         name = self._normalize_name(self._clean_name(name))
+
         f = S3BotoStorageFile(name, mode, self)
         if not f.key:
             raise IOError('File does not exist: %s' % name)
@@ -278,7 +280,7 @@ class S3BotoStorage(Storage):
         Called by Storage.save(). The name will already have gone through
         get_valid_name() and get_available_name(), and the content will be a
         File object itself.
-
+f =
         Should return the actual name of name of the file saved (usually the name
         passed in, but if the storage needs to change the file name return the
         new name instead).
@@ -324,16 +326,25 @@ class S3BotoStorage(Storage):
         if self.encryption:
             kwargs['encrypt_key'] = self.encryption
 
-        # Synchronous operation (for now...)
-        # Save to local file system (MEDIA_ROOT)
+        # Synchronous operation
+        # Save to local file system (settings.MEDIA_ROOT)
+        fs = FileSystemStorage()
+        print("cleaned_name : {}".format(cleaned_name))
+        print("encoded_name : {}".format(encoded_name))
+        ### cleaned_name : sounds/2014/11/04/ac8d2a727c1849c4ba4b3b683492ad6f.mp3
+        ### encoded_name : <location>/sounds/2014/11/04/ac8d2a727c1849c4ba4b3b683492ad6f.mp3
+
+        fs.save(cleaned_name, content)
+
         # upload to s3
         # clear as OK in model instance when complete
+        # key.set_contents_from_file(content,
+        #                            headers=headers,
+        #                            policy=self.acl,
+        #                            reduced_redundancy=self.reduced_redundancy,
+        #                            rewind=True,
+        #                            **kwargs)
 
-        key.set_contents_from_file(content, headers=headers,
-                                   policy=self.acl,
-                                   reduced_redundancy=self.reduced_redundancy,
-                                   rewind=True,
-                                   **kwargs)
         return cleaned_name
 
     def delete(self, name):
@@ -405,12 +416,20 @@ class S3BotoStorage(Storage):
         return last_modified_date.astimezone(timezone).replace(tzinfo=None)
 
     def url(self, name):
-        name = self._normalize_name(self._clean_name(name))
+        # _normalize calls safe_join that adds the 'location' tag
+        # specified in our .config module
+        cleaned_name = self._normalize_name(self._clean_name(name))
+
+        fs = FileSystemStorage()
+        local_exists = fs.exists(name)
+        if local_exists:
+            return os.path.join('/', cleaned_name)
+
         if self.custom_domain:
-            return "%s//%s/%s" % (self.url_protocol,
-                                  self.custom_domain, name)
+            return "%s//%s/%s" % (self.url_protocol, self.custom_domain, cleaned_name)
+
         return self.connection.generate_url(self.querystring_expire,
-            method='GET', bucket=self.bucket.name, key=self._encode_name(name),
+            method='GET', bucket=self.bucket.name, key=self._encode_name(cleaned_name),
             query_auth=self.querystring_auth, force_http=not self.secure_urls)
 
     def get_available_name(self, name):

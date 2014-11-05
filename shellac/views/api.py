@@ -124,7 +124,7 @@ class ClipListViewSet(ListViewSet):
         ##Check for the url keyword arguments
         q = self.request.QUERY_PARAMS.get('q', None)
         if q:
-            return Clip.objects.filter(
+            return Clip.live.filter(
                 Q(title__icontains=q) |
                 Q(author__username__icontains=q) |
                 Q(categories__slug__in=[q]) |
@@ -132,7 +132,7 @@ class ClipListViewSet(ListViewSet):
                 Q(description__icontains=q)
             ).order_by('-created').distinct()
 
-        return Clip.objects.all().order_by('-created')
+        return Clip.live.all().order_by('-created')
 
 
 
@@ -165,7 +165,7 @@ class ClipListFollowingView(generics.ListAPIView):
         #Retrieve following set (get_following) for Person corresponding to User
         user = get_object_or_404(User, username=username)
         following = user.person.get_following()
-        qclips = Clip.objects.filter(author__in=following).order_by('-created')
+        qclips = Clip.live.filter(author__in=following).order_by('-created')
 
         ## Get the url page_by parameter OR the settings value OR 50
         page_size = request.QUERY_PARAMS.get('page_size', settings.REST_FRAMEWORK.get('PAGINATE_BY', '50'))

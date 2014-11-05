@@ -31,12 +31,12 @@ class ClipListViewSet(APITestCase):
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
 
         #create the clips
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1 = Clip.objects.create(status=1, title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
         setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
         clip1.save()
 
-        clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
+        clip2 = Clip.objects.create(status=1,title='clip2 title', author=user2.person)
         clip2.description = "clip2 description"
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
         clip2.save()
@@ -66,10 +66,10 @@ class ClipListViewSet(APITestCase):
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
 
         #create the clips
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1 = Clip.objects.create(status=1,title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
         setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
-        clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
+        clip2 = Clip.objects.create(status=1,title='clip2 title', author=user2.person)
         clip2.description = "clip2 description"
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
 
@@ -91,7 +91,7 @@ class ClipListViewSet(APITestCase):
         # open a file and attach it to the request payload
         f = open(audio_path, "rb")
         # payload = {"title": "clip1 title", "description": "clip1 description", "audio_file": f}
-        payload = {"title": "clip1 title", "author": "http://testserver/api/people/andrea/",
+        payload = {"title": "clip1 title", "author": "http://testserver/api/people/andrea/", 'status': 1,
                    "description": "clip1 description", "audio_file": f}
 
         # response should be 'HTTP_201_CREATED' and have a clip count of 1
@@ -178,7 +178,7 @@ class ClipListViewSet(APITestCase):
         ### this is bizarre behaviour as the author is automatically set upon save
         ### and so ignores the author field even though it is required
         f = open(audio_path, "rb")
-        payload = {'title': 'clip1 title', 'author': 'http://testserver/api/people/andrea/', 'description': 'clip1 description', 'audio_file': f}
+        payload = {'title': 'clip1 title', 'status': 1, 'author': 'http://testserver/api/people/andrea/', 'description': 'clip1 description', 'audio_file': f}
 
         ### response should be 'HTTP_201_CREATED' and have a clip count of 1
         response = self.client.post("/api/clips/", payload, HTTP_AUTHORIZATION='Token ' + token)
@@ -204,10 +204,10 @@ class ClipListViewSet(APITestCase):
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
 
         #create the clips
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1 = Clip.objects.create(status=1,title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
         setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
-        clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
+        clip2 = Clip.objects.create(status=1,title='clip2 title', author=user2.person)
         clip2.description = "clip2 description"
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
 
@@ -279,10 +279,10 @@ class ClipDetailViewSet(APITestCase):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1 = Clip.objects.create(status=1, title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
         setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
-        clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
+        clip2 = Clip.objects.create(status=1, title='clip2 title', author=user2.person)
         clip2.description = "clip2 description"
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
 
@@ -316,10 +316,10 @@ class ClipDetailViewSet(APITestCase):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1 = Clip.objects.create(status=1, title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
         setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
-        clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
+        clip2 = Clip.objects.create(status=1, title='clip2 title', author=user2.person)
         clip2.description = "clip2 description"
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
         self.assertEqual(User.objects.all().count(), 2)
@@ -352,7 +352,7 @@ class ClipDetailViewSet(APITestCase):
     def test_ClipDetailViewSet_PUT_own_updates_existing_object(self):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1 = Clip.objects.create(status=1, title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
 
         # setFileAttributefromLocal(clip1.audio_file, audio_path, "song.mp3")
@@ -365,11 +365,11 @@ class ClipDetailViewSet(APITestCase):
         self.client.login(username='andrea', password='a')
         response = self.client.put('/api/clips/' + str(clip1.pk) + '/', data={'title': 'updated clip1 title',
                                                          'author': 'http://testserver/api/people/andrea/',
-                                                         'description': 'updated clip1 description',
+                                                         'description': 'updated clip1 description', 'status': 1,
                                                          'audio_file': f})
 
         resp = response.data
-        #print(resp)
+        # print(resp)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(resp['title'], 'updated clip1 title')
         self.assertEqual(resp['slug'], 'updated-clip1-title')
@@ -385,7 +385,7 @@ class ClipDetailViewSet(APITestCase):
     def test_ClipDetailViewSet_PATCH_own_updates_existing_object(self):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1 = Clip.objects.create(status=1, title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
         setFileAttributefromLocal(clip1.audio_file, audio_path, "song.mp3")
         self.assertEqual(User.objects.all().count(), 1)
@@ -410,7 +410,7 @@ class ClipDetailViewSet(APITestCase):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1 = Clip.objects.create(status=1, title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
 
         # setFileAttributefromLocal(clip1.audio_file, audio_path, "song.mp3")
@@ -437,10 +437,10 @@ class ClipDetailViewSet(APITestCase):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1 = Clip.objects.create(status=1, title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
         setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
-        clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
+        clip2 = Clip.objects.create(status=1, title='clip2 title', author=user2.person)
         clip2.description = "clip2 description"
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
         self.assertEqual(User.objects.all().count(), 2)
@@ -462,11 +462,11 @@ class ClipDetailViewSet(APITestCase):
         #add users and clips
         user1 = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
         user2 = User.objects.create_user('jvwong', email='jray@outlook.com', password='j')
-        clip1 = Clip.objects.create(title='clip1 title', author=user1.person)
+        clip1 = Clip.objects.create(status=1, title='clip1 title', author=user1.person)
         clip1.description = "clip1 description"
         setFileAttributefromLocal(clip1.audio_file, audio_path, "song1.mp3")
 
-        clip2 = Clip.objects.create(title='clip2 title', author=user2.person)
+        clip2 = Clip.objects.create(status=1, title='clip2 title', author=user2.person)
         clip2.description = "clip2 description"
         setFileAttributefromLocal(clip2.audio_file, audio_path, "song2.mp3")
 
