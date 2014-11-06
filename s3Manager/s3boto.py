@@ -10,7 +10,7 @@ except ImportError:
 from django.conf import settings
 from django.core.files.base import File
 from .storage import Storage, FileSystemStorage
-from .tasks import upload_task, get_upload_task_status, handle_post_upload
+from .tasks import upload_task
 
 from django.core.exceptions import ImproperlyConfigured, SuspiciousOperation
 from django.utils.encoding import force_text as force_unicode, smart_str
@@ -133,6 +133,8 @@ class S3BotoStorage(Storage):
             secure_urls=SECURE_URLS,
             url_protocol=URL_PROTOCOL,
             location=LOCATION,
+            file_buffer_size=FILE_BUFFER_SIZE,
+            chunk_size=CHUNK_SIZE,
             file_name_charset=FILE_NAME_CHARSET,
             preload_metadata=PRELOAD_METADATA,
             calling_format=CALLING_FORMAT):
@@ -153,6 +155,8 @@ class S3BotoStorage(Storage):
         self.url_protocol = url_protocol
         self.location = location or ''
         self.location = self.location.lstrip('/')
+        self.chunk_size = chunk_size
+        self.file_buffer_size = file_buffer_size
         self.file_name_charset = file_name_charset
         self.calling_format = calling_format
         self._entries = {}
@@ -327,14 +331,16 @@ class S3BotoStorage(Storage):
                 self.bucket_name,
                 encoded_name,
                 cleaned_name,
-                FILE_BUFFER_SIZE,
+                self.chunk_size,
+                self.file_buffer_size,
                 content_type,
                 self.reduced_redundancy,
                 self.encryption,
                 self.headers,
                 self.acl
-            ],
-            link=handle_post_upload.s()
+            ]
+            # Hack - right now this is called for any save (brand, audio, ...)
+            #link=handle_post_upload.s()
         )
         #print(get_upload_task_status(task.id))
 

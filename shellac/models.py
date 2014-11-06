@@ -319,6 +319,9 @@ class Clip(models.Model):
         (HIDDEN_STATUS, 'Hidden')
     )
 
+    BRAND_UPLOAD_TO = 'brands'
+    AUDIO_UPLOAD_TO = 'sounds'
+
     title = models.CharField(max_length=50, help_text=("Limit 50 characters"), unique_for_date='created')
     author = models.ForeignKey(Person, related_name="clips")
 
@@ -338,11 +341,11 @@ class Clip(models.Model):
 
     #VISUAL
     ###upload to subdirectory with user id prefixed
-    brand = ThumbnailImageField(upload_to=path_and_rename('brands'), blank=True, help_text=("Images will be cropped as squares"))
+    brand = ThumbnailImageField(upload_to=path_and_rename(BRAND_UPLOAD_TO), blank=True, help_text=("Images will be cropped as squares"))
 
     #AUDIO
     # Add the audio field to your model -- required
-    audio_file = AudioField(upload_to=path_and_rename('sounds'), blank=False, help_text=("Allowed type - .mp3, .wav, .ogg"))
+    audio_file = AudioField(upload_to=path_and_rename(AUDIO_UPLOAD_TO), blank=False, help_text=("Allowed type - .mp3, .wav, .ogg"))
 
     def save(self, *args, **kwargs):
         # brand exists only on new or updated clips
@@ -382,17 +385,20 @@ class Clip(models.Model):
     live = LiveClipManager()
 
 
-# Receive the post_save signal
-from s3Manager.storage import FileSystemStorage
-from s3Manager.tasks import upload_done
-@receiver(upload_done, sender=FileSystemStorage)
-def on_upload_done(sender, name, **kwargs):
-    print('on_upload_done name: {}'.format(name))
-    clips = Clip.objects.filter(audio_file=name)
-    print('len(clips): {}'.format(len(clips)))
-    if len(clips):
-        clips[0].status = Clip.LIVE_STATUS
-        clips[0].save()
+# Receive the post_save signal and filter for Clip-related changes
+from s3Manager.tasks import upload_done, upload_task
+@receiver(upload_done, sender=upload_task)
+def update_clip_status(sender, name, **kwargs):
+
+    # name format: '<upload_to>/YYYY/MM/DD/<file.ext>'
+    upload_to_prefix, path = name.split(sep='/', maxsplit=1)
+
+    if upload_to_prefix == Clip.AUDIO_UPLOAD_TO:
+        clips = Clip.objects.filter(audio_file=name)
+
+        if len(clips):
+            clips[0].status = Clip.LIVE_STATUS
+            clips[0].save()
 
 
 ##########################################################################################

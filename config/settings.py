@@ -77,6 +77,7 @@ USE_S3 = True
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', default='')
 AWS_STORAGE_BUCKET_NAME = '{}-media'.format(APP_NAME)
+AWS_S3_CHUNK_SIZE = 7340032
 
 ###Filesystem defaults
 if USE_S3:
