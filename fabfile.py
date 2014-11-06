@@ -127,6 +127,9 @@ lmedia_dir = os.path.abspath(os.path.join(lsource_dir, "../media/"))
 def start():
     local('../virtualenv/bin/python3.4 manage.py runserver 127.0.0.1:8000')
 
+def celery():
+    local('../virtualenv/bin/celery --app=config.celery:app worker --loglevel=INFO --purge')
+
 def watch():
     local('cd %s && grunt watch' % (ljs_dir,))
 

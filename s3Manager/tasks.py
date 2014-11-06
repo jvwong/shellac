@@ -48,6 +48,9 @@ def upload_task(bucket_name, encoded_name, cleaned_name, file_buffer_size,
         if not key:
             key = bucket.new_key(encoded_name)
 
+
+        print("content_type {}".format(content_type))
+
         key.set_metadata('Content-Type', content_type)
         # only pass backwards incompatible arguments if they vary from the default
         kwargs = {}
