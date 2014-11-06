@@ -32,15 +32,16 @@ var siren = (function() {
 
         try {
             contextClass = (
-                window.AudioContext ||
-                window.webkitAudioContext ||
-                window.mozAudioContext ||
-                window.oAudioContext ||
-                window.msAudioContext
+            window.AudioContext ||
+            window.webkitAudioContext ||
+            window.mozAudioContext ||
+            window.oAudioContext ||
+            window.msAudioContext
             );
             context = new contextClass();
 
         } catch (err) {
+            console.log(window.AudioContext);
             console.warn('getAudioContext: %s, %s', err.name, err.message);
 
         } finally {}
@@ -83,30 +84,17 @@ var siren = (function() {
         /* START variable declarations  */
         if (!Siren.id){ Siren.id = 0; }
         var
-            id = Siren.id++,
-            that = {
-                context: undefined
-            },
-
-            _data = {},
-            _setup = {
-                debugMode   : true,
-                idPrefix    : 'id',
-                url         : String()
-            },
-
-            init
+            id = Siren.id++
+            , that = {}
+            , _data
             ;
         /* END variable declarations  */
 
         /* START helper functions */
-        init = function(){
-            that.context = spec.context;
-        };
+        function dummy(){
+            return false;
+        }
         /* END helper function */
-
-        //Initialize the Siren object
-        init();
 
         /**
          * dothis
@@ -116,16 +104,19 @@ var siren = (function() {
         };
         /* END dothis */
 
+        /**
+         * dothat
+         **/
+        that.dothat = function () {
+            return true;
+        };
+        /* END dothat */
+
+
         /* START GETTERS & SETTERS */
         that.data = function(_){
             if(!arguments.length) return _data;
             _data = _;
-            return that;
-        };
-
-        that.setup = function(_){
-            if(!arguments.length) return _setup;
-            _setup = _;
             return that;
         };
         /* END GETTERS & SETTERS */
@@ -141,15 +132,13 @@ var siren = (function() {
      * @return true if initialisation successful
      **/
     initModule = function(spec){
-        var context = getAudioContext();
-
-        if(context){
+        console.log(test_string);
+        stateMap.context = getAudioContext();
+        if(stateMap.context){
             console.info("siren:initModule OK");
             //creation of a siren object that houses audio capability
-            spec.context = context;
             return Siren(spec);
         }
-
         console.warn("siren:initModule failed");
         return null;
     };
@@ -158,3 +147,6 @@ var siren = (function() {
         initModule: initModule
     };
 }());
+
+
+module.exports = siren;

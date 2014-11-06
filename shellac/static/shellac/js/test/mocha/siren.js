@@ -7,26 +7,37 @@ var supertest = require('supertest'),
 describe('siren.js', function () {
 
     var jsdom = require('jsdom').jsdom,
-        document = jsdom("<html><head></head><body><div></div></body></html>"),
-        siren = require("../jasmine/siren/src/siren.js")
+        document = jsdom(
+            "<html>" +
+              "<head>" +
+              "</head>" +
+              "<body>" +
+                "<div></div>" +
+              "</body>" +
+            "</html>"
+        ),
+        siren = require('./siren/siren.js')("test")
         ;
 
     global.document = document;
     global.window = document.parentWindow;
 
+    describe('initModule', function () {
+        var spec, Siren;
 
-    describe('test', function () {
+        spec = {};
 
-        beforeEach(function () {
+        beforeEach(function (){
+            Siren = siren.initModule({});
         });
 
-        afterEach(function () {
+        afterEach(function (){
         });
 
-        describe('existence', function(){
-            it('should be true', function () {
-                console.log(siren);
-            });
+        it('should return a Siren object', function () {
+//            Siren.should.be.an.Object;
+            console.log(Siren);
+            console.log();
         });
 
     });
