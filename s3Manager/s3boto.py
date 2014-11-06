@@ -329,6 +329,7 @@ class S3BotoStorage(Storage):
                 cleaned_name,
                 FILE_BUFFER_SIZE,
                 content_type,
+                self.reduced_redundancy,
                 self.encryption,
                 self.headers,
                 self.acl
