@@ -14,7 +14,7 @@ class ClipInline(admin.StackedInline):
     fk_name = 'author'
     #raw_id_fields = ('from_person', 'to_person')
     extra = 1
-    readonly_fields = ('status',)
+    # readonly_fields = ('status',)
     fieldsets = (
         ('Advanced options', {
             'classes': ('collapse',),

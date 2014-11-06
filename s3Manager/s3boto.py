@@ -1,4 +1,5 @@
 import os
+import math
 import mimetypes
 
 try:
@@ -9,10 +10,13 @@ except ImportError:
 from django.conf import settings
 from django.core.files.base import File
 from .storage import Storage, FileSystemStorage
+from .tasks import upload_task, get_upload_task_status, handle_post_upload
 
 from django.core.exceptions import ImproperlyConfigured, SuspiciousOperation
 from django.utils.encoding import force_text as force_unicode, smart_str
 from django.utils.deconstruct import deconstructible
+
+from .filechunkio import FileChunkIO
 
 try:
     from boto.s3.connection import S3Connection, SubdomainCallingFormat,NoHostProvided
@@ -42,6 +46,7 @@ SECURE_URLS = getattr(settings, 'AWS_S3_SECURE_URLS', True)
 FILE_NAME_CHARSET = getattr(settings, 'AWS_S3_FILE_NAME_CHARSET', 'utf-8')
 FILE_OVERWRITE = getattr(settings, 'AWS_S3_FILE_OVERWRITE', True)
 FILE_BUFFER_SIZE = getattr(settings, 'AWS_S3_FILE_BUFFER_SIZE', 5242880)
+CHUNK_SIZE = getattr(settings, 'AWS_S3_CHUNK_SIZE', 6291456)
 IS_GZIPPED = getattr(settings, 'AWS_IS_GZIPPED', False)
 PRELOAD_METADATA = getattr(settings, 'AWS_PRELOAD_METADATA', False)
 GZIP_CONTENT_TYPES = getattr(settings, 'GZIP_CONTENT_TYPES', (
@@ -280,7 +285,6 @@ class S3BotoStorage(Storage):
         Called by Storage.save(). The name will already have gone through
         get_valid_name() and get_available_name(), and the content will be a
         File object itself.
-f =
         Should return the actual name of name of the file saved (usually the name
         passed in, but if the storage needs to change the file name return the
         new name instead).
@@ -311,39 +315,27 @@ f =
         ## content.name = name of the file including the relative path from MEDIA_ROOT
         content.name = cleaned_name
         encoded_name = self._encode_name(name)
+        ### cleaned_name = '<upload_to>/YYYY/MM/DD/<file>.ext'
+        ### encoded_name : <location>/<upload_to>/YYYY/MM/DD/<file>.ext
 
-        ##Checks for the key existence -- can hijack this maybe
-        key = self.bucket.get_key(encoded_name)
-
-        if not key:
-            key = self.bucket.new_key(encoded_name)
-        if self.preload_metadata:
-            self._entries[encoded_name] = key
-
-        key.set_metadata('Content-Type', content_type)
-        # only pass backwards incompatible arguments if they vary from the default
-        kwargs = {}
-        if self.encryption:
-            kwargs['encrypt_key'] = self.encryption
-
-        # Synchronous operation
-        # Save to local file system (settings.MEDIA_ROOT)
+        ##Save sync
         fs = FileSystemStorage()
-        print("cleaned_name : {}".format(cleaned_name))
-        print("encoded_name : {}".format(encoded_name))
-        ### cleaned_name : sounds/2014/11/04/ac8d2a727c1849c4ba4b3b683492ad6f.mp3
-        ### encoded_name : <location>/sounds/2014/11/04/ac8d2a727c1849c4ba4b3b683492ad6f.mp3
-
         fs.save(cleaned_name, content)
 
-        # upload to s3
-        # clear as OK in model instance when complete
-        # key.set_contents_from_file(content,
-        #                            headers=headers,
-        #                            policy=self.acl,
-        #                            reduced_redundancy=self.reduced_redundancy,
-        #                            rewind=True,
-        #                            **kwargs)
+        task = upload_task.apply_async(
+            args=[
+                self.bucket_name,
+                encoded_name,
+                cleaned_name,
+                FILE_BUFFER_SIZE,
+                content_type,
+                self.encryption,
+                self.headers,
+                self.acl
+            ],
+            link=handle_post_upload.s()
+        )
+        #print(get_upload_task_status(task.id))
 
         return cleaned_name
 

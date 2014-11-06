@@ -382,6 +382,17 @@ class Clip(models.Model):
     live = LiveClipManager()
 
 
+# Receive the post_save signal
+from s3Manager.storage import FileSystemStorage
+from s3Manager.tasks import upload_done
+@receiver(upload_done, sender=FileSystemStorage)
+def on_upload_done(sender, name, **kwargs):
+    clips = Clip.objects.filter(audio_file=name)
+    if len(clips):
+        clips[0].status = Clip.LIVE_STATUS
+        clips[0].save()
+
+
 ##########################################################################################
 ###                             BEGIN Class Track                                      ###
 ##########################################################################################

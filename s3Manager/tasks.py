@@ -2,14 +2,17 @@ import os
 import sys
 import math
 
+from config import celery_app
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
-from config import celery_app
 from .filechunkio import FileChunkIO
+from .storage import FileSystemStorage
 
 sys.path.append('/home/jvwong/Projects/shellac')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings'
 from django.conf import settings
+import django.dispatch
+upload_done = django.dispatch.Signal(providing_args=["name"])
 
 CHUNK_SIZE = 6 * 1048576
 MIN_FILE_SIZE = 5 * 1048576
@@ -22,75 +25,88 @@ MIN_FILE_SIZE = 5 * 1048576
 # get_task_status(id) tells you if there was a completion of the S3 connection
 # t.info or t.result is a boolean telling you if there was a valid upload
 @celery_app.task()
-def upload_task(bucket_name, source_path, key_prefix):
-    #Open the connection
-    try:
+def upload_task(bucket_name, encoded_name, cleaned_name, file_buffer_size,
+                content_type, encryption, headers, acl):
+    # Synchronous operation
+        # Save to local file system (settings.MEDIA_ROOT)
+        fs = FileSystemStorage()
+
+        assert fs.exists(cleaned_name), 'file does not exist: {}'.format(cleaned_name)
+
+        f = fs.open(cleaned_name)
+        source_size = fs.size(cleaned_name)
+        source_name = f.name
+
         # conn = boto.connect_s3()
         conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-
         #Retrieve the bucket and Key object
         bucket = conn.get_bucket(bucket_name)
         k = Key(bucket)
 
-        #Format Get file info
-        if os.path.split(source_path)[1] == '':
-            return
-        source_filename = os.path.split(source_path)[1]
+        ##Checks for the key existence
+        key = bucket.get_key(encoded_name)
+        if not key:
+            key = bucket.new_key(encoded_name)
 
-        source_size = os.stat(source_path).st_size
-        if source_size == 0:
-            return
+        key.set_metadata('Content-Type', content_type)
+        # only pass backwards incompatible arguments if they vary from the default
+        kwargs = {}
+        if encryption:
+            kwargs['encrypt_key'] = encryption
 
-        #Set the key name from the destination path
-        dest_path = os.path.join(key_prefix, source_filename)
-        k.key = dest_path
-
-        #print(k.key)
-
+        # upload to s3
         # Create a multipart upload request
-        mp = bucket.initiate_multipart_upload(k.key)
-
-        ### Use a chunk size of 10 MiB (feel free to change this)
-        ### The minimal multipart upload size is 5mb
-
-        #chunk_count = int(math.ceil(source_size / CHUNK_SIZE))
+        mp = bucket.initiate_multipart_upload(key.key)
 
         ### floor is for celery bug (below)
         chunk_count = int(math.floor(source_size / CHUNK_SIZE))
 
-        # Send the file parts, using FileChunkIO to create a file-like object
-        # that points to a certain byte range within the original file. We
-        # set bytes to never exceed the original file size.
+        # print('source_size: {}'.format(source_size))
+        # print('chunk_count: {}'.format(chunk_count))
 
-        if source_size > MIN_FILE_SIZE:
-            for i in range(chunk_count):
-                offset = CHUNK_SIZE * i
+        try:
 
-                ##bytes will be chunk size OR leftover; each chunk must be > MIN_FILE_SIZE
-                if i == chunk_count - 1:
-                    num_bytes = source_size - offset
-                else:
-                    num_bytes = min(CHUNK_SIZE, source_size - offset)
+            if source_size > file_buffer_size:
+                # print('chunk upload...')
+                for i in range(chunk_count):
+                    offset = CHUNK_SIZE * i
 
-                # print("i: {}".format(i))
-                # print("source_size - offset: {}".format(source_size - offset))
-                # print("num_bytes: {}".format(num_bytes))
-                with FileChunkIO(source_path, 'r', offset=offset, bytes=num_bytes) as fp:
-                    mp.upload_part_from_file(fp, part_num=i + 1)
+                    ##bytes will be chunk size OR leftover; each chunk must be > MIN_FILE_SIZE
+                    if i == chunk_count - 1:
+                        num_bytes = source_size - offset
+                    else:
+                        num_bytes = min(CHUNK_SIZE, source_size - offset)
 
-            # Finish the upload
-            # Note that if you forget to call either mp.complete_upload() or
-            # mp.cancel_upload() you will be left with an incomplete upload
-            mp.complete_upload()
+                    # print("i: {}".format(i))
+                    # print("source_size - offset: {}".format(source_size - offset))
+                    # print("num_bytes: {}".format(num_bytes))
+                    with FileChunkIO(source_name, 'r', offset=offset, bytes=num_bytes) as fp:
+                        mp.upload_part_from_file(fp, part_num=i + 1)
 
-        else:
-            k.set_contents_from_filename(source_path)
 
-        return True
+                # Finish the upload
+                # Note that if you forget to call either mp.complete_upload() or
+                # mp.cancel_upload() you will be left with an incomplete upload
+                mp.complete_upload()
 
-    except IOError as e:
-        print("I/O error({0}): {1}".format(e.errno, e.strerror))
-        return False
+            else:
+                # print('whole upload...')
+                key.set_contents_from_file(f,
+                                           headers=headers,
+                                           policy=acl,
+                                           rewind=True)
+
+            return cleaned_name
+
+        except IOError as ioe:
+            print("I/O error({0}): {1}".format(ioe.errno, ioe.strerror))
+
+        except Exception as err:
+            print("Uncaught exception({0}): {1}".format(err.errno, err.strerror))
+
+        finally:
+            f.close()
+
 
 
 def get_upload_task_status(task_id):
@@ -118,26 +134,14 @@ def get_upload_task_status(task_id):
 
 
 @celery_app.task()
-def handle_instance_upload(result, model_class, primary_key):
+def handle_post_upload(cleaned_name):
 
-    if result:
-        print("model_class: {}".format(model_class))
-        print("primary_key: {}".format(primary_key))
-        ### delete local file,
-        #       FieldFile.delete(save=True)
-        # reset brand path to s3,
-        #       FieldFile.save(name, content, save=True)[source]
-        # signal model OK to display
-        return True
+    fs = FileSystemStorage()
+    # delete local file
+    if fs.exists(cleaned_name):
+        fs.delete(cleaned_name)
 
-    ### the upload failed. Don't touch local file
-    return False
+    if not fs.exists(cleaned_name):
+        upload_done.send(sender=fs.__class__, name=cleaned_name)
 
-
-##Debugging
-# from s3Manager.tasks import *;from s3Manager.utils import *
-# bucket_name = 'shellac-media'
-# source_path = '/home/jvwong/Music/Grantland Pop Culture/koppelman_2014-09-02_adamDuritz.mp3'
-# key_prefix = 'debug/media/sounds/2014/11/01'
-# key_name = os.path.join(key_prefix, os.path.split(source_path)[1])
 

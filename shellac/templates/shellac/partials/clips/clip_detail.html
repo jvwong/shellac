@@ -14,7 +14,7 @@
                   {% endif %}"  alt="{{ object.title }}" />
       </a>
       <div class="clip-detail-edit">
-        {% if object.author.user == user %}
+        {% if object.author.user == user and object.status == 1 %}
         <div class="btn-group">
             <a class="btn btn-default update" href="{% url 'shellac_clip_update' object.pk %}" role="button">Update</a>
             <a class="btn btn-default delete" href="{% url 'shellac_clip_confirm_delete' object.pk %}" role="button">Delete</a>

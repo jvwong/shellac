@@ -79,12 +79,11 @@ AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', default='')
 AWS_STORAGE_BUCKET_NAME = '{}-media'.format(APP_NAME)
 
 ###Filesystem defaults
-# if USE_S3:
-#     DEFAULT_FILE_STORAGE = 's3Manager.config.MediaRootS3BotoStorage'
-# else:
-#     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-# DEFAULT_FILE_STORAGE = 's3Manager.config.MediaRootS3BotoStorage'
+if USE_S3:
+    DEFAULT_FILE_STORAGE = 's3Manager.config.MediaRootS3BotoStorage'
+else:
+    DEFAULT_FILE_STORAGE = 's3Manager.storage.FileSystemStorage'
+
 #Uploaded files under this size are kept in-memory (RAM)
 FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 FILE_UPLOAD_HANDLERS =(
