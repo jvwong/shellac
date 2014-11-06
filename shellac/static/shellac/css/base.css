@@ -87,14 +87,14 @@
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
-@media (min-width: 768px) {
+@media (min-width: 769px) {
   main {
     width: 800px;
     margin: 0 auto;
   }
 }
 /* xs (phones) */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   main {
     width: 100%;
   }
@@ -397,14 +397,14 @@ dl.dl-horizontal dd {
 /* lg (large desktops, 1200px and up) */
 /* md (desktops, 992px and up) */
 /* sm (tablets, 768px and up) */
-@media (min-width: 768px) {
+@media (min-width: 769px) {
   main {
     width: 800px;
     margin: 0 auto;
   }
 }
 /* xs (phones) */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   main {
     width: 100%;
   }
