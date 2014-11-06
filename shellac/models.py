@@ -387,7 +387,9 @@ from s3Manager.storage import FileSystemStorage
 from s3Manager.tasks import upload_done
 @receiver(upload_done, sender=FileSystemStorage)
 def on_upload_done(sender, name, **kwargs):
+    print('on_upload_done name: {}'.format(name))
     clips = Clip.objects.filter(audio_file=name)
+    print('len(clips): {}'.format(len(clips)))
     if len(clips):
         clips[0].status = Clip.LIVE_STATUS
         clips[0].save()
