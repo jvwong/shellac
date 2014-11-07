@@ -41,10 +41,7 @@ class ProfileTest(FunctionalTest):
 
     def test_profile_page_can_navigate_to_clip_app(self):
         app_link = self.browser.find_element_by_css_selector('.content-profile .partial-profile .partial-profile-avatar-app_panel a')
-        #print(app_link.tag_name)
         app_link.click()
-        #
-        time.sleep(1.0)
         title = self.browser.find_element_by_tag_name('title')
         self.assertIn(title.text, 'App')
 
