@@ -80,7 +80,7 @@ AWS_STORAGE_BUCKET_NAME = '{}-media'.format(APP_NAME)
 AWS_S3_CHUNK_SIZE = 7340032
 
 ###Filesystem defaults
-if USE_S3:
+if not DEBUG:
     DEFAULT_FILE_STORAGE = 's3Manager.config.MediaRootS3BotoStorage'
 else:
     DEFAULT_FILE_STORAGE = 's3Manager.storage.FileSystemStorage'
