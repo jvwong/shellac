@@ -14199,7 +14199,12 @@ var bar_ui = (function() {
         function makeSound(url, id) {
 
             var query = playlistController.data.playlist_db({id: id}).first(),
-                sound;
+                sound
+//                ticker_old = -1,
+//                ticker_updated,
+//                enabled = true,
+//                ratchet = false
+                ;
 
             if(query)
             {
@@ -14215,21 +14220,38 @@ var bar_ui = (function() {
 
                     whileplaying: function () {
                         var progressMaxLeft = 100,
-                            left,
-                            width;
+                            progress,
+                            interval = 20
+                            ; //percentage
 
-                        left = Math.min(progressMaxLeft, Math.max(0, (progressMaxLeft * (this.position / this.durationEstimate)))) + '%';
-                        width = Math.min(100, Math.max(0, (100 * this.position / this.durationEstimate))) + '%';
+                        progress = Math.min(progressMaxLeft, Math.max(0, (progressMaxLeft * (this.position / this.durationEstimate))));
 
                         if (this.duration) {
 
-                            dom.progress.style.left = left;
-                            dom.progressBar.style.width = width;
+                            dom.progress.style.left = progress + '%'; /// progress ball
+                            dom.progressBar.style.width = progress + '%'; ///shaded region preceding ball
 
                             // TODO: only write changes
                             dom.time.innerHTML = getTime(this.position, true);
 
                         }
+
+                        //ping the server periodically if the ratchet option is true
+                        //use the left variable which indicates, in percent, the progress
+                        //lets ping the server every 4%
+//                        if (ratchet && !isNaN(progress)) {
+//                            ticker_updated = Math.floor(progress) % interval;
+//
+//                            if(ticker_updated > ticker_old){
+//                                enabled = true;
+//                            }
+//
+//                            if(enabled && ticker_updated === 0){
+//                                ticker_old = ticker_updated;
+//                                enabled = false;
+//                                util.PubSub.emit('player-save', playlistController.exportPositionsMap());
+//                            }
+//                        }
 
                     },
 
@@ -14612,11 +14634,13 @@ var bar_ui = (function() {
                 utils.css.add(dom.o, css.noVolume);
             }
 
-            dom.progress = utils.dom.get(dom.o, '.sm2-progress-ball');
-
+            /// progress container
             dom.progressTrack = utils.dom.get(dom.o, '.sm2-progress-track');
-
+            /// progress ball
+            dom.progress = utils.dom.get(dom.o, '.sm2-progress-ball');
+            ///shaded region preceding ball
             dom.progressBar = utils.dom.get(dom.o, '.sm2-progress-bar');
+
 
             dom.volume = utils.dom.get(dom.o, 'a.sm2-volume-control');
 
