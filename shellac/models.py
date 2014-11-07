@@ -3,44 +3,45 @@ import datetime
 import logging
 from uuid import uuid4
 
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
+from django.utils.deconstruct import deconstructible
 
 from taggit.managers import TaggableManager
 from image.fields import ThumbnailImageField
 from audio.fields import AudioField
 
 from shellac import util
-
+from markdown import markdown
 
 logger = logging.getLogger(__name__)
 
 APP_DIR = os.path.abspath(os.path.dirname(__file__))
 DEFAULT_AVATAR = os.path.abspath(os.path.join(APP_DIR, './static/shellac/assets/avatar.jpeg'))
 
-def path_and_rename(path):
-    def wrapper(instance, filename):
+##########################################################################################
+###                             BEGIN migragrations bug                                ###
+##########################################################################################
 
+@deconstructible
+class PathAndRename(object):
+    def __init__(self, sub_path):
+        self.path = os.path.normpath(sub_path)
+
+    def __call__(self, instance, filename):
         date_prefix = (datetime.datetime.now()).strftime('%Y/%m/%d')
-        path_date = os.path.join(path, date_prefix)
-
-        ##May need to guard against weird input (non file)
-        fname = os.path.split(filename)[1]
-
-        ##just get the extension
-        ext = fname.split('.')[-1]
+        path_date = os.path.join(self.path, date_prefix)
+        ext = os.path.splitext(os.path.normpath(filename))[1]
 
         # set filename as name + random string
-        fn = '{}.{}'.format(uuid4().hex, ext)
+        fn = '{}{}'.format(uuid4().hex, ext)
 
         # return the whole path to the file
         return os.path.join(path_date, fn)
 
-    return wrapper
 
 ##########################################################################################
 ###                             BEGIN Class Person                                     ###
@@ -51,10 +52,11 @@ class PersonManager(models.Model):
 ## One-to-one model -- extend User to accomodate relationships
 
 class Person(models.Model):
+    path_and_rename = PathAndRename("/avatars")
     user = models.OneToOneField(User, primary_key=True)
     username = models.CharField(max_length=30, editable=False)
     joined = models.DateTimeField(auto_now_add=True, blank=True)
-    avatar = ThumbnailImageField(upload_to=path_and_rename('avatars'), blank=True)
+    avatar = ThumbnailImageField(upload_to=path_and_rename, blank=True)
 
     relationships = models.ManyToManyField('self',
                                            through='Relationship',
@@ -172,17 +174,11 @@ class PlaylistManager(models.Manager):
         return playlist
 
 
-def datetime_title_default():
-    now = datetime.datetime.now()
-    return now.strftime("%Y_%m_%d_%H%M%S")
-
-
 class Playlist(models.Model):
-
     PATCHABLE = ('title',
                  'description')
 
-    title = models.CharField(max_length=50, default=datetime_title_default, help_text="Limit 50 characters")
+    title = models.CharField(max_length=50, default=util.datetime_title_default, help_text="Limit 50 characters")
     description = models.TextField(max_length=2000, blank=True, help_text="Limit 2000 characters")
     person = models.ForeignKey(Person, related_name="playlists", related_query_name="playlist")
 
@@ -199,6 +195,7 @@ class Playlist(models.Model):
         unique_together = ('person', 'title')
         verbose_name_plural = "playlists"
         ordering = ['-updated']
+
 
     def __unicode__(self):
         return self.title
@@ -328,6 +325,7 @@ class Clip(models.Model):
     ### Optional
     categories = models.ManyToManyField("shellac.Category", related_name="clips", blank=True)
     tags = TaggableManager(blank=True, help_text=("Comma separated list"))
+
     description = models.TextField(max_length=2000, blank=True, help_text=("Limit 2000 characters"))
 
     ### Default
@@ -341,11 +339,11 @@ class Clip(models.Model):
 
     #VISUAL
     ###upload to subdirectory with user id prefixed
-    brand = ThumbnailImageField(upload_to=path_and_rename(BRAND_UPLOAD_TO), blank=True, help_text=("Images will be cropped as squares"))
+    brand = ThumbnailImageField(upload_to=PathAndRename(BRAND_UPLOAD_TO), blank=True, help_text=("Images will be cropped as squares"))
 
     #AUDIO
     # Add the audio field to your model -- required
-    audio_file = AudioField(upload_to=path_and_rename(AUDIO_UPLOAD_TO), blank=False, help_text=("Allowed type - .mp3, .wav, .ogg"))
+    audio_file = AudioField(upload_to=PathAndRename(AUDIO_UPLOAD_TO), blank=False, help_text=("Allowed type - .mp3, .wav, .ogg"))
 
     def save(self, *args, **kwargs):
         # brand exists only on new or updated clips

@@ -69,3 +69,8 @@ def squarer(field, name):
     finally:
         f.close()
 
+import datetime
+
+def datetime_title_default():
+    now = datetime.datetime.now()
+    return now.strftime("%Y_%m_%d_%H%M%S")

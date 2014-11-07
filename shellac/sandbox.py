@@ -66,3 +66,21 @@
 #     ##called by Django!@ SHIIIIIIIIT.
 #
 # get_updated_url(old_file, new_file)
+
+# import os
+# from uuid import uuid4
+# import datetime
+# class PathAndRename(object):
+#     def __init__(self, sub_path):
+#         self.path = os.path.normpath(sub_path)
+#
+#     def __call__(self, instance, filename):
+#         date_prefix = (datetime.datetime.now()).strftime('%Y/%m/%d')
+#         path_date = os.path.join(self.path, date_prefix)
+#         ext = os.path.splitext(os.path.normpath(filename))[1]
+#
+#         # set filename as name + random string
+#         fn = '{}{}'.format(uuid4().hex, ext)
+#
+#         # return the whole path to the file
+#         return os.path.join(path_date, fn)

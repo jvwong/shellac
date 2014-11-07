@@ -190,7 +190,8 @@ INSTALLED_APPS = (
     'audio',
     'django_cleanup',
     'djcelery',
-    's3Manager'
+    's3Manager',
+    'markdown'
 )
 
 REST_FRAMEWORK = {
