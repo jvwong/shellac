@@ -45,6 +45,3 @@ class PersonUpdateForm(ModelForm):
     class Meta:
         model = Person
         exclude = ['relationships', 'user']
-
-    def clean_avatar(self):
-        return self.cleaned_data['avatar']

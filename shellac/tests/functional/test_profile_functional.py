@@ -48,3 +48,9 @@ class ProfileTest(FunctionalTest):
     def test_profile_page_same_user_can_edit_avatar(self):
         button_select_image = self.browser.find_element_by_css_selector('.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-img_panel button.update')
         self.assertIn(button_select_image.text, 'Save')
+
+    def test_profile_change_avatar_redirects_to_temp_avatar_or_actual(self):
+        button_select_image = self.browser.find_element_by_css_selector('.content-profile .partial-profile .partial-profile-avatar .partial-profile-avatar-img_panel button.update')
+        button_select_image.send_keys(Keys.ENTER)
+        title = self.browser.find_element_by_tag_name('title')
+        self.assertIn(title.text, 'Profile')

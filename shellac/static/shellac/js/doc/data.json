@@ -1,0 +1,452 @@
+{
+    "project": {},
+    "files": {
+        "src/app/app_util.js": {
+            "name": "src/app/app_util.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/app/shell.js": {
+            "name": "src/app/shell.js",
+            "modules": {
+                "shellac": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/app/sidebar.js": {
+            "name": "src/app/sidebar.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "shellac": {
+            "name": "shellac",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/app/shell.js",
+            "line": 5
+        }
+    },
+    "classes": {},
+    "classitems": [
+        {
+            "file": "src/app/app_util.js",
+            "line": 32,
+            "description": "parseClipData: transform any Clip fields to javascript-compatible",
+            "params": [
+                {
+                    "name": "raw",
+                    "description": "a string describing an array of valid JSON"
+                }
+            ],
+            "return": {
+                "description": "jsonArray - a list of valid JSON objects"
+            },
+            "class": ""
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 119,
+            "itemtype": "method",
+            "name": "setJqueryMap record the jQuery elements of the page\nRequired to support the bootstrap modal activities",
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 133,
+            "itemtype": "method",
+            "name": "setDomMap record the DOM elements of the page",
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 152,
+            "description": "actions ui action-related event handlers",
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 173,
+            "description": "enqueue pass the corresponding to a clip to the player playlist\nAction Add any clips database that are enqueued. These could be search results\nthat were not added to the database on init",
+            "params": [
+                {
+                    "name": "target",
+                    "description": "ElementNode for the clip to enqueue"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 196,
+            "itemtype": "method",
+            "name": "initLatest fetches the latest clips which defaults to recent, following",
+            "params": [
+                {
+                    "name": "done",
+                    "description": "async callback"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 211,
+            "itemtype": "method",
+            "name": "initPlaylist fetches the (default) playlist for this user and inflates",
+            "params": [
+                {
+                    "name": "done",
+                    "description": "async callback"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 322,
+            "itemtype": "method",
+            "name": "initUIModules installs other modules",
+            "params": [
+                {
+                    "name": "done",
+                    "description": "async callback"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 340,
+            "itemtype": "method",
+            "name": "initDom populates the shell UI with HTML",
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 351,
+            "itemtype": "method",
+            "name": "retrieveClip use the primary key to retrieve the Clip object\nAction fetch the clip from the latest clips db or makes an ajax request\nfor it otherwise. Add to the db in the latter case?",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "a Number representing the Clip primary key"
+                },
+                {
+                    "name": "db",
+                    "description": "the TAFFY db to look in or cache the result"
+                },
+                {
+                    "name": "callback",
+                    "description": "the callback function upon request"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 388,
+            "itemtype": "method",
+            "name": "render_clips append the html for the clips to the main body of the page\nActions This should check for the presence of an 'enqueue' class on each\n'span.enqueue-icon' element every time clips are inserted",
+            "params": [
+                {
+                    "name": "clipList",
+                    "description": "the list of clip objects"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 473,
+            "itemtype": "method",
+            "name": "handleClick Callback for a click event on the entire UI\nActions: processes the clicking an anchor element.",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "event object"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 554,
+            "itemtype": "method",
+            "name": "handlePlaylistChange Handler for change in Player playlist\nToggles the display value of check mark",
+            "params": [
+                {
+                    "name": "item",
+                    "description": "HTMLElement added / removed from playlist"
+                },
+                {
+                    "name": "isAdded",
+                    "description": "true if element was added"
+                },
+                {
+                    "name": "the",
+                    "description": "updated map of clip id's in the playlist"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 622,
+            "itemtype": "method",
+            "name": "handlePlayerStateChange Handler for change in player state",
+            "params": [
+                {
+                    "name": "state",
+                    "description": "string identifier indicating the type of state change"
+                },
+                {
+                    "name": "sm2Object",
+                    "description": "the relevant soundManager sound object"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 706,
+            "itemtype": "method",
+            "name": "handlePlayerSave Handler for the sm2 player 'save' action\nAction Clears out Track objects from the default playlist; Post\nTrack objects to default playlist that exist in pMap",
+            "params": [
+                {
+                    "name": "pMap",
+                    "description": "the positions map PlaylistController (exportPositionsMap())\nconsisting of pattern  for\neach Clip in playlist",
+                    "type": "Clip_pk: position_pk, ..., clip_pk: position_pk"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 826,
+            "itemtype": "method",
+            "name": "registerPubSub Registration function for the various PubSub events",
+            "params": [
+                {
+                    "name": "container",
+                    "description": "the DOM HTMLElement app container"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/shell.js",
+            "line": 840,
+            "itemtype": "method",
+            "name": "initModule Populates container with the shell of the UI\nand then configures and initializes feature modules.\nThe Shell is also responsible for browser-wide issues\nDirects this app to offer its capability to the user",
+            "params": [
+                {
+                    "name": "container",
+                    "description": "A DOM HTMLElement that should represent a single DOM container"
+                },
+                {
+                    "name": "target_username",
+                    "description": "account holder username for retrieving clips"
+                },
+                {
+                    "name": "DEBUG",
+                    "description": "for debug purposes (root url)"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/sidebar.js",
+            "line": 88,
+            "description": "setJqueryMap record the jQuery elements of the page",
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/sidebar.js",
+            "line": 111,
+            "description": "method parseCategoryData: transform any Category fields to javascript-compatible",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "string describing an array of valid JSON"
+                }
+            ],
+            "return": {
+                "description": "jsonArray a list of valid JSON objects"
+            },
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/sidebar.js",
+            "line": 131,
+            "description": "display_categories append the html for the category sidebar accordion section",
+            "params": [
+                {
+                    "name": "category_list",
+                    "description": "list containing formatted category objects"
+                },
+                {
+                    "name": "$container",
+                    "description": "jquery container"
+                },
+                {
+                    "name": "latest_clips_db",
+                    "description": "the TAFFY db containing relevant clip objects"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/sidebar.js",
+            "line": 167,
+            "description": "display_authors append the html for the currently displayed clips",
+            "params": [
+                {
+                    "name": "category_list",
+                    "description": "list containing formatted category objects"
+                },
+                {
+                    "name": "$container",
+                    "description": "jquery container"
+                },
+                {
+                    "name": "latest_clips_db",
+                    "description": "the TAFFY db containing relevant clip objects"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/sidebar.js",
+            "line": 208,
+            "description": "onClickCategory callback for changes in the category UI.\nExtracts the audio file url for each clip for the category\nand emits a sidebar change event",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "jQuery event object for the clicked elements"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/sidebar.js",
+            "line": 241,
+            "description": "onClickAuthor callback for changes in the author UI.\nExtracts the audio file url for each clip for the category\nand emits a sidebar change event",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "jQuery event object for the clicked elements"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/sidebar.js",
+            "line": 272,
+            "description": "onSubmitSearch callback for search box enter action\nCalls the search api and responds with a sidebar change event emit",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "jQuery event object for the clicked elements"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        },
+        {
+            "file": "src/app/sidebar.js",
+            "line": 294,
+            "description": "initModule Populates the $container with the sidebar of the UI\nand then configures and initializes feature modules.",
+            "params": [
+                {
+                    "name": "container",
+                    "description": "A single DOM HTMLElement"
+                },
+                {
+                    "name": "latest_clips_db",
+                    "description": "the TAFFY db of clip objects"
+                }
+            ],
+            "class": "",
+            "module": "shellac"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "Missing item type\nparseClipData: transform any Clip fields to javascript-compatible",
+            "line": " src/app/app_util.js:32"
+        },
+        {
+            "message": "Missing item type\nactions ui action-related event handlers",
+            "line": " src/app/shell.js:152"
+        },
+        {
+            "message": "Missing item type\nenqueue pass the corresponding to a clip to the player playlist\nAction Add any clips database that are enqueued. These could be search results\nthat were not added to the database on init",
+            "line": " src/app/shell.js:173"
+        },
+        {
+            "message": "Missing item type\nsetJqueryMap record the jQuery elements of the page",
+            "line": " src/app/sidebar.js:88"
+        },
+        {
+            "message": "Missing item type\nmethod parseCategoryData: transform any Category fields to javascript-compatible",
+            "line": " src/app/sidebar.js:111"
+        },
+        {
+            "message": "Missing item type\ndisplay_categories append the html for the category sidebar accordion section",
+            "line": " src/app/sidebar.js:131"
+        },
+        {
+            "message": "Missing item type\ndisplay_authors append the html for the currently displayed clips",
+            "line": " src/app/sidebar.js:167"
+        },
+        {
+            "message": "Missing item type\nonClickCategory callback for changes in the category UI.\nExtracts the audio file url for each clip for the category\nand emits a sidebar change event",
+            "line": " src/app/sidebar.js:208"
+        },
+        {
+            "message": "Missing item type\nonClickAuthor callback for changes in the author UI.\nExtracts the audio file url for each clip for the category\nand emits a sidebar change event",
+            "line": " src/app/sidebar.js:241"
+        },
+        {
+            "message": "Missing item type\nonSubmitSearch callback for search box enter action\nCalls the search api and responds with a sidebar change event emit",
+            "line": " src/app/sidebar.js:272"
+        },
+        {
+            "message": "Missing item type\ninitModule Populates the $container with the sidebar of the UI\nand then configures and initializes feature modules.",
+            "line": " src/app/sidebar.js:294"
+        }
+    ]
+}
