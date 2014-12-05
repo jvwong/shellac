@@ -12,8 +12,7 @@ SOURCE_DIR = os.path.abspath(os.path.join(CONFIG_DIR, ".."))
 BASE_DIR = os.path.abspath(os.path.join(SOURCE_DIR, ".."))
 STATIC_PATH = os.path.abspath(os.path.join(SOURCE_DIR, "static"))
 
-DATABASE = ".".join([APP_NAME, "db"])
-DATABASE_NAME = os.path.abspath(os.path.join(BASE_DIR, "database", DATABASE))
+DATABASE_NAME = ""
 URLCONF_MODULE = ".".join(["config.urls"])
 TEMPLATE_PATH = os.path.abspath(os.path.join(SOURCE_DIR, "templates"))
 TEMPLATE_DEBUG = DEBUG
@@ -28,8 +27,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', #'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': APP_NAME,                     #DATABASE_NAME,  # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': DATABASE_NAME,
         'USER': os.getenv('MYSQL_SHELLAC_USER', default='shellac'),
         'PASSWORD': os.getenv('MYSQL_SHELLAC_PASSWORD', default='Kordic27'),
         'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.

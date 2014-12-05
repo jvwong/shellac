@@ -7,10 +7,12 @@ from fabric.api import env, local, run
 
 import os
 import random
+import re
 
 APP_NAME = "shellac"
 REPO_URL = 'https://github.com/jvwong/shellac.git'
 AWS_STORAGE_BUCKET_NAME = '%s-media' % (APP_NAME,)
+re_staging = re.compile(r"staging")
 
 ### ***** BRING Deployment *****
 def deploy():
@@ -21,11 +23,11 @@ def deploy():
     _create_directory_structure_if_necessary(base_dir)
     _get_latest_source(source_dir)
     _update_settings(source_dir, env.host)
-    _update_config(source_dir, env.host)
-    _update_virtualenv(source_dir)
-    _update_static_files(js_dir, static_dir, source_dir)
-    _update_database(source_dir)
-    _restart_supervisor(env.host)
+    # _update_config(source_dir, env.host)
+    # _update_virtualenv(source_dir)
+    # _update_static_files(js_dir, static_dir, source_dir)
+    # _update_database(source_dir)
+    # _restart_supervisor(env.host)
 
 
 def _create_directory_structure_if_necessary(base_dir):
@@ -46,6 +48,9 @@ def _get_latest_source(source_dir):
 def _update_settings(source_dir, env_host):
     settings_path = source_dir + '/config/settings.py'
     sed(settings_path, "DEBUG = True", "DEBUG = False")
+    if re_staging.search(env_host):
+        host = env_host.split(".")[0]
+        sed(settings_path, 'DATABASE_NAME = ""', 'DATABASE_NAME = %s' % (host,))
     sed(settings_path,
         'ALLOWED_HOSTS =.+$',
         'ALLOWED_HOSTS = ["%s"]' % (env_host,)
