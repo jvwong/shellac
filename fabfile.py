@@ -48,9 +48,8 @@ def _get_latest_source(source_dir):
 def _update_settings(source_dir, env_host):
     settings_path = source_dir + '/config/settings.py'
     sed(settings_path, "DEBUG = True", "DEBUG = False")
-    if re_staging.search(env_host):
-        host = env_host.split(".")[0]
-        sed(settings_path, 'DATABASE_NAME = ""', 'DATABASE_NAME = "{}"'.format(host))
+    host = env_host.split(".")[0]
+    sed(settings_path, 'DATABASE_NAME = ""', 'DATABASE_NAME = "{}"'.format(host))
     sed(settings_path,
         'ALLOWED_HOSTS =.+$',
         'ALLOWED_HOSTS = ["%s"]' % (env_host,)
