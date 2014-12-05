@@ -59,7 +59,7 @@ def person_avatar_update(request, username):
             instance = form.save(commit=False)
             person.avatar = instance.avatar
             person.save()
-            return HttpResponseRedirect("/profile/" + person.username + "/")
+            return HttpResponseRedirect("/app/profile/" + person.username + "/")
     else:
         form = PersonUpdateForm()
     return render(request, 'shellac/app/profile.html', {'form': form, 'person': person})

@@ -13,7 +13,7 @@ if settings.DEBUG:
 
 urlpatterns += patterns('',
 
-    url(r'^', include('shellac.urls.app')),
+    url(r'^', include('shellac.urls.index')),
 
 )
 

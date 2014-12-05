@@ -23,10 +23,10 @@ class PeoplePage(TestCase):
 
     def test_people_url_returns_correct_url(self):
         url = reverse('shellac_people')
-        self.assertEqual(url, '/people/')
+        self.assertEqual(url, '/app/people/')
 
     def test_people_page_returns_correct_html(self):
-        response = self.client.get('/people/')
+        response = self.client.get('/app/people/')
 
         people = Person.objects.exclude(user=self.user).order_by('-joined')
         paginator = Paginator(people, 25)
@@ -46,5 +46,5 @@ class PeoplePageAccess(TestCase):
         self.person = self.user.person
 
     def test_people_page_requires_authentication(self):
-        response = self.client.get('/people/')
+        response = self.client.get('/app/people/')
         self.assertEqual(response.status_code, 302)

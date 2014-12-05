@@ -35,7 +35,7 @@ def user_accounts_signup(request):
 
             if new_user:
                 login(request, new_user)
-                return HttpResponseRedirect("/profile/" + new_user.username + "/")
+                return HttpResponseRedirect("/app/profile/" + new_user.username + "/")
     else:
         form = UserCreateForm()
     return render(request,
@@ -58,7 +58,7 @@ def user_accounts_signin(request):
             if not request.POST.get('remember_me', None):
                 request.session.set_expiry(0)
             login(request, user)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/app/')
     else:
         form = LoginForm()
     return render(request,
@@ -70,6 +70,6 @@ user_signin = anonymous_required(user_accounts_signin, redirect_to='/')
 @login_required(login_url='/accounts/signin/')
 def user_accounts_signout(request):
     logout(request)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/accounts/signin/')
 
 

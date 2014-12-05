@@ -21,10 +21,10 @@ class RelationsPage(TestCase):
 
     def test_tune_url_returns_correct_url(self):
         url = reverse('shellac_relations')
-        self.assertEqual(url, '/relations/')
+        self.assertEqual(url, '/app/relations/')
 
     def test_tune_url_resolves_to_correct_view(self):
-        found = resolve('/relations/')
+        found = resolve('/app/relations/')
         self.assertEqual(found.func, shellac_relations)
 
     def test_tune_page_returns_correct_html(self):
