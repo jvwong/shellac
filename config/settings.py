@@ -12,7 +12,7 @@ SOURCE_DIR = os.path.abspath(os.path.join(CONFIG_DIR, ".."))
 BASE_DIR = os.path.abspath(os.path.join(SOURCE_DIR, ".."))
 STATIC_PATH = os.path.abspath(os.path.join(SOURCE_DIR, "static"))
 
-DATABASE_NAME = ""
+DATABASE_NAME = APP_NAME
 URLCONF_MODULE = ".".join(["config.urls"])
 TEMPLATE_PATH = os.path.abspath(os.path.join(SOURCE_DIR, "templates"))
 TEMPLATE_DEBUG = DEBUG

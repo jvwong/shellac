@@ -55,7 +55,7 @@ def _update_settings(source_dir, env_host):
     ##format the database name
     host_raw = env_host.split(".")[0]
     host = host_raw.replace("-", "_")
-    sed(settings_path, 'DATABASE_NAME = ""', 'DATABASE_NAME = "{}"'.format(host))
+    sed(settings_path, 'DATABASE_NAME = APP_NAME', 'DATABASE_NAME = "{}"'.format(host))
     sed(settings_path,
         'ALLOWED_HOSTS =.+$',
         'ALLOWED_HOSTS = ["%s"]' % (env_host,)
