@@ -101,12 +101,12 @@ def _update_virtualenv(source_dir):
 
 
 def _update_static_files(static_dir, source_dir):
-    run('cd %s/app/ && grunt browserify' % (static_dir,))
     run('cd %s/app/ && npm install && bower install' % (static_dir,))
+    run('cd %s/app/ && grunt browserify' % (static_dir,))
     run('cd %s/app/styling/ && lessc -x less/app.less css/app.css' % (static_dir,))
 
-    run('cd %s/backend/ && grunt browserify' % (static_dir,))
     run('cd %s/backend/ && npm install && bower install' % (static_dir,))
+    run('cd %s/backend/ && grunt browserify' % (static_dir,))
     run('cd %s/backend/styling/ && lessc -x less/backend.less css/backend.css' % (static_dir,))
 
     run('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic '
