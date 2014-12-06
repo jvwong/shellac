@@ -12,7 +12,7 @@ module.exports = function less(grunt) {
                 compress: false
             },
             files:{
-                "assets/styling/css/app.css": "assets/styling/less/app.less"
+                "./styling/css/app.css": "./styling/less/app.less"
             }
         }
 	};

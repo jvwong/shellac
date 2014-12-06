@@ -9,21 +9,11 @@ module.exports = function browserify(grunt) {
 	return {
 		app: {
 			files: {
-				'dist/app_bundle.js': ['src/app/main.js']
 			},
 			options: {
 			    debug: true,
 			    watch: true
 			}
-		},
-    people: {
-        files: {
-            'dist/relationships_bundle.js': ['src/relationships/main.js']
-        },
-        options: {
-            debug: true,
-            watch: true
-        }
-    }
+		}
 	};
 };
