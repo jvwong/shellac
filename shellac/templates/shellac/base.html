@@ -18,17 +18,17 @@
 
     <!-- Third-party css -->
     {% block third_party_css %}
-        <link rel="stylesheet" href="{% static 'shellac/backend/assets/lib/bootstrap/dist/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'shellac/backend/lib/bootstrap/dist/css/bootstrap.min.css' %}">
     {% endblock third_party_css %}
 
     <!-- Custom css -->
     {% block custom_css %}
-        <link rel="stylesheet" type="text/css" href="{% static 'shellac/backend/assets/styling/css/backend.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'shellac/backend/styling/css/backend.css' %}" />
     {% endblock custom_css %}
 
     <!-- Third party javascript -->
-    <script src="{% static 'shellac/backend/assets/lib/jquery/dist/jquery.min.js' %}"></script>
-    <script src="{% static 'shellac/backend/assets/lib/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'shellac/backend/lib/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'shellac/backend/lib/bootstrap/dist/js/bootstrap.min.js' %}"></script>
     <title>{% block title %}{% endblock title %} | SHELLAC</title>
     {% block head %}
     {% endblock head %}
