@@ -15,6 +15,7 @@ STATIC_PATH = os.path.abspath(os.path.join(SOURCE_DIR, "static"))
 DATABASE_NAME = APP_NAME
 URLCONF_MODULE = ".".join(["config.urls"])
 TEMPLATE_PATH = os.path.abspath(os.path.join(SOURCE_DIR, "templates"))
+APP_TEMPLATE_PATH = os.path.abspath(os.path.join(SOURCE_DIR, APP_NAME, "static", APP_NAME))
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -147,6 +148,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     TEMPLATE_PATH,
+    APP_TEMPLATE_PATH,
 )
 
 MIDDLEWARE_CLASSES = (

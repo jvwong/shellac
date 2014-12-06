@@ -3,8 +3,8 @@
 <html lang="en">
 <head>
     <!--faveicon  -->
-    <link rel="icon" href="{% static 'shellac/assets/favicon.ico'%}" type="image/x-icon">
-    <link rel="shortcut icon" href="{% static 'shellac/assets/favicon.ico'%}" type="image/x-icon">
+    <link rel="icon" href="{% static 'shellac/backend/assets/img/base/favicon.ico'%}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'shellac/backend/assets/img/base/favicon.ico'%}" type="image/x-icon">
 
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -18,17 +18,17 @@
 
     <!-- Third-party css -->
     {% block third_party_css %}
-    <link rel="stylesheet" href="{% static 'shellac/js/lib/bootstrap/dist/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'shellac/backend/assets/lib/bootstrap/dist/css/bootstrap.min.css' %}">
     {% endblock third_party_css %}
 
     <!-- Custom css -->
     {% block custom_css %}
-        <link rel="stylesheet" type="text/css" href="{% static 'shellac/css/base.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'shellac/backend/assets/styling/css/backend.css' %}" />
     {% endblock custom_css %}
 
     <!-- Third party javascript -->
-    <script src="{% static 'shellac/js/lib/jquery/dist/jquery.min.js' %}"></script>
-    <script src="{% static 'shellac/js/lib/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'shellac/backend/assets/lib/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'shellac/backend/assets/lib/bootstrap/dist/js/bootstrap.min.js' %}"></script>
     <title>{% block title %}{% endblock title %} | SHELLAC</title>
     {% block head %}
     {% endblock head %}
@@ -51,7 +51,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     {% block navbar-header-brand %}
-                    <a data-toggle="tooltip" data-placement="bottom" title="My Playlist" class="navbar-brand" href="{% url 'shellac_main' %}">
+                    <a data-toggle="tooltip" data-placement="bottom" title="My Playlist" class="navbar-brand" href="{% url 'shellac_app' %}">
                         <span class="icon-sound"></span><span class="mls"> SHELLAC</span>
                     </a>
                     {% endblock navbar-header-brand %}

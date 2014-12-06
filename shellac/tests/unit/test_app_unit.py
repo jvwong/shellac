@@ -1,9 +1,8 @@
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import reverse, resolve
 from django.test import TestCase
-from django.http import HttpRequest
 from django.contrib.auth.models import User
-from django.template.loader import render_to_string
-from shellac.views.app import shellac_main
+from django.test.client import RequestFactory
+from django.views.generic.base import TemplateView
 
 class AppPageTest(TestCase):
     fixtures = ['shellac.json', 'auth.json']
@@ -14,18 +13,14 @@ class AppPageTest(TestCase):
         self.user = User.objects.get(username=username)
         self.person = self.user.person
         self.client.login(username=username, password=password)
+        self.factory = RequestFactory()
 
-    # line up view for '/' with app_page
-    def test_root_url_resolvers_to_app_page_view(self):
-        found = resolve('/')
-        self.assertEqual(found.func, shellac_main)
-
-    #This is dynamic javascript so cannot judge html
     def test_app_page_returns_correct_template(self):
-        request = HttpRequest()
-        request.user = self.user
-        response = shellac_main(request)
-        self.assertTemplateUsed(response, 'shellac/app/main.html')
+        request = self.factory.get(reverse('shellac_app'))
+        response = TemplateView.as_view(template_name="app/app.html")(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'app/app.html')
+
 
 
 

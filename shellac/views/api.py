@@ -336,14 +336,6 @@ class PersonDetailCurrentView(generics.RetrieveAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     print(request.user)
-    #     # queryset = Person.objects.all()
-    #     # person = get_object_or_404(queryset, user=request.user)
-    #     # serializer = PersonSerializer(person)
-    #     return super(PersonDetailCurrentView, self).retrieve(request, *args, **kwargs)
-
-
 
 class PlaylistListViewSet(ListViewSet):
     queryset = Playlist.objects.all()

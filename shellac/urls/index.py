@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
 from search.views import search
-from shellac.views.app import shellac_main
+from django.views.generic.base import TemplateView
+from django.contrib.auth.decorators import login_required
 
 admin.autodiscover()
 urlpatterns = patterns('',
@@ -11,13 +12,13 @@ urlpatterns = patterns('',
     url('', include('social.apps.django_app.urls', namespace='social')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
 
-    url(r'^$', shellac_main, name='shellac_main'),
+    url(r'^$', login_required(TemplateView.as_view(template_name="app/app.html")), name='shellac_app'),
 
     url(r'^info/', include('shellac.urls.info')),
     url(r'^user/', include('shellac.urls.user')),
     url(r'^api/', include('shellac.urls.api')),
     url(r'^clips/', include('shellac.urls.clips')),
-    url(r'^search/', search, name='search'),
+    url(r'^search/', search, name='search')
 )
 
 # Login and logout views for the browsable API

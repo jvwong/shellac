@@ -91,8 +91,9 @@ urlpatterns = patterns('shellac.views.api',
     url(r'^users/$', user_list, name='user-list'),
     url(r'^users/(?P<username>[\w.@+-]+)/$', user_detail, name='user-detail'),
 
+    url(r'^person/$', PersonDetailCurrentView.as_view(), name='person-current'),
+
     url(r'^people/$', PersonListView.as_view(), name='person-list'),
-    url(r'^people/current/$', PersonDetailCurrentView.as_view(), name='person-current'),
     url(r'^people/(?P<status>[\w-]+)/(?P<username>[\w.@+-]+)/$', PersonListStatusView.as_view(), name='person-list-status'),
     url(r'^people/(?P<username>[\w.@+-]+)/$', PersonDetailView.as_view(), name='person-detail'),
 

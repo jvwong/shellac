@@ -55,7 +55,7 @@ class PersonDetailCurrentView(APITestCase):
 
     def test_PersonDetailCurrentView_url_resolves_to_api_category_view(self):
         url = reverse('person-current')
-        self.assertEqual(url, '/api/people/current/')
+        self.assertEqual(url, '/api/person/')
 
 
     def test_PersonDetailCurrentView_GET_returns_correct_response(self):
@@ -64,7 +64,7 @@ class PersonDetailCurrentView(APITestCase):
         u.save()
 
         self.client.login(username='andrea', password='a')
-        response = self.client.get('/api/people/current/.json')
+        response = self.client.get('/api/person/.json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # print(response.data)
