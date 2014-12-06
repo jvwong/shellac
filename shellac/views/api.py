@@ -25,6 +25,7 @@ from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, \
     PlaylistListViewPermissions, PlaylistDetailViewPermissions,\
     TrackListViewPermissions, TrackDetailViewPermissions
 from shellac.viewsets import DetailViewSet, ListViewSet
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 @api_view(('GET',))
@@ -142,7 +143,7 @@ class ClipListViewSet(ListViewSet):
     def pre_save(self, obj):
         obj.author = Person.objects.get(user=self.request.user)
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 class ClipListFollowingView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated, )
     paginate_by = 10
@@ -212,6 +213,7 @@ class ClipDetailViewSet(DetailViewSet):
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
 
 class UserListViewSet(ListViewSet):
     queryset = User.objects.all()
@@ -318,6 +320,30 @@ class PersonDetailView(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
+class PersonDetailCurrentView(generics.RetrieveAPIView):
+    """
+    Retrieve the Person corresponding to the authenticated User
+    """
+    model = Person
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def get_object(self):
+        obj = get_object_or_404(Person, user=self.request.user)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     print(request.user)
+    #     # queryset = Person.objects.all()
+    #     # person = get_object_or_404(queryset, user=request.user)
+    #     # serializer = PersonSerializer(person)
+    #     return super(PersonDetailCurrentView, self).retrieve(request, *args, **kwargs)
+
+
 
 class PlaylistListViewSet(ListViewSet):
     queryset = Playlist.objects.all()
@@ -332,7 +358,6 @@ class PlaylistListViewSet(ListViewSet):
 
     def pre_save(self, obj):
         obj.person = self.request.user.person
-
 
 
 class PlaylistDetailViewSet(DetailViewSet):

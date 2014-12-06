@@ -12,7 +12,8 @@ module.exports = function less(grunt) {
                 compress: false
             },
             files:{
-                "../css/base.css": "../less/**/*.less"
+                "../css/base.css": "../less/base.less",
+                "../css/app.css": "../less/app/base.less"
             }
         },
         production: {

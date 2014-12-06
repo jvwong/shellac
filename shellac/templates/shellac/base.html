@@ -29,7 +29,6 @@
     <!-- Third party javascript -->
     <script src="{% static 'shellac/js/lib/jquery/dist/jquery.min.js' %}"></script>
     <script src="{% static 'shellac/js/lib/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'shellac/js/lib/jquery-touchswipe/jquery.touchSwipe.js' %}"></script>
     <title>{% block title %}{% endblock title %} | SHELLAC</title>
     {% block head %}
     {% endblock head %}
@@ -52,7 +51,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     {% block navbar-header-brand %}
-                    <a data-toggle="tooltip" data-placement="bottom" title="My Playlist" class="navbar-brand" href="{% url 'shellac_app' %}">
+                    <a data-toggle="tooltip" data-placement="bottom" title="My Playlist" class="navbar-brand" href="{% url 'shellac_main' %}">
                         <span class="icon-sound"></span><span class="mls"> SHELLAC</span>
                     </a>
                     {% endblock navbar-header-brand %}
@@ -65,21 +64,6 @@
                     {% block navbar-collapse-right %}
                     <ul class="nav navbar-nav navbar-right">
                         {% block navbar-collapse-right-bar %}
-                        <li id="nav-navbar-right-bar-profile">
-                            <a data-toggle="tooltip" data-placement="bottom" title="Profile" href="{{ user.person.get_absolute_url }}">
-                                <span class=""></span><span class="mls"> {{ user.username }}</span>
-                            </a>
-                        </li>
-                        <li id="nav-navbar-right-bar-people">
-                            <a data-toggle="tooltip" data-placement="bottom" title="People" href="{% url 'shellac_people' %}">
-                                <span class="icon-users"></span><span class="mls"></span>
-                            </a>
-                        </li>
-                        <li id="nav-navbar-right-bar-relations">
-                            <a data-toggle="tooltip" data-placement="bottom" title="Relations" href="{% url 'shellac_relations' %}">
-                                <span class="icon-flow-tree"></span><span class="mls"></span>
-                            </a>
-                        </li>
                         <li id="nav-navbar-right-bar-myClips">
                             <a data-toggle="tooltip" data-placement="bottom" title="Clips" href="{% url 'shellac_clip_list' %}">
                                 <span class="icon-list"></span><span class="mls"></span>
@@ -93,7 +77,7 @@
                         {% endblock navbar-collapse-right-bar %}
 
                         {% block navbar-collapse-right-dropdown %}
-                        <li id=" nav-navbar-right-dropdown" class="dropdown">
+                        <li id="nav-navbar-right-dropdown" class="dropdown">
                             <a data-placement="bottom" title="Settings" href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <span class="icon-cog"></span><span class="mls"></span>
                             </a>

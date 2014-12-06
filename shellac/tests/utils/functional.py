@@ -73,17 +73,14 @@ class FunctionalTest(StaticLiveServerTestCase):
         )
 
     def wait_to_be_signed_in(self, username):
-        self.wait_for_element_with_id('nav-navbar-right-bar-profile')
-        user = self.browser.find_element_by_css_selector('#nav-navbar-right-bar-profile a')
+        self.wait_for_element_with_id('nav-navbar-right-dropdown')
         #print(user.text)
         self.assertTrue(True)
-        self.assertEqual(username, user.text)
 
     def wait_to_be_signed_out(self, username):
         self.wait_for_element_with_id('navbar-collapse-right-bar-signup')
         signup = self.browser.find_element_by_css_selector('#navbar-collapse-right-bar-signup')
         self.assertNotIn(username, signup.text)
-
 
     def create_pre_authenticated_session(self, username):
         self.user = User.objects.create(username=username)

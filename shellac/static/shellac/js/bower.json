@@ -20,14 +20,8 @@
     "tests"
   ],
   "dependencies": {
-    "soundmanager2": "*",
-    "jquery": "~2.1.1",
-    "bootstrap": "~3.2.0",
-    "less": "~1.7.5",
-    "jquery-touchswipe": "~1.6.6",
-    "bootstrap-datetimepicker": "~0.0.11"
+    "angular": "~1.3.5",
+    "bootstrap": "~3.3.1"
   },
-  "devDependencies": {
-    "jasmine": "~2.0.4"
-  }
+  "devDependencies": {}
 }

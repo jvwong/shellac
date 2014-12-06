@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
 from search.views import search
+from shellac.views.app import shellac_main
 
 admin.autodiscover()
 urlpatterns = patterns('',
@@ -10,8 +11,7 @@ urlpatterns = patterns('',
     url('', include('social.apps.django_app.urls', namespace='social')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
 
-    url(r'^app/', include('shellac.urls.app')),
-    url(r'^$', include('shellac.urls.app')),
+    url(r'^$', shellac_main, name='shellac_main'),
 
     url(r'^info/', include('shellac.urls.info')),
     url(r'^user/', include('shellac.urls.user')),

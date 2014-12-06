@@ -13,7 +13,7 @@
     <div class="partial-relationships-detail person">
         <div class="partial-relationships-description person">
             <div class="partial-relationships-app">
-                <a href="{% url 'shellac_app' person.username 'following' %}">
+                <a href="{% url 'shellac_main' person.username 'following' %}">
                     <span data-username="{{ person.username }}" class="partial-relationships-description-content username icon-sound"></span>
                     <span class="mls"> {{ person.username | truncatechars:30  }}</span>
                 </a>

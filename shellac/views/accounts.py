@@ -19,6 +19,7 @@ class AnonymousRequired(object):
 
     def __call__(self, request, *args, **kwargs):
         if hasattr(request, 'user') and request.user.is_authenticated():
+            print("redirecting")
             return HttpResponseRedirect(self.redirect_to)
         return self.view_function(request, *args, **kwargs)
 
@@ -35,7 +36,7 @@ def user_accounts_signup(request):
 
             if new_user:
                 login(request, new_user)
-                return HttpResponseRedirect("/app/profile/" + new_user.username + "/")
+                return HttpResponseRedirect("/")
     else:
         form = UserCreateForm()
     return render(request,
@@ -58,7 +59,7 @@ def user_accounts_signin(request):
             if not request.POST.get('remember_me', None):
                 request.session.set_expiry(0)
             login(request, user)
-            return HttpResponseRedirect('/app/')
+            return HttpResponseRedirect('/')
     else:
         form = LoginForm()
     return render(request,
