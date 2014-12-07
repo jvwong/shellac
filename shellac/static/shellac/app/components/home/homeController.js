@@ -10,5 +10,7 @@ angular.module('homeApp', ['apiApp'])
         }, function(errResponse){
             self.errorMessage = errResponse.data.msg;
         });
+
     }])
 ;
+

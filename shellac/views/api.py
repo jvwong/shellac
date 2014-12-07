@@ -249,6 +249,7 @@ class PersonListView(generics.ListCreateAPIView):
     """
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -260,6 +261,7 @@ class PersonListStatusView(generics.ListCreateAPIView):
     """
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -316,6 +318,7 @@ class PersonDetailView(generics.RetrieveAPIView):
     lookup_field = 'username'
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -327,6 +330,7 @@ class PersonDetailCurrentView(generics.RetrieveAPIView):
     model = Person
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
