@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles %}
-<html lang="en">
+<html lang="en" ng-app="homeApp">
 <head>
     <!--faveicon  -->
     <link rel="icon" href="{% static 'shellac/app/assets/img/base/favicon.ico'%}" type="image/x-icon">
@@ -19,21 +19,24 @@
     <title> APP | SHELLAC</title>
 </head>
 
-<body ng-app>
+<body ng-controller="PersonCtrl as ctrl">
     <!-- Navigation bar -->
     <nav>
-        <p>Logged in: </p>
+        <div>
+          User: <span ng-bind="ctrl.person.username"></span>
+        </div>
     </nav>
 
     <!-- Main -->
     <main>
-
     </main>
 
     <!-- Footer -->
     <footer></footer>
 
     <!-- Third party javascript -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
+    <script type="text/javascript" src="{% static 'shellac/app/lib/angular/angular.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'shellac/app/components/home/homeController.js' %}"></script>
+    <script type="text/javascript" src="{% static 'shellac/app/shared/api/apiService.js' %}"></script>
 </body>
 </html>
