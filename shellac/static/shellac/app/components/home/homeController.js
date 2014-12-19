@@ -1,4 +1,4 @@
-angular.module('homeApp', ['apiApp'])
+angular.module('homeApp', ['apiService'])
     .controller('PersonCtrl', ['UserService', function(UserService){
         var self = this;
         //set the username

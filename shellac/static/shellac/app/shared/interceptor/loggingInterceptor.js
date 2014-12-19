@@ -26,8 +26,9 @@ app.factory('LoggingInterceptor', ['$q', function($q){
 
         responseError: function(rejection){
             console.log("Response error ", rejection);
-            if(reject.status === 403){
-                
+            if(rejection.status === 403){
+                //need to login?
+                //console.log(rejection);
             }
             return $q.reject(rejection);
         }

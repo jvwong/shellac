@@ -8,12 +8,8 @@ module.exports = function browserify(grunt) {
 	// Options
 	return {
 		app: {
-			files: {
-			},
-			options: {
-			    debug: true,
-			    watch: true
-			}
+			src: 'app.js',
+            dest: './.build/js/app.js'
 		}
 	};
 };

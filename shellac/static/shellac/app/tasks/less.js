@@ -1,6 +1,5 @@
 'use strict';
 
-
 module.exports = function less(grunt) {
 	// Load task
 	grunt.loadNpmTasks('grunt-contrib-less');
@@ -12,7 +11,7 @@ module.exports = function less(grunt) {
                 compress: false
             },
             files:{
-                "./styling/css/app.css": "./styling/less/app.less"
+                "./.build/css/app.css": "./css/app.less"
             }
         }
 	};

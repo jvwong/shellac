@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles %}
-<html lang="en" ng-app="homeApp">
+<html lang="en" ng-app="shellacApp">
 <head>
     <!--faveicon  -->
     <link rel="icon" href="{% static 'shellac/app/assets/img/base/favicon.ico'%}" type="image/x-icon">
@@ -13,15 +13,15 @@
     <meta name="description" content="shellac.no-ip.ca" />
 
     <!-- Custom css -->
-    <link rel="stylesheet" type="text/css" href="{% static 'shellac/app/styling/css/app.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'shellac/app/.build/css/app.css' %}" />
 
 
     <title> APP | SHELLAC</title>
 </head>
 
-<body ng-controller="PersonCtrl as ctrl">
+<body>
     <!-- Navigation bar -->
-    <nav>
+    <nav ng-controller="NavCtrl as ctrl">
         <div>
           User: <span ng-bind="ctrl.person.username"></span>
         </div>
@@ -35,9 +35,7 @@
     <footer></footer>
 
     <!-- Third party javascript -->
-    <script type="text/javascript" src="{% static 'shellac/app/lib/angular/angular.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'shellac/app/components/home/homeController.js' %}"></script>
-    <script type="text/javascript" src="{% static 'shellac/app/shared/api/apiService.js' %}"></script>
-    <script type="text/javascript" src="{% static 'shellac/app/shared/interceptor/loggingInterceptor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'shellac/app/.build/js/app.js' %}"></script>
+
 </body>
 </html>

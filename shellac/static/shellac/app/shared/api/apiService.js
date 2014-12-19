@@ -3,7 +3,9 @@
  * @author jvwong
  * @created 06/12/14
  */
-var app = angular.module('apiApp', ['LoggingInterceptor']);
+
+require('../interceptor/loggingInterceptor');
+var app = angular.module('apiService', ['LoggingInterceptor']);
 
 app.factory('UserService', ['$http', function($http){
     return {

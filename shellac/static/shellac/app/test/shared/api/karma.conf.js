@@ -7,8 +7,8 @@ module.exports = function(config) {
         files: [
             'node_modules/angular/angular.min.js',
             'node_modules/angular-mocks/angular-mocks.js',
-            'components/home/**/*.js',
             'shared/api/**/*.js',
+            'shared/interceptor/**/*.js',
             'test/shared/api/**/*.js'
         ],
         exclude: [],

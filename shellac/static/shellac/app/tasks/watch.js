@@ -9,7 +9,9 @@ module.exports = function watch(grunt) {
 	return {
         js: {
             files: [
-                'src/**/*.js'
+                'app.js',
+                'components/**/*.js',
+                'shared/**/*.js'
             ],
             tasks: [
                 'jshint',
@@ -18,7 +20,7 @@ module.exports = function watch(grunt) {
         },
         styles: {
             files: [
-                '../less/**/*.less'
+                'css/**/*.less'
             ],
             tasks: [
                 'less:development'
