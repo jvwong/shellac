@@ -218,7 +218,7 @@ REST_FRAMEWORK = {
 
 LOGIN_URL = '/accounts/signin/'
 LOGOUT_URL = '/accounts/signout/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/api'
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_LOGIN_URL = '/accounts/signin/'

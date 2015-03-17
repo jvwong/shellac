@@ -17,18 +17,11 @@
     <!-- Third-party javascript -->
 
     <!-- Third-party css -->
-    {% block third_party_css %}
-        <link rel="stylesheet" href="{% static 'shellac/backend/lib/bootstrap/dist/css/bootstrap.min.css' %}">
-    {% endblock third_party_css %}
 
     <!-- Custom css -->
-    {% block custom_css %}
-        <link rel="stylesheet" type="text/css" href="{% static 'shellac/backend/styling/css/backend.css' %}" />
-    {% endblock custom_css %}
 
     <!-- Third party javascript -->
-    <script src="{% static 'shellac/backend/lib/jquery/dist/jquery.min.js' %}"></script>
-    <script src="{% static 'shellac/backend/lib/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
     <title>{% block title %}{% endblock title %} | SHELLAC</title>
     {% block head %}
     {% endblock head %}
@@ -38,92 +31,23 @@
     <!-- Navigation bar -->
     <nav>
         {% block navbar %}
-        <!--<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">-->
-        <div class="navbar navbar-inverse" role="navigation">
-            <div class="container-fluid">
-
-                {% block navbar-header %}
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    {% block navbar-header-brand %}
-                    <a data-toggle="tooltip" data-placement="bottom" title="My Playlist" class="navbar-brand" href="{% url 'shellac_app' %}">
-                        <span class="icon-sound"></span><span class="mls"> SHELLAC</span>
-                    </a>
-                    {% endblock navbar-header-brand %}
-                </div>
-                {% endblock navbar-header %}
-
-                {% block navbar-collapse %}
-                <div class="navbar-collapse collapse">
-
-                    {% block navbar-collapse-right %}
-                    <ul class="nav navbar-nav navbar-right">
-                        {% block navbar-collapse-right-bar %}
-                        <li id="nav-navbar-right-bar-myClips">
-                            <a data-toggle="tooltip" data-placement="bottom" title="Clips" href="{% url 'shellac_clip_list' %}">
-                                <span class="icon-list"></span><span class="mls"></span>
-                            </a>
-                        </li>
-                        <li id="nav-navbar-right-bar-record">
-                            <a data-toggle="tooltip" data-placement="bottom" title="Upload" href="{% url 'shellac_clip_create' %}">
-                                <span class="icon-add-to-list"></span><span class="mls"></span>
-                            </a>
-                        </li>
-                        {% endblock navbar-collapse-right-bar %}
-
-                        {% block navbar-collapse-right-dropdown %}
-                        <li id="nav-navbar-right-dropdown" class="dropdown">
-                            <a data-placement="bottom" title="Settings" href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <span class="icon-cog"></span><span class="mls"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li id="nav-navbar-right-bar-user">
-                                    <a id="navbar-collapse-right-dropdown-user" href="{% url 'user_detail' user.id %}">
-                                        <span class="icon-vcard"></span><span class="mls"> My Account</span>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <a id="navbar-collapse-right-dropdown-signout" href="{% url 'shellac_accounts_signout' %}?next={{ request.path }}">
-                                        <span class="icon-logout"></span><span class="mls"> Signout</span>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <a id="navbar-collapse-right-dropdown-about" href="{% url 'shellac_info_about' %}">
-                                        About
-                                    </a>
-                                </li>
-                                <li>
-                                    <a id="navbar-collapse-right-dropdown-privacy" href="{% url 'shellac_info_privacy' %}">
-                                        Privacy
-                                    </a>
-                                </li>
-                                <li>
-                                    <a id="navbar-collapse-right-dropdown-started" href="{% url 'shellac_info_started' %}">
-                                        Getting Started
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        {% endblock navbar-collapse-right-dropdown %}
-
-                    </ul>
-                    {% endblock navbar-collapse-right %}
-
-                    {% block navbar-right-form %}
-                    {% endblock navbar-right-form %}
-
-                </div>
-                {% endblock navbar-collapse %}
-
-            </div>
-        </div>
+        <ul>
+            <li>
+                <a href="{% url 'shellac_accounts_signin' %}?next={{ request.path }}">
+                    Sign in
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'shellac_accounts_signup' %}?next={{ request.path }}">
+                    Sign up
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'shellac_accounts_signout' %}?next={{ request.path }}">
+                    Signout
+                </a>
+            </li>
+        </ul>
         {% endblock navbar %}
     </nav>
 

@@ -11,14 +11,7 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('shellac.urls.accounts')),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
-
-    url(r'^$', login_required(TemplateView.as_view(template_name="app/app.html")), name='shellac_app'),
-
-    url(r'^info/', include('shellac.urls.info')),
-    url(r'^user/', include('shellac.urls.user')),
     url(r'^api/', include('shellac.urls.api')),
-    url(r'^clips/', include('shellac.urls.clips')),
-    url(r'^search/', search, name='search')
 )
 
 # Login and logout views for the browsable API

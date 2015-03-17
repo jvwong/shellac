@@ -1,6 +1,7 @@
 from shellac.forms import UserCreateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.conf import settings
 
 from django.http import HttpResponseRedirect
 
@@ -19,7 +20,6 @@ class AnonymousRequired(object):
 
     def __call__(self, request, *args, **kwargs):
         if hasattr(request, 'user') and request.user.is_authenticated():
-            print("redirecting")
             return HttpResponseRedirect(self.redirect_to)
         return self.view_function(request, *args, **kwargs)
 
@@ -36,13 +36,13 @@ def user_accounts_signup(request):
 
             if new_user:
                 login(request, new_user)
-                return HttpResponseRedirect("/")
+                return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
     else:
         form = UserCreateForm()
     return render(request,
                   'shellac/accounts/signup.html',
                   {'form': form})
-user_signup = anonymous_required(user_accounts_signup, redirect_to='/')
+user_signup = anonymous_required(user_accounts_signup, redirect_to=settings.LOGIN_URL)
 
 ### Login user
 from django.shortcuts import render
@@ -59,13 +59,13 @@ def user_accounts_signin(request):
             if not request.POST.get('remember_me', None):
                 request.session.set_expiry(0)
             login(request, user)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
     else:
         form = LoginForm()
     return render(request,
                   'shellac/accounts/signin.html',
                   {'form': form})
-user_signin = anonymous_required(user_accounts_signin, redirect_to='/')
+user_signin = anonymous_required(user_accounts_signin, redirect_to=settings.LOGIN_URL)
 
 
 @login_required(login_url='/accounts/signin/')

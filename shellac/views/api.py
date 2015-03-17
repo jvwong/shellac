@@ -323,6 +323,7 @@ class PersonDetailView(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
+
 class PersonDetailCurrentView(generics.RetrieveAPIView):
     """
     Retrieve the Person corresponding to the authenticated User
