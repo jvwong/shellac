@@ -143,10 +143,6 @@ class Person(models.Model):
         from shellac.models import Clip
         return self.clips.filter(status=Clip.LIVE_STATUS)
 
-    def get_absolute_url(self):
-        return 'shellac_profile', (), {'username': self.username}
-    get_absolute_url = models.permalink(get_absolute_url)
-
     objects = PersonManager()
 
 
@@ -267,11 +263,6 @@ class Category(models.Model):
         from shellac.models import Clip
         return self.clips.filter(status=Clip.LIVE_STATUS)
 
-
-    def get_absolute_url(self):
-        return ('shellac_category', (), {'slug': self.slug})
-    get_absolute_url = models.permalink(get_absolute_url)
-
     objects = CategoryManager()
 
 
@@ -375,10 +366,6 @@ class Clip(models.Model):
 
     def __str__(self):
         return self.title
-
-    def get_absolute_url(self):
-        return ('shellac_clip_detail', (), {'pk': self.pk})
-    get_absolute_url = models.permalink(get_absolute_url)
 
     objects = ClipManager()
     live = LiveClipManager()

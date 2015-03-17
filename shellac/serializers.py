@@ -125,8 +125,6 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
 
     brand_url = serializers.SerializerMethodField('get_brand_url')
 
-    permalink = serializers.Field(source='get_absolute_url')
-
     tags = serializers.Field(source='tags.names')
 
     def get_brand_url(self, obj):
@@ -147,7 +145,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
         model = Clip
         fields = ('url', 'id', 'title', 'author', 'description', 'categories', 'tags',
                   'brand', 'brand_url', 'plays', 'rating', 'status', 'slug',
-                  'audio_file', 'audio_file_url', 'created', 'owner', 'permalink')
+                  'audio_file', 'audio_file_url', 'created', 'owner')
         # read_only_fields = ('categories',)
 
     def restore_object(self, attrs, instance=None):

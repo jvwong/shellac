@@ -104,8 +104,6 @@ class CategoryViewSet(APITestCase):
         self.assertEqual(len(results), n)
 
 
-
-
 class CategoryDetail(APITestCase):
     fixtures = ['shellac.json', 'auth.json']
 
