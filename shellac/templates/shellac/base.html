@@ -31,23 +31,18 @@
     <!-- Navigation bar -->
     <nav>
         {% block navbar %}
-        <ul>
-            <li>
-                <a href="{% url 'shellac_accounts_signin' %}?next={{ request.path }}">
-                    Sign in
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'shellac_accounts_signup' %}?next={{ request.path }}">
-                    Sign up
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'shellac_accounts_signout' %}?next={{ request.path }}">
-                    Signout
-                </a>
-            </li>
-        </ul>
+            <ul>
+                <li>
+                    <a href="{% url 'shellac_accounts_signin' %}?next={{ request.path }}">
+                        Sign in
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'shellac_accounts_signup' %}?next={{ request.path }}">
+                        Sign up
+                    </a>
+                </li>
+            </ul>
         {% endblock navbar %}
     </nav>
 

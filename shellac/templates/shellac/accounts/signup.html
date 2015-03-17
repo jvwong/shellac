@@ -7,39 +7,31 @@
 
 
 <!-- Navbar -->
-    {% block navbar-collapse-right-bar %}
-    <li><a class="navbar-collapse-right-bar-option" href="{% url 'shellac_accounts_signin' %}"><span class="icon-login"></span><span class="mls"> Sign in</span></a></li>
-    {% endblock navbar-collapse-right-bar %}
-
-    {% block navbar-collapse-right-dropdown %}
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-flag"> Language</span></a>
-        <ul class="dropdown-menu" role="menu">
-             <li><a href="">en-us</a></li>
-        </ul>
-    </li>
-    {% endblock navbar-collapse-right-dropdown %}
-
-    {% block navbar-right-form %}
-    {% endblock navbar-right-form %}
+     {% block navbar %}
+    <ul>
+        <li>
+            <a href="{% url 'shellac_accounts_signin' %}">
+                Sign in
+            </a>
+        </li>
+    </ul>
+    {% endblock navbar %}
 
 
 <!-- Main -->
     {% block main %}
-    <div class="container-fluid content-signup">
-        <div class="col-sm-12 col-md-6 col-md-offset-6">
-            <form class="form-signin" role="form" action="" method="POST">{% csrf_token %}
-                <h3 class="form-login-heading">Sign up</h3>
-                {{ form.username.errors }}
-                <input type="text" class="form-control username" autocapitalize="none" id="signup_username" name="username" placeholder="User Name" required autofocus>
-                {{ form.email.errors }}
-                <input type="email" class="form-control" id="signup_email" name="email" placeholder="Email" required>
-                {{ form.password1.errors }}
-                <input type="password" class="form-control" autocapitalize="none" id="signup_password1" name="password1" placeholder="Password" required>
-                {{ form.password2.errors }}
-                <input type="password" class="form-control" autocapitalize="none" id="signup_password2" name="password2" placeholder="Password Confirm" required><br/>
-                <button class="btn btn-lg btn-primary btn-block" id="signup_submit" type="submit">Submit</button>
-            </form>
-        </div>
+    <div>
+        <form role="form" action="" method="POST">{% csrf_token %}
+            <h3 class="form-login-heading">Sign up</h3>
+            {{ form.username.errors }}
+            <input type="text" autocapitalize="none" id="signup_username" name="username" placeholder="User Name" required autofocus>
+            {{ form.email.errors }}
+            <input type="email" id="signup_email" name="email" placeholder="Email" required>
+            {{ form.password1.errors }}
+            <input type="password" autocapitalize="none" id="signup_password1" name="password1" placeholder="Password" required>
+            {{ form.password2.errors }}
+            <input type="password" autocapitalize="none" id="signup_password2" name="password2" placeholder="Password Confirm" required><br/>
+            <button id="signup_submit" type="submit">Submit</button>
+        </form>
     </div>
     {% endblock main %}
