@@ -25,7 +25,7 @@ def deploy():
     _update_settings(source_dir, env.host)
     _update_config(source_dir, env.host)
     _update_virtualenv(source_dir)
-    _update_static_files(js_dir, static_dir, source_dir)
+    _update_static_files(static_dir, source_dir)
     _update_database(source_dir)
     _restart_supervisor(env.host)
 
@@ -47,12 +47,15 @@ def _get_latest_source(source_dir):
 
 def _update_settings(source_dir, env_host):
     settings_path = source_dir + '/config/settings.py'
-    sed(settings_path, "DEBUG = True", "DEBUG = False")
+
+    ##DEBUG True in staging
+    if not re_staging.search(env_host):
+        sed(settings_path, "DEBUG = True", "DEBUG = False")
 
     ##format the database name
     host_raw = env_host.split(".")[0]
     host = host_raw.replace("-", "_")
-    sed(settings_path, 'DATABASE_NAME = ""', 'DATABASE_NAME = "{}"'.format(host))
+    sed(settings_path, 'DATABASE_NAME = APP_NAME', 'DATABASE_NAME = "{}"'.format(host))
     sed(settings_path,
         'ALLOWED_HOSTS =.+$',
         'ALLOWED_HOSTS = ["%s"]' % (env_host,)
@@ -94,16 +97,20 @@ def _update_virtualenv(source_dir):
         run('virtualenv --python=/opt/python3.4/bin/python3.4 %s' % (virtualenv_dir,))
         run("touch %s/lib/python3.4/site-packages/_virtualenv_path_extensions.pth" % (virtualenv_dir,))
         _add2virtualenv(source_dir, source_dir)
-        # run('%s/bin/pip install https://github.com/django/django/archive/stable/1.7.x.zip' % (virtualenv_dir,))
     _piprequire(virtualenv_dir, source_dir)
 
 
-def _update_static_files(js_dir, static_dir, source_dir):
-    run('cd %s && npm install && bower install' % (js_dir,))
-    run('cd %s &&  lessc -x less/app.less css/base.css' % (static_dir,))
-    run('cd %s &&  grunt browserify' % (js_dir,))
-    run('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic --clear --noinput -i node_modules -i less -i src -i *.json -i .bowerrc' % (source_dir, ))
+def _update_static_files(static_dir, source_dir):
+    run('cd %s/app/ && npm install && bower install' % (static_dir,))
+    run('cd %s/app/ && grunt browserify' % (static_dir,))
+    run('cd %s/app/styling/ && lessc -x less/app.less css/app.css' % (static_dir,))
 
+    run('cd %s/backend/ && npm install && bower install' % (static_dir,))
+    run('cd %s/backend/ && grunt browserify' % (static_dir,))
+    run('cd %s/backend/styling/ && lessc -x less/backend.less css/backend.css' % (static_dir,))
+
+    run('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic '
+        '--clear --noinput -i node_modules -i less -i src -i *.json -i .bowerrc' % (source_dir, ))
 
 def _update_database(source_dir):
     run('cd %s && ../virtualenv/bin/python3.4 manage.py migrate --noinput' % (source_dir,))

@@ -12,9 +12,10 @@ SOURCE_DIR = os.path.abspath(os.path.join(CONFIG_DIR, ".."))
 BASE_DIR = os.path.abspath(os.path.join(SOURCE_DIR, ".."))
 STATIC_PATH = os.path.abspath(os.path.join(SOURCE_DIR, "static"))
 
-DATABASE_NAME = ""
+DATABASE_NAME = APP_NAME
 URLCONF_MODULE = ".".join(["config.urls"])
 TEMPLATE_PATH = os.path.abspath(os.path.join(SOURCE_DIR, "templates"))
+APP_TEMPLATE_PATH = os.path.abspath(os.path.join(SOURCE_DIR, APP_NAME, "static", APP_NAME))
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -147,6 +148,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     TEMPLATE_PATH,
+    APP_TEMPLATE_PATH,
 )
 
 MIDDLEWARE_CLASSES = (
@@ -216,7 +218,7 @@ REST_FRAMEWORK = {
 
 LOGIN_URL = '/accounts/signin/'
 LOGOUT_URL = '/accounts/signout/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/api'
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_LOGIN_URL = '/accounts/signin/'

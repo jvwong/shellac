@@ -51,6 +51,27 @@ class RelationshipFixtureValidation(APITestCase):
 # """
 #  BEGIN Person API
 # """
+class PersonDetailCurrentView(APITestCase):
+
+    def test_PersonDetailCurrentView_url_resolves_to_api_category_view(self):
+        url = reverse('person-current')
+        self.assertEqual(url, '/api/person/')
+
+
+    def test_PersonDetailCurrentView_GET_returns_correct_response(self):
+        u = User.objects.create_user('andrea', email='aray@outlook.com', password='a')
+        u.is_staff = True
+        u.save()
+
+        self.client.login(username='andrea', password='a')
+        response = self.client.get('/api/person/.json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # print(response.data)
+        self.assertIn('"username": "andrea"', response.content.decode())
+        self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
+
+
 class PersonListView(APITestCase):
 
     # line up view for '/'

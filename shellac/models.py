@@ -144,7 +144,7 @@ class Person(models.Model):
         return self.clips.filter(status=Clip.LIVE_STATUS)
 
     def get_absolute_url(self):
-        return ('shellac_profile', (), { 'username': self.username })
+        return 'shellac_profile', (), {'username': self.username}
     get_absolute_url = models.permalink(get_absolute_url)
 
     objects = PersonManager()

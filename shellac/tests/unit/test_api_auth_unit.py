@@ -46,7 +46,7 @@ class UserListViewSet(APITestCase):
         response = self.client.post('/api/users/.json', payload, content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        #print(response.data)
+        # print(response.data)
         self.assertIn('"username": "ronald"', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 

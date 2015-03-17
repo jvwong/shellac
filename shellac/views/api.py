@@ -25,6 +25,7 @@ from shellac.permissions import IsAuthorOrReadOnly, UserIsOwnerOrAdmin, \
     PlaylistListViewPermissions, PlaylistDetailViewPermissions,\
     TrackListViewPermissions, TrackDetailViewPermissions
 from shellac.viewsets import DetailViewSet, ListViewSet
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 @api_view(('GET',))
@@ -142,7 +143,7 @@ class ClipListViewSet(ListViewSet):
     def pre_save(self, obj):
         obj.author = Person.objects.get(user=self.request.user)
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 class ClipListFollowingView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated, )
     paginate_by = 10
@@ -213,6 +214,7 @@ class ClipDetailViewSet(DetailViewSet):
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+
 class UserListViewSet(ListViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -247,6 +249,7 @@ class PersonListView(generics.ListCreateAPIView):
     """
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -258,6 +261,7 @@ class PersonListStatusView(generics.ListCreateAPIView):
     """
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -314,9 +318,28 @@ class PersonDetailView(generics.RetrieveAPIView):
     lookup_field = 'username'
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+
+class PersonDetailCurrentView(generics.RetrieveAPIView):
+    """
+    Retrieve the Person corresponding to the authenticated User
+    """
+    model = Person
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def get_object(self):
+        obj = get_object_or_404(Person, user=self.request.user)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 
 class PlaylistListViewSet(ListViewSet):
@@ -332,7 +355,6 @@ class PlaylistListViewSet(ListViewSet):
 
     def pre_save(self, obj):
         obj.person = self.request.user.person
-
 
 
 class PlaylistDetailViewSet(DetailViewSet):

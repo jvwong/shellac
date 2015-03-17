@@ -3,7 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from shellac.views.api import api_root, \
     CategoryViewSet, ClipListViewSet, ClipDetailViewSet, ClipListFollowingView, \
     UserListViewSet, UserDetailViewSet,\
-    PersonListView, PersonDetailView, PersonListStatusView, \
+    PersonListView, PersonDetailView, PersonListStatusView, PersonDetailCurrentView, \
     RelationshipListViewSet, RelationshipDetailViewSet,\
     PlaylistListViewSet, PlaylistDetailViewSet,\
     TrackListViewSet, TrackDetailViewSet
@@ -90,6 +90,8 @@ urlpatterns = patterns('shellac.views.api',
 
     url(r'^users/$', user_list, name='user-list'),
     url(r'^users/(?P<username>[\w.@+-]+)/$', user_detail, name='user-detail'),
+
+    url(r'^person/$', PersonDetailCurrentView.as_view(), name='person-current'),
 
     url(r'^people/$', PersonListView.as_view(), name='person-list'),
     url(r'^people/(?P<status>[\w-]+)/(?P<username>[\w.@+-]+)/$', PersonListStatusView.as_view(), name='person-list-status'),
