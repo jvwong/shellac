@@ -56,6 +56,7 @@ class RelationshipSerializer(serializers.HyperlinkedModelSerializer):
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     first_name = serializers.Field(source='user.first_name')
     last_name = serializers.Field(source='user.last_name')
+    avatar_url = serializers.SerializerMethodField('get_avatar_url')
     clips = serializers.HyperlinkedRelatedField(many=True,
                                                 lookup_field='pk',
                                                 view_name='clip-detail')
@@ -64,11 +65,17 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
                                                     view_name='playlist-detail')
     relationships = RelationshipSerializer(source='from_people', many=True)
 
+    def get_avatar_url(self, obj):
+        if obj.avatar:
+            return obj.avatar.url
+        else:
+            return ""
+
     class Meta:
         lookup_field = 'username'
         model = Person
-        fields = ('url', 'username', 'first_name', 'last_name', 'joined',
-                  'clips', 'relationships', 'playlists')
+        fields = ('url', 'username', 'first_name', 'last_name', 'avatar_url',
+                  'joined', 'clips', 'relationships', 'playlists')
 
 
 class PaginatedPersonSerializer(pagination.PaginationSerializer):
