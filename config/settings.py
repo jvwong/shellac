@@ -182,7 +182,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.flatpages',
     'shellac',
-    'social.apps.django_app.default',
     'taggit',
     'rest_framework',
     'rest_framework.authtoken',
@@ -210,34 +209,12 @@ REST_FRAMEWORK = {
         'user': '10000/day',
 
     },
-    'DEFAULT_PAGINATION_SERIALIZER_CLASS': (
-        'rest_framework.pagination.PaginationSerializer',
-    ),
     'PAGINATE_BY': 100,                 # Default to 20
     'PAGINATE_BY_PARAM': 'page_size',  # Allow client to override, using `?page_size=xxx`.
     'MAX_PAGINATE_BY': 250             # Maximum limit allowed when using `?page_size=xxx`.
 }
 
-LOGIN_URL = '/accounts/signin/'
-LOGOUT_URL = '/accounts/signout/'
-LOGIN_REDIRECT_URL = '/api'
-
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_LOGIN_URL = '/accounts/signin/'
-
-SOCIAL_AUTH_TWITTER_KEY = os.getenv('SOCIAL_AUTH_TWITTER_KEY', default='')
-SOCIAL_AUTH_TWITTER_SECRET = os.getenv('SOCIAL_AUTH_TWITTER_SECRET', default='')
-SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('SOCIAL_AUTH_FACEBOOK_KEY', default='')
-SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('SOCIAL_AUTH_FACEBOOK_SECRET', default='')
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', default='')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', default='')
-SOCIAL_AUTH_SOUNDCLOUD_KEY = os.getenv('SOCIAL_AUTH_SOUNDCLOUD_KEY', default='')
-SOCIAL_AUTH_SOUNDCLOUD_SECRET = os.getenv('SOCIAL_AUTH_SOUNDCLOUD_SECRET', default='')
-
 AUTHENTICATION_BACKENDS = (
-    'social.backends.facebook.FacebookOAuth2',
-    'social.backends.twitter.TwitterOAuth',
-    'social.backends.soundcloud.SoundcloudOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -248,9 +225,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
-    'django.contrib.messages.context_processors.messages',
-    'social.apps.django_app.context_processors.backends',
-    'social.apps.django_app.context_processors.login_redirect',
+    'django.contrib.messages.context_processors.messages'
 )
 
 AUDIO_WHITELIST = {
