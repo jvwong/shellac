@@ -210,6 +210,9 @@ REST_FRAMEWORK = {
         'user': '10000/day',
 
     },
+    'DEFAULT_PAGINATION_SERIALIZER_CLASS': (
+        'rest_framework.pagination.PaginationSerializer',
+    ),
     'PAGINATE_BY': 100,                 # Default to 20
     'PAGINATE_BY_PARAM': 'page_size',  # Allow client to override, using `?page_size=xxx`.
     'MAX_PAGINATE_BY': 250             # Maximum limit allowed when using `?page_size=xxx`.
