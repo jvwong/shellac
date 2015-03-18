@@ -135,8 +135,6 @@ class ClipListViewSet(ListViewSet):
 
         return Clip.live.all().order_by('-created')
 
-
-
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
