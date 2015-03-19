@@ -11,7 +11,8 @@
 		"07cbeb3e-0ac8-92a8-f727-051a912b23e1",
 		"769080d5-ba24-f6e9-0153-8798d3ad67a3",
 		"98653af1-637b-7111-56ac-650351224466",
-		"b9d945fe-ba45-fae7-2c80-6407f1404504"
+		"b9d945fe-ba45-fae7-2c80-6407f1404504",
+		"e3dbfb95-16b5-84fd-58f5-5bdcb901ddb3"
 	],
 	"folders": [],
 	"timestamp": 1426678239935,
@@ -22,7 +23,6 @@
 	"remoteLink": "",
 	"public": false,
 	"write": true,
-	"hasRequests": true,
 	"requests": [
 		{
 			"id": "07cbeb3e-0ac8-92a8-f727-051a912b23e1",
@@ -201,6 +201,26 @@
 			"helperAttributes": {},
 			"time": 1426679642453,
 			"name": "/api/clips",
+			"description": "",
+			"collectionId": "77806541-68ce-785f-cfa7-04df4af3a7c1",
+			"responses": [],
+			"synced": false
+		},
+		{
+			"id": "e3dbfb95-16b5-84fd-58f5-5bdcb901ddb3",
+			"headers": "Content-Type: application/json\nAuthorization: Token b7e7f45ef21b57b73fe8c239ac252d334e69b70a\n",
+			"url": "http://shellac.no-ip.ca/api/clips/following/shellac",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1426713829507,
+			"name": "/api/clips/following/shellac",
 			"description": "",
 			"collectionId": "77806541-68ce-785f-cfa7-04df4af3a7c1",
 			"responses": [],

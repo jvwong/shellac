@@ -19,7 +19,6 @@ def deploy():
     base_dir = '/webapps/%s/%s/%s' % (env.user, APP_NAME, env.host)
     source_dir = base_dir + '/source'
     static_dir = os.path.abspath(os.path.join(source_dir, "%s/static/%s" % (APP_NAME, APP_NAME)))
-    js_dir = os.path.abspath(os.path.join(source_dir, "%s/static/%s/js" % (APP_NAME, APP_NAME)))
     _create_directory_structure_if_necessary(base_dir)
     _get_latest_source(source_dir)
     _update_settings(source_dir, env.host)
@@ -101,14 +100,6 @@ def _update_virtualenv(source_dir):
 
 
 def _update_static_files(static_dir, source_dir):
-    # run('cd %s/app/ && npm install && bower install' % (static_dir,))
-    # run('cd %s/app/ && grunt browserify' % (static_dir,))
-    # run('cd %s/app/styling/ && lessc -x less/app.less css/app.css' % (static_dir,))
-
-    # run('cd %s/backend/ && npm install && bower install' % (static_dir,))
-    # run('cd %s/backend/ && grunt browserify' % (static_dir,))
-    # run('cd %s/backend/styling/ && lessc -x less/backend.less css/backend.css' % (static_dir,))
-
     run('cd %s && ../virtualenv/bin/python3.4 manage.py collectstatic '
         '--clear --noinput -i node_modules -i less -i src -i *.json -i .bowerrc' % (source_dir, ))
 
