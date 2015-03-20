@@ -118,7 +118,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ClipSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.Field(source='author.user.username')
+    owner = serializers.Field(source='author.title')
     author = serializers.HyperlinkedRelatedField(lookup_field='username',
                                                  view_name='person-detail')
 
