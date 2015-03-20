@@ -5,6 +5,7 @@ from shellac.models import Category
 
 ### Category list
 CATEGORIES = (
+    'arts',
     'champions league',
     'tennis',
     'track & field',

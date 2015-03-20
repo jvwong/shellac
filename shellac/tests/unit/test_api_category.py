@@ -50,7 +50,6 @@ class CategoryViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # print(response.content.decode())
-        self.assertIn('"id": 1', response.content.decode())
         self.assertIn('"title": "ARTS"', response.content.decode())
         self.assertIn('"description": "arts"', response.content.decode())
         self.assertIn('"clips": []', response.content.decode())
@@ -126,7 +125,6 @@ class CategoryDetail(APITestCase):
         #print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertIn('"id": 1', response.content.decode())
         self.assertIn('"title": "ARTS"', response.content.decode())
         self.assertIn('"description": "arts"', response.content.decode())
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')

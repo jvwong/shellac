@@ -1,95 +1,95 @@
 [
 {
-    "pk": 1,
-    "model": "taggit.tag",
     "fields": {
-        "slug": "asd",
-        "name": "asd"
-    }
+        "name": "asd",
+        "slug": "asd"
+    },
+    "model": "taggit.tag",
+    "pk": 1
 },
 {
-    "pk": 2,
-    "model": "taggit.tag",
     "fields": {
-        "slug": "wer",
-        "name": "wer"
-    }
+        "name": "wer",
+        "slug": "wer"
+    },
+    "model": "taggit.tag",
+    "pk": 2
 },
 {
-    "pk": 3,
-    "model": "taggit.tag",
     "fields": {
-        "slug": "ert",
-        "name": "ert"
-    }
+        "name": "ert",
+        "slug": "ert"
+    },
+    "model": "taggit.tag",
+    "pk": 3
 },
 {
-    "pk": 4,
-    "model": "taggit.tag",
     "fields": {
-        "slug": "rty",
-        "name": "rty"
-    }
+        "name": "rty",
+        "slug": "rty"
+    },
+    "model": "taggit.tag",
+    "pk": 4
 },
 {
-    "pk": 5,
-    "model": "taggit.tag",
     "fields": {
-        "slug": "a1a",
-        "name": "a1a"
-    }
+        "name": "a1a",
+        "slug": "a1a"
+    },
+    "model": "taggit.tag",
+    "pk": 5
 },
 {
-    "pk": 6,
-    "model": "taggit.tag",
     "fields": {
-        "slug": "technology",
-        "name": "technology"
-    }
+        "name": "technology",
+        "slug": "technology"
+    },
+    "model": "taggit.tag",
+    "pk": 6
 },
 {
-    "pk": 5,
-    "model": "taggit.taggeditem",
     "fields": {
         "content_type": 14,
-        "tag": 2,
-        "object_id": 2
-    }
+        "object_id": 2,
+        "tag": 2
+    },
+    "model": "taggit.taggeditem",
+    "pk": 5
 },
 {
-    "pk": 6,
-    "model": "taggit.taggeditem",
     "fields": {
         "content_type": 14,
-        "tag": 3,
-        "object_id": 3
-    }
+        "object_id": 3,
+        "tag": 3
+    },
+    "model": "taggit.taggeditem",
+    "pk": 6
 },
 {
-    "pk": 8,
-    "model": "taggit.taggeditem",
     "fields": {
         "content_type": 14,
-        "tag": 4,
-        "object_id": 4
-    }
+        "object_id": 4,
+        "tag": 4
+    },
+    "model": "taggit.taggeditem",
+    "pk": 8
 },
 {
-    "pk": 10,
-    "model": "taggit.taggeditem",
     "fields": {
         "content_type": 14,
-        "tag": 5,
-        "object_id": 1
-    }
+        "object_id": 1,
+        "tag": 5
+    },
+    "model": "taggit.taggeditem",
+    "pk": 10
 },
 {
-    "pk": 11,
-    "model": "taggit.taggeditem",
     "fields": {
         "content_type": 14,
-        "tag": 6,
-        "object_id": 5
-    }
+        "object_id": 5,
+        "tag": 6
+    },
+    "model": "taggit.taggeditem",
+    "pk": 11
 }
 ]
