@@ -1,769 +1,503 @@
 [
 {
+    "model": "shellac.playlist",
     "fields": {
-        "updated": "2014-10-24T19:32:25",
+        "updated": "2015-03-20T13:29:26",
+        "description": "",
+        "title": "default",
+        "slug": "default",
         "person": 1,
-        "created": "2014-10-24T19:32:25",
-        "slug": "default",
-        "title": "default",
-        "description": ""
+        "created": "2015-03-20T13:29:26"
     },
-    "pk": 1,
-    "model": "shellac.playlist"
+    "pk": 1
 },
 {
+    "model": "shellac.playlist",
     "fields": {
-        "updated": "2014-10-24T19:32:31",
+        "updated": "2015-03-20T13:30:17",
+        "description": "",
+        "title": "default",
+        "slug": "default",
         "person": 2,
-        "created": "2014-10-24T19:32:31",
-        "slug": "default",
-        "title": "default",
-        "description": ""
+        "created": "2015-03-20T13:30:17"
     },
-    "pk": 2,
-    "model": "shellac.playlist"
+    "pk": 2
 },
 {
+    "model": "shellac.playlist",
     "fields": {
-        "updated": "2014-10-24T19:32:31",
+        "updated": "2015-03-20T13:30:28",
+        "description": "",
+        "title": "default",
+        "slug": "default",
         "person": 3,
-        "created": "2014-10-24T19:32:31",
-        "slug": "default",
+        "created": "2015-03-20T13:30:28"
+    },
+    "pk": 3
+},
+{
+    "model": "shellac.playlist",
+    "fields": {
+        "updated": "2015-03-20T13:30:40",
+        "description": "",
         "title": "default",
-        "description": ""
-    },
-    "pk": 3,
-    "model": "shellac.playlist"
-},
-{
-    "fields": {
-        "updated": "2014-10-24T19:32:31",
-        "person": 4,
-        "created": "2014-10-24T19:32:31",
         "slug": "default",
-        "title": "default",
-        "description": ""
-    },
-    "pk": 4,
-    "model": "shellac.playlist"
-},
-{
-    "fields": {
-        "updated": "2014-10-19T16:35:08",
-        "person": 2,
-        "created": "2014-10-19T16:35:03",
-        "slug": "aray1",
-        "title": "aray1",
-        "description": "aray1"
-    },
-    "pk": 5,
-    "model": "shellac.playlist"
-},
-{
-    "fields": {
-        "updated": "2014-10-19T16:35:31",
-        "person": 1,
-        "created": "2014-10-19T16:35:26",
-        "slug": "jvwong1",
-        "title": "jvwong1",
-        "description": "jvwong1"
-    },
-    "pk": 6,
-    "model": "shellac.playlist"
-},
-{
-    "fields": {
-        "updated": "2014-10-19T16:35:47",
         "person": 4,
-        "created": "2014-10-19T16:35:47",
-        "slug": "kray1",
-        "title": "kray1",
-        "description": "kray1"
+        "created": "2015-03-20T13:30:40"
     },
-    "pk": 7,
-    "model": "shellac.playlist"
+    "pk": 4
 },
 {
+    "model": "shellac.relationship",
     "fields": {
-        "updated": "2014-10-19T16:36:00",
-        "person": 3,
-        "created": "2014-10-19T16:36:00",
-        "slug": "jray1",
-        "title": "jray1",
-        "description": "jray1"
-    },
-    "pk": 8,
-    "model": "shellac.playlist"
-},
-{
-    "fields": {
-        "from_person": 1,
-        "to_person": 4,
         "private": false,
-        "created": "2014-10-08T16:54:34",
-        "status": "following"
-    },
-    "pk": 2,
-    "model": "shellac.relationship"
-},
-{
-    "fields": {
         "from_person": 1,
-        "to_person": 2,
-        "private": false,
-        "created": "2014-10-08T16:54:34",
-        "status": "following"
+        "status": "following",
+        "created": "2015-03-20T13:31:05",
+        "to_person": 2
     },
-    "pk": 3,
-    "model": "shellac.relationship"
+    "pk": 1
 },
 {
+    "model": "shellac.relationship",
     "fields": {
+        "private": false,
         "from_person": 1,
-        "to_person": 3,
-        "private": false,
-        "created": "2014-10-08T16:54:35",
-        "status": "following"
+        "status": "following",
+        "created": "2015-03-20T13:31:05",
+        "to_person": 3
     },
-    "pk": 4,
-    "model": "shellac.relationship"
+    "pk": 2
 },
 {
+    "model": "shellac.relationship",
     "fields": {
+        "private": false,
+        "from_person": 1,
+        "status": "following",
+        "created": "2015-03-20T13:31:05",
+        "to_person": 4
+    },
+    "pk": 3
+},
+{
+    "model": "shellac.relationship",
+    "fields": {
+        "private": false,
         "from_person": 2,
-        "to_person": 3,
-        "private": false,
-        "created": "2014-10-08T16:59:02",
-        "status": "following"
+        "status": "following",
+        "created": "2015-03-20T13:31:28",
+        "to_person": 3
     },
-    "pk": 6,
-    "model": "shellac.relationship"
+    "pk": 4
 },
 {
+    "model": "shellac.relationship",
     "fields": {
+        "private": false,
+        "from_person": 2,
+        "status": "following",
+        "created": "2015-03-20T13:31:28",
+        "to_person": 4
+    },
+    "pk": 5
+},
+{
+    "model": "shellac.relationship",
+    "fields": {
+        "private": false,
         "from_person": 3,
-        "to_person": 1,
-        "private": false,
-        "created": "2014-10-08T16:59:15",
-        "status": "following"
+        "status": "following",
+        "created": "2015-03-20T13:31:43",
+        "to_person": 1
     },
-    "pk": 7,
-    "model": "shellac.relationship"
+    "pk": 6
 },
 {
+    "model": "shellac.relationship",
     "fields": {
+        "private": false,
         "from_person": 3,
-        "to_person": 4,
+        "status": "following",
+        "created": "2015-03-20T13:31:43",
+        "to_person": 4
+    },
+    "pk": 7
+},
+{
+    "model": "shellac.relationship",
+    "fields": {
         "private": false,
-        "created": "2014-10-08T16:59:15",
-        "status": "following"
+        "from_person": 4,
+        "status": "following",
+        "created": "2015-03-20T13:31:50",
+        "to_person": 1
     },
-    "pk": 8,
-    "model": "shellac.relationship"
+    "pk": 8
 },
 {
+    "model": "shellac.category",
     "fields": {
-        "slug": "arts",
-        "title": "ARTS",
-        "description": "arts"
-    },
-    "pk": 1,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "business",
-        "title": "BUSINESS",
-        "description": "business"
-    },
-    "pk": 2,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "food",
-        "title": "FOOD",
-        "description": "food"
-    },
-    "pk": 3,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "health",
-        "title": "HEALTH",
-        "description": "health"
-    },
-    "pk": 4,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "music",
-        "title": "MUSIC",
-        "description": "music"
-    },
-    "pk": 5,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "opinion",
-        "title": "OPINION",
-        "description": "opinion"
-    },
-    "pk": 6,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "politics",
-        "title": "POLITICS",
-        "description": "politics"
-    },
-    "pk": 7,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "real-estate",
-        "title": "REAL ESTATE",
-        "description": "real estate"
-    },
-    "pk": 8,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "science",
-        "title": "SCIENCE",
-        "description": "science"
-    },
-    "pk": 9,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "sports",
-        "title": "SPORTS",
-        "description": "sports"
-    },
-    "pk": 10,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "style",
-        "title": "STYLE",
-        "description": "style"
-    },
-    "pk": 11,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "technology",
-        "title": "TECHNOLOGY",
-        "description": "technology"
-    },
-    "pk": 12,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "travel",
-        "title": "TRAVEL",
-        "description": "travel"
-    },
-    "pk": 13,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "money",
-        "title": "MONEY",
-        "description": "money"
-    },
-    "pk": 14,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "economics",
-        "title": "ECONOMICS",
-        "description": "economics"
-    },
-    "pk": 15,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "comedy",
-        "title": "COMEDY",
-        "description": "comedy"
-    },
-    "pk": 16,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "nascar",
-        "title": "NASCAR",
-        "description": "nascar"
-    },
-    "pk": 17,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "tennis",
-        "title": "TENNIS",
-        "description": "tennis"
-    },
-    "pk": 18,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "track-field",
-        "title": "TRACK & FIELD",
-        "description": "track & field"
-    },
-    "pk": 19,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "golf",
-        "title": "GOLF",
-        "description": "golf"
-    },
-    "pk": 20,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "boxing",
-        "title": "BOXING",
-        "description": "boxing"
-    },
-    "pk": 21,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "mixed-martial-arts",
-        "title": "MIXED MARTIAL ARTS",
-        "description": "mixed martial arts"
-    },
-    "pk": 22,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "wrestling",
-        "title": "WRESTLING",
-        "description": "wrestling"
-    },
-    "pk": 23,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "horse-racing",
-        "title": "HORSE RACING",
-        "description": "horse racing"
-    },
-    "pk": 24,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "ncaa-football",
-        "title": "NCAA FOOTBALL",
-        "description": "ncaa football"
-    },
-    "pk": 25,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "ncaa-basketball",
-        "title": "NCAA BASKETBALL",
-        "description": "ncaa basketball"
-    },
-    "pk": 26,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "nba",
-        "title": "NBA",
-        "description": "nba"
-    },
-    "pk": 27,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "nhl",
-        "title": "NHL",
-        "description": "nhl"
-    },
-    "pk": 28,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "nfl",
-        "title": "NFL",
-        "description": "nfl"
-    },
-    "pk": 29,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "mls",
-        "title": "MLS",
-        "description": "mls"
-    },
-    "pk": 30,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "mlb",
-        "title": "MLB",
-        "description": "mlb"
-    },
-    "pk": 31,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "baseball",
-        "title": "BASEBALL",
-        "description": "baseball"
-    },
-    "pk": 32,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "rugby",
-        "title": "RUGBY",
-        "description": "rugby"
-    },
-    "pk": 33,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "lacrosse",
-        "title": "LACROSSE",
-        "description": "lacrosse"
-    },
-    "pk": 34,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "cricket",
-        "title": "CRICKET",
-        "description": "cricket"
-    },
-    "pk": 35,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "soccer",
-        "title": "SOCCER",
-        "description": "soccer"
-    },
-    "pk": 36,
-    "model": "shellac.category"
-},
-{
-    "fields": {
-        "slug": "champions-league",
         "title": "CHAMPIONS LEAGUE",
+        "slug": "champions-league",
         "description": "champions league"
     },
-    "pk": 37,
-    "model": "shellac.category"
+    "pk": 1
 },
 {
+    "model": "shellac.category",
     "fields": {
-        "slug": "world-cup-soccer",
-        "title": "WORLD CUP SOCCER",
-        "description": "world cup soccer"
+        "title": "TENNIS",
+        "slug": "tennis",
+        "description": "tennis"
     },
-    "pk": 38,
-    "model": "shellac.category"
+    "pk": 2
 },
 {
+    "model": "shellac.category",
     "fields": {
-        "slug": "pop-culture",
-        "title": "POP CULTURE",
-        "description": "pop culture"
+        "title": "TRACK & FIELD",
+        "slug": "track-field",
+        "description": "track & field"
     },
-    "pk": 39,
-    "model": "shellac.category"
+    "pk": 3
 },
 {
+    "model": "shellac.category",
     "fields": {
-        "slug": "in-the-news",
+        "title": "GOLF",
+        "slug": "golf",
+        "description": "golf"
+    },
+    "pk": 4
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "BOXING",
+        "slug": "boxing",
+        "description": "boxing"
+    },
+    "pk": 5
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "LACROSSE",
+        "slug": "lacrosse",
+        "description": "lacrosse"
+    },
+    "pk": 6
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "MIXED MARTIAL ARTS",
+        "slug": "mixed-martial-arts",
+        "description": "mixed martial arts"
+    },
+    "pk": 7
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "HORSE RACING",
+        "slug": "horse-racing",
+        "description": "horse racing"
+    },
+    "pk": 8
+},
+{
+    "model": "shellac.category",
+    "fields": {
         "title": "IN THE NEWS",
+        "slug": "in-the-news",
         "description": "in the news"
     },
-    "pk": 40,
-    "model": "shellac.category"
+    "pk": 9
 },
 {
+    "model": "shellac.category",
     "fields": {
-        "slug": "olympics",
+        "title": "NASCAR",
+        "slug": "nascar",
+        "description": "nascar"
+    },
+    "pk": 10
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "NCAA FOOTBALL",
+        "slug": "ncaa-football",
+        "description": "ncaa football"
+    },
+    "pk": 11
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "NCAA BASKETBALL",
+        "slug": "ncaa-basketball",
+        "description": "ncaa basketball"
+    },
+    "pk": 12
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "NBA",
+        "slug": "nba",
+        "description": "nba"
+    },
+    "pk": 13
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "NHL",
+        "slug": "nhl",
+        "description": "nhl"
+    },
+    "pk": 14
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "NFL",
+        "slug": "nfl",
+        "description": "nfl"
+    },
+    "pk": 15
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "MLS",
+        "slug": "mls",
+        "description": "mls"
+    },
+    "pk": 16
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "MLB",
+        "slug": "mlb",
+        "description": "mlb"
+    },
+    "pk": 17
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "POP CULTURE",
+        "slug": "pop-culture",
+        "description": "pop culture"
+    },
+    "pk": 18
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "RUGBY",
+        "slug": "rugby",
+        "description": "rugby"
+    },
+    "pk": 19
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "TALK",
+        "slug": "talk",
+        "description": "talk"
+    },
+    "pk": 20
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "TELEVISION",
+        "slug": "television",
+        "description": "television"
+    },
+    "pk": 21
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "FILM",
+        "slug": "film",
+        "description": "film"
+    },
+    "pk": 22
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "ENTERTAINMENT",
+        "slug": "entertainment",
+        "description": "entertainment"
+    },
+    "pk": 23
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "CRICKET",
+        "slug": "cricket",
+        "description": "cricket"
+    },
+    "pk": 24
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "OPINION",
+        "slug": "opinion",
+        "description": "opinion"
+    },
+    "pk": 25
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "SOCCER",
+        "slug": "soccer",
+        "description": "soccer"
+    },
+    "pk": 26
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "WRESTLING",
+        "slug": "wrestling",
+        "description": "wrestling"
+    },
+    "pk": 27
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "WORLD CUP SOCCER",
+        "slug": "world-cup-soccer",
+        "description": "world cup soccer"
+    },
+    "pk": 28
+},
+{
+    "model": "shellac.category",
+    "fields": {
+        "title": "BUSINESS",
+        "slug": "business",
+        "description": "business"
+    },
+    "pk": 29
+},
+{
+    "model": "shellac.category",
+    "fields": {
         "title": "OLYMPICS",
+        "slug": "olympics",
         "description": "olympics"
     },
-    "pk": 41,
-    "model": "shellac.category"
+    "pk": 30
 },
 {
+    "model": "shellac.clip",
     "fields": {
-        "title": "wer",
+        "categories": [
+            5
+        ],
         "plays": 0,
-        "audio_file": "sounds/2014/10/19/water_Fy0CRFv.mp3",
-        "status": 1,
-        "rating": 0,
-        "brand": "",
-        "categories": [],
-        "created": "2014-10-08T12:08:51",
-        "author": 1,
-        "slug": "wer",
-        "brand": "",
-        "description": "wer"
-    },
-    "pk": 1,
-    "model": "shellac.clip"
-},
-{
-    "fields": {
-        "title": "2",
-        "plays": 0,
-        "audio_file": "sounds/2014/10/19/water_lFAudJx.mp3",
-        "status": 1,
-        "rating": 0,
-        "brand": "",
-        "categories": [],
-        "created": "2014-10-08T12:09:40",
-        "author": 1,
-        "slug": "2",
-        "brand": "",
-        "description": "asdasd"
-    },
-    "pk": 2,
-    "model": "shellac.clip"
-},
-{
-    "fields": {
+        "brand": "brands/2015/03/20/0ba76759e52b4820ae7da4483f5d46e5.png",
+        "description": "asd",
         "title": "asd",
-        "plays": 0,
-        "audio_file": "sounds/2014/10/19/water_TsJPtsM.mp3",
+        "slug": "asd",
+        "created": "2015-03-20T13:36:21",
         "status": 1,
         "rating": 0,
-        "brand": "",
-        "categories": [],
-        "created": "2014-10-08T15:07:36",
-        "author": 1,
-        "slug": "asd",
-        "brand": "",
-        "description": "asd"
+        "author": 2,
+        "audio_file": "sounds/2015/03/20/62981db4715d42bab58ede97b68c3a05.mp3"
     },
-    "pk": 3,
-    "model": "shellac.clip"
+    "pk": 1
 },
 {
+    "model": "shellac.clip",
     "fields": {
-        "title": "kray1",
-        "plays": 1,
-        "audio_file": "sounds/2014/10/19/water_gin0DI9.mp3",
+        "categories": [
+            29
+        ],
+        "plays": 0,
+        "brand": "brands/2015/03/20/2b43fe24bf0c4952b6a3c464e10c2a2e.png",
+        "description": "wer",
+        "title": "wer",
+        "slug": "wer",
+        "created": "2015-03-20T13:37:59",
         "status": 1,
         "rating": 0,
-        "brand": "",
+        "author": 4,
+        "audio_file": "sounds/2015/03/20/a46e9a2312294e429ac18f12a2196ba2.mp3"
+    },
+    "pk": 2
+},
+{
+    "model": "shellac.clip",
+    "fields": {
         "categories": [
             1
         ],
-        "created": "2014-10-08T16:59:17",
-        "author": 4,
-        "slug": "kray1",
-        "brand": "",
-        "description": "kray1"
-    },
-    "pk": 4,
-    "model": "shellac.clip"
-},
-{
-    "fields": {
-        "title": "kray2",
-        "plays": 1,
-        "audio_file": "sounds/2014/10/19/water_XExmIdJ.mp3",
-        "status": 1,
-        "rating": 0,
-        "brand": "",
-        "categories": [
-            2
-        ],
-        "created": "2014-10-08T16:59:59",
-        "author": 4,
-        "slug": "kray2",
-        "brand": "",
-        "description": "kray1"
-    },
-    "pk": 5,
-    "model": "shellac.clip"
-},
-{
-    "fields": {
-        "title": "jray1",
-        "plays": 2,
-        "audio_file": "sounds/2014/10/19/water_fht0Pq5.mp3",
-        "status": 1,
-        "rating": 0,
-        "brand": "",
-        "categories": [
-            16
-        ],
-        "created": "2014-10-08T17:00:41",
-        "author": 3,
-        "slug": "jray1",
-        "brand": "",
-        "description": "jray1"
-    },
-    "pk": 6,
-    "model": "shellac.clip"
-},
-{
-    "fields": {
-        "title": "jray2",
-        "plays": 1,
-        "audio_file": "sounds/2014/10/19/heart_hckIBAe.mp3",
-        "status": 1,
-        "rating": 0,
-        "brand": "",
-        "categories": [
-            15
-        ],
-        "created": "2014-10-08T17:01:06",
-        "author": 3,
-        "slug": "jray2",
-        "brand": "",
-        "description": "jray2"
-    },
-    "pk": 7,
-    "model": "shellac.clip"
-},
-{
-    "fields": {
-        "title": "aray1",
         "plays": 0,
-        "audio_file": "sounds/2014/10/19/water_VV1jivv.mp3",
+        "brand": "brands/2015/03/20/490b82488fe34d0598f173d86b124864.jpeg",
+        "description": "ert",
+        "title": "ert",
+        "slug": "ert",
+        "created": "2015-03-20T13:38:16",
         "status": 1,
         "rating": 0,
-        "brand": "",
-        "categories": [
-            12,
-            13
-        ],
-        "created": "2014-10-08T17:01:30",
-        "author": 2,
-        "slug": "aray1",
-        "brand": "",
-        "description": "aray1"
+        "author": 3,
+        "audio_file": "sounds/2015/03/20/a85ccb699b8243259dce7703b369ec88.mp3"
     },
-    "pk": 8,
-    "model": "shellac.clip"
+    "pk": 3
 },
 {
+    "model": "shellac.clip",
     "fields": {
-        "title": "aray2",
-        "plays": 2,
-        "audio_file": "sounds/2014/10/19/water_vmcDJCj.mp3",
+        "categories": [
+            5
+        ],
+        "plays": 0,
+        "brand": "brands/2015/03/20/402f889ef846411a99999a36344aa736.jpg",
+        "description": "rty",
+        "title": "rty",
+        "slug": "rty",
+        "created": "2015-03-20T13:38:33",
         "status": 1,
         "rating": 0,
-        "brand": "",
+        "author": 1,
+        "audio_file": "sounds/2015/03/20/98dfaf58b27042f88abb4f086fccde1a.mp3"
+    },
+    "pk": 4
+},
+{
+    "model": "shellac.clip",
+    "fields": {
         "categories": [
-            15,
-            12
+            24
         ],
-        "created": "2014-10-08T17:01:30",
+        "plays": 0,
+        "brand": "brands/2015/03/20/f2a22a7ddee74b8994b23fbc19f77517.png",
+        "description": "ertrty",
+        "title": "werrtyr",
+        "slug": "werrtyr",
+        "created": "2015-03-20T13:49:07",
+        "status": 1,
+        "rating": 0,
         "author": 2,
-        "slug": "aray2",
-        "brand": "",
-        "description": "aray2"
+        "audio_file": "sounds/2015/03/20/00ea303806634c1b81d7ce72eaaa7782.mp3"
     },
-    "pk": 9,
-    "model": "shellac.clip"
-},
-{
-    "fields": {
-        "clip": 5,
-        "playlist": 5,
-        "position": 0,
-        "added": "2014-10-19T16:35:03"
-    },
-    "pk": 7,
-    "model": "shellac.track"
-},
-{
-    "fields": {
-        "clip": 7,
-        "playlist": 5,
-        "position": 0,
-        "added": "2014-10-19T16:35:08"
-    },
-    "pk": 8,
-    "model": "shellac.track"
-},
-{
-    "fields": {
-        "clip": 7,
-        "playlist": 6,
-        "position": 0,
-        "added": "2014-10-19T16:35:26"
-    },
-    "pk": 9,
-    "model": "shellac.track"
-},
-{
-    "fields": {
-        "clip": 7,
-        "playlist": 6,
-        "position": 0,
-        "added": "2014-10-19T16:35:31"
-    },
-    "pk": 10,
-    "model": "shellac.track"
-},
-{
-    "fields": {
-        "clip": 5,
-        "playlist": 7,
-        "position": 0,
-        "added": "2014-10-19T16:35:47"
-    },
-    "pk": 11,
-    "model": "shellac.track"
-},
-{
-    "fields": {
-        "clip": 5,
-        "playlist": 8,
-        "position": 0,
-        "added": "2014-10-19T16:36:00"
-    },
-    "pk": 12,
-    "model": "shellac.track"
+    "pk": 5
 }
 ]

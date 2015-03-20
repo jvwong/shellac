@@ -1,207 +1,95 @@
 [
 {
-    "model": "taggit.tag",
     "pk": 1,
+    "model": "taggit.tag",
     "fields": {
-        "name": "krayt1",
-        "slug": "krayt1"
+        "slug": "asd",
+        "name": "asd"
     }
 },
 {
-    "model": "taggit.tag",
     "pk": 2,
+    "model": "taggit.tag",
     "fields": {
-        "name": "krayt2",
-        "slug": "krayt2"
+        "slug": "wer",
+        "name": "wer"
     }
 },
 {
-    "model": "taggit.tag",
     "pk": 3,
+    "model": "taggit.tag",
     "fields": {
-        "name": "jrayt2",
-        "slug": "jrayt2"
+        "slug": "ert",
+        "name": "ert"
     }
 },
 {
-    "model": "taggit.tag",
     "pk": 4,
+    "model": "taggit.tag",
     "fields": {
-        "name": "jrayt1",
-        "slug": "jrayt1"
+        "slug": "rty",
+        "name": "rty"
     }
 },
 {
-    "model": "taggit.tag",
     "pk": 5,
+    "model": "taggit.tag",
     "fields": {
-        "name": "jrayt2a",
-        "slug": "jrayt2a"
+        "slug": "a1a",
+        "name": "a1a"
     }
 },
 {
-    "model": "taggit.tag",
     "pk": 6,
-    "fields": {
-        "name": "jrayt2b",
-        "slug": "jrayt2b"
-    }
-},
-{
     "model": "taggit.tag",
-    "pk": 7,
     "fields": {
-        "name": "at2",
-        "slug": "at2"
+        "slug": "technology",
+        "name": "technology"
     }
 },
 {
-    "model": "taggit.tag",
-    "pk": 8,
-    "fields": {
-        "name": "at1",
-        "slug": "at1"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 9,
-    "fields": {
-        "name": "aray2b",
-        "slug": "aray2b"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 10,
-    "fields": {
-        "name": "aray2a",
-        "slug": "aray2a"
-    }
-},
-{
-    "model": "taggit.tag",
-    "pk": 11,
-    "fields": {
-        "name": "a1a",
-        "slug": "a1a"
-    }
-},
-{
+    "pk": 5,
     "model": "taggit.taggeditem",
-    "pk": 17,
     "fields": {
-        "tag": 8,
-        "object_id": 8,
-        "content_type": 13
+        "content_type": 14,
+        "tag": 2,
+        "object_id": 2
     }
 },
 {
+    "pk": 6,
     "model": "taggit.taggeditem",
-    "pk": 18,
     "fields": {
-        "tag": 7,
-        "object_id": 8,
-        "content_type": 13
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 19,
-    "fields": {
-        "tag": 9,
-        "object_id": 9,
-        "content_type": 13
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 20,
-    "fields": {
-        "tag": 10,
-        "object_id": 9,
-        "content_type": 13
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 21,
-    "fields": {
+        "content_type": 14,
         "tag": 3,
-        "object_id": 6,
-        "content_type": 13
+        "object_id": 3
     }
 },
 {
+    "pk": 8,
     "model": "taggit.taggeditem",
-    "pk": 22,
     "fields": {
+        "content_type": 14,
         "tag": 4,
-        "object_id": 6,
-        "content_type": 13
+        "object_id": 4
     }
 },
 {
+    "pk": 10,
     "model": "taggit.taggeditem",
-    "pk": 23,
     "fields": {
+        "content_type": 14,
         "tag": 5,
-        "object_id": 7,
-        "content_type": 13
+        "object_id": 1
     }
 },
 {
+    "pk": 11,
     "model": "taggit.taggeditem",
-    "pk": 24,
     "fields": {
+        "content_type": 14,
         "tag": 6,
-        "object_id": 7,
-        "content_type": 13
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 25,
-    "fields": {
-        "tag": 1,
-        "object_id": 4,
-        "content_type": 13
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 26,
-    "fields": {
-        "tag": 2,
-        "object_id": 4,
-        "content_type": 13
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 27,
-    "fields": {
-        "tag": 1,
-        "object_id": 5,
-        "content_type": 13
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 28,
-    "fields": {
-        "tag": 2,
-        "object_id": 5,
-        "content_type": 13
-    }
-},
-{
-    "model": "taggit.taggeditem",
-    "pk": 31,
-    "fields": {
-        "tag": 11,
-        "object_id": 8,
-        "content_type": 14
+        "object_id": 5
     }
 }
 ]

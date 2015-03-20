@@ -191,7 +191,8 @@ INSTALLED_APPS = (
     'django_cleanup',
     'djcelery',
     's3Manager',
-    'markdown'
+    'markdown',
+    'search'
 )
 
 REST_FRAMEWORK = {

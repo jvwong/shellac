@@ -57,6 +57,8 @@ class Person(models.Model):
     path_and_rename = PathAndRename("avatars")
     user = models.OneToOneField(User, primary_key=True)
     username = models.CharField(max_length=30, editable=False)
+    title = models.CharField(max_length=30, blank=False, default="title")
+    description = models.TextField(max_length=1000, blank=False, help_text=("Limit 1000 characters"), default="description")
     joined = models.DateTimeField(auto_now_add=True, blank=True)
     avatar = ThumbnailImageField(upload_to=PathAndRename(AVATAR_UPLOAD_TO), blank=True, help_text=("Images will be cropped as squares"))
     relationships = models.ManyToManyField('self',
