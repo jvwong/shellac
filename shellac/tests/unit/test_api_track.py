@@ -118,7 +118,7 @@ class TrackDetailViewSet(APITestCase):
 
 
     def test_TrackDetailViewSet_PUT_by_playlist_owner_accepted(self):
-        myPlaylist = Playlist.objects.filter(person=self.person)[1]
+        myPlaylist = Playlist.objects.filter(person=self.person)[0]
         myTrack = Track.objects.filter(playlist=myPlaylist)[0]
         payload = {
             "playlist": 'http://testserver/api/playlists/' + str(myTrack.playlist.id) + '/',
@@ -139,7 +139,7 @@ class TrackDetailViewSet(APITestCase):
 
 
     def test_TrackDetailViewSet_PUT_cannot_hijack_anothers_track(self):
-        otherPlaylist = Playlist.objects.filter(person=Person.objects.get(username='jvwong'))[1]
+        otherPlaylist = Playlist.objects.filter(person=Person.objects.get(username='jvwong'))[0]
         otherTrack = Track.objects.filter(playlist=otherPlaylist)[0]
         payload = {
             "playlist": 'http://testserver/api/playlists/' + str(otherTrack.playlist.id) + '/',
@@ -155,7 +155,7 @@ class TrackDetailViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_TrackDetailViewSet_DELETE_by_playlist_owner_accepted(self):
-        myPlaylist = Playlist.objects.filter(person=self.person)[1]
+        myPlaylist = Playlist.objects.filter(person=self.person)[0]
         myTrack = Track.objects.filter(playlist=myPlaylist)[0]
 
         response = self.client.delete('/api/tracks/' + str(myTrack.id) + '/')
@@ -169,8 +169,8 @@ class TrackDetailViewSet(APITestCase):
         self.assertEqual(len(fetched), 0)
 
     def test_TrackDetailViewSet_DELETE_by_nonowner_rejected(self):
-        myPlaylist = Playlist.objects.filter(person=self.person)[1]
-        otherPlaylist = Playlist.objects.filter(person=Person.objects.get(username='jvwong'))[1]
+        myPlaylist = Playlist.objects.filter(person=self.person)[0]
+        otherPlaylist = Playlist.objects.filter(person=Person.objects.get(username='jvwong'))[0]
         otherTrack = Track.objects.filter(playlist=otherPlaylist)[0]
 
         response = self.client.delete('/api/tracks/' + str(otherTrack.id) + '/')
@@ -181,7 +181,7 @@ class TrackDetailViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_TrackDetailViewSet_PATCH_own_updates_existing(self):
-        myPlaylist = Playlist.objects.filter(person=self.person)[1]
+        myPlaylist = Playlist.objects.filter(person=self.person)[0]
         myTrack = Track.objects.filter(playlist=myPlaylist)[0]
         payload = {
             "position": 1000,
@@ -200,8 +200,8 @@ class TrackDetailViewSet(APITestCase):
 
 
     def test_TrackDetailViewSet_PATCH_other_rejected(self):
-        myPlaylist = Playlist.objects.filter(person=self.person)[1]
-        otherPlaylist = Playlist.objects.filter(person=Person.objects.get(username='jvwong'))[1]
+        myPlaylist = Playlist.objects.filter(person=self.person)[0]
+        otherPlaylist = Playlist.objects.filter(person=Person.objects.get(username='jvwong'))[0]
         otherTrack = Track.objects.filter(playlist=otherPlaylist)[0]
 
         payload = {
@@ -218,7 +218,7 @@ class TrackDetailViewSet(APITestCase):
 
     ##This is forbidden since its not in the Track.PATCHABLE list
     def test_TrackDetailViewSet_PATCH_own_with_other_playlist_rejected_non_patchable_field(self):
-        myPlaylist = Playlist.objects.filter(person=self.person)[1]
+        myPlaylist = Playlist.objects.filter(person=self.person)[0]
         myTrack = Track.objects.filter(playlist=myPlaylist)[0]
 
         otherPlaylist = Playlist.objects.filter(person=Person.objects.get(username='jvwong'))[0]

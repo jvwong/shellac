@@ -26,6 +26,7 @@ CATEGORIES = (
     'pop culture',
     'rugby',
     'talk',
+    'technology',
     'television',
     'film',
     'entertainment',
@@ -37,7 +38,8 @@ CATEGORIES = (
     'pop culture',
     'in the news',
     'business',
-    'olympics'
+    'olympics',
+    'music'
 )
 
 

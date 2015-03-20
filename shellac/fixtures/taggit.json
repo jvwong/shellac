@@ -49,47 +49,47 @@
 },
 {
     "fields": {
-        "content_type": 14,
-        "object_id": 2,
-        "tag": 2
-    },
-    "model": "taggit.taggeditem",
-    "pk": 5
-},
-{
-    "fields": {
-        "content_type": 14,
-        "object_id": 3,
-        "tag": 3
-    },
-    "model": "taggit.taggeditem",
-    "pk": 6
-},
-{
-    "fields": {
-        "content_type": 14,
-        "object_id": 4,
-        "tag": 4
-    },
-    "model": "taggit.taggeditem",
-    "pk": 8
-},
-{
-    "fields": {
-        "content_type": 14,
         "object_id": 1,
-        "tag": 5
+        "tag": 5,
+        "content_type": 14
     },
     "model": "taggit.taggeditem",
-    "pk": 10
+    "pk": 16
 },
 {
     "fields": {
-        "content_type": 14,
         "object_id": 5,
-        "tag": 6
+        "tag": 6,
+        "content_type": 14
     },
     "model": "taggit.taggeditem",
-    "pk": 11
+    "pk": 17
+},
+{
+    "fields": {
+        "object_id": 2,
+        "tag": 2,
+        "content_type": 14
+    },
+    "model": "taggit.taggeditem",
+    "pk": 19
+},
+{
+    "fields": {
+        "object_id": 3,
+        "tag": 3,
+        "content_type": 14
+    },
+    "model": "taggit.taggeditem",
+    "pk": 20
+},
+{
+    "fields": {
+        "object_id": 4,
+        "tag": 4,
+        "content_type": 14
+    },
+    "model": "taggit.taggeditem",
+    "pk": 21
 }
 ]

@@ -49,7 +49,6 @@ class ClipListViewSet(APITestCase):
 
         resp = json.loads(response.content.decode())
         # print(resp['results'][0])
-        self.assertEqual(resp['results'][0].get('id'), clip1.id)
         self.assertEqual(resp['results'][0].get('title'), clip1.title)
         self.assertIn(clip1.author.user.username, resp['results'][0].get('author'))
         self.assertEqual(resp['results'][0].get('description'), clip1.description)
