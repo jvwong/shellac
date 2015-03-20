@@ -104,6 +104,7 @@ def _update_static_files(static_dir, source_dir):
         '--clear --noinput -i node_modules -i less -i src -i *.json -i .bowerrc' % (source_dir, ))
 
 def _update_database(source_dir):
+    #Inject db name and password???
     run('cd %s && ../virtualenv/bin/python3.4 manage.py migrate --noinput' % (source_dir,))
 
 def _restart_supervisor(env_host):

@@ -30,8 +30,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': DATABASE_NAME,
-        'USER': os.getenv('MYSQL_SHELLAC_USER', default=''),
-        'PASSWORD': os.getenv('MYSQL_SHELLAC_PASSWORD', default=''),
+        'USER': os.getenv('MYSQL_SHELLAC_USER', default='shellac'),
+        'PASSWORD': os.getenv('MYSQL_SHELLAC_PASSWORD', default='Kordic27'),
         'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '3306',                           # Set to empty string for default.
     }
