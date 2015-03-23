@@ -121,6 +121,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.Field(source='author.title')
     author = serializers.HyperlinkedRelatedField(lookup_field='username',
                                                  view_name='person-detail')
+    author_username = serializers.Field(source='author.username')
 
     categories = serializers.HyperlinkedRelatedField(many=True,
                                                      lookup_field='slug',
@@ -148,7 +149,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         lookup_field = 'pk'
         model = Clip
-        fields = ('url', 'id', 'title', 'author', 'description', 'categories', 'tags',
+        fields = ('url', 'id', 'title', 'author', 'author_username', 'description', 'categories', 'tags',
                   'brand', 'brand_url', 'plays', 'rating', 'status', 'slug',
                   'audio_file', 'audio_file_url', 'created', 'owner')
         # read_only_fields = ('categories',)

@@ -193,7 +193,7 @@ class ClipListViewSet(APITestCase):
         self.assertEqual(data['status'], 1)
         self.assertEqual(data['brand'], '')
         self.assertEqual(data['categories'], [])
-        self.assertEqual(data['owner'], 'andrea')
+        self.assertEqual(data['owner'], 'title')
 
         cleanClips()
 
@@ -305,7 +305,7 @@ class ClipDetailViewSet(APITestCase):
         self.assertEqual(resp['status'], 1)
         self.assertEqual(resp['brand'], '')
         self.assertEqual(resp['categories'], [])
-        self.assertEqual(resp['owner'], 'andrea')
+        self.assertEqual(resp['owner'], 'title')
         self.assertEqual([], resp['categories'])
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
@@ -342,7 +342,7 @@ class ClipDetailViewSet(APITestCase):
         self.assertEqual(resp['status'], 1)
         self.assertEqual(resp['brand'], '')
         self.assertEqual(resp['categories'], [])
-        self.assertEqual(resp['owner'], 'andrea')
+        self.assertEqual(resp['owner'], 'title')
         self.assertEqual([], resp['categories'])
         self.assertEqual(response.__getitem__('Content-Type'), 'application/json')
 
@@ -374,10 +374,10 @@ class ClipDetailViewSet(APITestCase):
         self.assertEqual(resp['slug'], 'updated-clip1-title')
         self.assertEqual(resp['description'], 'updated clip1 description')
         self.assertIn('andrea', resp['author'])
-        self.assertEqual(resp['owner'], 'andrea')
+        self.assertEqual(resp['owner'], 'title')
         self.assertEqual(resp['plays'], 0)
         self.assertEqual(resp['status'], 1)
-        self.assertEqual(resp['owner'], 'andrea')
+        self.assertEqual(resp['owner'], 'title')
 
         cleanClips()
 
