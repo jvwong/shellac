@@ -54,6 +54,7 @@ class RelationshipSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.Field(source='user.id')
     avatar_url = serializers.SerializerMethodField('get_avatar_url')
     clips = serializers.HyperlinkedRelatedField(many=True,
                                                 lookup_field='pk',
@@ -72,7 +73,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         lookup_field = 'username'
         model = Person
-        fields = ('url', 'username', 'title', 'description', 'avatar_url',
+        fields = ('url', 'id', 'username', 'title', 'description', 'avatar_url',
                   'joined', 'clips', 'relationships', 'playlists')
 
 

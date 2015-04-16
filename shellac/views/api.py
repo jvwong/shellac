@@ -245,6 +245,7 @@ class PersonListView(generics.ListCreateAPIView):
     """
     List only; DO NOT allow create Person -- do this through User
     """
+    lookup_field = 'username'
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
     permission_classes = (permissions.IsAuthenticated, )
